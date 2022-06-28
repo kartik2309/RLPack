@@ -8,9 +8,11 @@ include(CMakePackageConfigHelpers)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+cmake_policy(SET CMP0069 NEW)
+set(CMAKE_POLICY_DEFAULT_CMP0069 NEW)
 set_property(GLOBAL PROPERTY USE_FOLDERS YES)
 # ----------------------------------- Package Dependencies ----------------------------------- #
-find_package(Python REQUIRED COMPONENTS Interpreter NumPy Development)
+find_package(Python REQUIRED COMPONENTS Interpreter Development)
 find_package(PyBind11 REQUIRED)
 find_package(OpenMP REQUIRED)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
@@ -18,15 +20,16 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 find_package(OpenCV REQUIRED)
 find_package(Torch REQUIRED)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
+
 if (NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
     set(CMAKE_CUDA_ARCHITECTURES 61)
 endif ()
 
-if (APPLE AND (NOT CALL_FROM_SETUP_PY))
+if (APPLE)
     find_library(APPLE_FWK_FOUNDATION Foundation REQUIRED)
     find_library(APPLE_FWK_QUARTZ_CORE QuartzCore REQUIRED)
     find_library(APPLE_FWK_METAL Metal REQUIRED)
-endif()
+endif ()
 
 find_package(Boost COMPONENTS program_options log log_setup mpi serialization REQUIRED)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${DBOOST_LOG_DYN_LINK}")
@@ -36,35 +39,49 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${DBOOST_LOG_DYN_LINK}")
 pybind11_add_module(
         RLPack
 
+        bindings/pybind11_helpers/Dqn/GetDqnAgent.h
+        bindings/pybind11_helpers/Dqn/GetDqnAgent.tpp
         bindings/pybind11_helpers/dqnBinder.cpp
 
-        src/DQN/Agent.cuh
+        src/Dqn/Agent.h
+        src/Dqn/Agent.tpp
+        src/Dqn/DqnImpl.hpp
 
-        src/DQN/DQN1D/Dqn1D.cpp
-        src/DQN/DQN1D/Dqn1D.h
+        src/Dqn/Dqn1d/Dqn1d.tpp
+        src/Dqn/Dqn1d/Dqn1d.h
+
+        utils/Metal/MetalComputeWrapperImpl.cpp
+        utils/Metal/MetalComputeWrapperImpl.h
 )
 
-if (APPLE AND (NOT CALL_FROM_SETUP_PY))
+IF (APPLE)
 
-    add_custom_command(
-        TARGET RLPack
+    FILE(GLOB METAL_FILES "utils/Metal/MetalFiles/*.metal")
+    FOREACH (METAL_FILE ${METAL_FILES})
+        add_custom_command(
+                TARGET RLPack
 
-        COMMAND
-        xcrun -sdk macosx metal -c "${CMAKE_CURRENT_SOURCE_DIR}/utils/metal_files/add.metal" -o "${METAL_BUILD_DIR}/add.air"
+                COMMAND
+                xcrun
+                -sdk macosx metal
+                -c "utils/Metal/MetalFiles/${METAL_FILE}.metal"
+                -o "${METAL_BUILD_DIR}/${METAL_FILE}.air"
 
-        COMMAND
-        xcrun -sdk macosx metallib "${METAL_BUILD_DIR}/add.air" -o "${METAL_BUILD_DIR}/add.metallib"
-    )
+                COMMAND
+                xcrun
+                -sdk macosx metallib "${METAL_BUILD_DIR}/${METAL_FILE}.air"
+                -o "${METAL_BUILD_DIR}/${METAL_FILE}.metallib"
+        )
+    ENDFOREACH ()
     target_include_directories(RLPack SYSTEM PRIVATE ${METAL_CPP_DIR})
     target_link_libraries(RLPack PRIVATE ${APPLE_FWK_FOUNDATION}
             ${APPLE_FWK_QUARTZ_CORE} ${APPLE_FWK_METAL})
 
-endif()
+ENDIF ()
 
 add_dependencies(RLPack pybind11::headers)
 
 target_link_libraries(RLPack PRIVATE Python::Python)
-target_link_libraries(RLPack PRIVATE Python::NumPy)
 target_link_libraries(RLPack PRIVATE "${OpenCV_LIBRARIES}")
 target_link_libraries(RLPack PRIVATE "${TORCH_LIBRARIES}")
 target_link_libraries(RLPack PRIVATE ${Boost_LOG_LIBRARY})
@@ -83,11 +100,11 @@ install(
 )
 
 
-if (CALL_FROM_SETUP_PY)
+IF (CALL_FROM_SETUP_PY)
     set(RLPack_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
-else ()
+ELSE ()
     set(RLPack_INSTALL_PREFIX ${Python3_SITELIB})
-endif ()
+ENDIF ()
 
 set_target_properties(
         RLPack PROPERTIES

@@ -19,6 +19,8 @@ def simulate_lunar_lander() -> None:
         model_name=yaml_dict["model_name"],
         model_args=yaml_dict["model_args"],
         agent_args=yaml_dict["agent_args"],
+        optimizer_args=yaml_dict["optimizer_args"],
+        activation_args=None,
     )
     rewards = list()
 
@@ -30,7 +32,7 @@ def simulate_lunar_lander() -> None:
             action = env.action_space.sample()
 
             for _ in range(yaml_dict["max_timesteps"]):
-                env.render()
+                # env.render()
 
                 observation_next, reward, done, info = env.step(action=action)
                 if not done:

@@ -8,10 +8,17 @@ model_args: {
   activation: 'relu',
   sequence_length: 2,
   channels: [ 4, 16, 32 ],
-  kernel_sizes: [ 1, 2 ],
-  strides_sizes: [ 1, 1 ],
-  dilation_sizes: [ 1, 1 ],
+  kernel_sizes_conv: [ 1, 1 ],
+  strides_sizes_conv: [ 1, 1 ],
+  dilation_sizes_conv: [ 1, 1 ],
+  kernel_sizes_pool: null,
+  strides_sizes_pool: null,
+  dilation_sizes_pool: null,
+  use_padding: True,
   dropout: 0.5
+}
+
+activation_args: {
 }
 
 agent_args: {
@@ -22,9 +29,12 @@ agent_args: {
   target_model_update_rate: 128,
   policy_model_update_rate: 32,
   epsilon_decay_rate: 0.8,
+  save_path: "/Users/kartikrajeshwaran/CodeSupport/CPP/Models/RLPack/dqn1d/",
+}
+
+optimizer_args: {
   optimizer: "adam",
   lr: 5e-2,
-  save_path: "/Users/kartikrajeshwaran/CodeSupport/CPP/Models/RLPack/dqn1d/",
 }
 
 device: 'cpu'
