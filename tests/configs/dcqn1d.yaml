@@ -1,0 +1,52 @@
+mode: 'train'
+num_episodes: 100000
+max_timesteps: 2000
+model_name: 'dcqn1d'
+reward_print_frequency: 10000
+
+model_args: {
+  num_actions: 4,
+  activation: 'relu',
+  sequence_length: 8,
+  channels: [ 2, 16, 32 ],
+  kernel_sizes_conv: [ 1, 3 ],
+  strides_sizes_conv: [ 1, 2 ],
+  dilation_sizes_conv: [ 1, 1 ],
+  kernel_sizes_pool: null,
+  strides_sizes_pool: null,
+  dilation_sizes_pool: null,
+  use_padding: False,
+  dropout: 0.5
+}
+
+activation_args: {
+}
+
+agent_args: {
+  gamma: 0.99,
+  epsilon: 0.9 ,
+  num_actions: 4,
+  memory_buffer_size: 131072,
+  target_model_update_rate: 1024,
+  policy_model_update_rate: 128,
+  epsilon_decay_rate: 0.95,
+  apply_norm: 0,
+  apply_norm_to: 2
+}
+
+# apply_norm:
+# i)  -1: Apply no normalization.
+# ii)  0 and above : Apply min-max scaling on the specified axis.
+#
+# apply_norm_to:
+# Description: Only valid when apply_norm >= 0. Specifies values to which we may want to apply normalization.
+# i)    0: Only apply min-max scaling to input states.
+# ii)   1: Apply min-max scaling to input states and reward states
+# iii)  2: Apply min-max scaling to input states and TD Values.
+
+optimizer_args: {
+  optimizer: "adam",
+  lr: 1e-2,
+}
+
+device: 'cpu'

@@ -2,8 +2,10 @@ cmake_minimum_required(VERSION 3.8)
 project(RLPack)
 
 # ----------------------------------- Includes for CMAKE ----------------------------------- #
+
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
+
 # ----------------------------------- Set Global Variables for CMAKE ----------------------------------- #
 
 set(CMAKE_CXX_STANDARD 17)
@@ -11,7 +13,9 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 cmake_policy(SET CMP0069 NEW)
 set(CMAKE_POLICY_DEFAULT_CMP0069 NEW)
 set_property(GLOBAL PROPERTY USE_FOLDERS YES)
+set(METAL_CPP_DIR "${CMAKE_SOURCE_DIR}/utils/Metal/metal-cpp")
 # ----------------------------------- Package Dependencies ----------------------------------- #
+
 find_package(Python REQUIRED COMPONENTS Interpreter Development)
 find_package(PyBind11 REQUIRED)
 find_package(OpenMP REQUIRED)
@@ -29,6 +33,8 @@ if (APPLE)
     find_library(APPLE_FWK_FOUNDATION Foundation REQUIRED)
     find_library(APPLE_FWK_QUARTZ_CORE QuartzCore REQUIRED)
     find_library(APPLE_FWK_METAL Metal REQUIRED)
+    find_library(APPLE_FWK_METAL_PERFORMANCE_SHADERS MetalPerformanceShaders REQUIRED)
+    find_library(APPLE_FWK_METAL_PERFORMANCE_SHADERSGRAPH MetalPerformanceShadersGraph REQUIRED)
 endif ()
 
 find_package(Boost COMPONENTS program_options log log_setup mpi serialization REQUIRED)
@@ -45,39 +51,27 @@ pybind11_add_module(
 
         src/Dqn/Agent.h
         src/Dqn/Agent.tpp
-        src/Dqn/DqnImpl.hpp
+        src/Dqn/DqnBase.hpp
 
-        src/Dqn/Dqn1d/Dqn1d.tpp
-        src/Dqn/Dqn1d/Dqn1d.h
+        src/Dqn/Dcqn1d/Dcqn1d.h
+        src/Dqn/Dcqn1d/Dcqn1d.tpp
 
-        utils/Metal/MetalComputeWrapperImpl.cpp
-        utils/Metal/MetalComputeWrapperImpl.h
+        src/Dqn/Dlqn1d/Dlqn1d.h
+        src/Dqn/Dlqn1d/Dlqn1d.tpp
 )
 
-IF (APPLE)
 
-    FILE(GLOB METAL_FILES "utils/Metal/MetalFiles/*.metal")
-    FOREACH (METAL_FILE ${METAL_FILES})
-        add_custom_command(
-                TARGET RLPack
-
-                COMMAND
-                xcrun
-                -sdk macosx metal
-                -c "utils/Metal/MetalFiles/${METAL_FILE}.metal"
-                -o "${METAL_BUILD_DIR}/${METAL_FILE}.air"
-
-                COMMAND
-                xcrun
-                -sdk macosx metallib "${METAL_BUILD_DIR}/${METAL_FILE}.air"
-                -o "${METAL_BUILD_DIR}/${METAL_FILE}.metallib"
-        )
-    ENDFOREACH ()
+if (APPLE)
     target_include_directories(RLPack SYSTEM PRIVATE ${METAL_CPP_DIR})
-    target_link_libraries(RLPack PRIVATE ${APPLE_FWK_FOUNDATION}
-            ${APPLE_FWK_QUARTZ_CORE} ${APPLE_FWK_METAL})
-
-ENDIF ()
+    target_link_libraries(
+            RLPack PRIVATE
+            ${APPLE_FWK_FOUNDATION}
+            ${APPLE_FWK_QUARTZ_CORE}
+            ${APPLE_FWK_METAL}
+            ${APPLE_FWK_METAL_PERFORMANCE_SHADERS}
+            ${APPLE_FWK_METAL_PERFORMANCE_SHADERSGRAPH}
+    )
+endif ()
 
 add_dependencies(RLPack pybind11::headers)
 
@@ -100,11 +94,11 @@ install(
 )
 
 
-IF (CALL_FROM_SETUP_PY)
+if (CALL_FROM_SETUP_PY)
     set(RLPack_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
-ELSE ()
+else ()
     set(RLPack_INSTALL_PREFIX ${Python3_SITELIB})
-ENDIF ()
+endif ()
 
 set_target_properties(
         RLPack PROPERTIES
