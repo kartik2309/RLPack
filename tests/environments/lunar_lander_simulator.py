@@ -1,0 +1,127 @@
+import gym
+import numpy as np
+import yaml
+import logging
+from typing import Union, Dict, TypeVar, Any
+
+ReshapeFunction = TypeVar("ReshapeFunction")
+RLPackAgent = TypeVar("RLPackAgent")
+
+
+class LunarLander:
+    def __init__(
+            self,
+            agent: RLPackAgent,
+            config_path: Union[str, None] = None,
+            config_dict: Union[None, Dict[str, Any]] = None,
+            reshape_func: Union[None, ReshapeFunction] = None,
+    ):
+        self.agent = agent
+        if config_path is not None:
+            if config_dict is not None:
+                logging.warning(
+                    "Arguments `config_path` and `config_dict` were passed. "
+                    "`config_dict` will be overwritten by the file read from `config_path`! "
+                    "Try using only one of them to not receive this warning."
+                )
+            with open(config_path) as f:
+                config_dict = yaml.load(f, yaml.Loader)
+
+        elif config_dict is not None:
+            config_dict = config_dict
+        else:
+            raise ValueError("Either of the Arguments `config_path` or `config_dict` must be passed!")
+
+        self.config_dict = config_dict
+        if reshape_func is None:
+            self.reshape_func = self.reshape_func_default
+        else:
+            self.reshape_func = reshape_func
+
+        self.env = gym.make("LunarLander-v2")
+
+    @staticmethod
+    def reshape_func_default(x: np.ndarray) -> np.ndarray:
+        return x
+
+    def train_agent(self, render: bool = False) -> None:
+
+        self.__is_train(), ("Set Training mode in the configuration! "
+                            "Set mode='train' or mode='training")
+
+        agent = self.agent(
+            model_name=self.config_dict["model_name"],
+            model_args=self.config_dict["model_args"],
+            agent_args=self.config_dict["agent_args"],
+            optimizer_args=self.config_dict["optimizer_args"],
+            activation_args=self.config_dict["activation_args"],
+            device=self.config_dict["device"],
+        )
+        rewards = list()
+        episode_counter = 0
+
+        for _ in range(self.config_dict["num_episodes"]):
+            observation_current = self.env.reset()
+            action = self.env.action_space.sample()
+            episode_counter += 1
+
+            for _ in range(self.config_dict["max_timesteps"]):
+
+                if render:
+                    self.env.render()
+
+                observation_next, reward, done, info = self.env.step(action=action)
+                if not done:
+
+                    rewards.append(reward)
+                    action = agent.train(
+                        state_current=self.reshape_func(observation_current),
+                        state_next=self.reshape_func(observation_next),
+                        action=action,
+                        reward=reward,
+                        done=done,
+                    )
+
+                    observation_current = observation_next
+                else:
+                    if episode_counter % self.config_dict["reward_print_frequency"] == 0:
+                        logging.info(
+                            f"Average Reward after {episode_counter} episodes: {sum(rewards) / len(rewards)}"
+                        )
+                        rewards.clear()
+
+                    break
+
+        self.env.close()
+        agent.save()
+
+    def evaluate_agent(self) -> None:
+
+        assert self.__is_eval(), ("Set Evaluation mode in the configuration! "
+                                  "Set mode='eval' or mode='evaluate or mode='evaluation")
+        rewards = list()
+        timesteps = 0
+        _ = self.env.reset()
+        action = self.env.action_space.sample()
+
+        for _ in range(self.config_dict["max_timesteps"]):
+            self.env.render()
+            observation, reward, done, info = self.env.step(action=action)
+            rewards.append(reward)
+            timesteps += 1
+            if done:
+                logging.info(
+                    f"Average Reward after {timesteps} timesteps:",
+                    sum(rewards) / len(rewards),
+                )
+                break
+            action = self.agent.policy(observation)
+        self.env.close()
+
+    def __is_eval(self):
+        possible_eval_names = ("eval", "evaluate", "evaluation")
+        return self.config_dict["mode"] in possible_eval_names
+
+    def __is_train(self):
+        possible_train_names = ("train", "training")
+        return self.config_dict["mode"] in possible_train_names
