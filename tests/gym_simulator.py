@@ -8,7 +8,7 @@ def simulate_lunar_lander():
         config_path="configs/dlqn1d.yaml"
     )
 
-    lunar_lander.train_agent()
+    lunar_lander.train_agent(load=False)
 
 
 if __name__ == "__main__":

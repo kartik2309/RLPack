@@ -8,7 +8,7 @@ model_args: {
   num_actions: 4,
   activation: 'relu',
   sequence_length: 1,
-  hidden_sizes: [8, 32, 64],
+  hidden_sizes: [ 8, 32, 64 ],
   dropout: 0.5
 }
 
@@ -16,30 +16,23 @@ activation_args: {
 }
 
 agent_args: {
-  gamma: 0.99,
-  epsilon: 0.9 ,
+  gamma: 0.95,
+  epsilon: 1,
+  min_epsilon: 0.01,
   num_actions: 4,
-  memory_buffer_size: 8192,
-  target_model_update_rate: 256,
-  policy_model_update_rate: 32,
-  epsilon_decay_rate: 0.95,
-  apply_norm: -1,
-  apply_norm_to: 0
+  memory_buffer_size: 16384,
+  target_model_update_rate: 20,
+  policy_model_update_rate: 4,
+  batch_size: 32,
+  epsilon_decay_rate: 0.98,
+  epsilon_decay_frequency: 20,
+  apply_norm: "none",
+  apply_norm_to: [ "none" ]
 }
-
-# apply_norm:
-# i)  -1: Apply no normalization.
-# ii)  0 and above : Apply min-max scaling on the specified axis.
-#
-# apply_norm_to:
-# Description: Only valid when apply_norm >= 0. Specifies values to which we may want to apply normalization.
-# i)    0: Only apply min-max scaling to input states.
-# ii)   1: Apply min-max scaling to input states and reward states
-# iii)  2: Apply min-max scaling to input states and TD Values.
 
 optimizer_args: {
   optimizer: "adam",
-  lr: 1e-2,
+  lr: 1e-3,
 }
 
-device: 'cpu'
+device: 'cpu-mps'

@@ -8,9 +8,15 @@
 #include <random>
 #include <torch/torch.h>
 #include <boost/log/trivial.hpp>
+#include <boost/range/algorithm_ext/push_back.hpp>
+#include <boost/range/irange.hpp>
+#include <boost/range/algorithm/random_shuffle.hpp>
+#include <boost/generator_iterator.hpp>
+#include <boost/random.hpp>
+#include <boost/random/random_device.hpp>
 
 #include "../AgentBase.hpp"
-
+#include "../utils/utils.hpp"
 
 namespace dqn {
     template<class ModelClass, class Optimizer>
@@ -18,87 +24,61 @@ namespace dqn {
 
 
     public:
-        Agent(ModelClass &targetModel, ModelClass &policyModel, Optimizer &optimizer, float_t gamma,
-              float_t epsilon, float_t epsilonDecayRate, int32_t memoryBufferSize, int32_t targetModelUpdateRate,
-              int32_t policyModelUpdateRate, int32_t numActions, std::string &savePath, int32_t applyNorm = -1,
-              int32_t applyNormTo = 0);
+        Agent(ModelClass &targetModel, ModelClass &policyModel, Optimizer &optimizer,
+              float_t gamma, float_t epsilon, float_t minEpsilon, float_t epsilonDecayRate,
+              int32_t epsilonDecayFrequency, int32_t memoryBufferSize, int32_t targetModelUpdateRate,
+              int32_t policyModelUpdateRate, int32_t batchSize, int32_t numActions,
+              std::string &savePath, float_t tau, int32_t applyNorm = -1, int32_t applyNormTo = -1,
+              float_t epsForNorm = 5e-8, int32_t pForNorm = 2, int32_t dimForNorm = 0);
 
         ~Agent();
 
-        int train(torch::Tensor &stateCurrent, torch::Tensor &stateNext, float reward, int action, int done) override;
+        int32_t
+        train(torch::Tensor &stateCurrent, torch::Tensor &stateNext, float reward, int action, int done) override;
 
-        int policy(torch::Tensor &stateCurrent) override;
+        int32_t policy(torch::Tensor &stateCurrent) override;
 
         void save() override;
 
-    private:
+        void load() override;
 
+    private:
         ModelClass targetModel_;
         ModelClass policyModel_;
         Optimizer optimizer_;
-        float gamma_;
-        float epsilon_;
-        float epsilonDecayRate_;
-        int memoryBufferSize_;
-        int targetModelUpdateRate_;
-        int policyModelUpdateRate_;
-        int numActions_;
+        float_t gamma_;
+        float_t epsilon_;
+        float_t minEpsilon_;
+        float_t epsilonDecayRate_;
+        int32_t epsilonDecayFrequency_;
+        int32_t memoryBufferSize_;
+        int32_t targetModelUpdateRate_;
+        int32_t policyModelUpdateRate_;
+        int32_t batchSize_;
+        int32_t numActions_;
         std::string savePath_;
-        int32_t applyNorm_;
+        float_t tau_;
+        Normalization *normalization_;
         int32_t applyNormTo_;
+        float_t epsForNorm_;
+        int32_t pForNorm_;
+        int32_t dimForNorm_;
 
-        torch::nn::HuberLoss huberLoss_;
-
-        struct Memory {
-        private:
-            std::vector<torch::Tensor> stateCurrent_;
-            std::vector<torch::Tensor> stateNext_;
-            std::vector<torch::Tensor> reward_;
-            std::vector<torch::Tensor> action_;
-            std::vector<torch::Tensor> done_;
-
-        public:
-            Memory();
-
-            ~Memory();
-
-            void push_back(torch::Tensor &stateCurrent,
-                           torch::Tensor &stateNext,
-                           float reward,
-                           int action,
-                           int done);
-
-            void push_back(Memory *memory);
-
-            torch::Tensor stack_current_states(int32_t applyNorm, int32_t applyNormTo);
-
-            torch::Tensor stack_next_states(int32_t applyNorm, int32_t applyNormTo);
-
-            torch::Tensor stack_rewards(int32_t applyNorm, int32_t applyNormTo);
-
-            torch::Tensor stack_actions();
-
-            torch::Tensor stack_dones();
-
-            void clear();
-
-            size_t size();
-
-            Memory *at(int index);
-        } memoryBuffer;
+        Memory memoryBuffer;
 
         int targetModelUpdateCounter = 0;
         int policyModelUpdateCounter = 0;
+        int epsilonDecayCounter = 0;
+
+        torch::nn::HuberLoss huberLoss_;
 
         void train_policy_model();
 
         void update_target_model();
 
-        typename Agent<ModelClass, Optimizer>::Memory *load_random_experiences();
+        Memory *load_random_experiences();
 
         torch::Tensor temporal_difference(torch::Tensor &rewards, torch::Tensor &qValues, torch::Tensor &dones);
-
-        static torch::Tensor apply_normalization(torch::Tensor &tensor, int32_t applyNorm);
 
         void decay_epsilon();
 

@@ -54,7 +54,7 @@ setuptools.setup(
                                         "-DBUILD_SHARED_LIBS:BOOL=TRUE",
                                         f"-DMETAL_BUILD_DIR={os.environ.get('METAL_BUILD_DIR', None)}",
                                         f"-DMETAL_CPP_DIR={os.environ.get('METAL_CPP_DIR', None)}",
-                                        f"-DCALL_FROM_SETUP_PY=TRUE"
+                                        f"-DCALL_FROM_SETUP_PY=TRUE",
                                     ] + CIBW_CMAKE_OPTIONS,
         ),
     ],

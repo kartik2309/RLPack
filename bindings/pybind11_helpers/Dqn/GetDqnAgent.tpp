@@ -7,6 +7,7 @@
 
 #include "GetDqnAgent.h"
 
+
 GetDqnAgent::GetDqnAgent(pybind11::str &modelName, pybind11::dict &modelArgs, pybind11::dict &activationArgs,
                          pybind11::dict &agentArgs, pybind11::dict &optimizerArgs, pybind11::str &device) {
     modelName_ = modelName.cast<std::string>();
@@ -48,6 +49,10 @@ int GetDqnAgent::policy(pybind11::array_t<float_t> &stateCurrent, pybind11::tupl
 
 void GetDqnAgent::save() {
     agent_->save();
+}
+
+void GetDqnAgent::load() {
+    agent_->load();
 }
 
 std::vector<std::shared_ptr<dqn::DqnBase>> GetDqnAgent::get_dqn_model() {
@@ -92,7 +97,6 @@ std::vector<std::shared_ptr<dqn::DqnBase>> GetDqnAgent::get_dqn_model() {
     auto activation = modelArgs_["activation"].cast<std::string>();
     auto dropout = modelArgs_["dropout"].cast<float_t>();
     auto numActions = modelArgs_["num_actions"].cast<int32_t>();
-
 
     auto modelCode = dqnModels_[modelName_];
     auto activationCode = activations_[activation];
@@ -153,34 +157,47 @@ std::vector<std::shared_ptr<dqn::DqnBase>> GetDqnAgent::get_dqn_model() {
 AgentBase *GetDqnAgent::get_agent() {
     auto gamma = agentArgs_["gamma"].cast<float_t>();
     auto epsilon = agentArgs_["epsilon"].cast<float_t>();
+    auto minEpsilon = agentArgs_["min_epsilon"].cast<float_t>();
     auto epsilonDecayRate = agentArgs_["epsilon_decay_rate"].cast<float_t>();
+    auto epsilonDecayFrequency = agentArgs_["epsilon_decay_frequency"].cast<int32_t>();
     auto memoryBufferSize = agentArgs_["memory_buffer_size"].cast<int32_t>();
     auto targetModelUpdateRate = agentArgs_["target_model_update_rate"].cast<int32_t>();
     auto policyModelUpdateRate = agentArgs_["policy_model_update_rate"].cast<int32_t>();
+    auto batchSize = agentArgs_["batch_size"].cast<int32_t>();
     auto numActions = agentArgs_["num_actions"].cast<int32_t>();
-    auto applyNormOptional = agentArgs_["apply_norm"].cast<std::optional<int32_t>>();
-    auto applyNormToOptional = agentArgs_["apply_norm_to"].cast<std::optional<int32_t>>();
     auto savePath = agentArgs_["save_path"].cast<std::string>();
+    auto tau = agentArgs_.contains("tau") ? agentArgs_["tau"].cast<float_t>() : 1.0;
+    auto applyNormOptional = agentArgs_.contains("apply_norm")
+                             ? agentArgs_["apply_norm"].cast<std::string>()
+                             : "none";
+    auto applyNormToOptional = agentArgs_.contains("apply_norm_to")
+                               ? agentArgs_["apply_norm_to"].cast<std::optional<std::vector<std::string>>>()
+                               : std::optional<std::vector<std::string>>();
+    auto epsForNorm = agentArgs_.contains("eps") ? agentArgs_["eps"].cast<float_t>() : 5e-8;
+    auto pForNorm = agentArgs_.contains("p") ? agentArgs_["p"].cast<int32_t>() : 0;
+    auto dimForNorm = agentArgs_.contains("dim") ? agentArgs_["dim"].cast<int32_t>() : 0;
 
-    int32_t applyNorm = applyNormOptional.has_value() ? applyNormOptional.value() : -1;
-    int32_t applyNormTo = applyNormToOptional.has_value() ? applyNormToOptional.value() : -1;
+    int32_t applyNorm = normModeCodes_[applyNormOptional];
+    int32_t applyNormTo = applyNormToOptional.has_value() ? normApplyToCodes_[applyNormToOptional.value()] : -1;
 
     auto optimizerName = optimizerArgsRetrieved_["optimizer"].cast<std::string>();
     auto optimizerCode = optimizers_[optimizerName];
     auto models = get_dqn_model();
     switch (optimizerCode) {
         case 0: {
-            return get_adam_optim_agent(models.at(0), models.at(1), gamma, epsilon,
-                                        epsilonDecayRate, memoryBufferSize, targetModelUpdateRate,
-                                        policyModelUpdateRate, numActions, savePath, applyNorm,
-                                        applyNormTo);
+            return get_adam_optim_agent(models.at(0), models.at(1), gamma, epsilon, minEpsilon,
+                                        epsilonDecayRate, epsilonDecayFrequency, memoryBufferSize,
+                                        targetModelUpdateRate, policyModelUpdateRate, batchSize, numActions,
+                                        savePath, (float_t) tau, applyNorm, applyNormTo,
+                                        (float_t) epsForNorm, pForNorm, dimForNorm);
         }
         case 1: {
 
-            return get_rmsprop_optim_agent(models.at(0), models.at(1), gamma, epsilon,
-                                           epsilonDecayRate, memoryBufferSize, targetModelUpdateRate,
-                                           policyModelUpdateRate, numActions, savePath, applyNorm,
-                                           applyNormTo);
+            return get_rmsprop_optim_agent(models.at(0), models.at(1), gamma, epsilon, minEpsilon,
+                                           epsilonDecayRate, epsilonDecayFrequency, memoryBufferSize,
+                                           targetModelUpdateRate, policyModelUpdateRate, batchSize, numActions,
+                                           savePath, (float_t) tau, applyNorm, applyNormTo,
+                                           (float_t) epsForNorm, pForNorm, dimForNorm);
         }
         default:
             throw std::runtime_error("Invalid Optimizer name passed!");
@@ -332,18 +349,18 @@ GetDqnAgent::get_sigmoid_dcqn1d_model(int32_t sequenceLength, std::vector<int32_
                                       float_t dropout, int32_t numActions, bool usePadding) {
     // When activation is sigmoid.
     torch::nn::Sigmoid sigmoid = torch::nn::Sigmoid();
-    auto targetModel = std::make_shared<dqn::Dcqn1d<torch::nn::Sigmoid>>(sequenceLength,
-                                                                         channels, kernelSizesConv,
-                                                                         strideSizesConv, dilationSizesConv, numActions,
-                                                                         kernelSizesPool, strideSizesPool,
-                                                                         dilationSizesPool,
-                                                                         sigmoid, dropout, usePadding);
-    auto policyModel = std::make_shared<dqn::Dcqn1d<torch::nn::Sigmoid>>(sequenceLength,
-                                                                         channels, kernelSizesConv,
-                                                                         strideSizesConv, dilationSizesConv, numActions,
-                                                                         kernelSizesPool, strideSizesPool,
-                                                                         dilationSizesPool,
-                                                                         sigmoid, dropout, usePadding);
+    auto targetModel = std::make_shared<dqn::Dcqn1d<torch::nn::Sigmoid>>(
+            sequenceLength, channels, kernelSizesConv,
+            strideSizesConv, dilationSizesConv,
+            numActions, kernelSizesPool, strideSizesPool,
+            dilationSizesPool, sigmoid, dropout, usePadding
+    );
+    auto policyModel = std::make_shared<dqn::Dcqn1d<torch::nn::Sigmoid>>(
+            sequenceLength, channels, kernelSizesConv,
+            strideSizesConv, dilationSizesConv,
+            numActions, kernelSizesPool, strideSizesPool,
+            dilationSizesPool, sigmoid, dropout, usePadding
+    );
     targetModel->to(dataType_);
     policyModel->to(dataType_);
     targetModel->to(device_);
@@ -373,15 +390,18 @@ GetDqnAgent::get_sigmoid_dlqn1d_model(int32_t sequenceLength, std::vector<int32_
     policyModel->to(device_);
 
     std::vector<std::shared_ptr<dqn::DqnBase>> dqnModels = {targetModel, policyModel};
-    return dqnModels;;
+    return dqnModels;
 }
 
 AgentBase *GetDqnAgent::get_adam_optim_agent(std::shared_ptr<dqn::DqnBase> &targetModel,
-                                             std::shared_ptr<dqn::DqnBase> &policyModel, float_t gamma,
-                                             float_t epsilon, float_t epsilonDecayRate, int32_t memoryBufferSize,
-                                             int32_t targetModelUpdateRate, int32_t policyModelUpdateRate,
-                                             int32_t numActions, std::string &savePath, int32_t applyNorm,
-                                             int32_t applyNormTo) {
+                                             std::shared_ptr<dqn::DqnBase> &policyModel,
+                                             float_t gamma, float_t epsilon, float_t minEpsilon,
+                                             float_t epsilonDecayRate, int32_t epsilonDecayFrequency,
+                                             int32_t memoryBufferSize, int32_t targetModelUpdateRate,
+                                             int32_t policyModelUpdateRate, int32_t batchSize, int32_t numActions,
+                                             std::string &savePath, float_t tau, int32_t applyNorm,
+                                             int32_t applyNormTo, float_t epsForNorm, int32_t pForNorm,
+                                             int32_t dimForNorm) {
     // When optimizer is Adam
     auto optimizersArgs = optimizersArgs_["adam"];
     auto lr = optimizerArgsRetrieved_[optimizersArgs.at(0).c_str()].cast<pybind11::float_>().cast<float_t>();
@@ -409,18 +429,22 @@ AgentBase *GetDqnAgent::get_adam_optim_agent(std::shared_ptr<dqn::DqnBase> &targ
     );
 
     auto *agent = new dqn::Agent<std::shared_ptr<dqn::DqnBase>, std::shared_ptr<torch::optim::Adam>>(
-            targetModel, policyModel, adamOptimizer, gamma, epsilon, epsilonDecayRate, memoryBufferSize,
-            targetModelUpdateRate, policyModelUpdateRate, numActions, savePath, applyNorm, applyNormTo
+            targetModel, policyModel, adamOptimizer, gamma, epsilon, minEpsilon, epsilonDecayRate,
+            epsilonDecayFrequency, memoryBufferSize, targetModelUpdateRate, policyModelUpdateRate,
+            batchSize, numActions, savePath, tau, applyNorm, applyNormTo, epsForNorm, pForNorm, dimForNorm
     );
     return agent;
 }
 
 AgentBase *GetDqnAgent::get_rmsprop_optim_agent(std::shared_ptr<dqn::DqnBase> &targetModel,
-                                                std::shared_ptr<dqn::DqnBase> &policyModel, float_t gamma,
-                                                float_t epsilon, float_t epsilonDecayRate, int32_t memoryBufferSize,
-                                                int32_t targetModelUpdateRate, int32_t policyModelUpdateRate,
-                                                int32_t numActions, std::string &savePath, int32_t applyNorm,
-                                                int32_t applyNormTo) {
+                                                std::shared_ptr<dqn::DqnBase> &policyModel,
+                                                float_t gamma, float_t epsilon, float_t minEpsilon,
+                                                float_t epsilonDecayRate, int32_t epsilonDecayFrequency,
+                                                int32_t memoryBufferSize, int32_t targetModelUpdateRate,
+                                                int32_t policyModelUpdateRate, int32_t batchSize, int32_t numActions,
+                                                std::string &savePath, float_t tau, int32_t applyNorm,
+                                                int32_t applyNormTo, float_t epsForNorm, int32_t pForNorm,
+                                                int32_t dimForNorm) {
 
     // When optimizer is RMSProp
     auto optimizersArgs = optimizersArgs_["rmsprop"];
@@ -448,8 +472,9 @@ AgentBase *GetDqnAgent::get_rmsprop_optim_agent(std::shared_ptr<dqn::DqnBase> &t
     );
 
     auto *agent = new dqn::Agent<std::shared_ptr<dqn::DqnBase>, std::shared_ptr<torch::optim::RMSprop>>(
-            targetModel, policyModel, rmsPropOptimizer, gamma, epsilon, epsilonDecayRate, memoryBufferSize,
-            targetModelUpdateRate, policyModelUpdateRate, numActions, savePath, applyNorm, applyNormTo
+            targetModel, policyModel, rmsPropOptimizer, gamma, epsilon, minEpsilon, epsilonDecayRate,
+            epsilonDecayFrequency, memoryBufferSize, targetModelUpdateRate, policyModelUpdateRate,
+            batchSize, numActions, savePath, tau, applyNorm, applyNormTo, epsForNorm, pForNorm, dimForNorm
     );
 
     return agent;

@@ -19,6 +19,8 @@ public:
     virtual int policy(torch::Tensor &stateCurrent);
 
     virtual void save();
+
+    virtual void load();
 };
 
 int AgentBase::train(torch::Tensor &stateCurrent, torch::Tensor &stateNext, float reward, int action, int done) {
@@ -39,6 +41,10 @@ int AgentBase::policy(torch::Tensor &stateCurrent) {
 
 void AgentBase::save() {
     throw std::runtime_error("AgentBase class cannot save models. This method must be overridden");
+}
+
+void AgentBase::load() {
+    throw std::runtime_error("AgentBase class cannot load models. This method must be overridden");
 }
 
 AgentBase::AgentBase() = default;

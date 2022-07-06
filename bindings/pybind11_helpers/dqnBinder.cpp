@@ -9,8 +9,9 @@ PYBIND11_MODULE(RLPack, m) {
     pybind11::class_<GetDqnAgent>(m, "GetDqnAgent")
             .def(pybind11::init<pybind11::str &, pybind11::dict &, pybind11::dict &,
                     pybind11::dict &, pybind11::dict &, pybind11::str &>())
-            .def("train", &GetDqnAgent::train, "train method to train the agent")
-            .def("policy", &GetDqnAgent::policy, "policy method to run the policy (only eval) of the agent")
-            .def("save", &GetDqnAgent::save, "save method to save the policy model of the agent.")
+            .def("train", &GetDqnAgent::train, "train method to train the agent.")
+            .def("policy", &GetDqnAgent::policy, "policy method to run the policy (only eval) of the agent.")
+            .def("save", &GetDqnAgent::save, "save method to save the policy and target model of the agent.")
+            .def("load", &GetDqnAgent::load, "load method to save the policy and target model of the agent.")
             .def("__repr__", [](const GetDqnAgent &) { return "<GetDqnAgent>"; });
 }

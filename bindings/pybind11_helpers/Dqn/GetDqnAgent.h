@@ -33,6 +33,8 @@ public:
 
     void save();
 
+    void load();
+
 private:
     std::string modelName_;
     pybind11::kwargs modelArgs_;
@@ -59,6 +61,16 @@ private:
             {"adam",    {"lr", "betas",    "eps",       "weight_decay", "amsgrad"}},
             {"rmsprop", {"lr", "alpha",    "eps",       "weight_decay", "momentum"}},
             {"sgd",     {"lr", "momentum", "dampening", "weight_decay", "nesterov"}}};
+
+    std::map<std::string, int> normModeCodes_ = {{"none",        -1},
+                                                 {"min_max",     0},
+                                                 {"standardize", 1},
+                                                 {"p_norm",      2}};
+
+    std::map<std::vector<std::string>, int> normApplyToCodes_ = {{{"none"},              -1},
+                                                                 {{"states"},            0},
+                                                                 {{"states", "rewards"}, 1},
+                                                                 {{"states", "td"},      2}};
 
     torch::Tensor pybind_array_to_torch_tensor(pybind11::array_t<float_t> &array, pybind11::tuple &shape);
 
@@ -92,7 +104,7 @@ private:
 
     std::vector<std::shared_ptr<dqn::DqnBase>>
     get_leaky_relu_dlqn1d_model(int32_t sequenceLength, std::vector<int32_t> &hiddenSizes, int32_t numAction,
-                          float_t dropout);
+                                float_t dropout);
 
     std::vector<std::shared_ptr<dqn::DqnBase>>
     get_sigmoid_dcqn1d_model(int32_t sequenceLength, std::vector<int32_t> &channels,
@@ -106,19 +118,23 @@ private:
 
     std::vector<std::shared_ptr<dqn::DqnBase>>
     get_sigmoid_dlqn1d_model(int32_t sequenceLength, std::vector<int32_t> &hiddenSizes, int32_t numAction,
-                          float_t dropout);
+                             float_t dropout);
 
     AgentBase *
     get_adam_optim_agent(std::shared_ptr<dqn::DqnBase> &targetModel, std::shared_ptr<dqn::DqnBase> &policyModel,
-                         float_t gamma, float_t epsilon, float_t epsilonDecayRate, int32_t memoryBufferSize,
-                         int32_t targetModelUpdateRate, int32_t policyModelUpdateRate, int32_t numActions,
-                         std::string &savePath, int32_t applyNorm, int32_t applyNormTo);
+                         float_t gamma, float_t epsilon, float_t minEpsilon, float_t epsilonDecayRate,
+                         int32_t epsilonDecayFrequency, int32_t memoryBufferSize, int32_t targetModelUpdateRate,
+                         int32_t policyModelUpdateRate, int32_t batchSize, int32_t numActions, std::string &savePath,
+                         float_t tau, int32_t applyNorm, int32_t applyNormTo, float_t epsForNorm, int32_t pForNorm,
+                         int32_t dimForNorm);
 
     AgentBase *
     get_rmsprop_optim_agent(std::shared_ptr<dqn::DqnBase> &targetModel, std::shared_ptr<dqn::DqnBase> &policyModel,
-                            float_t gamma, float_t epsilon, float_t epsilonDecayRate, int32_t memoryBufferSize,
-                            int32_t targetModelUpdateRate, int32_t policyModelUpdateRate, int32_t numActions,
-                            std::string &savePath, int32_t applyNorm, int32_t applyNormTo);
+                            float_t gamma, float_t epsilon, float_t minEpsilon, float_t epsilonDecayRate,
+                            int32_t epsilonDecayFrequency, int32_t memoryBufferSize, int32_t targetModelUpdateRate,
+                            int32_t policyModelUpdateRate, int32_t batchSize, int32_t numActions, std::string &savePath,
+                            float_t tau, int32_t applyNorm, int32_t applyNormTo, float_t epsForNorm, int32_t pForNorm,
+                            int32_t dimForNorm);
 
     static torch::DeviceType get_device(std::string &device);
 

@@ -39,17 +39,7 @@ class LunarLander:
             self.reshape_func = reshape_func
 
         self.env = gym.make("LunarLander-v2")
-
-    @staticmethod
-    def reshape_func_default(x: np.ndarray) -> np.ndarray:
-        return x
-
-    def train_agent(self, render: bool = False) -> None:
-
-        self.__is_train(), ("Set Training mode in the configuration! "
-                            "Set mode='train' or mode='training")
-
-        agent = self.agent(
+        self.agent = agent(
             model_name=self.config_dict["model_name"],
             model_args=self.config_dict["model_args"],
             agent_args=self.config_dict["agent_args"],
@@ -57,13 +47,25 @@ class LunarLander:
             activation_args=self.config_dict["activation_args"],
             device=self.config_dict["device"],
         )
-        rewards = list()
-        episode_counter = 0
 
-        for _ in range(self.config_dict["num_episodes"]):
+    @staticmethod
+    def reshape_func_default(x: np.ndarray) -> np.ndarray:
+        return x
+
+    def train_agent(self, render: bool = False, load: bool = False) -> None:
+
+        self.__is_train(), ("Set Training mode in the configuration! "
+                            "Set mode='train' or mode='training")
+
+        if load:
+            self.agent.load()
+
+        rewards = list()
+
+        for ep in range(self.config_dict["num_episodes"]):
             observation_current = self.env.reset()
             action = self.env.action_space.sample()
-            episode_counter += 1
+            scores = 0
 
             for _ in range(self.config_dict["max_timesteps"]):
 
@@ -71,34 +73,37 @@ class LunarLander:
                     self.env.render()
 
                 observation_next, reward, done, info = self.env.step(action=action)
-                if not done:
 
-                    rewards.append(reward)
-                    action = agent.train(
-                        state_current=self.reshape_func(observation_current),
-                        state_next=self.reshape_func(observation_next),
-                        action=action,
-                        reward=reward,
-                        done=done,
-                    )
+                action = self.agent.train(
+                    state_current=self.reshape_func(observation_current),
+                    state_next=self.reshape_func(observation_next),
+                    action=action,
+                    reward=reward,
+                    done=done,
+                )
+                scores += reward
 
-                    observation_current = observation_next
-                else:
-                    if episode_counter % self.config_dict["reward_print_frequency"] == 0:
-                        logging.info(
-                            f"Average Reward after {episode_counter} episodes: {sum(rewards) / len(rewards)}"
-                        )
-                        rewards.clear()
+                observation_current = observation_next
 
+                if done:
                     break
 
+            rewards.append(scores)
+
+            if ep % self.config_dict["reward_print_frequency"] == 0:
+                logging.info(
+                    f"Average Reward after {ep} episodes: {sum(rewards) / len(rewards)}"
+                )
+                rewards.clear()
+
         self.env.close()
-        agent.save()
+        self.agent.save()
 
     def evaluate_agent(self) -> None:
 
         assert self.__is_eval(), ("Set Evaluation mode in the configuration! "
                                   "Set mode='eval' or mode='evaluate or mode='evaluation")
+        self.agent.load()
         rewards = list()
         timesteps = 0
         _ = self.env.reset()
@@ -111,8 +116,7 @@ class LunarLander:
             timesteps += 1
             if done:
                 logging.info(
-                    f"Average Reward after {timesteps} timesteps:",
-                    sum(rewards) / len(rewards),
+                    f"Average Reward after {timesteps} timesteps:, {sum(rewards) / len(rewards)}",
                 )
                 break
             action = self.agent.policy(observation)
