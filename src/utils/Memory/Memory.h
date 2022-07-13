@@ -36,7 +36,7 @@ public:
 
     size_t size();
 
-    void at(Memory *memory, int index);
+    void at(std::shared_ptr<Memory> &memory, int index);
 
     void reserve(int32_t bufferSize);
 

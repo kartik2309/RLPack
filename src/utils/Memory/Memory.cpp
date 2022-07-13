@@ -38,7 +38,7 @@ void Memory::clear() {
     done_.clear();
 }
 
-void Memory::at(Memory *memory, int index) {
+void Memory::at(std::shared_ptr<Memory> &memory, int index) {
     memory->stateCurrent_.push_back(stateCurrent_[index]);
     memory->stateNext_.push_back(stateNext_[index]);
     memory->reward_.push_back(reward_[index]);

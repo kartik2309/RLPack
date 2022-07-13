@@ -15,21 +15,32 @@
 #include <boost/random.hpp>
 #include <boost/random/random_device.hpp>
 
-#include "../AgentBase.hpp"
-#include "../utils/utils.hpp"
+#include "../../AgentBase.h"
+#include "../../utils/utils.hpp"
+#include "../../Optimizers/Optimizer.hpp"
+#include "../../LrSchedulers/LrScheduler.hpp"
+#include "../../ModelBase.h"
+#include "DqnAgentOptions/DqnAgentOptions.h"
 
-namespace dqn {
-    template<class ModelClass, class Optimizer>
-    class Agent : public AgentBase {
+namespace agent::dqn {
+
+    class Agent : public agent::AgentBase {
 
 
     public:
-        Agent(ModelClass &targetModel, ModelClass &policyModel, Optimizer &optimizer,
-              float_t gamma, float_t epsilon, float_t minEpsilon, float_t epsilonDecayRate,
-              int32_t epsilonDecayFrequency, int32_t memoryBufferSize, int32_t targetModelUpdateRate,
-              int32_t policyModelUpdateRate, int32_t batchSize, int32_t numActions,
-              std::string &savePath, float_t tau, int32_t applyNorm = -1, int32_t applyNormTo = -1,
-              float_t epsForNorm = 5e-8, int32_t pForNorm = 2, int32_t dimForNorm = 0);
+        Agent(
+                std::shared_ptr<model::ModelBase> &targetModel,
+                std::shared_ptr<model::ModelBase> &policyModel,
+                std::shared_ptr<optimizer::OptimizerBase> &optimizer,
+                optimizer::lrScheduler::LrSchedulerBase &lrScheduler, float_t gamma, float_t epsilon,
+                float_t minEpsilon, float_t epsilonDecayRate, int32_t epsilonDecayFrequency,
+                int32_t memoryBufferSize, int32_t targetModelUpdateRate,
+                int32_t policyModelUpdateRate, int32_t batchSize, int32_t numActions,
+                std::string &savePath, float_t tau, int32_t applyNorm, int32_t applyNormTo,
+                float_t epsForNorm, int32_t pForNorm, int32_t dimForNorm
+        );
+
+         explicit Agent(std::unique_ptr<DqnAgentOptions> &dqnAgentOptions);
 
         ~Agent();
 
@@ -43,9 +54,10 @@ namespace dqn {
         void load() override;
 
     private:
-        ModelClass targetModel_;
-        ModelClass policyModel_;
-        Optimizer optimizer_;
+        std::shared_ptr<model::ModelBase> targetModel_;
+        std::shared_ptr<model::ModelBase> policyModel_;
+        std::shared_ptr<optimizer::OptimizerBase> optimizer_;
+        std::shared_ptr<optimizer::lrScheduler::LrSchedulerBase> lrScheduler_;
         float_t gamma_;
         float_t epsilon_;
         float_t minEpsilon_;
@@ -58,7 +70,7 @@ namespace dqn {
         int32_t numActions_;
         std::string savePath_;
         float_t tau_;
-        Normalization *normalization_;
+        std::shared_ptr<Normalization> normalization_;
         int32_t applyNormTo_;
         float_t epsForNorm_;
         int32_t pForNorm_;
@@ -76,9 +88,9 @@ namespace dqn {
 
         void update_target_model();
 
-        Memory *load_random_experiences();
+        std::shared_ptr<Memory> load_random_experiences();
 
-        torch::Tensor temporal_difference(torch::Tensor &rewards, torch::Tensor &qValues, torch::Tensor &dones);
+        torch::Tensor temporal_difference(torch::Tensor &rewards, torch::Tensor &qValues, torch::Tensor &dones) const;
 
         void decay_epsilon();
 

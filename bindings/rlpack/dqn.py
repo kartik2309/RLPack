@@ -1,7 +1,8 @@
-import sys
 
+# Import the RLPack library.
 from .lib import RLPack
 
+# Regular python imports
 import os.path
 import numpy as np
 import re
@@ -16,6 +17,7 @@ class DQN:
             agent_args: Dict[str, Any],
             optimizer_args: Dict[str, Any],
             activation_args: Optional[Dict[str, Any]] = None,
+            lr_scheduler_args: Optional[Dict[str, Any]] = None,
             device: str = "cpu",
     ):
         """
@@ -35,13 +37,16 @@ class DQN:
 
         if activation_args is None:
             activation_args = dict()
+        if lr_scheduler_args is None:
+            lr_scheduler_args = dict()
 
         agent_args = self.__save_path_checks(agent_args)
         agent_args = self.__save_path_correction(agent_args, model_name)
 
         self.get_dqn_agent = RLPack.GetDqnAgent(
-            model_name, model_args, activation_args, agent_args, optimizer_args, device
+            model_name, model_args, activation_args, agent_args, optimizer_args, lr_scheduler_args, device
         )
+        self.get_dqn_agent.setup_agent()
         self.device = device
 
     def train(

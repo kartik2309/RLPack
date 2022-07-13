@@ -46,25 +46,64 @@ find_package(Boost COMPONENTS program_options log log_setup mpi serialization ra
 pybind11_add_module(
         RLPack
 
+        bindings/pybind11_helpers/BinderBase.h
+        bindings/pybind11_helpers/BinderBase.cpp
+
         bindings/pybind11_helpers/Dqn/GetDqnAgent.h
-        bindings/pybind11_helpers/Dqn/GetDqnAgent.tpp
-        bindings/pybind11_helpers/dqnBinder.cpp
+        bindings/pybind11_helpers/Dqn/GetDqnAgent.cpp
+        bindings/pybind11_helpers/Dqn/dqnBinder.cpp
 
-        src/Dqn/Agent.h
-        src/Dqn/Agent.tpp
-        src/Dqn/DqnBase.hpp
-
+        src/Dqn/Agent/Agent.h
+        src/Dqn/Agent/Agent.cpp
+        src/Dqn/Agent/DqnAgentOptions/DqnAgentOptions.h
+        src/Dqn/Agent/DqnAgentOptions/DqnAgentOptions.cpp
         src/Dqn/Dcqn1d/Dcqn1d.h
-        src/Dqn/Dcqn1d/Dcqn1d.tpp
-
+        src/Dqn/Dcqn1d/Dcqn1d.cpp
+        src/Dqn/Dcqn1d/Dcqn1dOptions/Dcqn1dOptions.h
+        src/Dqn/Dcqn1d/Dcqn1dOptions/Dcqn1dOptions.cpp
         src/Dqn/Dlqn1d/Dlqn1d.h
-        src/Dqn/Dlqn1d/Dlqn1d.tpp
+        src/Dqn/Dlqn1d/Dlqn1d.cpp
+        src/Dqn/Dlqn1d/Dlqn1dOptions/Dlqn1dOptions.h
+        src/Dqn/Dlqn1d/Dlqn1dOptions/Dlqn1dOptions.cpp
+        src/Dqn/Dqn.hpp
+
+        src/Optimizers/Optimizer.hpp
+        src/Optimizers/OptimizerBase.h
+        src/Optimizers/OptimizerBase.cpp
+        src/Optimizers/Adam/Adam.h
+        src/Optimizers/Adam/Adam.cpp
+        src/Optimizers/RmsProp/RmsProp.h
+        src/Optimizers/RmsProp/RmsProp.cpp
+        src/Optimizers/Sgd/Sgd.h
+        src/Optimizers/Sgd/Sgd.cpp
+
+        src/LrSchedulers/LrSchedulerBase.h
+        src/LrSchedulers/LrSchedulerBase.cpp
+        src/LrSchedulers/LrScheduler.hpp
+        src/LrSchedulers/StepLr/StepLr.h
+        src/LrSchedulers/StepLr/StepLr.cpp
 
         src/utils/utils.hpp
         src/utils/Normalization/Normalization.h
         src/utils/Normalization/Normalization.cpp
         src/utils/Memory/Memory.h
         src/utils/Memory/Memory.cpp
+        src/utils/Options/AgentOptions/AgentOptionsBase.h
+        src/utils/Options/AgentOptions/AgentOptionsBase.cpp
+        src/utils/Options/ModelOptions/ModelOptionsBase.h
+        src/utils/Options/ModelOptions/ModelOptionsBase.cpp
+        src/utils/Activations/Activations.hpp
+        src/utils/Activations/ActivationBase.h
+        src/utils/Activations/ActivationBase.cpp
+        src/utils/Activations/Relu/Relu.h
+        src/utils/Activations/Relu/Relu.cpp
+        src/utils/Activations/LeakyRelu/LeakyRelu.h
+        src/utils/Activations/LeakyRelu/LeakyRelu.cpp
+
+        src/AgentBase.h
+        src/AgentBase.cpp
+        src/ModelBase.h
+        src/ModelBase.cpp
 
 )
 

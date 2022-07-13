@@ -2,18 +2,17 @@
 // Created by Kartik Rajeshwaran on 2022-06-27.
 //
 
-#ifndef RLPACK_SRC_DQN_AGENT_TPP_
-#define RLPACK_SRC_DQN_AGENT_TPP_
-
 #include "Agent.h"
 
-namespace dqn {
+namespace agent::dqn {
 
-    template<class ModelClass, class Optimizer>
-    Agent<ModelClass, Optimizer>::Agent(
-            ModelClass &targetModel, ModelClass &policyModel, Optimizer &optimizer,
-            float_t gamma, float_t epsilon, float_t minEpsilon, float_t epsilonDecayRate,
-            int32_t epsilonDecayFrequency, int32_t memoryBufferSize, int32_t targetModelUpdateRate,
+    Agent::Agent(
+            std::shared_ptr<model::ModelBase> &targetModel,
+            std::shared_ptr<model::ModelBase> &policyModel,
+            std::shared_ptr<optimizer::OptimizerBase> &optimizer,
+            optimizer::lrScheduler::LrSchedulerBase &lrScheduler, float_t gamma, float_t epsilon,
+            float_t minEpsilon, float_t epsilonDecayRate, int32_t epsilonDecayFrequency,
+            int32_t memoryBufferSize, int32_t targetModelUpdateRate,
             int32_t policyModelUpdateRate, int32_t batchSize, int32_t numActions,
             std::string &savePath, float_t tau, int32_t applyNorm, int32_t applyNormTo,
             float_t epsForNorm, int32_t pForNorm, int32_t dimForNorm
@@ -37,16 +36,16 @@ namespace dqn {
 
         savePath_ = savePath;
 
-        if (tau < 0 || tau > 1){
+        if (tau < 0 || tau > 1) {
             throw std::range_error("Invalid value for tau passed! Expected value is between 0 and 1");
         }
         tau_ = tau;
 
-        if (applyNormTo < -1 || applyNormTo > 2) {
+        if (applyNormTo < -1 || applyNormTo > 4) {
             throw std::range_error("Invalid applyNormTo passed!");
         }
         applyNormTo_ = applyNormTo;
-        normalization_ = new Normalization(applyNorm);
+        normalization_ = std::make_shared<Normalization>(applyNorm);
 
         epsForNorm_ = epsForNorm;
         pForNorm_ = pForNorm;
@@ -55,9 +54,9 @@ namespace dqn {
         memoryBuffer.reserve(memoryBufferSize);
     }
 
-    template<class ModelClass, class Optimizer>
-    int32_t Agent<ModelClass, Optimizer>::train(torch::Tensor &stateCurrent, torch::Tensor &stateNext, float reward,
-                                                int action, int done) {
+    int32_t Agent::train(torch::Tensor &stateCurrent, torch::Tensor &stateNext,
+                         float reward,
+                         int action, int done) {
 
         memoryBuffer.push_back(stateCurrent, stateNext, reward, action, done);
 
@@ -74,7 +73,7 @@ namespace dqn {
         }
 
         if (done == 1) {
-            if (epsilonDecayCounter % epsilonDecayFrequency_ == 0){
+            if (epsilonDecayCounter % epsilonDecayFrequency_ == 0) {
                 decay_epsilon();
             }
             epsilonDecayCounter += 1;
@@ -88,9 +87,8 @@ namespace dqn {
         return action;
     }
 
-    template<class ModelClass, class Optimizer>
-    void Agent<ModelClass, Optimizer>::train_policy_model() {
-        Memory *randomExperiences = load_random_experiences();
+    void Agent::train_policy_model() {
+        auto randomExperiences = load_random_experiences();
 
         torch::Tensor statesCurrent = randomExperiences->stack_current_states();
         torch::Tensor statesNext = randomExperiences->stack_next_states();
@@ -98,14 +96,12 @@ namespace dqn {
         torch::Tensor actions = randomExperiences->stack_actions();
         torch::Tensor dones = randomExperiences->stack_dones();
 
-        delete randomExperiences;
-
-        if (applyNormTo_ >= 0) {
+        if (applyNormTo_ == 0 || applyNormTo_ == 3 || applyNormTo_ == 4) {
             statesCurrent = normalization_->apply_normalization(statesCurrent, epsForNorm_, pForNorm_, dimForNorm_);
             statesNext = normalization_->apply_normalization(statesNext, epsForNorm_, pForNorm_, dimForNorm_);
         }
 
-        if (applyNormTo_ == 1) {
+        if (applyNormTo_ == 1 || applyNormTo_ == 3) {
             rewards = normalization_->apply_normalization(rewards, epsForNorm_, pForNorm_, dimForNorm_);
         }
 
@@ -117,7 +113,7 @@ namespace dqn {
             torch::Tensor qValuesTarget = targetModel_->forward(statesNext);
             tdValue = temporal_difference(rewards, qValuesTarget, dones);
 
-            if (applyNormTo_ == 2) {
+            if (applyNormTo_ == 2 || applyNormTo_ == 4) {
                 tdValue = normalization_->apply_normalization(tdValue, epsForNorm_, pForNorm_, dimForNorm_);
             }
         }
@@ -127,17 +123,20 @@ namespace dqn {
 
         if (qValuesPolicyGathered.isnan().any().item<bool>() || tdValue.isnan().any().item<bool>()) {
             BOOST_LOG_TRIVIAL(warning) << "NaN values encountered during training! "
-                                          "This may lead to instability in models" << std::endl;
+                                          "This may lead to instability in model" << std::endl;
         }
 
         optimizer_->zero_grad();
         torch::Tensor loss = huberLoss_(tdValue.detach(), qValuesPolicyGathered);
         loss.backward();
-        optimizer_->step();
+        optimizer_->step(nullptr);
+
+        if (lrScheduler_ != nullptr){
+            lrScheduler_->step();
+        }
     }
 
-    template<class ModelClass, class Optimizer>
-    void Agent<ModelClass, Optimizer>::update_target_model() {
+    void Agent::update_target_model() {
         {
 
             torch::NoGradGuard noGradGuard;
@@ -163,8 +162,7 @@ namespace dqn {
         }
     }
 
-    template<class ModelClass, class Optimizer>
-    Memory *Agent<ModelClass, Optimizer>::load_random_experiences() {
+    std::shared_ptr<Memory> Agent::load_random_experiences() {
         std::vector<int32_t> loadedIndices(policyModelUpdateRate_);
         boost::random::random_device rd;
 
@@ -176,7 +174,7 @@ namespace dqn {
         boost::push_back(loadedIndices, boost::irange(0, (int32_t) memoryBuffer.size(), 1));
         boost::range::random_shuffle(loadedIndices, variateGenerator);
 
-        auto *loadedExperiences = new Memory();
+        auto loadedExperiences = std::make_shared<Memory>();
 
         for (int32_t index: loadedIndices) {
             memoryBuffer.at(loadedExperiences, index);
@@ -195,9 +193,10 @@ namespace dqn {
         return loadedExperiences;
     }
 
-    template<class ModelClass, class Optimizer>
-    torch::Tensor Agent<ModelClass, Optimizer>::temporal_difference(torch::Tensor &rewards, torch::Tensor &qValues,
-                                                                    torch::Tensor &dones) {
+    torch::Tensor
+    Agent::temporal_difference(
+            torch::Tensor &rewards, torch::Tensor &qValues, torch::Tensor &dones
+    ) const {
         std::tuple<torch::Tensor, torch::Tensor> qValuesTuple = qValues.max(-1, true);
         torch::Tensor qValuesMax = std::get<0>(qValuesTuple);
         torch::Tensor tdValue = rewards + ((gamma_ * qValuesMax) * (1 - dones));
@@ -205,8 +204,8 @@ namespace dqn {
         return tdValue;
     }
 
-    template<class ModelClass, class Optimizer>
-    int32_t Agent<ModelClass, Optimizer>::policy(torch::Tensor &stateCurrent) {
+
+    int32_t Agent::policy(torch::Tensor &stateCurrent) {
         int32_t action;
         std::random_device rd;
         std::mt19937 generator(rd());
@@ -221,7 +220,7 @@ namespace dqn {
                 policyModel_->eval();
                 torch::NoGradGuard guard;
 
-                if (applyNormTo_ >= 0) {
+                if (applyNormTo_ == 0 || applyNormTo_ == 3 || applyNormTo_ == 4) {
                     stateCurrent = normalization_->apply_normalization(stateCurrent);
                 }
 
@@ -234,8 +233,7 @@ namespace dqn {
         return action;
     }
 
-    template<class ModelClass, class Optimizer>
-    void Agent<ModelClass, Optimizer>::decay_epsilon() {
+    void Agent::decay_epsilon() {
         if (epsilon_ > minEpsilon_) {
             epsilon_ *= epsilonDecayRate_;
         }
@@ -245,13 +243,11 @@ namespace dqn {
         }
     }
 
-    template<class ModelClass, class Optimizer>
-    void Agent<ModelClass, Optimizer>::clear_memory() {
+    void Agent::clear_memory() {
         memoryBuffer.clear();
     }
 
-    template<class ModelClass, class Optimizer>
-    void Agent<ModelClass, Optimizer>::save() {
+    void Agent::save() {
 
         std::string policyModelPath = savePath_;
         std::string targetModelPath = savePath_;
@@ -267,8 +263,7 @@ namespace dqn {
         stateArchive.save_to(statePath.append("stateValues.pt"));
     }
 
-    template<class ModelClass, class Optimizer>
-    void Agent<ModelClass, Optimizer>::load() {
+    void Agent::load() {
         std::string policyModelPath = savePath_;
         std::string targetModelPath = savePath_;
         std::string statePath = savePath_;
@@ -285,9 +280,42 @@ namespace dqn {
 
     }
 
-    template<class ModelClass, class Optimizer>
-    Agent<ModelClass, Optimizer>::~Agent() = default;
+    Agent::Agent(std::unique_ptr<DqnAgentOptions> &dqnAgentOptions) {
+        targetModel_ = dqnAgentOptions->get_target_model();
+        policyModel_ = dqnAgentOptions->get_policy_model();
+        optimizer_ = dqnAgentOptions->get_optimizer();
+
+        gamma_ = dqnAgentOptions->get_gamma();
+        epsilon_ = dqnAgentOptions->get_epsilon();
+        minEpsilon_ = dqnAgentOptions->get_min_epsilon();
+        epsilonDecayRate_ = dqnAgentOptions->get_epsilon_decay_rate();
+        epsilonDecayFrequency_ = dqnAgentOptions->get_epsilon_decay_frequency();
+        memoryBufferSize_ = dqnAgentOptions->get_memory_buffer_size();
+        assert(dqnAgentOptions->get_target_model_update_rate() > dqnAgentOptions->get_policy_model_update_rate());
+
+        targetModelUpdateRate_ = dqnAgentOptions->get_target_model_update_rate();
+        policyModelUpdateRate_ = dqnAgentOptions->get_policy_model_update_rate();
+        batchSize_ = dqnAgentOptions->get_batch_size();
+        numActions_ = dqnAgentOptions->get_num_actions();
+
+        savePath_ = dqnAgentOptions->get_save_path();
+
+        if (dqnAgentOptions->get_tau() < 0 || dqnAgentOptions->get_tau() > 1) {
+            throw std::range_error("Invalid value for tau passed! Expected value is between 0 and 1");
+        }
+        tau_ = dqnAgentOptions->get_tau();
+
+        if (dqnAgentOptions->get_apply_norm_to() < -1 || dqnAgentOptions->get_apply_norm_to() > 4) {
+            throw std::range_error("Invalid applyNormTo passed!");
+        }
+        applyNormTo_ = dqnAgentOptions->get_apply_norm_to();
+        normalization_ = dqnAgentOptions->get_normalizer();
+
+        epsForNorm_ = dqnAgentOptions->get_eps_for_norm();
+        pForNorm_ = dqnAgentOptions->get_p_for_norm();
+        dimForNorm_ = dqnAgentOptions->get_dim_for_norm();
+    }
+
+    Agent::~Agent() = default;
 
 }
-
-#endif//RLPACK_SRC_DQN_AGENT_TPP_

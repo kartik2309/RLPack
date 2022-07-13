@@ -3,6 +3,7 @@ import numpy as np
 import yaml
 import logging
 from typing import Union, Dict, TypeVar, Any
+import matplotlib.pyplot as plt
 
 ReshapeFunction = TypeVar("ReshapeFunction")
 RLPackAgent = TypeVar("RLPackAgent")
@@ -45,6 +46,7 @@ class LunarLander:
             agent_args=self.config_dict["agent_args"],
             optimizer_args=self.config_dict["optimizer_args"],
             activation_args=self.config_dict["activation_args"],
+            lr_scheduler_args=self.config_dict["lr_scheduler_args"],
             device=self.config_dict["device"],
         )
 
@@ -52,7 +54,7 @@ class LunarLander:
     def reshape_func_default(x: np.ndarray) -> np.ndarray:
         return x
 
-    def train_agent(self, render: bool = False, load: bool = False) -> None:
+    def train_agent(self, render: bool = False, load: bool = False, plot: bool = False) -> None:
 
         self.__is_train(), ("Set Training mode in the configuration! "
                             "Set mode='train' or mode='training")
@@ -60,6 +62,8 @@ class LunarLander:
         if load:
             self.agent.load()
 
+        timestep = 0
+        rewards_collector = {k: list() for k in range(self.config_dict["num_episodes"])}
         rewards = list()
 
         for ep in range(self.config_dict["num_episodes"]):
@@ -67,7 +71,7 @@ class LunarLander:
             action = self.env.action_space.sample()
             scores = 0
 
-            for _ in range(self.config_dict["max_timesteps"]):
+            for timestep in range(self.config_dict["max_timesteps"]):
 
                 if render:
                     self.env.render()
@@ -83,11 +87,16 @@ class LunarLander:
                 )
                 scores += reward
 
+                if plot:
+                    rewards_collector[ep].append(reward)
+
                 observation_current = observation_next
 
                 if done:
                     break
 
+            if timestep == self.config_dict["max_timesteps"]:
+                logging.info(f"Maximum timesteps of {timestep} reached at episode {ep}")
             rewards.append(scores)
 
             if ep % self.config_dict["reward_print_frequency"] == 0:
@@ -95,6 +104,18 @@ class LunarLander:
                     f"Average Reward after {ep} episodes: {sum(rewards) / len(rewards)}"
                 )
                 rewards.clear()
+
+        if plot:
+            rewards_to_plot = [
+                sum(rewards_collector[k]) / len(rewards_collector[k])
+                for k in range(self.config_dict["num_episodes"])
+            ]
+
+            plt.plot(range(self.config_dict["num_episodes"]), rewards_to_plot)
+            plt.xlabel("Episodes")
+            plt.ylabel("Rewards")
+            plt.title("Lunar Lander - Rewards vs. Episodes")
+            plt.show()
 
         self.env.close()
         self.agent.save()
