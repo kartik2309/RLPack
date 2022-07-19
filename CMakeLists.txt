@@ -103,13 +103,13 @@ pybind11_add_module(
         src/utils/Base/Options/LrSchedulerOptions/LrSchedulerOptionsBase.cpp
 
         # Activations Classes
-        src/utils/Activations/Activations.hpp
-        src/utils/Activations/ActivationBase.h
-        src/utils/Activations/ActivationBase.cpp
-        src/utils/Activations/Relu/Relu.h
-        src/utils/Activations/Relu/Relu.cpp
-        src/utils/Activations/LeakyRelu/LeakyRelu.h
-        src/utils/Activations/LeakyRelu/LeakyRelu.cpp
+        src/Activations/Activation.hpp
+        src/utils/Base/ActivationBase/ActivationBase.h
+        src/utils/Base/ActivationBase/ActivationBase.cpp
+        src/Activations/Relu/Relu.h
+        src/Activations/Relu/Relu.cpp
+        src/Activations/LeakyRelu/LeakyRelu.h
+        src/Activations/LeakyRelu/LeakyRelu.cpp
 
         # Base Classes
         src/utils/Base/AgentBase/AgentBase.h

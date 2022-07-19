@@ -12,7 +12,7 @@
 #include <torch/torch.h>
 #include <vector>
 
-#include "../../../src/utils/Activations/Activations.hpp"
+#include "../../../src/Activations/Activation.hpp"
 #include "../../../src/Optimizers/Optimizer.hpp"
 #include "../../../src/utils/Base/AgentBase/AgentBase.h"
 #include "../../../src/Dqn/Dqn.hpp"

@@ -6,11 +6,11 @@
 #define RLPACK_RELU_H
 
 #include <torch/nn.h>
-#include "../ActivationBase.h"
+#include "../../utils/Base/ActivationBase/ActivationBase.h"
 
 class Relu : public ActivationBase {
 public:
-    torch::nn::ReLU relu_;
+    torch::nn::ReLU activation_;
 
     Relu();
 

@@ -1,4 +1,4 @@
-mode: 'train'
+mode: 'eval'
 num_episodes: 10000
 max_timesteps: 1000
 model_name: 'dlqn1d'

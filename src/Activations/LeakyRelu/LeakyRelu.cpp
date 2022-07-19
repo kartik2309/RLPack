@@ -5,13 +5,13 @@
 #include "LeakyRelu.h"
 
 LeakyRelu::LeakyRelu() {
-    leakyRelu_ = torch::nn::LeakyReLU();
+    activation_ = torch::nn::LeakyReLU();
 }
 
 LeakyRelu::LeakyRelu(torch::nn::LeakyReLUOptions &leakyReluOptions) {
-    leakyRelu_ = torch::nn::LeakyReLU(leakyReluOptions);
+    activation_ = torch::nn::LeakyReLU(leakyReluOptions);
 }
 
 torch::Tensor LeakyRelu::operator()(torch::Tensor &tensor) {
-    return leakyRelu_(tensor);
+    return activation_(tensor);
 }

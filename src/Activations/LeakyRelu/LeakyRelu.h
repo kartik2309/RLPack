@@ -6,11 +6,11 @@
 #define RLPACK_LEAKYRELU_H
 
 #include <torch/nn.h>
-#include "../ActivationBase.h"
+#include "../../utils/Base/ActivationBase/ActivationBase.h"
 
 class LeakyRelu : public ActivationBase{
 public:
-    torch::nn::LeakyReLU leakyRelu_;
+    torch::nn::LeakyReLU activation_;
 
     LeakyRelu();
 

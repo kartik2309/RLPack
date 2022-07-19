@@ -6,7 +6,7 @@
 #define RLPACK_MODELBASE_H
 
 #include <torch/torch.h>
-#include "../../Options/ModelOptions/ModelOptionsBase.h"
+#include "../Options/ModelOptions/ModelOptionsBase.h"
 
 namespace model {
     class ModelBase : public torch::nn::Module {

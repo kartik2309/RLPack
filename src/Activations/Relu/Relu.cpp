@@ -5,13 +5,13 @@
 #include "Relu.h"
 
 torch::Tensor Relu::operator()(torch::Tensor &tensor) {
-    return relu_(tensor);
+    return activation_(tensor);
 }
 
 Relu::Relu(torch::nn::ReLUOptions &reluOptions) {
-    relu_ = torch::nn::ReLU(reluOptions);
+    activation_ = torch::nn::ReLU(reluOptions);
 }
 
 Relu::Relu() {
-    relu_ = torch::nn::ReLU();
+    activation_ = torch::nn::ReLU();
 }

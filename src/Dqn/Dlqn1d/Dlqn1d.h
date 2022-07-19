@@ -8,7 +8,7 @@
 #include <torch/torch.h>
 #include "Dlqn1dOptions/Dlqn1dOptions.h"
 #include "../../utils/Base/ModelBase/ModelBase.h"
-#include "../../utils/Activations/Activations.hpp"
+#include "../../Activations/Activation.hpp"
 
 namespace model::dqn {
 
