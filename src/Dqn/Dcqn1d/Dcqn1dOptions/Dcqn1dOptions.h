@@ -6,8 +6,8 @@
 #define RLPACK_DCQN1DOPTIONS_H
 
 #include <torch/nn.h>
-#include "../../../ModelBase.h"
-#include "../../../utils/Options/ModelOptions/ModelOptionsBase.h"
+#include "../../../utils/Base/ModelBase/ModelBase.h"
+#include "../../../utils/Base/Options/ModelOptions/ModelOptionsBase.h"
 
 namespace model::dqn {
     class Dcqn1dOptions : public ModelOptionsBase {

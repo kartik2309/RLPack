@@ -15,11 +15,11 @@
 #include <boost/random.hpp>
 #include <boost/random/random_device.hpp>
 
-#include "../../AgentBase.h"
+#include "../../utils/Base/AgentBase/AgentBase.h"
 #include "../../utils/utils.hpp"
 #include "../../Optimizers/Optimizer.hpp"
 #include "../../LrSchedulers/LrScheduler.hpp"
-#include "../../ModelBase.h"
+#include "../../utils/Base/ModelBase/ModelBase.h"
 #include "DqnAgentOptions/DqnAgentOptions.h"
 
 namespace agent::dqn {
@@ -35,7 +35,7 @@ namespace agent::dqn {
                 optimizer::lrScheduler::LrSchedulerBase &lrScheduler, float_t gamma, float_t epsilon,
                 float_t minEpsilon, float_t epsilonDecayRate, int32_t epsilonDecayFrequency,
                 int32_t memoryBufferSize, int32_t targetModelUpdateRate,
-                int32_t policyModelUpdateRate, int32_t batchSize, int32_t numActions,
+                int32_t policyModelUpdateRate, int32_t modelBackupFrequency, float_t minLr, int32_t batchSize, int32_t numActions,
                 std::string &savePath, float_t tau, int32_t applyNorm, int32_t applyNormTo,
                 float_t epsForNorm, int32_t pForNorm, int32_t dimForNorm
         );
@@ -66,6 +66,8 @@ namespace agent::dqn {
         int32_t memoryBufferSize_;
         int32_t targetModelUpdateRate_;
         int32_t policyModelUpdateRate_;
+        int32_t modelBackupFrequency_;
+        float_t minLr_;
         int32_t batchSize_;
         int32_t numActions_;
         std::string savePath_;
@@ -78,8 +80,7 @@ namespace agent::dqn {
 
         Memory memoryBuffer;
 
-        int targetModelUpdateCounter = 0;
-        int policyModelUpdateCounter = 0;
+        int stepCounter = 0;
         int epsilonDecayCounter = 0;
 
         torch::nn::HuberLoss huberLoss_;

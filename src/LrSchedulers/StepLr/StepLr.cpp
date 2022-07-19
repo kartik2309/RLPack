@@ -6,16 +6,42 @@
 
 namespace optimizer::lrScheduler {
 
-    optimizer::lrScheduler::StepLr::StepLr(
-            std::shared_ptr<OptimizerBase> &optimizer, const uint32_t stepSize, const float_t gamma) {
-        stepLr = std::make_shared<torch::optim::StepLR>(*optimizer->optim, stepSize, gamma);
+    optimizer::lrScheduler::StepLr::StepLr(std::shared_ptr<OptimizerBase> &optimizer, uint32_t stepSize,
+                                           float_t gamma) {
+        optimizer_ = optimizer;
+        stepSize_ = stepSize;
+        gamma_ = gamma;
+    }
+
+    StepLr::StepLr(std::shared_ptr<StepLrOptions> &stepLrOptions) {
+        optimizer_ = stepLrOptions->get_optimizer();
+        stepSize_ = stepLrOptions->get_step_size();
+        gamma_ = stepLrOptions->get_gamma();
     }
 
     void optimizer::lrScheduler::StepLr::step() {
-        stepLr->step();
+        stepCounter_ += 1;
+
+        if (stepCounter_ % stepSize_ == 0) {
+            perform_decay();
+        }
     }
 
     void *StepLr::get() {
         return stepLr.get();
     }
+
+    void StepLr::perform_decay() {
+        std::vector<float> newLrs;
+        uint32_t paramGroupSize = optimizer_->get_param_group_size();
+
+        for (int idx = 0; idx != paramGroupSize; idx++) {
+            float lr = optimizer_->get_lr(idx);
+            lr *= gamma_;
+            newLrs.push_back(lr);
+        }
+
+        optimizer_->set_lr(newLrs);
+    }
+
 }

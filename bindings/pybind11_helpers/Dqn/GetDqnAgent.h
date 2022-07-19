@@ -14,7 +14,7 @@
 
 #include "../../../src/utils/Activations/Activations.hpp"
 #include "../../../src/Optimizers/Optimizer.hpp"
-#include "../../../src/AgentBase.h"
+#include "../../../src/utils/Base/AgentBase/AgentBase.h"
 #include "../../../src/Dqn/Dqn.hpp"
 #include "../BinderBase.h"
 

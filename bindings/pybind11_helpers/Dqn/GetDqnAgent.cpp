@@ -69,6 +69,8 @@ std::unique_ptr<agent::AgentOptionsBase> GetDqnAgent::create_agent_options() {
     auto memoryBufferSize = agentArgs_["memory_buffer_size"].cast<int32_t>();
     auto targetModelUpdateRate = agentArgs_["target_model_update_rate"].cast<int32_t>();
     auto policyModelUpdateRate = agentArgs_["policy_model_update_rate"].cast<int32_t>();
+    auto modelBackupFrequency = agentArgs_["model_backup_frequency"].cast<int32_t>();
+    auto minLr = agentArgs_["min_lr"].cast<float_t>();
     auto batchSize = agentArgs_["batch_size"].cast<int32_t>();
     auto numActions = agentArgs_["num_actions"].cast<int32_t>();
     auto savePath = agentArgs_["save_path"].cast<std::string>();
@@ -109,6 +111,8 @@ std::unique_ptr<agent::AgentOptionsBase> GetDqnAgent::create_agent_options() {
     agentOptions->memory_buffer_size(memoryBufferSize);
     agentOptions->target_model_update_rate(targetModelUpdateRate);
     agentOptions->policy_model_update_rate(policyModelUpdateRate);
+    agentOptions->model_backup_frequency(modelBackupFrequency);
+    agentOptions->min_lr(minLr);
     agentOptions->batch_size(batchSize);
     agentOptions->num_actions(numActions);
     agentOptions->save_path(savePath);
@@ -334,18 +338,21 @@ GetDqnAgent::create_lr_scheduler(std::shared_ptr<optimizer::OptimizerBase> &opti
 
     switch (lrSchedulerCode) {
         case 0: {
-            int32_t step_size = 3;
-            float_t gamma = 0.01;
+            auto stepLrSchedulerOptions = std::make_shared<optimizer::lrScheduler::StepLrOptions>();
+
+            stepLrSchedulerOptions->optimizer(optimizer);
 
             if (lrSchedulerArgsRetrieved_.contains("step_size")) {
-                step_size = lrSchedulerArgsRetrieved_["step_size"].cast<int32_t>();
+                auto stepSize = lrSchedulerArgsRetrieved_["step_size"].cast<uint32_t>();
+                stepLrSchedulerOptions->step_size(stepSize);
             }
 
             if (lrSchedulerArgsRetrieved_.contains("gamma")) {
-                gamma = lrSchedulerArgsRetrieved_["gamma"].cast<const float_t>();
+                auto gamma = lrSchedulerArgsRetrieved_["gamma"].cast<const float_t>();
+                stepLrSchedulerOptions->gamma(gamma);
             }
 
-            auto stepLrScheduler = std::make_shared<optimizer::lrScheduler::StepLr>(optimizer, step_size, gamma);
+            auto stepLrScheduler = std::make_shared<optimizer::lrScheduler::StepLr>(stepLrSchedulerOptions);
             return stepLrScheduler;
         }
         default:

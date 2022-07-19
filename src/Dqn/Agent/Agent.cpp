@@ -13,7 +13,8 @@ namespace agent::dqn {
             optimizer::lrScheduler::LrSchedulerBase &lrScheduler, float_t gamma, float_t epsilon,
             float_t minEpsilon, float_t epsilonDecayRate, int32_t epsilonDecayFrequency,
             int32_t memoryBufferSize, int32_t targetModelUpdateRate,
-            int32_t policyModelUpdateRate, int32_t batchSize, int32_t numActions,
+            int32_t policyModelUpdateRate, int32_t modelBackupFrequency, float_t minLr,
+            int32_t batchSize, int32_t numActions,
             std::string &savePath, float_t tau, int32_t applyNorm, int32_t applyNormTo,
             float_t epsForNorm, int32_t pForNorm, int32_t dimForNorm
     ) {
@@ -31,6 +32,8 @@ namespace agent::dqn {
 
         targetModelUpdateRate_ = targetModelUpdateRate;
         policyModelUpdateRate_ = policyModelUpdateRate;
+        minLr_ = minLr;
+        modelBackupFrequency_ = modelBackupFrequency;
         batchSize_ = batchSize;
         numActions_ = numActions;
 
@@ -60,11 +63,11 @@ namespace agent::dqn {
 
         memoryBuffer.push_back(stateCurrent, stateNext, reward, action, done);
 
-        if ((policyModelUpdateCounter % policyModelUpdateRate_ == 0) && (memoryBuffer.size() >= batchSize_)) {
+        if ((stepCounter % policyModelUpdateRate_ == 0) && (memoryBuffer.size() >= batchSize_)) {
             train_policy_model();
         }
 
-        if (targetModelUpdateCounter % targetModelUpdateRate_ == 0) {
+        if (stepCounter % targetModelUpdateRate_ == 0) {
             update_target_model();
         }
 
@@ -79,11 +82,19 @@ namespace agent::dqn {
             epsilonDecayCounter += 1;
         }
 
-        policyModelUpdateCounter += 1;
-        targetModelUpdateCounter += 1;
+        if (lrScheduler_ != nullptr and optimizer_->get_lr(0) > minLr_) {
+            lrScheduler_->step();
+        }
+
+        if (stepCounter % modelBackupFrequency_ == 0) {
+            save();
+        }
+
+        stepCounter += 1;
 
         stateCurrent = stateCurrent.unsqueeze(0);
         action = policy(stateCurrent);
+
         return action;
     }
 
@@ -131,9 +142,6 @@ namespace agent::dqn {
         loss.backward();
         optimizer_->step(nullptr);
 
-        if (lrScheduler_ != nullptr){
-            lrScheduler_->step();
-        }
     }
 
     void Agent::update_target_model() {
@@ -155,15 +163,11 @@ namespace agent::dqn {
                         true
                 );
             }
-
-            std::vector<torch::Tensor> policyParametersForCheck = policyModel_->parameters();
-            std::vector<torch::Tensor> targetParametersForCheck = targetModel_->parameters();
-
         }
     }
 
     std::shared_ptr<Memory> Agent::load_random_experiences() {
-        std::vector<int32_t> loadedIndices(policyModelUpdateRate_);
+        std::vector<int32_t> loadedIndices(batchSize_);
         boost::random::random_device rd;
 
         boost::mt19937 generator(rd);
@@ -253,14 +257,12 @@ namespace agent::dqn {
         std::string targetModelPath = savePath_;
         std::string statePath = savePath_;
 
-        torch::serialize::OutputArchive stateArchive;
         torch::TensorOptions optionsForEpsilonAsTensor = torch::TensorOptions().dtype(torch::kFloat32);
         torch::Tensor epsilonAsTensor = torch::full({}, epsilon_, optionsForEpsilonAsTensor);
-        stateArchive.write("epsilon", epsilonAsTensor);
 
         torch::save(policyModel_, policyModelPath.append("_policy.pt"));
         torch::save(targetModel_, targetModelPath.append("_target.pt"));
-        stateArchive.save_to(statePath.append("stateValues.pt"));
+        torch::save(epsilonAsTensor, statePath.append("stateValues.pt"));
     }
 
     void Agent::load() {
@@ -268,22 +270,20 @@ namespace agent::dqn {
         std::string targetModelPath = savePath_;
         std::string statePath = savePath_;
 
-        torch::serialize::InputArchive inputArchive;
         torch::TensorOptions optionsForEpsilonAsTensor = torch::TensorOptions().dtype(torch::kFloat32);
         torch::Tensor epsilonAsTensor = torch::full({}, 0, optionsForEpsilonAsTensor);
-        inputArchive.load_from(statePath);
-        inputArchive.read("epsilon", epsilonAsTensor);
-        epsilon_ = epsilonAsTensor.template item<float_t>();
 
         torch::load(policyModel_, policyModelPath.append("_policy.pt"));
         torch::load(targetModel_, targetModelPath.append("_target.pt"));
-
+        torch::load(epsilonAsTensor, statePath.append("stateValues.pt"));
+        epsilon_ = epsilonAsTensor.template item<float_t>();
     }
 
     Agent::Agent(std::unique_ptr<DqnAgentOptions> &dqnAgentOptions) {
         targetModel_ = dqnAgentOptions->get_target_model();
         policyModel_ = dqnAgentOptions->get_policy_model();
         optimizer_ = dqnAgentOptions->get_optimizer();
+        lrScheduler_ = dqnAgentOptions->get_lr_scheduler();
 
         gamma_ = dqnAgentOptions->get_gamma();
         epsilon_ = dqnAgentOptions->get_epsilon();
@@ -295,6 +295,8 @@ namespace agent::dqn {
 
         targetModelUpdateRate_ = dqnAgentOptions->get_target_model_update_rate();
         policyModelUpdateRate_ = dqnAgentOptions->get_policy_model_update_rate();
+        modelBackupFrequency_ = dqnAgentOptions->get_model_backup_frequency();
+        minLr_ = dqnAgentOptions->get_min_lr();
         batchSize_ = dqnAgentOptions->get_batch_size();
         numActions_ = dqnAgentOptions->get_num_actions();
 

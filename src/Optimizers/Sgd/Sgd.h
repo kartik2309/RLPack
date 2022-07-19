@@ -6,7 +6,7 @@
 #define RLPACK_SGD_H
 
 
-#include "../OptimizerBase.h"
+#include "../../utils/Base/OptimizerBase/OptimizerBase.h"
 #include <torch/optim.h>
 
 namespace optimizer {
@@ -20,6 +20,12 @@ namespace optimizer {
         );
 
         torch::Tensor step(torch::optim::Optimizer::LossClosure closure) override;
+
+        float get_lr(int paramGroupIndex) override;
+
+        void set_lr(std::vector<float> &newLrVector) const override;
+
+        uint32_t get_param_group_size() override;
     };
 }
 

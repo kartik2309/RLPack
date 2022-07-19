@@ -6,7 +6,7 @@
 #define RLPACK_DLQN1DOPTIONS_H
 
 #include <torch/nn.h>
-#include "../../../utils/Options/ModelOptions/ModelOptionsBase.h"
+#include "../../../utils/Base/Options/ModelOptions/ModelOptionsBase.h"
 
 namespace model::dqn {
 

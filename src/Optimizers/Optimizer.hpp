@@ -5,7 +5,7 @@
 #ifndef RLPACK_OPTIMIZER_HPP
 #define RLPACK_OPTIMIZER_HPP
 
-#include "OptimizerBase.h"
+#include "../utils/Base/OptimizerBase/OptimizerBase.h"
 #include "Adam/Adam.h"
 #include "RmsProp/RmsProp.h"
 #include "Sgd/Sgd.h"

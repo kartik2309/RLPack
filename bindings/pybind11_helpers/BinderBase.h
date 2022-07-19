@@ -11,10 +11,10 @@
 #include <string>
 #include <pybind11/numpy.h>
 # include "../../src/Optimizers/Optimizer.hpp"
-# include "../../src/AgentBase.h"
-# include "../../src/ModelBase.h"
-# include "../../src/utils/Options/AgentOptions/AgentOptionsBase.h"
-# include "../../src/utils/Options/ModelOptions/ModelOptionsBase.h"
+# include "../../src/utils/Base/AgentBase/AgentBase.h"
+# include "../../src/utils/Base/ModelBase/ModelBase.h"
+# include "../../src/utils/Base/Options/AgentOptions/AgentOptionsBase.h"
+# include "../../src/utils/Base/Options/ModelOptions/ModelOptionsBase.h"
 
 class BinderBase {
 

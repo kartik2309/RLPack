@@ -8,15 +8,14 @@ namespace agent {
 
     AgentOptionsBase::AgentOptionsBase() = default;
 
-    AgentOptionsBase::AgentOptionsBase(
-            std::shared_ptr<optimizer::OptimizerBase> &optimizer,
-            std::shared_ptr<optimizer::lrScheduler::LrSchedulerBase> &lrScheduler,
-            float_t gamma, float_t epsilon, float_t minEpsilon, float_t epsilonDecayRate,
-            int32_t epsilonDecayFrequency, int32_t memoryBufferSize, int32_t targetModelUpdateRate,
-            int32_t policyModelUpdateRate, int32_t batchSize, int32_t numActions,
-            std::string &savePath, float_t tau, int32_t applyNorm, int32_t applyNormTo,
-            float_t epsForNorm, int32_t pForNorm, int32_t dimForNorm
-    ) {
+    AgentOptionsBase::AgentOptionsBase(std::shared_ptr<optimizer::OptimizerBase> &optimizer,
+                                       std::shared_ptr<optimizer::lrScheduler::LrSchedulerBase> &lrScheduler,
+                                       float_t gamma, float_t epsilon, float_t minEpsilon,
+                                       float_t epsilonDecayRate, int32_t epsilonDecayFrequency,
+                                       int32_t modelBackupFrequency, float_t minLr, int32_t batchSize,
+                                       int32_t numActions, std::string &savePath, int32_t applyNorm,
+                                       int32_t applyNormTo, float_t epsForNorm, int32_t pForNorm,
+                                       int32_t dimForNorm) {
 
         optimizer_ = optimizer;
         lrScheduler_ = lrScheduler;
@@ -26,20 +25,14 @@ namespace agent {
         minEpsilon_ = minEpsilon;
         epsilonDecayRate_ = epsilonDecayRate;
         epsilonDecayFrequency_ = epsilonDecayFrequency;
-        memoryBufferSize_ = memoryBufferSize;
         assert(targetModelUpdateRate > policyModelUpdateRate);
 
-        targetModelUpdateRate_ = targetModelUpdateRate;
-        policyModelUpdateRate_ = policyModelUpdateRate;
+        modelBackupFrequency_ = modelBackupFrequency;
+        minLr_ = minLr;
         batchSize_ = batchSize;
         numActions_ = numActions;
 
         savePath_ = savePath;
-
-        if (tau < 0 || tau > 1) {
-            throw std::range_error("Invalid value for tau passed! Expected value is between 0 and 1");
-        }
-        tau_ = tau;
 
         if (applyNormTo < -1 || applyNormTo > 4) {
             throw std::range_error("Invalid applyNormTo passed!");
@@ -80,20 +73,12 @@ namespace agent {
         epsilonDecayFrequency_ = epsilonDecayFrequency;
     }
 
-    void AgentOptionsBase::memory_buffer_size(int32_t memoryBufferSize) {
-        memoryBufferSize_ = memoryBufferSize;
-    }
-
-    void AgentOptionsBase::target_model_update_rate(int32_t targetModelUpdateRate) {
-        targetModelUpdateRate_ = targetModelUpdateRate;
-    }
-
-    void AgentOptionsBase::policy_model_update_rate(int32_t policyModelUpdateRate) {
-        policyModelUpdateRate_ = policyModelUpdateRate;
-    }
-
     void AgentOptionsBase::model_backup_frequency(int32_t modelBackFrequency) {
-        modelBackFrequency_ = modelBackFrequency;
+        modelBackupFrequency_ = modelBackFrequency;
+    }
+
+    void AgentOptionsBase::min_lr(float_t minLr) {
+        minLr_ = minLr;
     }
 
     void AgentOptionsBase::batch_size(int32_t batchSize) {
@@ -106,13 +91,6 @@ namespace agent {
 
     void AgentOptionsBase::save_path(std::string &savePath) {
         savePath_ = savePath;
-    }
-
-    void AgentOptionsBase::tau(float_t tau) {
-        if (tau < 0 || tau > 1) {
-            throw std::range_error("Invalid value for tau passed! Expected value is between 0 and 1");
-        }
-        tau_ = tau;
     }
 
     void AgentOptionsBase::apply_norm(int32_t applyNorm) {
@@ -167,20 +145,12 @@ namespace agent {
         return epsilonDecayFrequency_;
     }
 
-    int32_t AgentOptionsBase::get_memory_buffer_size() const {
-        return memoryBufferSize_;
-    }
-
-    int32_t AgentOptionsBase::get_target_model_update_rate() const {
-        return targetModelUpdateRate_;
-    }
-
-    int32_t AgentOptionsBase::get_policy_model_update_rate() const {
-        return policyModelUpdateRate_;
-    }
-
     int32_t AgentOptionsBase::get_model_backup_frequency() const {
-        return modelBackFrequency_;
+        return modelBackupFrequency_;
+    }
+
+    float_t AgentOptionsBase::get_min_lr() const {
+        return minLr_;
     }
 
     int32_t AgentOptionsBase::get_batch_size() const {
@@ -193,10 +163,6 @@ namespace agent {
 
     std::string AgentOptionsBase::get_save_path() {
         return savePath_;
-    }
-
-    float_t AgentOptionsBase::get_tau() const {
-        return tau_;
     }
 
     int32_t AgentOptionsBase::get_apply_norm() const {

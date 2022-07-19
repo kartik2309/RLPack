@@ -1,6 +1,6 @@
 mode: 'train'
-num_episodes: 2000
-max_timesteps: 1500
+num_episodes: 10000
+max_timesteps: 1000
 model_name: 'dlqn1d'
 reward_print_frequency: 100
 
@@ -21,14 +21,16 @@ agent_args: {
   min_epsilon: 0.01,
   num_actions: 4,
   memory_buffer_size: 16384,
-  target_model_update_rate: 512,
+  target_model_update_rate: 128,
   policy_model_update_rate: 4,
-  batch_size: 128,
+  min_lr: 0.00005,
+  model_backup_frequency: 1500,
+  batch_size: 64,
   epsilon_decay_rate: 0.99,
-  epsilon_decay_frequency: 4,
+  epsilon_decay_frequency: 64,
   apply_norm: "none",
   apply_norm_to: [ "none" ],
-  tau: 0.5
+  tau: 0.95
 }
 
 optimizer_args: {
@@ -39,7 +41,8 @@ optimizer_args: {
 
 lr_scheduler_args: {
   "scheduler": "step_lr",
-  "step_size": 10,
+  "step_size": 128,
+  "gamma": 0.9
 }
 
 device: 'cpu'

@@ -21,6 +21,12 @@ namespace optimizer {
         ~OptimizerBase() override;
 
         torch::Tensor step(torch::optim::Optimizer::LossClosure closure) override = 0;
+
+        virtual float get_lr(int paramGroupIndex) = 0;
+
+        virtual void set_lr(std::vector<float> &newLrVector) const = 0;
+
+        virtual uint32_t get_param_group_size() = 0;
     };
 }
 

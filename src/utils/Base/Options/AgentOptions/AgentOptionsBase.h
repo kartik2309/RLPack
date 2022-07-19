@@ -6,9 +6,9 @@
 #define RLPACK_AGENTOPTIONSBASE_H
 
 #include <torch/torch.h>
-#include "../../../Optimizers/Optimizer.hpp"
-#include "../../../LrSchedulers/LrSchedulerBase.h"
-#include "../../Normalization/Normalization.h"
+#include "../../../../Optimizers/Optimizer.hpp"
+#include "../../LrSchedulerBase/LrSchedulerBase.h"
+#include "../../../Normalization/Normalization.h"
 
 namespace agent {
     class AgentOptionsBase {
@@ -23,13 +23,11 @@ namespace agent {
         float_t epsilonDecayRate_ = 0.99;
         int32_t epsilonDecayFrequency_ = 16;
         int32_t memoryBufferSize_ = 16384;
-        int32_t targetModelUpdateRate_ = 512;
-        int32_t policyModelUpdateRate_ = 8;
-        int32_t modelBackFrequency_ = 128;
+        float_t minLr_ = 5e-5;
+        int32_t modelBackupFrequency_ = 128;
         int32_t batchSize_ = 64;
         int32_t numActions_ = 4;
         std::string savePath_ = "./";
-        float_t tau_ = 1.0;
         std::shared_ptr<Normalization> normalization_ = nullptr;
         int32_t applyNorm_ = -1;
         int32_t applyNormTo_ = -1;
@@ -43,11 +41,10 @@ namespace agent {
 
         AgentOptionsBase(
                 std::shared_ptr<optimizer::OptimizerBase> &optimizer,
-                std::shared_ptr<optimizer::lrScheduler::LrSchedulerBase> &lrScheduler,
-                float_t gamma, float_t epsilon, float_t minEpsilon, float_t epsilonDecayRate,
-                int32_t epsilonDecayFrequency, int32_t memoryBufferSize, int32_t targetModelUpdateRate,
-                int32_t policyModelUpdateRate, int32_t batchSize, int32_t numActions,
-                std::string &savePath, float_t tau, int32_t applyNorm, int32_t applyNormTo,
+                std::shared_ptr<optimizer::lrScheduler::LrSchedulerBase> &lrScheduler, float_t gamma,
+                float_t epsilon, float_t minEpsilon, float_t epsilonDecayRate, int32_t epsilonDecayFrequency,
+                int32_t modelBackupFrequency, float_t minLr, int32_t batchSize,
+                int32_t numActions, std::string &savePath, int32_t applyNorm, int32_t applyNormTo,
                 float_t epsForNorm, int32_t pForNorm, int32_t dimForNorm
         );
 
@@ -69,21 +66,15 @@ namespace agent {
 
         void epsilon_decay_frequency(int32_t epsilonDecayFrequency);
 
-        void memory_buffer_size(int32_t memoryBufferSize);
-
-        void target_model_update_rate(int32_t targetModelUpdateRate);
-
-        void policy_model_update_rate(int32_t policyModelUpdateRate);
-
         void model_backup_frequency(int32_t modelBackFrequency);
+
+        void min_lr(float_t minLr);
 
         void batch_size(int32_t batchSize);
 
         void num_actions(int32_t numActions);
 
         void save_path(std::string &savePath);
-
-        void tau(float_t tau = 1);
 
         void apply_norm(int32_t applyNorm = -1);
 
@@ -111,21 +102,15 @@ namespace agent {
 
         [[nodiscard]] int32_t get_epsilon_decay_frequency() const;
 
-        [[nodiscard]] int32_t get_memory_buffer_size() const;
-
-        [[nodiscard]] int32_t get_target_model_update_rate() const;
-
-        [[nodiscard]] int32_t get_policy_model_update_rate() const;
-
         [[nodiscard]] int32_t get_model_backup_frequency() const;
+
+        [[nodiscard]] float_t get_min_lr() const;
 
         [[nodiscard]] int32_t get_batch_size() const;
 
         [[nodiscard]] int32_t get_num_actions() const;
 
         std::string get_save_path();
-
-        [[nodiscard]] float_t get_tau() const;
 
         [[nodiscard]] int32_t get_apply_norm() const;
 
@@ -137,7 +122,7 @@ namespace agent {
 
         [[nodiscard]] int32_t get_dim_for_norm() const;
 
-        std::shared_ptr<Normalization>get_normalizer();
+        std::shared_ptr<Normalization> get_normalizer();
     };
 
 }

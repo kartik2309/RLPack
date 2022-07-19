@@ -67,9 +67,8 @@ pybind11_add_module(
         src/Dqn/Dlqn1d/Dlqn1dOptions/Dlqn1dOptions.cpp
         src/Dqn/Dqn.hpp
 
+        # Optimizer Classes
         src/Optimizers/Optimizer.hpp
-        src/Optimizers/OptimizerBase.h
-        src/Optimizers/OptimizerBase.cpp
         src/Optimizers/Adam/Adam.h
         src/Optimizers/Adam/Adam.cpp
         src/Optimizers/RmsProp/RmsProp.h
@@ -77,21 +76,33 @@ pybind11_add_module(
         src/Optimizers/Sgd/Sgd.h
         src/Optimizers/Sgd/Sgd.cpp
 
-        src/LrSchedulers/LrSchedulerBase.h
-        src/LrSchedulers/LrSchedulerBase.cpp
+        # LrScheduler Classes
         src/LrSchedulers/LrScheduler.hpp
+        src/LrSchedulers/StepLr/StepLrOptions/StepLrOptions.h
+        src/LrSchedulers/StepLr/StepLrOptions/StepLrOptions.cpp
         src/LrSchedulers/StepLr/StepLr.h
         src/LrSchedulers/StepLr/StepLr.cpp
 
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~ Utils ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
         src/utils/utils.hpp
+
+        # Normalization
         src/utils/Normalization/Normalization.h
         src/utils/Normalization/Normalization.cpp
+
+        # Memory
         src/utils/Memory/Memory.h
         src/utils/Memory/Memory.cpp
-        src/utils/Options/AgentOptions/AgentOptionsBase.h
-        src/utils/Options/AgentOptions/AgentOptionsBase.cpp
-        src/utils/Options/ModelOptions/ModelOptionsBase.h
-        src/utils/Options/ModelOptions/ModelOptionsBase.cpp
+
+        # Options Classes
+        src/utils/Base/Options/AgentOptions/AgentOptionsBase.h
+        src/utils/Base/Options/AgentOptions/AgentOptionsBase.cpp
+        src/utils/Base/Options/ModelOptions/ModelOptionsBase.h
+        src/utils/Base/Options/ModelOptions/ModelOptionsBase.cpp
+        src/utils/Base/Options/LrSchedulerOptions/LrSchedulerOptionsBase.h
+        src/utils/Base/Options/LrSchedulerOptions/LrSchedulerOptionsBase.cpp
+
+        # Activations Classes
         src/utils/Activations/Activations.hpp
         src/utils/Activations/ActivationBase.h
         src/utils/Activations/ActivationBase.cpp
@@ -100,10 +111,15 @@ pybind11_add_module(
         src/utils/Activations/LeakyRelu/LeakyRelu.h
         src/utils/Activations/LeakyRelu/LeakyRelu.cpp
 
-        src/AgentBase.h
-        src/AgentBase.cpp
-        src/ModelBase.h
-        src/ModelBase.cpp
+        # Base Classes
+        src/utils/Base/AgentBase/AgentBase.h
+        src/utils/Base/AgentBase/AgentBase.cpp
+        src/utils/Base/ModelBase/ModelBase.h
+        src/utils/Base/ModelBase/ModelBase.cpp
+        src/utils/Base/LrSchedulerBase/LrSchedulerBase.h
+        src/utils/Base/LrSchedulerBase/LrSchedulerBase.cpp
+        src/utils/Base/OptimizerBase/OptimizerBase.h
+        src/utils/Base/OptimizerBase/OptimizerBase.cpp
 
 )
 
@@ -121,6 +137,8 @@ if (APPLE)
 endif ()
 
 add_dependencies(RLPack pybind11::headers)
+
+
 
 target_link_libraries(RLPack PRIVATE Python::Python)
 target_link_libraries(RLPack PRIVATE OpenMP::OpenMP_CXX)

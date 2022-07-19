@@ -6,7 +6,7 @@
 #define RLPACK_MODELOPTIONSBASE_H
 
 #include <torch/nn.h>
-#include "../../Activations/Activations.hpp"
+#include "../../../Activations/Activations.hpp"
 
 namespace model {
 

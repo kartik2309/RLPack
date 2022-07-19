@@ -40,6 +40,7 @@ class LunarLander:
             self.reshape_func = reshape_func
 
         self.env = gym.make("LunarLander-v2")
+
         self.agent = agent(
             model_name=self.config_dict["model_name"],
             model_args=self.config_dict["model_args"],
@@ -56,8 +57,9 @@ class LunarLander:
 
     def train_agent(self, render: bool = False, load: bool = False, plot: bool = False) -> None:
 
-        self.__is_train(), ("Set Training mode in the configuration! "
-                            "Set mode='train' or mode='training")
+        if not self.__is_train():
+            logging.info("Currently operating in Evaluation Mode")
+            return
 
         if load:
             self.agent.load()
@@ -122,10 +124,12 @@ class LunarLander:
 
     def evaluate_agent(self) -> None:
 
-        assert self.__is_eval(), ("Set Evaluation mode in the configuration! "
-                                  "Set mode='eval' or mode='evaluate or mode='evaluation")
+        if not self.__is_eval():
+            logging.info("Currently operating in Training Mode")
+            return
+
         self.agent.load()
-        rewards = list()
+        score = 0
         timesteps = 0
         _ = self.env.reset()
         action = self.env.action_space.sample()
@@ -133,14 +137,17 @@ class LunarLander:
         for _ in range(self.config_dict["max_timesteps"]):
             self.env.render()
             observation, reward, done, info = self.env.step(action=action)
-            rewards.append(reward)
+            score += reward
             timesteps += 1
             if done:
-                logging.info(
-                    f"Average Reward after {timesteps} timesteps:, {sum(rewards) / len(rewards)}",
-                )
                 break
-            action = self.agent.policy(observation)
+            action = self.agent.policy(self.reshape_func(observation))
+
+        if timesteps == self.config_dict["max_timesteps"]:
+            logging.info("Max timesteps was reached!")
+        logging.info(
+            f"Total Reward after {timesteps} timesteps: {score}",
+        )
         self.env.close()
 
     def __is_eval(self):

@@ -6,8 +6,9 @@
 #define RLPACK_STEPLR_H
 
 #include <torch/optim.h>
-#include "../LrSchedulerBase.h"
+#include "../../utils/Base/LrSchedulerBase/LrSchedulerBase.h"
 #include "../../Optimizers/Optimizer.hpp"
+#include "StepLrOptions/StepLrOptions.h"
 
 
 namespace optimizer::lrScheduler {
@@ -17,9 +18,19 @@ namespace optimizer::lrScheduler {
 
         StepLr(std::shared_ptr<OptimizerBase> &optimizer, uint32_t stepSize, float_t gamma = 0.1);
 
+        explicit StepLr(std::shared_ptr<StepLrOptions> &stepLrOptions);
+
         void step() override;
 
         void *get() override;
+
+    private:
+        std::shared_ptr<OptimizerBase> optimizer_;
+        uint32_t stepSize_;
+        float_t gamma_;
+        int32_t stepCounter_ = 0;
+
+        void perform_decay() override;
 
     };
 }

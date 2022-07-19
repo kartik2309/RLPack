@@ -15,6 +15,8 @@ namespace optimizer::lrScheduler {
         virtual void step() = 0;
 
         virtual void *get();
+
+        virtual void perform_decay() = 0;
     };
 }
 

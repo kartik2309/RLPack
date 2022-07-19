@@ -14,4 +14,22 @@ namespace optimizer {
     torch::Tensor RmsProp::step(torch::optim::Optimizer::LossClosure closure) {
         return optim->step(closure);
     }
+
+    float RmsProp::get_lr(int paramGroupIndex) {
+        return (float) dynamic_cast<torch::optim::AdamOptions &>(optim->param_groups()[0].options()).lr();
+    }
+
+    void RmsProp::set_lr(std::vector<float> &newLrs) const {
+        for (int idx = 0; idx != newLrs.size(); idx++) {
+            auto &options = dynamic_cast<torch::optim::RMSpropOptions &>(
+                    optim->param_groups().at(idx).options()
+            );
+            float newLr = newLrs.at(idx);
+            options.set_lr(newLr);
+        }
+    }
+
+    uint32_t RmsProp::get_param_group_size() {
+        return optim->param_groups().size();
+    }
 }

@@ -6,7 +6,7 @@
 #define RLPACK_ADAM_H
 
 #include <torch/optim.h>
-#include "../OptimizerBase.h"
+#include "../../utils/Base/OptimizerBase/OptimizerBase.h"
 
 namespace optimizer {
     class Adam : public OptimizerBase {
@@ -16,11 +16,16 @@ namespace optimizer {
         std::shared_ptr<torch::optim::Adam> optim;
 
         Adam(const std::vector<torch::Tensor> &parameters,
-             const std::shared_ptr<torch::optim::AdamOptions>& adamOptions
+             const std::shared_ptr<torch::optim::AdamOptions> &adamOptions
         );
 
         torch::Tensor step(torch::optim::Optimizer::LossClosure closure) override;
 
+        float get_lr(int paramGroupIndex) override;
+
+        void set_lr(std::vector<float> &newLrVector) const override;
+
+        uint32_t get_param_group_size() override;
     };
 }
 
