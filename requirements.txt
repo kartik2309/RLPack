@@ -1,0 +1,5 @@
+gym~=0.25.0
+numpy~=1.23.1
+PyYAML~=6.0
+RLPack~=0.0.1
+matplotlib~=3.5.2

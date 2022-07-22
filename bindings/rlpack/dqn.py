@@ -5,6 +5,7 @@ from .lib import RLPack
 # Regular python imports
 import os.path
 import numpy as np
+from pathlib import Path
 import re
 from typing import Dict, Any, Optional
 
@@ -47,6 +48,7 @@ class DQN:
             model_name, model_args, activation_args, agent_args, optimizer_args, lr_scheduler_args, device
         )
         self.get_dqn_agent.setup_agent()
+        self.save_path = Path(agent_args["save_path"]).parent.__str__()
         self.device = device
 
     def train(
@@ -78,6 +80,15 @@ class DQN:
 
     def load(self):
         self.get_dqn_agent.load()
+
+    def finish(self):
+        self.get_dqn_agent.finish()
+
+    def barrier(self):
+        self.get_dqn_agent.barrier()
+
+    def sync_models(self):
+        self.get_dqn_agent.sync_models()
 
     @staticmethod
     def __save_path_checks(agent_args):

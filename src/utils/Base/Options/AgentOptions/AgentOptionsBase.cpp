@@ -89,6 +89,10 @@ namespace agent {
         numActions_ = numActions;
     }
 
+    void AgentOptionsBase::d_type(torch::ScalarType dType) {
+        dType_ = dType;
+    }
+
     void AgentOptionsBase::save_path(std::string &savePath) {
         savePath_ = savePath;
     }
@@ -159,6 +163,10 @@ namespace agent {
 
     int32_t AgentOptionsBase::get_num_actions() const {
         return numActions_;
+    }
+
+    torch::ScalarType AgentOptionsBase::get_d_type() const {
+        return dType_;
     }
 
     std::string AgentOptionsBase::get_save_path() {

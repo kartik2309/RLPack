@@ -1,2 +1,3 @@
-setup.sh
+build
+RLPack.egg-info
 .idea

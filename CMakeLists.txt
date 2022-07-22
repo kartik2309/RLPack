@@ -94,6 +94,10 @@ pybind11_add_module(
         src/utils/Memory/Memory.h
         src/utils/Memory/Memory.cpp
 
+        # Ops
+        src/utils/Ops/Ops.h
+        src/utils/Ops/Ops.cpp
+
         # Options Classes
         src/utils/Base/Options/AgentOptions/AgentOptionsBase.h
         src/utils/Base/Options/AgentOptions/AgentOptionsBase.cpp

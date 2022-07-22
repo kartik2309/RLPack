@@ -34,6 +34,7 @@ namespace agent {
         float_t epsForNorm_ = 5e-8;
         int32_t pForNorm_ = 2;
         int32_t dimForNorm_ = 0;
+        torch::ScalarType dType_ = torch::kFloat32;
 
     public:
 
@@ -74,6 +75,8 @@ namespace agent {
 
         void num_actions(int32_t numActions);
 
+        void d_type(torch::ScalarType dType);
+
         void save_path(std::string &savePath);
 
         void apply_norm(int32_t applyNorm = -1);
@@ -109,6 +112,8 @@ namespace agent {
         [[nodiscard]] int32_t get_batch_size() const;
 
         [[nodiscard]] int32_t get_num_actions() const;
+
+        [[nodiscard]] torch::ScalarType get_d_type() const;
 
         std::string get_save_path();
 

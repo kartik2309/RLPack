@@ -15,5 +15,8 @@ PYBIND11_MODULE(RLPack, m) {
                  "setup method to allocate memory and setup the agent and all underlying modules.")
             .def("save", &GetDqnAgent::save, "save method to save the policy and target model of the agent.")
             .def("load", &GetDqnAgent::load, "load method to save the policy and target model of the agent.")
+            .def("finish", &GetDqnAgent::finish, "finish method, to be used when using MPI")
+            .def("barrier", &GetDqnAgent::finish, "barrier method, to be used when using MPI")
+            .def("sync_models", &GetDqnAgent::sync_models, "sync method, to be used when using MPI")
             .def("__repr__", [](const GetDqnAgent &) { return "<GetDqnAgent>"; });
 }

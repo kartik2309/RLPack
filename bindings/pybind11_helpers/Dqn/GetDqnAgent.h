@@ -40,6 +40,12 @@ public:
 
     void load();
 
+    void finish();
+
+    void barrier();
+
+    void sync_models();
+
 private:
     std::string modelName_;
     pybind11::kwargs modelArgs_;

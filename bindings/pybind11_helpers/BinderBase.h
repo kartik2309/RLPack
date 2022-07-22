@@ -71,6 +71,7 @@ protected:
             {"cpu",  0},
             {"cuda", 1},
             {"mps",  2},
+            {"cpu_mps", 3}
     };
 
     std::map<int, torch::DeviceType> deviceTypes_ = {

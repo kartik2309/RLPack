@@ -14,7 +14,7 @@ namespace agent::dqn {
             float_t minEpsilon, float_t epsilonDecayRate, int32_t epsilonDecayFrequency,
             int32_t memoryBufferSize, int32_t targetModelUpdateRate,
             int32_t policyModelUpdateRate, int32_t modelBackupFrequency, float_t minLr,
-            int32_t batchSize, int32_t numActions,
+            int32_t batchSize, int32_t numActions, torch::ScalarType dType,
             std::string &savePath, float_t tau, int32_t applyNorm, int32_t applyNormTo,
             float_t epsForNorm, int32_t pForNorm, int32_t dimForNorm
     ) {
@@ -36,6 +36,7 @@ namespace agent::dqn {
         modelBackupFrequency_ = modelBackupFrequency;
         batchSize_ = batchSize;
         numActions_ = numActions;
+        dType_ = dType;
 
         savePath_ = savePath;
 
@@ -57,8 +58,51 @@ namespace agent::dqn {
         memoryBuffer.reserve(memoryBufferSize);
     }
 
+    Agent::Agent(std::unique_ptr<DqnAgentOptions> &dqnAgentOptions) {
+        targetModel_ = dqnAgentOptions->get_target_model();
+        policyModel_ = dqnAgentOptions->get_policy_model();
+        optimizer_ = dqnAgentOptions->get_optimizer();
+        lrScheduler_ = dqnAgentOptions->get_lr_scheduler();
+
+        gamma_ = dqnAgentOptions->get_gamma();
+        epsilon_ = dqnAgentOptions->get_epsilon();
+        minEpsilon_ = dqnAgentOptions->get_min_epsilon();
+        epsilonDecayRate_ = dqnAgentOptions->get_epsilon_decay_rate();
+        epsilonDecayFrequency_ = dqnAgentOptions->get_epsilon_decay_frequency();
+        memoryBufferSize_ = dqnAgentOptions->get_memory_buffer_size();
+        assert(dqnAgentOptions->get_target_model_update_rate() > dqnAgentOptions->get_policy_model_update_rate());
+
+        targetModelUpdateRate_ = dqnAgentOptions->get_target_model_update_rate();
+        policyModelUpdateRate_ = dqnAgentOptions->get_policy_model_update_rate();
+        modelBackupFrequency_ = dqnAgentOptions->get_model_backup_frequency();
+        minLr_ = dqnAgentOptions->get_min_lr();
+        batchSize_ = dqnAgentOptions->get_batch_size();
+        numActions_ = dqnAgentOptions->get_num_actions();
+        dType_ = dqnAgentOptions->get_d_type();
+
+        savePath_ = dqnAgentOptions->get_save_path();
+
+        if (dqnAgentOptions->get_tau() < 0 || dqnAgentOptions->get_tau() > 1) {
+            throw std::range_error("Invalid value for tau passed! Expected value is between 0 and 1");
+        }
+        tau_ = dqnAgentOptions->get_tau();
+
+        if (dqnAgentOptions->get_apply_norm_to() < -1 || dqnAgentOptions->get_apply_norm_to() > 4) {
+            throw std::range_error("Invalid applyNormTo passed!");
+        }
+        applyNormTo_ = dqnAgentOptions->get_apply_norm_to();
+        normalization_ = dqnAgentOptions->get_normalizer();
+
+        epsForNorm_ = dqnAgentOptions->get_eps_for_norm();
+        pForNorm_ = dqnAgentOptions->get_p_for_norm();
+        dimForNorm_ = dqnAgentOptions->get_dim_for_norm();
+
+        memoryBuffer.reserve(memoryBufferSize_);
+
+    }
+
     int32_t Agent::train(torch::Tensor &stateCurrent, torch::Tensor &stateNext,
-                         float reward,
+                         float_t reward,
                          int action, int done) {
 
         memoryBuffer.push_back(stateCurrent, stateNext, reward, action, done);
@@ -99,6 +143,7 @@ namespace agent::dqn {
     }
 
     void Agent::train_policy_model() {
+
         auto randomExperiences = load_random_experiences();
 
         torch::Tensor statesCurrent = randomExperiences->stack_current_states();
@@ -108,12 +153,18 @@ namespace agent::dqn {
         torch::Tensor dones = randomExperiences->stack_dones();
 
         if (applyNormTo_ == 0 || applyNormTo_ == 3 || applyNormTo_ == 4) {
-            statesCurrent = normalization_->apply_normalization(statesCurrent, epsForNorm_, pForNorm_, dimForNorm_);
-            statesNext = normalization_->apply_normalization(statesNext, epsForNorm_, pForNorm_, dimForNorm_);
+            statesCurrent = normalization_->apply_normalization(
+                    statesCurrent, epsForNorm_, pForNorm_, dimForNorm_
+            );
+            statesNext = normalization_->apply_normalization(
+                    statesNext, epsForNorm_, pForNorm_, dimForNorm_
+            );
         }
 
         if (applyNormTo_ == 1 || applyNormTo_ == 3) {
-            rewards = normalization_->apply_normalization(rewards, epsForNorm_, pForNorm_, dimForNorm_);
+            rewards = normalization_->apply_normalization(
+                    rewards, epsForNorm_, pForNorm_, dimForNorm_
+            );
         }
 
         policyModel_->train();
@@ -125,7 +176,9 @@ namespace agent::dqn {
             tdValue = temporal_difference(rewards, qValuesTarget, dones);
 
             if (applyNormTo_ == 2 || applyNormTo_ == 4) {
-                tdValue = normalization_->apply_normalization(tdValue, epsForNorm_, pForNorm_, dimForNorm_);
+                tdValue = normalization_->apply_normalization(
+                        tdValue, epsForNorm_, pForNorm_, dimForNorm_
+                );
             }
         }
 
@@ -137,14 +190,15 @@ namespace agent::dqn {
                                           "This may lead to instability in model" << std::endl;
         }
 
+
         optimizer_->zero_grad();
         torch::Tensor loss = huberLoss_(tdValue.detach(), qValuesPolicyGathered);
         loss.backward();
         optimizer_->step(nullptr);
-
     }
 
     void Agent::update_target_model() {
+
         {
 
             torch::NoGradGuard noGradGuard;
@@ -213,7 +267,7 @@ namespace agent::dqn {
         int32_t action;
         std::random_device rd;
         std::mt19937 generator(rd());
-        std::uniform_real_distribution<float> distributionP(0, 1);
+        std::uniform_real_distribution<float_t> distributionP(0, 1);
         std::uniform_int_distribution<int> distributionAction(0, numActions_ - 1);
         float_t p = distributionP(generator);
 
@@ -253,16 +307,11 @@ namespace agent::dqn {
 
     void Agent::save() {
 
-        std::string policyModelPath = savePath_;
-        std::string targetModelPath = savePath_;
-        std::string statePath = savePath_;
+        sync_models();
 
-        torch::TensorOptions optionsForEpsilonAsTensor = torch::TensorOptions().dtype(torch::kFloat32);
-        torch::Tensor epsilonAsTensor = torch::full({}, epsilon_, optionsForEpsilonAsTensor);
-
-        torch::save(policyModel_, policyModelPath.append("_policy.pt"));
-        torch::save(targetModel_, targetModelPath.append("_target.pt"));
-        torch::save(epsilonAsTensor, statePath.append("stateValues.pt"));
+        if (world.rank() == MASTER) {
+            _save();
+        }
     }
 
     void Agent::load() {
@@ -279,43 +328,41 @@ namespace agent::dqn {
         epsilon_ = epsilonAsTensor.template item<float_t>();
     }
 
-    Agent::Agent(std::unique_ptr<DqnAgentOptions> &dqnAgentOptions) {
-        targetModel_ = dqnAgentOptions->get_target_model();
-        policyModel_ = dqnAgentOptions->get_policy_model();
-        optimizer_ = dqnAgentOptions->get_optimizer();
-        lrScheduler_ = dqnAgentOptions->get_lr_scheduler();
+    void Agent::finish() {
+        MPI_Finalize();
+    }
 
-        gamma_ = dqnAgentOptions->get_gamma();
-        epsilon_ = dqnAgentOptions->get_epsilon();
-        minEpsilon_ = dqnAgentOptions->get_min_epsilon();
-        epsilonDecayRate_ = dqnAgentOptions->get_epsilon_decay_rate();
-        epsilonDecayFrequency_ = dqnAgentOptions->get_epsilon_decay_frequency();
-        memoryBufferSize_ = dqnAgentOptions->get_memory_buffer_size();
-        assert(dqnAgentOptions->get_target_model_update_rate() > dqnAgentOptions->get_policy_model_update_rate());
+    void Agent::barrier() {
+        world.barrier();
+    }
 
-        targetModelUpdateRate_ = dqnAgentOptions->get_target_model_update_rate();
-        policyModelUpdateRate_ = dqnAgentOptions->get_policy_model_update_rate();
-        modelBackupFrequency_ = dqnAgentOptions->get_model_backup_frequency();
-        minLr_ = dqnAgentOptions->get_min_lr();
-        batchSize_ = dqnAgentOptions->get_batch_size();
-        numActions_ = dqnAgentOptions->get_num_actions();
+    void Agent::_save() {
+        std::string policyModelPath = savePath_;
+        std::string targetModelPath = savePath_;
+        std::string statePath = savePath_;
 
-        savePath_ = dqnAgentOptions->get_save_path();
+        torch::TensorOptions optionsForEpsilonAsTensor = torch::TensorOptions().dtype(dType_);
+        torch::Tensor epsilonAsTensor = torch::full({}, epsilon_, optionsForEpsilonAsTensor);
 
-        if (dqnAgentOptions->get_tau() < 0 || dqnAgentOptions->get_tau() > 1) {
-            throw std::range_error("Invalid value for tau passed! Expected value is between 0 and 1");
+        torch::save(policyModel_, policyModelPath.append("_policy.pt"));
+        torch::save(targetModel_, targetModelPath.append("_target.pt"));
+        torch::save(epsilonAsTensor, statePath.append("stateValues.pt"));
+    }
+
+    void Agent::sync_models() {
+
+        int dTypeCode = dTypeCodes[dType_];
+        switch (dTypeCode) {
+            case 0:
+            case 1:
+                all_reduce_params_with_mean<double_t>();
+                break;
+            case 3:
+                all_reduce_params_with_mean<float_t>();
+                break;
+            default:
+                throw std::runtime_error("Invalid DataType encountered! Could not finish All Reduce Operation.");
         }
-        tau_ = dqnAgentOptions->get_tau();
-
-        if (dqnAgentOptions->get_apply_norm_to() < -1 || dqnAgentOptions->get_apply_norm_to() > 4) {
-            throw std::range_error("Invalid applyNormTo passed!");
-        }
-        applyNormTo_ = dqnAgentOptions->get_apply_norm_to();
-        normalization_ = dqnAgentOptions->get_normalizer();
-
-        epsForNorm_ = dqnAgentOptions->get_eps_for_norm();
-        pForNorm_ = dqnAgentOptions->get_p_for_norm();
-        dimForNorm_ = dqnAgentOptions->get_dim_for_norm();
     }
 
     Agent::~Agent() = default;

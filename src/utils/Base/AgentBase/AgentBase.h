@@ -11,6 +11,13 @@
 namespace agent {
     class AgentBase {
 
+    protected:
+        std::map<torch::ScalarType, int> dTypeCodes = {
+                {torch::kFloat64, 0},
+                {torch::kDouble, 1},
+                {torch::kFloat32, 2},
+        };
+
     public:
 
         AgentBase();
@@ -22,6 +29,12 @@ namespace agent {
         virtual void save();
 
         virtual void load();
+
+        virtual void finish();
+
+        virtual void barrier();
+
+        virtual void sync_models();
     };
 }
 

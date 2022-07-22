@@ -7,5 +7,6 @@
 
 #include "Normalization/Normalization.h"
 #include "Memory/Memory.h"
+#include "Ops/Ops.h"
 
 #endif //RLPACK_UTILS_HPP

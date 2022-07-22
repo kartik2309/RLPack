@@ -17,7 +17,7 @@ def simulate_lunar_lander():
     )
 
     lunar_lander.train_agent(load=False, plot=True)
-    lunar_lander.evaluate_agent()
+    # lunar_lander.evaluate_agent()
 
 
 if __name__ == "__main__":
