@@ -60,19 +60,6 @@ void GetDqnAgent::load() {
     agent_->load();
 }
 
-void GetDqnAgent::finish() {
-    agent_->finish();
-}
-
-void GetDqnAgent::barrier() {
-    agent_->barrier();
-}
-
-void GetDqnAgent::sync_models() {
-    agent_->sync_models();
-}
-
-
 std::unique_ptr<agent::AgentOptionsBase> GetDqnAgent::create_agent_options() {
     auto gamma = agentArgs_["gamma"].cast<float_t>();
     auto epsilon = agentArgs_["epsilon"].cast<float_t>();

@@ -4,8 +4,8 @@
 
 #ifndef RLPACK_DQN_AGENT_H_
 #define RLPACK_DQN_AGENT_H_
-#define MASTER 0
 
+#include <omp.h>
 #include <random>
 #include <torch/torch.h>
 #include <boost/log/trivial.hpp>
@@ -15,10 +15,6 @@
 #include <boost/generator_iterator.hpp>
 #include <boost/random.hpp>
 #include <boost/random/random_device.hpp>
-#include <boost/mpi.hpp>
-#include <boost/mpi/communicator.hpp>
-#include <boost/mpi/environment.hpp>
-#include <boost/serialization/vector.hpp>
 
 #include "../../utils/Base/AgentBase/AgentBase.h"
 #include "../../utils/utils.hpp"
@@ -59,13 +55,8 @@ namespace agent::dqn {
 
         void load() override;
 
-        void finish() override;
-
-        void barrier() override;
-
-        void sync_models() override;
-
     private:
+
         std::shared_ptr<model::ModelBase> targetModel_;
         std::shared_ptr<model::ModelBase> policyModel_;
         std::shared_ptr<optimizer::OptimizerBase> optimizer_;
@@ -93,13 +84,11 @@ namespace agent::dqn {
 
         Memory memoryBuffer;
 
-        int stepCounter = 0;
-        int epsilonDecayCounter = 0;
+        int stepCounter_ = 1;
+        int epsilonDecayCounter_ = 1;
+        std::vector<torch::Tensor> gradTensorsVector_;
 
         torch::nn::HuberLoss huberLoss_;
-
-        boost::mpi::environment env;
-        boost::mpi::communicator world;
 
         void train_policy_model();
 
@@ -113,64 +102,11 @@ namespace agent::dqn {
 
         void clear_memory();
 
-        void _save();
+        int _save();
 
-        template<typename cppDType>
-        void all_reduce_params_with_mean();
+        void all_reduce_grads_with_mean();
 
     };
-
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Template Function Definition ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-    template<typename cppDType>
-    void Agent::all_reduce_params_with_mean() {
-        if (world.size() <= 1) {
-            std::cerr << "Did you call finish() method with singleton MPI process?" << std::endl;
-            throw std::runtime_error(
-                    "Only one process found! All Reduce cannot be done."
-            );
-        }
-        {
-            torch::NoGradGuard noGradGuard;
-
-            for (auto &param: policyModel_->parameters()) {
-
-                auto paramValueVector = Ops::tensor_to_vector<cppDType>(param);
-                std::vector<std::vector<cppDType>> meanParamValueVector;
-
-                if (world.rank() == MASTER) {
-                    std::vector<std::vector<std::vector<cppDType>>> toGatherVector;
-                    std::vector<torch::Tensor> gatheredTensors;
-                    torch::Tensor stacked, meanTensor, flattened, tensor_;
-
-                    boost::mpi::gather(world, paramValueVector, toGatherVector, MASTER);
-
-                    for (auto &vec: toGatherVector) {
-                        tensor_ = Ops::vector_to_tensor(vec);
-                        gatheredTensors.push_back(tensor_);
-                    }
-
-                    stacked = torch::stack(gatheredTensors);
-                    meanTensor = torch::mean(stacked, 0);
-
-                    flattened = meanTensor.flatten();
-                    std::vector<cppDType> meanParamValueVector_(flattened.data_ptr<cppDType>(),
-                                                                flattened.data_ptr<cppDType>() + flattened.numel());
-                    meanParamValueVector.push_back(meanParamValueVector_);
-
-                    std::vector<cppDType> shapes(meanTensor.sizes().begin(), meanTensor.sizes().end());
-                    meanParamValueVector.push_back(shapes);
-                } else {
-                    boost::mpi::gather(world, paramValueVector, MASTER);
-                }
-
-                boost::mpi::broadcast(world, meanParamValueVector, MASTER);
-                torch::Tensor meanParamValueTensor = Ops::vector_to_tensor(meanParamValueVector);
-
-                param.copy_(meanParamValueTensor);
-                assert(meanParamValueTensor.equal(param));
-            }
-        }
-    }
 
 }// namespace agent::dqn
 #endif//RLPACK_DQN_AGENT_H_

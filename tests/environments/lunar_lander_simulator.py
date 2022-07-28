@@ -5,7 +5,6 @@ import yaml
 import logging
 from typing import Union, Dict, TypeVar, Any
 import matplotlib.pyplot as plt
-import time
 
 ReshapeFunction = TypeVar("ReshapeFunction")
 RLPackAgent = TypeVar("RLPackAgent")
@@ -19,7 +18,7 @@ class LunarLander:
             config_dict: Union[None, Dict[str, Any]] = None,
             reshape_func: Union[None, ReshapeFunction] = None,
     ):
-        time.sleep(10)
+
         self.agent = agent
         if config_path is not None:
             if config_dict is not None:
@@ -111,6 +110,12 @@ class LunarLander:
                 )
                 rewards.clear()
 
+        self.env.close()
+        # self.agent.save()
+        self.agent.finish()
+        print("Finished")
+
+
         if plot:
             rewards_to_plot = [
                 sum(rewards_collector[k]) / len(rewards_collector[k])
@@ -122,10 +127,6 @@ class LunarLander:
             plt.ylabel("Rewards")
             plt.title("Lunar Lander - Rewards vs. Episodes")
             plt.savefig(os.path.join(self.agent.save_path, "EpisodeVsReward.png"))
-
-        self.env.close()
-        self.agent.save()
-        self.agent.finish()
 
     def evaluate_agent(self) -> None:
 

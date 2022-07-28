@@ -107,11 +107,13 @@ namespace agent::dqn {
 
         memoryBuffer.push_back(stateCurrent, stateNext, reward, action, done);
 
-        if ((stepCounter % policyModelUpdateRate_ == 0) && (memoryBuffer.size() >= batchSize_)) {
+        if ((stepCounter_ % policyModelUpdateRate_ == 0) && (memoryBuffer.size() >= batchSize_)) {
             train_policy_model();
+
+
         }
 
-        if (stepCounter % targetModelUpdateRate_ == 0) {
+        if (stepCounter_ % targetModelUpdateRate_ == 0) {
             update_target_model();
         }
 
@@ -120,21 +122,21 @@ namespace agent::dqn {
         }
 
         if (done == 1) {
-            if (epsilonDecayCounter % epsilonDecayFrequency_ == 0) {
+            if (epsilonDecayCounter_ % epsilonDecayFrequency_ == 0) {
                 decay_epsilon();
             }
-            epsilonDecayCounter += 1;
+            epsilonDecayCounter_ += 1;
         }
 
         if (lrScheduler_ != nullptr and optimizer_->get_lr(0) > minLr_) {
             lrScheduler_->step();
         }
 
-        if (stepCounter % modelBackupFrequency_ == 0) {
+        if (stepCounter_ % modelBackupFrequency_ == 0) {
             save();
         }
 
-        stepCounter += 1;
+        stepCounter_ += 1;
 
         stateCurrent = stateCurrent.unsqueeze(0);
         action = policy(stateCurrent);
@@ -143,57 +145,58 @@ namespace agent::dqn {
     }
 
     void Agent::train_policy_model() {
-
-        auto randomExperiences = load_random_experiences();
-
-        torch::Tensor statesCurrent = randomExperiences->stack_current_states();
-        torch::Tensor statesNext = randomExperiences->stack_next_states();
-        torch::Tensor rewards = randomExperiences->stack_rewards();
-        torch::Tensor actions = randomExperiences->stack_actions();
-        torch::Tensor dones = randomExperiences->stack_dones();
-
-        if (applyNormTo_ == 0 || applyNormTo_ == 3 || applyNormTo_ == 4) {
-            statesCurrent = normalization_->apply_normalization(
-                    statesCurrent, epsForNorm_, pForNorm_, dimForNorm_
-            );
-            statesNext = normalization_->apply_normalization(
-                    statesNext, epsForNorm_, pForNorm_, dimForNorm_
-            );
-        }
-
-        if (applyNormTo_ == 1 || applyNormTo_ == 3) {
-            rewards = normalization_->apply_normalization(
-                    rewards, epsForNorm_, pForNorm_, dimForNorm_
-            );
-        }
-
-        policyModel_->train();
-        torch::Tensor tdValue;
+        optimizer_->zero_grad();
+#pragma omp parallel default(none) shared(gradTensorsVector_) firstprivate(policyModel_, targetModel_)
         {
-            targetModel_->eval();
-            torch::NoGradGuard guard;
-            torch::Tensor qValuesTarget = targetModel_->forward(statesNext);
-            tdValue = temporal_difference(rewards, qValuesTarget, dones);
+            auto randomExperiences = load_random_experiences();
 
-            if (applyNormTo_ == 2 || applyNormTo_ == 4) {
-                tdValue = normalization_->apply_normalization(
-                        tdValue, epsForNorm_, pForNorm_, dimForNorm_
+            torch::Tensor statesCurrent = randomExperiences->stack_current_states();
+            torch::Tensor statesNext = randomExperiences->stack_next_states();
+            torch::Tensor rewards = randomExperiences->stack_rewards();
+            torch::Tensor actions = randomExperiences->stack_actions();
+            torch::Tensor dones = randomExperiences->stack_dones();
+
+            if (applyNormTo_ == 0 || applyNormTo_ == 3 || applyNormTo_ == 4) {
+                statesCurrent = normalization_->apply_normalization(
+                        statesCurrent, epsForNorm_, pForNorm_, dimForNorm_
+                );
+                statesNext = normalization_->apply_normalization(
+                        statesNext, epsForNorm_, pForNorm_, dimForNorm_
                 );
             }
+
+            if (applyNormTo_ == 1 || applyNormTo_ == 3) {
+                rewards = normalization_->apply_normalization(
+                        rewards, epsForNorm_, pForNorm_, dimForNorm_
+                );
+            }
+
+            policyModel_->train();
+            torch::Tensor tdValue;
+            {
+                targetModel_->eval();
+                torch::NoGradGuard guard;
+                torch::Tensor qValuesTarget = targetModel_->forward(statesNext);
+                tdValue = temporal_difference(rewards, qValuesTarget, dones);
+
+                if (applyNormTo_ == 2 || applyNormTo_ == 4) {
+                    tdValue = normalization_->apply_normalization(
+                            tdValue, epsForNorm_, pForNorm_, dimForNorm_
+                    );
+                }
+            }
+
+            torch::Tensor qValuesPolicy = policyModel_->forward(statesCurrent);
+            torch::Tensor qValuesPolicyGathered = qValuesPolicy.gather(-1, actions);
+
+            if (qValuesPolicyGathered.isnan().any().item<bool>() || tdValue.isnan().any().item<bool>()) {
+                printf("NaN values encountered during training! This may lead to instability in model");
+            }
+
+            torch::Tensor loss = huberLoss_(tdValue.detach(), qValuesPolicyGathered);
+            loss.backward();
+            all_reduce_grads_with_mean();
         }
-
-        torch::Tensor qValuesPolicy = policyModel_->forward(statesCurrent);
-        torch::Tensor qValuesPolicyGathered = qValuesPolicy.gather(-1, actions);
-
-        if (qValuesPolicyGathered.isnan().any().item<bool>() || tdValue.isnan().any().item<bool>()) {
-            BOOST_LOG_TRIVIAL(warning) << "NaN values encountered during training! "
-                                          "This may lead to instability in model" << std::endl;
-        }
-
-
-        optimizer_->zero_grad();
-        torch::Tensor loss = huberLoss_(tdValue.detach(), qValuesPolicyGathered);
-        loss.backward();
         optimizer_->step(nullptr);
     }
 
@@ -288,6 +291,7 @@ namespace agent::dqn {
                 action = actionTensor.item<int32_t>();
             }
         }
+
         return action;
     }
 
@@ -306,12 +310,7 @@ namespace agent::dqn {
     }
 
     void Agent::save() {
-
-        sync_models();
-
-        if (world.rank() == MASTER) {
-            _save();
-        }
+        _save();
     }
 
     void Agent::load() {
@@ -326,42 +325,85 @@ namespace agent::dqn {
         torch::load(targetModel_, targetModelPath.append("_target.pt"));
         torch::load(epsilonAsTensor, statePath.append("stateValues.pt"));
         epsilon_ = epsilonAsTensor.template item<float_t>();
+
     }
 
-    void Agent::finish() {
-        MPI_Finalize();
-    }
-
-    void Agent::barrier() {
-        world.barrier();
-    }
-
-    void Agent::_save() {
+    int Agent::_save() {
         std::string policyModelPath = savePath_;
         std::string targetModelPath = savePath_;
         std::string statePath = savePath_;
 
-        torch::TensorOptions optionsForEpsilonAsTensor = torch::TensorOptions().dtype(dType_);
-        torch::Tensor epsilonAsTensor = torch::full({}, epsilon_, optionsForEpsilonAsTensor);
+        try {
 
-        torch::save(policyModel_, policyModelPath.append("_policy.pt"));
-        torch::save(targetModel_, targetModelPath.append("_target.pt"));
-        torch::save(epsilonAsTensor, statePath.append("stateValues.pt"));
+            torch::TensorOptions optionsForEpsilonAsTensor = torch::TensorOptions().dtype(torch::kFloat32);
+            torch::Tensor epsilonAsTensor = torch::full({}, epsilon_, optionsForEpsilonAsTensor);
+
+            torch::save(policyModel_, policyModelPath.append("_policy.pt"));
+            torch::save(targetModel_, targetModelPath.append("_target.pt"));
+            torch::save(epsilonAsTensor, statePath.append("stateValues.pt"));
+        }
+        catch (std::exception const &ex) {
+            std::cerr << "Exception occurred while trying to save the models: " << ex.what() << std::endl;
+            return -1;
+        }
+        return 0;
     }
 
-    void Agent::sync_models() {
+    void Agent::all_reduce_grads_with_mean() {
 
-        int dTypeCode = dTypeCodes[dType_];
-        switch (dTypeCode) {
-            case 0:
-            case 1:
-                all_reduce_params_with_mean<double_t>();
-                break;
-            case 3:
-                all_reduce_params_with_mean<float_t>();
-                break;
-            default:
-                throw std::runtime_error("Invalid DataType encountered! Could not finish All Reduce Operation.");
+        {
+
+            torch::NoGradGuard noGradGuard;
+            auto parameters = policyModel_->parameters();
+            uint32_t gradTensorsVectorSize = parameters.size() * omp_get_num_threads();
+
+#pragma omp single
+            {
+                std::vector<torch::Tensor> gradTensorsVector(parameters.size() * omp_get_num_threads());
+                gradTensorsVector_ = gradTensorsVector;
+            }
+
+            uint32_t paramIndex = 0, gradVectorIndex = 0;
+            int numThreads = omp_get_num_threads();
+
+#pragma omp barrier
+            {
+
+                while (paramIndex != parameters.size()) {
+                    int tid = omp_get_thread_num();
+#pragma omp critical
+                    {
+                        gradTensorsVector_.at(gradVectorIndex + tid) = parameters.at(paramIndex).mutable_grad();
+                    }
+                    gradVectorIndex += numThreads;
+                    paramIndex += 1;
+                }
+            }
+
+            paramIndex = 0, gradVectorIndex = 0;
+
+#pragma omp barrier
+            {
+                while (gradVectorIndex != gradTensorsVectorSize) {
+                    std::vector<torch::Tensor> gradSlice;
+#pragma omp critical
+                    {
+                        gradSlice = std::vector<torch::Tensor>(gradTensorsVector_.begin() + gradVectorIndex,
+                                                               gradTensorsVector_.begin() + gradVectorIndex +
+                                                               numThreads - 1);
+                    }
+
+                    auto stackedGradTensor = torch::stack(gradSlice);
+                    auto meanGradTensor = stackedGradTensor.mean(0);
+#pragma omp critical
+                    {
+                        parameters[paramIndex].mutable_grad() = meanGradTensor;
+                    };
+
+                    gradVectorIndex += numThreads;
+                    paramIndex += 1;
+                }
+            }
         }
     }
 

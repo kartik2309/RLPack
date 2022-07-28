@@ -30,17 +30,5 @@ namespace agent {
         throw std::runtime_error("AgentBase class cannot load model. This method must be overridden");
     }
 
-    void AgentBase::finish() {
-        throw std::runtime_error("AgentBase class cannot finish MPI Comm. This method must be overridden");
-    }
-
-    void AgentBase::barrier() {
-        throw std::runtime_error("AgentBase class cannot provide MPI Barrier. This method must be overridden");
-    }
-
-    void AgentBase::sync_models() {
-        throw std::runtime_error("AgentBase class cannot provide MPI Barrier. This method must be overridden");
-    }
-
     AgentBase::AgentBase() = default;
 }

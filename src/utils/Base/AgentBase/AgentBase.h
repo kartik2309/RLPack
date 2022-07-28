@@ -30,11 +30,6 @@ namespace agent {
 
         virtual void load();
 
-        virtual void finish();
-
-        virtual void barrier();
-
-        virtual void sync_models();
     };
 }
 
