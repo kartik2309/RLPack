@@ -14,6 +14,7 @@ cmake_policy(SET CMP0069 NEW)
 set(CMAKE_POLICY_DEFAULT_CMP0069 NEW)
 set_property(GLOBAL PROPERTY USE_FOLDERS YES)
 set(METAL_CPP_DIR "${CMAKE_SOURCE_DIR}/utils/Metal/metal-cpp")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 # ----------------------------------- Package Dependencies ----------------------------------- #
 
 find_package(Python REQUIRED COMPONENTS Interpreter Development)
@@ -21,6 +22,7 @@ find_package(PyBind11 REQUIRED)
 find_package(OpenMP REQUIRED)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 
+find_package(MPI REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(Torch REQUIRED)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
@@ -37,27 +39,92 @@ if (APPLE)
     find_library(APPLE_FWK_METAL_PERFORMANCE_SHADERSGRAPH MetalPerformanceShadersGraph REQUIRED)
 endif ()
 
-find_package(Boost COMPONENTS program_options log log_setup mpi serialization REQUIRED)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${DBOOST_LOG_DYN_LINK}")
+find_package(Boost COMPONENTS program_options log log_setup mpi serialization random REQUIRED)
 
 # ----------------------------------- Add Modules and Link Libraries ----------------------------------- #
 
 pybind11_add_module(
         RLPack
 
+        bindings/pybind11_helpers/BinderBase.h
+        bindings/pybind11_helpers/BinderBase.cpp
+
         bindings/pybind11_helpers/Dqn/GetDqnAgent.h
-        bindings/pybind11_helpers/Dqn/GetDqnAgent.tpp
-        bindings/pybind11_helpers/dqnBinder.cpp
+        bindings/pybind11_helpers/Dqn/GetDqnAgent.cpp
+        bindings/pybind11_helpers/Dqn/dqnBinder.cpp
 
-        src/Dqn/Agent.h
-        src/Dqn/Agent.tpp
-        src/Dqn/DqnBase.hpp
-
+        src/Dqn/Agent/Agent.h
+        src/Dqn/Agent/Agent.cpp
+        src/Dqn/Agent/DqnAgentOptions/DqnAgentOptions.h
+        src/Dqn/Agent/DqnAgentOptions/DqnAgentOptions.cpp
         src/Dqn/Dcqn1d/Dcqn1d.h
-        src/Dqn/Dcqn1d/Dcqn1d.tpp
-
+        src/Dqn/Dcqn1d/Dcqn1d.cpp
+        src/Dqn/Dcqn1d/Dcqn1dOptions/Dcqn1dOptions.h
+        src/Dqn/Dcqn1d/Dcqn1dOptions/Dcqn1dOptions.cpp
         src/Dqn/Dlqn1d/Dlqn1d.h
-        src/Dqn/Dlqn1d/Dlqn1d.tpp
+        src/Dqn/Dlqn1d/Dlqn1d.cpp
+        src/Dqn/Dlqn1d/Dlqn1dOptions/Dlqn1dOptions.h
+        src/Dqn/Dlqn1d/Dlqn1dOptions/Dlqn1dOptions.cpp
+        src/Dqn/Dqn.hpp
+
+        # Optimizer Classes
+        src/Optimizers/Optimizer.hpp
+        src/Optimizers/Adam/Adam.h
+        src/Optimizers/Adam/Adam.cpp
+        src/Optimizers/RmsProp/RmsProp.h
+        src/Optimizers/RmsProp/RmsProp.cpp
+        src/Optimizers/Sgd/Sgd.h
+        src/Optimizers/Sgd/Sgd.cpp
+
+        # LrScheduler Classes
+        src/LrSchedulers/LrScheduler.hpp
+        src/LrSchedulers/StepLr/StepLrOptions/StepLrOptions.h
+        src/LrSchedulers/StepLr/StepLrOptions/StepLrOptions.cpp
+        src/LrSchedulers/StepLr/StepLr.h
+        src/LrSchedulers/StepLr/StepLr.cpp
+
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~ Utils ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+        src/utils/utils.hpp
+
+        # Normalization
+        src/utils/Normalization/Normalization.h
+        src/utils/Normalization/Normalization.cpp
+
+        # Memory
+        src/utils/Memory/Memory.h
+        src/utils/Memory/Memory.cpp
+
+        # Ops
+        src/utils/Ops/Ops.h
+        src/utils/Ops/Ops.cpp
+
+        # Options Classes
+        src/utils/Base/Options/AgentOptions/AgentOptionsBase.h
+        src/utils/Base/Options/AgentOptions/AgentOptionsBase.cpp
+        src/utils/Base/Options/ModelOptions/ModelOptionsBase.h
+        src/utils/Base/Options/ModelOptions/ModelOptionsBase.cpp
+        src/utils/Base/Options/LrSchedulerOptions/LrSchedulerOptionsBase.h
+        src/utils/Base/Options/LrSchedulerOptions/LrSchedulerOptionsBase.cpp
+
+        # Activations Classes
+        src/Activations/Activation.hpp
+        src/utils/Base/ActivationBase/ActivationBase.h
+        src/utils/Base/ActivationBase/ActivationBase.cpp
+        src/Activations/Relu/Relu.h
+        src/Activations/Relu/Relu.cpp
+        src/Activations/LeakyRelu/LeakyRelu.h
+        src/Activations/LeakyRelu/LeakyRelu.cpp
+
+        # Base Classes
+        src/utils/Base/AgentBase/AgentBase.h
+        src/utils/Base/AgentBase/AgentBase.cpp
+        src/utils/Base/ModelBase/ModelBase.h
+        src/utils/Base/ModelBase/ModelBase.cpp
+        src/utils/Base/LrSchedulerBase/LrSchedulerBase.h
+        src/utils/Base/LrSchedulerBase/LrSchedulerBase.cpp
+        src/utils/Base/OptimizerBase/OptimizerBase.h
+        src/utils/Base/OptimizerBase/OptimizerBase.cpp
+
 )
 
 
@@ -75,13 +142,14 @@ endif ()
 
 add_dependencies(RLPack pybind11::headers)
 
+
+
 target_link_libraries(RLPack PRIVATE Python::Python)
+target_link_libraries(RLPack PRIVATE OpenMP::OpenMP_CXX)
+target_link_libraries(RLPack PRIVATE MPI::MPI_CXX)
 target_link_libraries(RLPack PRIVATE "${OpenCV_LIBRARIES}")
 target_link_libraries(RLPack PRIVATE "${TORCH_LIBRARIES}")
-target_link_libraries(RLPack PRIVATE ${Boost_LOG_LIBRARY})
-target_link_libraries(RLPack PRIVATE ${Boost_LOG_SETUP_LIBRARY})
 target_link_libraries(RLPack PRIVATE ${Boost_LIBRARIES})
-target_link_libraries(RLPack PRIVATE OpenMP::OpenMP_CXX)
 
 # ----------------------------------- Installation ----------------------------------- #
 install(

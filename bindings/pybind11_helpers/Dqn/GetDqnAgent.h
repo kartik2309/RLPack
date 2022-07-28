@@ -12,16 +12,19 @@
 #include <torch/torch.h>
 #include <vector>
 
-#include "../../../src/AgentBase.hpp"
-#include "../../../src/Dqn/Agent.tpp"
-#include "../../../src/Dqn/Dcqn1d/Dcqn1d.tpp"
-#include "../../../src/Dqn/Dlqn1d/Dlqn1d.tpp"
-#include "../../../src/Dqn/DqnBase.hpp"
+#include "../../../src/Activations/Activation.hpp"
+#include "../../../src/Optimizers/Optimizer.hpp"
+#include "../../../src/utils/Base/AgentBase/AgentBase.h"
+#include "../../../src/Dqn/Dqn.hpp"
+#include "../BinderBase.h"
 
-class GetDqnAgent {
+class GetDqnAgent : protected BinderBase {
 public:
-    GetDqnAgent(pybind11::str &modelName, pybind11::dict &modelArgs, pybind11::dict &activationArgs,
-                pybind11::dict &agentArgs, pybind11::dict &optimizerArgs, pybind11::str &device);
+    GetDqnAgent(
+            pybind11::str &modelName, pybind11::dict &modelArgs, pybind11::dict &activationArgs,
+            pybind11::dict &agentArgs, pybind11::dict &optimizerArgs, pybind11::dict &lrSchedulerArgs,
+            pybind11::str &device
+    );
 
     ~GetDqnAgent();
 
@@ -31,7 +34,11 @@ public:
 
     int policy(pybind11::array_t<float_t> &stateCurrent, pybind11::tuple &stateCurrentShape);
 
+    void setup_agent();
+
     void save();
+
+    void load();
 
 private:
     std::string modelName_;
@@ -39,90 +46,30 @@ private:
     pybind11::kwargs activationArgsRetrieved_;
     pybind11::kwargs agentArgs_;
     pybind11::kwargs optimizerArgsRetrieved_;
-    AgentBase *agent_;
+    pybind11::kwargs lrSchedulerArgsRetrieved_;
+    std::shared_ptr<agent::AgentBase> agent_;
     torch::DeviceType device_;
     torch::ScalarType dataType_;
 
     std::map<std::string, int> dqnModels_ = {{"dcqn1d", 0},
                                              {"dlqn1d", 1}};
-    std::map<std::string, int> activations_ = {{"relu",       0},
-                                               {"leaky_relu", 1},
-                                               {"sigmoid",    2}};
-    std::map<std::string, std::vector<std::string>> activationArgs_ = {
-            {"relu",       {}},
-            {"leaky_relu", {"negative_slope"}}};
 
-    std::map<std::string, int> optimizers_ = {{"adam",    0},
-                                              {"rmsprop", 1},
-                                              {"sgd",     2}};
-    std::map<std::string, std::vector<std::string>> optimizersArgs_ = {
-            {"adam",    {"lr", "betas",    "eps",       "weight_decay", "amsgrad"}},
-            {"rmsprop", {"lr", "alpha",    "eps",       "weight_decay", "momentum"}},
-            {"sgd",     {"lr", "momentum", "dampening", "weight_decay", "nesterov"}}};
 
-    torch::Tensor pybind_array_to_torch_tensor(pybind11::array_t<float_t> &array, pybind11::tuple &shape);
+    std::unique_ptr<agent::AgentOptionsBase> create_agent_options() override;
 
-    AgentBase *get_agent();
+    std::unique_ptr<model::ModelOptionsBase> create_model_options() override;
 
-    std::vector<std::shared_ptr<dqn::DqnBase>> get_dqn_model();
+    std::shared_ptr<optimizer::OptimizerBase> create_optimizer(std::shared_ptr<model::ModelBase> &model) override;
 
-    std::vector<std::shared_ptr<dqn::DqnBase>>
-    get_relu_dcqn1d_model(int32_t sequenceLength, std::vector<int32_t> &channels,
-                          std::vector<int32_t> &kernelSizesConv,
-                          std::vector<int32_t> &strideSizesConv,
-                          std::vector<int32_t> &dilationSizesConv,
-                          std::optional<std::vector<int32_t>> &kernelSizesPool,
-                          std::optional<std::vector<int32_t>> &strideSizesPool,
-                          std::optional<std::vector<int32_t>> &dilationSizesPool,
-                          float_t dropout, int32_t numActions, bool usePadding);
+    std::shared_ptr<optimizer::lrScheduler::LrSchedulerBase>
+    create_lr_scheduler(std::shared_ptr<optimizer::OptimizerBase> &optimizer) override;
 
-    std::vector<std::shared_ptr<dqn::DqnBase>>
-    get_relu_dlqn1d_model(int32_t sequenceLength, std::vector<int32_t> &hiddenSizes, int32_t numAction,
-                          float_t dropout);
+    std::optional<std::shared_ptr<ActivationBase>> create_activation_module() override;
 
-    std::vector<std::shared_ptr<dqn::DqnBase>>
-    get_leaky_relu_dcqn1d_model(int32_t sequenceLength, std::vector<int32_t> &channels,
-                                std::vector<int32_t> &kernelSizesConv,
-                                std::vector<int32_t> &strideSizesConv,
-                                std::vector<int32_t> &dilationSizesConv,
-                                std::optional<std::vector<int32_t>> &kernelSizesPool,
-                                std::optional<std::vector<int32_t>> &strideSizesPool,
-                                std::optional<std::vector<int32_t>> &dilationSizesPool,
-                                float_t dropout, int32_t numActions, bool usePadding);
+    std::shared_ptr<model::ModelBase> create_model() override;
 
-    std::vector<std::shared_ptr<dqn::DqnBase>>
-    get_leaky_relu_dlqn1d_model(int32_t sequenceLength, std::vector<int32_t> &hiddenSizes, int32_t numAction,
-                          float_t dropout);
+    std::shared_ptr<agent::AgentBase> create_agent() override;
 
-    std::vector<std::shared_ptr<dqn::DqnBase>>
-    get_sigmoid_dcqn1d_model(int32_t sequenceLength, std::vector<int32_t> &channels,
-                             std::vector<int32_t> &kernelSizesConv,
-                             std::vector<int32_t> &strideSizesConv,
-                             std::vector<int32_t> &dilationSizesConv,
-                             std::optional<std::vector<int32_t>> &kernelSizesPool,
-                             std::optional<std::vector<int32_t>> &strideSizesPool,
-                             std::optional<std::vector<int32_t>> &dilationSizesPool,
-                             float_t dropout, int32_t numActions, bool usePadding);
-
-    std::vector<std::shared_ptr<dqn::DqnBase>>
-    get_sigmoid_dlqn1d_model(int32_t sequenceLength, std::vector<int32_t> &hiddenSizes, int32_t numAction,
-                          float_t dropout);
-
-    AgentBase *
-    get_adam_optim_agent(std::shared_ptr<dqn::DqnBase> &targetModel, std::shared_ptr<dqn::DqnBase> &policyModel,
-                         float_t gamma, float_t epsilon, float_t epsilonDecayRate, int32_t memoryBufferSize,
-                         int32_t targetModelUpdateRate, int32_t policyModelUpdateRate, int32_t numActions,
-                         std::string &savePath, int32_t applyNorm, int32_t applyNormTo);
-
-    AgentBase *
-    get_rmsprop_optim_agent(std::shared_ptr<dqn::DqnBase> &targetModel, std::shared_ptr<dqn::DqnBase> &policyModel,
-                            float_t gamma, float_t epsilon, float_t epsilonDecayRate, int32_t memoryBufferSize,
-                            int32_t targetModelUpdateRate, int32_t policyModelUpdateRate, int32_t numActions,
-                            std::string &savePath, int32_t applyNorm, int32_t applyNormTo);
-
-    static torch::DeviceType get_device(std::string &device);
-
-    static torch::ScalarType get_data_type(std::string &device);
 };
 
 #endif//RLPACK_BINDINGS_PYBIND11_HELPERS_DQN_GETDQNAGENT_H_

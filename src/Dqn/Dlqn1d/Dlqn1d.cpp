@@ -2,52 +2,62 @@
 // Created by Kartik Rajeshwaran on 2022-07-01.
 //
 
-#ifndef RLPACK_DQN_DLQN1D_DLQN1D_TPP
-#define RLPACK_DQN_DLQN1D_DLQN1D_TPP
-
-
 #include "Dlqn1d.h"
 
-namespace dqn {
-    template<class Activation>
-    dqn::Dlqn1d<Activation>::Dlqn1d(int32_t sequenceLength, std::vector<int32_t> &hiddenSizes, int32_t numAction,
-                                    std::optional<Activation> activation, float_t dropout) {
+namespace model::dqn {
+    dqn::Dlqn1d::Dlqn1d(
+            int32_t sequenceLength, std::vector<int32_t> &hiddenSizes, int32_t numAction,
+            std::optional<std::shared_ptr<ActivationBase>> activation, float_t dropout
+    ) : model::ModelBase() {
 
         sequenceLength_ = sequenceLength;
         hiddenSizes_ = hiddenSizes;
         hiddenSizes_.push_back(numAction);
 
         dropout_ = dropout;
-        activationSubmodule = activation.has_value() ? activation.value() : Activation();
+        activationSubmodule = activation.has_value() ? activation.value() : std::make_shared<Relu>();
         numBlocks_ = hiddenSizes_.size() - 1;
 
         setup_model();
     }
 
-    template<class Activation>
-    torch::Tensor dqn::Dlqn1d<Activation>::forward(torch::Tensor x) {
+    Dlqn1d::Dlqn1d(std::unique_ptr<Dlqn1dOptions> &options) : model::ModelBase() {
+        sequenceLength_ = options->get_sequence_length();
+        hiddenSizes_ = options->get_hidden_sizes();
+        hiddenSizes_.push_back(options->get_num_actions());
+
+        dropout_ = options->get_dropout();
+        activationSubmodule = options->get_activation().has_value()
+                              ? options->get_activation().value()
+                              : std::make_shared<Relu>();
+
+        numBlocks_ = hiddenSizes_.size() - 1;
+        setup_model();
+    }
+
+    torch::Tensor dqn::Dlqn1d::forward(torch::Tensor x) {
         for (int32_t idx = 0; idx != numBlocks_; idx++) {
 
             if (idx == numBlocks_ - 1) {
+                x = flattenSubmodule->ptr()->forward(x);
                 x = dropoutSubmodule->ptr()->forward(x);
             }
 
             x = linearSubmodules[idx]->template as<torch::nn::Linear>()->forward(x);
 
             if (idx != numBlocks_ - 1) {
-                x = activationSubmodule(x);
+                x = activationSubmodule->operator()(x);
             }
         }
         return x;
     }
 
-    template<class Activation>
-    void dqn::Dlqn1d<Activation>::setup_model() {
+    void dqn::Dlqn1d::setup_model() {
 
         std::string linearModuleName = "linear_";
         for (int32_t idx = 0; idx != numBlocks_; idx++) {
 
-            if (idx == numBlocks_ - 1){
+            if (idx == numBlocks_ - 1) {
                 hiddenSizes_[idx] *= sequenceLength_;
             }
 
@@ -69,8 +79,5 @@ namespace dqn {
 
     }
 
-    template<class Activation>
-    dqn::Dlqn1d<Activation>::~Dlqn1d() = default;
-}
-
-#endif //RLPACK_DQN_DLQN1D_DLQN1D_TPP
+    dqn::Dlqn1d::~Dlqn1d() = default;
+}//namespace model::dqn
