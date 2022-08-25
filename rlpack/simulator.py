@@ -1,16 +1,16 @@
 import argparse
 import os
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 import yaml
 from numpy import ndarray
-from torch.nn import Module
 
-from dqn.dqn_agent import DqnAgent
-from environments.environments import Environments
-from utils.base.agent import Agent
-from utils.register import Register
+from rlpack import pytorch
+from rlpack.dqn.dqn_agent import DqnAgent
+from rlpack.environments.environments import Environments
+from rlpack.utils.base import Agent
+from rlpack.utils.register import Register
 
 SHAPE = (1, 8)
 
@@ -21,9 +21,24 @@ def reshape_func(x: ndarray) -> ndarray:
 
 
 class Simulator:
-    def __init__(self, config: Dict[str, Any]):
-        self.config = config
+    def __init__(
+        self,
+        config: Optional[Dict[str, Any]] = None,
+        algorithm: Optional[str] = None,
+        environment: Optional[str] = None,
+    ):
         self.register = Register()
+        # Check arguments and select config.
+        if config is None and algorithm is None and environment is None:
+            raise ValueError(
+                "At least one of the arguments, `config`, `algorithm` or `environments` must be passed!"
+            )
+        if config is None and algorithm is not None:
+            config = self.register.get_default_config(algorithm)
+        if environment is not None:
+            config["env_name"] = environment
+
+        self.config = config
         self.agent = self.setup_agent()
         self.env = Environments(
             agent=self.agent, config=self.config, reshape_func=reshape_func
@@ -105,7 +120,7 @@ class Simulator:
 
         return agent
 
-    def setup_models(self) -> List[Module]:
+    def setup_models(self) -> List[pytorch.nn.Module]:
         activation = self.register.get_activation(
             activation_args=self.config["activation_args"]
         )

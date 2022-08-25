@@ -1,15 +1,14 @@
 import os
 import random
-import time
 from collections import OrderedDict
 from typing import List, Optional, TypeVar, Union
 
-import torch
 from numpy import ndarray
 
-from utils.base.agent import Agent
-from utils.memory import Memory
-from utils.normalization import Normalization
+from rlpack import pytorch
+from rlpack._C.memory import Memory
+from rlpack.utils.base.agent import Agent
+from rlpack.utils.normalization import Normalization
 
 LRScheduler = TypeVar("LRScheduler")
 LossFunction = TypeVar("LossFunction")
@@ -22,9 +21,9 @@ MEMORY_SHUFFLE_SEED_MAX = 9223372036854775807
 class DqnAgent(Agent):
     def __init__(
         self,
-        target_model: torch.nn.Module,
-        policy_model: torch.nn.Module,
-        optimizer: torch.optim.Optimizer,
+        target_model: pytorch.nn.Module,
+        policy_model: pytorch.nn.Module,
+        optimizer: pytorch.optim.Optimizer,
         lr_scheduler: LRScheduler,
         loss_function: LossFunction,
         gamma: float,
@@ -84,7 +83,6 @@ class DqnAgent(Agent):
         self.dim_for_norm = dim_for_norm
 
         self.memory = Memory(buffer_size=memory_buffer_size, device=self.device)
-        self.generator = torch.Generator(self.device)
         self.step_counter = 1
 
         for n, p in self.target_model.named_parameters():
@@ -94,19 +92,13 @@ class DqnAgent(Agent):
 
     def train(
         self,
-        state_current: Union[ndarray, torch.Tensor, List[float]],
-        state_next: Union[ndarray, torch.Tensor, List[float]],
+        state_current: Union[ndarray, pytorch.Tensor, List[float]],
+        state_next: Union[ndarray, pytorch.Tensor, List[float]],
         reward: Union[int, float],
         action: Union[int, float],
         done: Union[bool, int],
     ) -> int:
-        state_current = self.memory.cast_to_tensor(state_current)
-        state_next = self.memory.cast_to_tensor(state_next)
-
-        if isinstance(done, bool):
-            done = int(done)
-
-        self.memory.append(state_current, state_next, reward, action, done)
+        self.memory.insert(state_current, state_next, reward, action, done)
 
         if (
             self.step_counter % self.policy_model_update_rate == 0
@@ -128,14 +120,13 @@ class DqnAgent(Agent):
             self.step_counter = 0
 
         self.step_counter += 1
-        state_current = torch.unsqueeze(state_current, 0)
         action = self.policy(state_current)
         return action
 
-    @torch.no_grad()
-    def policy(self, state_current: Union[ndarray, torch.Tensor, List[float]]) -> int:
-        if not isinstance(state_current, torch.Tensor):
-            state_current = self.memory.cast_to_tensor(state_current)
+    @pytorch.no_grad()
+    def policy(self, state_current: Union[ndarray, pytorch.Tensor, List[float]]) -> int:
+        state_current = self._cast_to_tensor(state_current).to(self.device)
+        state_current = pytorch.unsqueeze(state_current, 0)
         p = random.random()
         if p < self.epsilon:
             action = random.randint(0, self.num_actions - 1)
@@ -166,39 +157,39 @@ class DqnAgent(Agent):
 
         agent_state = {"epsilon": self.epsilon}
 
-        torch.save(
+        pytorch.save(
             checkpoint_target,
             os.path.join(self.save_path, f"target{custom_name_suffix}.pt"),
         )
-        torch.save(
+        pytorch.save(
             checkpoint_policy,
             os.path.join(self.save_path, f"policy{custom_name_suffix}.pt"),
         )
-        torch.save(
+        pytorch.save(
             checkpoint_optimizer,
             os.path.join(self.save_path, f"optimizer{custom_name_suffix}.pt"),
         )
         if self.lr_scheduler is not None:
-            torch.save(
+            pytorch.save(
                 checkpoint_lr_scheduler,
                 os.path.join(self.save_path, f"lr_scheduler{custom_name_suffix}.pt"),
             )
 
-        torch.save(agent_state, os.path.join(self.save_path, "agent_state.pt"))
+        pytorch.save(agent_state, os.path.join(self.save_path, "agent_state.pt"))
         return
 
     def load(self, custom_name_suffix: Optional[str] = None) -> None:
         if custom_name_suffix is None:
             custom_name_suffix = ""
-        checkpoint_target = torch.load(
+        checkpoint_target = pytorch.load(
             os.path.join(self.save_path, f"target{custom_name_suffix}.pt"),
             map_location="cpu",
         )
-        checkpoint_policy = torch.load(
+        checkpoint_policy = pytorch.load(
             os.path.join(self.save_path, f"policy{custom_name_suffix}.pt"),
             map_location="cpu",
         )
-        checkpoint_optimizer = torch.load(
+        checkpoint_optimizer = pytorch.load(
             os.path.join(self.save_path, f"optimizer{custom_name_suffix}.pt"),
             map_location="cpu",
         )
@@ -207,7 +198,7 @@ class DqnAgent(Agent):
         if os.path.isfile(
             os.path.join(self.save_path, f"lr_scheduler{custom_name_suffix}.pt")
         ):
-            checkpoint_lr_sc = torch.load(
+            checkpoint_lr_sc = pytorch.load(
                 os.path.join(self.save_path, f"lr_scheduler{custom_name_suffix}.pt"),
                 map_location="cpu",
             )
@@ -218,17 +209,13 @@ class DqnAgent(Agent):
         if self.lr_scheduler is not None and checkpoint_lr_sc is not None:
             self.lr_scheduler.load_state_dict(checkpoint_lr_sc["state_dict"])
 
-        agent_state = torch.load(os.path.join(self.save_path, "agent_state.pt"))
+        agent_state = pytorch.load(os.path.join(self.save_path, "agent_state.pt"))
         self.epsilon = agent_state["epsilon"]
         return
 
     def __train_policy_model(self) -> None:
         random_experiences = self.__load_random_experiences()
-        state_current = random_experiences.stack_current_states()
-        state_next = random_experiences.stack_next_states()
-        rewards = random_experiences.stack_rewards()
-        actions = random_experiences.stack_actions()
-        dones = random_experiences.stack_dones()
+        state_current, state_next, rewards, actions, dones = random_experiences
 
         if self.apply_norm_to in self.state_norm_codes:
             state_current = self.normalization.apply_normalization(
@@ -242,11 +229,10 @@ class DqnAgent(Agent):
             rewards = self.normalization.apply_normalization(
                 rewards, self.eps_for_norm, self.p_for_norm, self.dim_for_norm
             )
-
         if not self.policy_model.training:
             self.policy_model.train()
 
-        with torch.no_grad():
+        with pytorch.no_grad():
             q_values_target = self.target_model(state_next)
             td_value = self.__temporal_difference(rewards, q_values_target, dones)
 
@@ -256,7 +242,10 @@ class DqnAgent(Agent):
             )
 
         q_values_policy = self.policy_model(state_current)
-        q_values_gathered = torch.gather(q_values_policy, dim=-1, index=actions)
+        actions = self._adjust_dims_for_tensor(
+            tensor=actions, target_dim=q_values_target.dim()
+        )
+        q_values_gathered = pytorch.gather(q_values_policy, dim=-1, index=actions)
         self.optimizer.zero_grad()
 
         loss = self.loss_function(q_values_gathered, td_value.detach())
@@ -269,7 +258,7 @@ class DqnAgent(Agent):
         ):
             self.lr_scheduler.step()
 
-    @torch.no_grad()
+    @pytorch.no_grad()
     def __update_target_model(self) -> None:
         policy_parameters = self.policy_model.named_parameters()
         target_parameters = self.target_model.named_parameters()
@@ -282,11 +271,14 @@ class DqnAgent(Agent):
                 )
         return
 
+    @pytorch.no_grad()
     def __temporal_difference(
-        self, rewards: torch.Tensor, q_values: torch.Tensor, dones: torch.Tensor
-    ) -> torch.Tensor:
-        q_values_max_tuple = torch.max(q_values, dim=-1, keepdim=True)
+        self, rewards: pytorch.Tensor, q_values: pytorch.Tensor, dones: pytorch.Tensor
+    ) -> pytorch.Tensor:
+        q_values_max_tuple = pytorch.max(q_values, dim=-1, keepdim=True)
         q_values_max = q_values_max_tuple.values
+        rewards = self._adjust_dims_for_tensor(rewards, target_dim=q_values.dim())
+        dones = self._adjust_dims_for_tensor(dones, target_dim=q_values.dim())
         td_value = rewards + ((self.gamma * q_values_max) * (1 - dones))
         return td_value
 
@@ -297,33 +289,8 @@ class DqnAgent(Agent):
             self.epsilon = self.min_epsilon
         return
 
-    def __load_random_experiences(self) -> Memory:
-        random.seed(time.time())
-        self.generator.manual_seed(
-            random.randint(MEMORY_SHUFFLE_SEED_MIN, MEMORY_SHUFFLE_SEED_MAX)
+    def __load_random_experiences(self) -> List[pytorch.Tensor]:
+        samples = self.memory.sample(
+            self.batch_size, self.force_terminal_state_selection_prob
         )
-
-        force_sample_terminal_state = False
-        if (
-            random.random() < self.force_terminal_state_selection_prob
-            and self.memory.has_terminal_state()
-        ):
-            force_sample_terminal_state = True
-
-        local_batch_size = self.batch_size
-        if force_sample_terminal_state:
-            local_batch_size -= 1
-        random_indices = torch.randint(
-            low=0,
-            high=len(self.memory) - 1,
-            size=(local_batch_size,),
-            generator=self.generator,
-            requires_grad=False,
-            device=self.device,
-        ).tolist()
-
-        if force_sample_terminal_state:
-            random_indices.append(self.memory.get_random_terminal_sample_index())
-        random_experience = Memory(buffer_size=self.batch_size, device=self.device)
-        random_experience.append(*self.memory[random_indices])
-        return random_experience
+        return samples

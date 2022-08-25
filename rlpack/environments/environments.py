@@ -6,7 +6,7 @@ import gym
 import matplotlib.pyplot as plt
 import numpy as np
 
-from utils.base.agent import Agent
+from rlpack.utils.base.agent import Agent
 
 
 class Environments:
@@ -16,7 +16,6 @@ class Environments:
         config: Dict[str, Any],
         reshape_func: Optional[Callable] = None,
     ):
-
         self.agent = agent
         self.config = config
 
@@ -81,7 +80,10 @@ class Environments:
 
                 # Log Mean Reward in the episode cycle
                 mean_reward = self.__list_mean(rewards)
-                logging.info(f"Average Reward after {ep} episodes: {mean_reward}")
+                reward_log_message = (
+                    f"Average Reward after {ep} episodes: {mean_reward}"
+                )
+                logging.info(reward_log_message)
                 if highest_mv_avg_reward < mean_reward:
                     self.agent.save(custom_name_suffix="_best")
                     highest_mv_avg_reward = mean_reward
@@ -89,7 +91,8 @@ class Environments:
                 # Log Mean Loss in the episode cycle
                 mean_loss = self.__list_mean(self.agent.loss)
                 if len(self.agent.loss) > 0:
-                    logging.info(f"Average Loss after {ep} episodes: {mean_loss} \n")
+                    logging.info(f"Average Loss after {ep} episodes: {mean_loss}")
+                logging.info(f"{'~' * len(reward_log_message)}\n")
                 rewards.clear()
         self.env.close()
         self.agent.save()
