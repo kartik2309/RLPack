@@ -5,16 +5,12 @@
 #ifndef RLPACK_C_MEMORY_H
 #define RLPACK_C_MEMORY_H
 
-#include <vector>
 #include <pybind11/pybind11.h>
-#include <pybind11/numpy.h>
 #include <pybind11/stl.h>
-#include <pybind11/stl_bind.h>
-#include <optional>
 #include <random>
-#include <iostream>
 #include <omp.h>
 #include <torch/extension.h>
+#include <vector>
 
 class C_Memory {
 public:

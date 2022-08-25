@@ -3,6 +3,7 @@
 //
 
 #include "C_Memory.h"
+#include <pybind11/stl_bind.h>
 
 PYBIND11_MAKE_OPAQUE(std::vector<torch::Tensor>)
 PYBIND11_MAKE_OPAQUE(std::map<std::string, std::vector<torch::Tensor> *>)

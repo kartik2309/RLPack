@@ -14,43 +14,46 @@ endif ()
 find_package(Python REQUIRED COMPONENTS Interpreter Development)
 find_package(pybind11 QUIET)
 
-if(NOT pybind11_FOUND)
+# Install pybind11 if not found.
+if (NOT pybind11_FOUND)
     execute_process(
             COMMAND sh ${CMAKE_SOURCE_DIR}/src/c_requirements/install_pybind11.sh
             WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/"
             COMMAND_ECHO STDOUT
     )
-    if("${CMAKE_PREFIX_PATH}" STREQUAL "")
+    if ("${CMAKE_PREFIX_PATH}" STREQUAL "")
         set(CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/pybind11")
-    else()
+    else ()
         set(CMAKE_PREFIX_PATH "${CMAKE_PREFIX_PATH};${CMAKE_SOURCE_DIR}/pybind11")
-    endif()
+    endif ()
     find_package(pybind11 REQUIRED)
-endif()
+endif ()
 
 find_package(OpenMP REQUIRED)
-set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 
 find_package(CUDAToolkit QUIET)
-if(NOT CUDA_FOUND)
+if (NOT CUDA_FOUND)
     set(CUDA_SOURCE_DIR "")
-endif()
-if(NOT EXISTS "${Torch_PACKAGE_DIR}/kineto/")
+endif ()
+if (NOT EXISTS "${Torch_PACKAGE_DIR}/kineto/")
     execute_process(
-            COMMAND sh "${CMAKE_SOURCE_DIR}/src/c_requirements/install_kineto.sh" "${Torch_PACKAGE_DIR}" "${CUDAToolkit_TARGET_DIR}"
+            COMMAND sh "${CMAKE_SOURCE_DIR}/src/c_requirements/install_kineto.sh"
+            "${Torch_PACKAGE_DIR}" "${CUDAToolkit_TARGET_DIR}"
             WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/"
             COMMAND_ECHO STDOUT
     )
-endif()
+endif ()
 set(kineto_LIBRARY "${Torch_PACKAGE_DIR}/kineto/libkineto/build/libkineto.a")
 find_package(Torch QUIET)
-if(NOT Torch_FOUND)
+if (NOT Torch_FOUND)
     message(FATAL "Cannot find a valid PyTorch installation!")
-endif()
+endif ()
 find_library(TORCH_PYTHON_LIBRARY torch_python PATHS "${TORCH_INSTALL_PREFIX}/lib")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 set(TORCH_USE_RTLD_GLOBAL YES)
+# ----------------------------------------- Linking ---------------------------------------- #
 
 pybind11_add_module(
         C_Memory
