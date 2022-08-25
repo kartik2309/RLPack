@@ -58,8 +58,7 @@ setup(
     author="Kartik Rajeshwaran",
     author_email="kartik.rajeshwaran@gmail.com",
     description="Implementation of RL Algorithms",
-    long_description="Implementation of RL Algorithms with PyTorch and optimization with C++."
-    "with Python Bindings",
+    long_description="Implementation of RL Algorithms with PyTorch and optimization with C++.",
     long_description_content_type="text/markdown",
     url="https://github.com/kartik2309/RLPack",
     packages=[
