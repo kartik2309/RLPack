@@ -141,12 +141,13 @@ std::map<std::string, torch::Tensor> C_Memory::sample(int32_t batchSize,
         sampledDones[index] = dones_[loadedIndex];
         index++;
     }
-    std::map<std::string, torch::Tensor> samples = {{"states_current", torch::stack(sampledStateCurrent, 0).to(
-            device_)},
-                                                    {"states_next",    torch::stack(sampledStateNext, 0).to(device_)},
-                                                    {"rewards",        torch::stack(sampledRewards, 0).to(device_)},
-                                                    {"actions",        torch::stack(sampledActions, 0).to(device_)},
-                                                    {"dones",          torch::stack(sampledDones, 0).to(device_)}};
+    std::map<std::string, torch::Tensor> samples = {
+            {"states_current", torch::stack(sampledStateCurrent, 0).to(device_)},
+            {"states_next",    torch::stack(sampledStateNext, 0).to(device_)},
+            {"rewards",        torch::stack(sampledRewards, 0).to(device_)},
+            {"actions",        torch::stack(sampledActions, 0).to(device_)},
+            {"dones",          torch::stack(sampledDones, 0).to(device_)}
+    };
     return samples;
 }
 
@@ -168,12 +169,13 @@ std::map<std::string, torch::Tensor> C_Memory::sample(int32_t batchSize) {
         sampledDones[index] = dones_[loadedIndex];
         index++;
     }
-    std::map<std::string, torch::Tensor> samples = {{"states_current", torch::stack(sampledStateCurrent, 0).to(
-            device_)},
-                                                    {"states_next",    torch::stack(sampledStateNext, 0).to(device_)},
-                                                    {"rewards",        torch::stack(sampledRewards, 0).to(device_)},
-                                                    {"actions",        torch::stack(sampledActions, 0).to(device_)},
-                                                    {"dones",          torch::stack(sampledDones, 0).to(device_)}};
+    std::map<std::string, torch::Tensor> samples = {
+            {"states_current", torch::stack(sampledStateCurrent, 0).to(device_)},
+            {"states_next",    torch::stack(sampledStateNext, 0).to(device_)},
+            {"rewards",        torch::stack(sampledRewards, 0).to(device_)},
+            {"actions",        torch::stack(sampledActions, 0).to(device_)},
+            {"dones",          torch::stack(sampledDones, 0).to(device_)}
+    };
     return samples;
 }
 
