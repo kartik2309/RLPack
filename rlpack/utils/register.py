@@ -1,13 +1,9 @@
 from typing import Any, Dict, List, TypeVar
+from rlpack import pytorch
 
-from torch import Tensor
-from torch.nn import HuberLoss, LeakyReLU, Module, MSELoss, ReLU, Tanh
-from torch.optim import SGD, Adam, AdamW, Optimizer, RMSprop
-from torch.optim.lr_scheduler import CyclicLR, LinearLR, StepLR
-
-from dqn import Dlqn1d
-from dqn import DqnAgent as DqnAgent
-from utils.base.agent import Agent
+from rlpack.dqn.dqn_agent import DqnAgent
+from rlpack.dqn.models.dlqn1d import Dlqn1d
+from rlpack.utils.base.agent import Agent
 
 LRScheduler = TypeVar("LRScheduler")
 LossFunction = TypeVar("LossFunction")
@@ -17,17 +13,24 @@ Activation = TypeVar("Activation")
 class Register(object):
     def __init__(self):
         self.optimizer_map = {
-            "adam": Adam,
-            "adamw": AdamW,
-            "rms_prop": RMSprop,
-            "sgd": SGD,
+            "adam": pytorch.optim.Adam,
+            "adamw": pytorch.optim.AdamW,
+            "rms_prop": pytorch.optim.RMSprop,
+            "sgd": pytorch.optim.SGD,
         }
-        self.loss_function_map = {"huber_loss": HuberLoss, "mse": MSELoss}
-        self.activation_map = {"relu": ReLU, "leaky_relu": LeakyReLU, "tanh": Tanh}
+        self.loss_function_map = {
+            "huber_loss": pytorch.nn.HuberLoss,
+            "mse": pytorch.nn.MSELoss,
+        }
+        self.activation_map = {
+            "relu": pytorch.nn.ReLU,
+            "leaky_relu": pytorch.nn.LeakyReLU,
+            "tanh": pytorch.nn.Tanh,
+        }
         self.lr_scheduler_map = {
-            "step_lr": StepLR,
-            "linear_lr": LinearLR,
-            "cyclic_lr": CyclicLR,
+            "step_lr": pytorch.optim.lr_scheduler.StepLR,
+            "linear_lr": pytorch.optim.lr_scheduler.LinearLR,
+            "cyclic_lr": pytorch.optim.lr_scheduler.CyclicLR,
         }
         self.norm_mode_codes = {"none": -1, "min_max": 0, "standardize": 1, "p_norm": 2}
         self.norm_to_mode_codes = {
@@ -86,7 +89,7 @@ class Register(object):
     def get_model_args(self, model_name: str) -> List[str]:
         return self.model_args[model_name]
 
-    def get_models(self, model_name: str, *args, **kwargs) -> List[Module]:
+    def get_models(self, model_name: str, *args, **kwargs) -> List[pytorch.nn.Module]:
         return [
             self.models[model_name](*args, **kwargs)
             for _ in range(len(self.model_args_for_agents[model_name].keys()))
@@ -96,8 +99,8 @@ class Register(object):
         return self.agents[model_name](*args, **kwargs)
 
     def get_optimizer(
-        self, params: List[Tensor], optimizer_args: Dict[str, Any]
-    ) -> Optimizer:
+        self, params: List[pytorch.Tensor], optimizer_args: Dict[str, Any]
+    ) -> pytorch.optim.Optimizer:
         name = optimizer_args["optimizer"]
         optimizer_args.pop("optimizer")
         optimizer = self.optimizer_map[name](params=params, **optimizer_args)
@@ -111,7 +114,7 @@ class Register(object):
         return activation
 
     def get_lr_scheduler(
-        self, optimizer: Optimizer, lr_scheduler_args: Dict[str, Any]
+        self, optimizer: pytorch.optim.Optimizer, lr_scheduler_args: Dict[str, Any]
     ) -> LRScheduler:
         if lr_scheduler_args is None:
             return

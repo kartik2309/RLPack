@@ -5,12 +5,12 @@ from typing import Any, Dict, List
 import numpy as np
 import yaml
 from numpy import ndarray
-from torch.nn import Module
+from rlpack import pytorch
 
-from dqn.dqn_agent import DqnAgent
-from environments.environments import Environments
-from utils.base.agent import Agent
-from utils.register import Register
+from rlpack.dqn.dqn_agent import DqnAgent
+from rlpack.environments.environments import Environments
+from rlpack.utils.base import Agent
+from rlpack.utils.register import Register
 
 SHAPE = (1, 8)
 
@@ -105,7 +105,7 @@ class Simulator:
 
         return agent
 
-    def setup_models(self) -> List[Module]:
+    def setup_models(self) -> List[pytorch.nn.Module]:
         activation = self.register.get_activation(
             activation_args=self.config["activation_args"]
         )

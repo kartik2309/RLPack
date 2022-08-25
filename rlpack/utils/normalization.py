@@ -1,8 +1,6 @@
 from typing import Optional, Tuple
 
-import torch
-from torch import Tensor
-from torch.linalg import norm
+from rlpack import pytorch
 
 
 class Normalization:
@@ -14,8 +12,8 @@ class Normalization:
         return
 
     def apply_normalization(
-        self, tensor: Tensor, eps: float, p: float, dim: int
-    ) -> Tensor:
+        self, tensor: pytorch.Tensor, eps: float, p: float, dim: int
+    ) -> pytorch.Tensor:
         if self.apply_norm == -1:
             return tensor
         elif self.apply_norm == 0:
@@ -27,26 +25,28 @@ class Normalization:
         else:
             raise ValueError("Invalid value of normalization received!")
 
-    def min_max_normalization(self, tensor: Tensor, eps: float, dim: int) -> Tensor:
+    def min_max_normalization(
+        self, tensor: pytorch.Tensor, eps: float, dim: int
+    ) -> pytorch.Tensor:
         if self.custom_min_max is not None:
             min_ = self.custom_min_max[0]
             max_ = self.custom_min_max[1]
         else:
-            min_ = torch.min(tensor, dim=dim)
-            max_ = torch.max(tensor, dim=dim)
+            min_ = pytorch.min(tensor, dim=dim)
+            max_ = pytorch.max(tensor, dim=dim)
 
         tensor = 2.0 * ((tensor - min_) / (max_ - min_ + eps)) - 1
         return tensor
 
     @staticmethod
-    def standardization(tensor: Tensor, eps: float, dim: int) -> Tensor:
-        mean_ = torch.mean(tensor, dim=dim)
-        std_ = torch.std(tensor, dim=dim)
+    def standardization(tensor: pytorch.Tensor, eps: float, dim: int) -> pytorch.Tensor:
+        mean_ = pytorch.mean(tensor, dim=dim)
+        std_ = pytorch.std(tensor, dim=dim)
 
         tensor = (tensor - mean_) / (std_ + eps)
         return tensor
 
     @staticmethod
-    def p_normalization(tensor: Tensor, p: float, dim: int) -> Tensor:
-        tensor = norm(tensor, dim=dim, ord=p)
+    def p_normalization(tensor: pytorch.Tensor, p: float, dim: int) -> pytorch.Tensor:
+        tensor = pytorch.linalg.norm(tensor, dim=dim, ord=p)
         return tensor
