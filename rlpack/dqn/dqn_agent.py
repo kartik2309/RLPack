@@ -3,9 +3,9 @@ import random
 from collections import OrderedDict
 from typing import List, Optional, TypeVar, Union
 
-from rlpack import pytorch
 from numpy import ndarray
 
+from rlpack import pytorch
 from rlpack._C.memory import Memory
 from rlpack.utils.base.agent import Agent
 from rlpack.utils.normalization import Normalization

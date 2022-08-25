@@ -1,6 +1,8 @@
 from typing import Any, Dict, List, TypeVar
-from rlpack import pytorch
 
+import yaml
+
+from rlpack import pytorch
 from rlpack.dqn.dqn_agent import DqnAgent
 from rlpack.dqn.models.dlqn1d import Dlqn1d
 from rlpack.utils.base.agent import Agent
@@ -85,6 +87,7 @@ class Register(object):
         self.model_args_for_agents = {
             "dlqn1d": {"target_model": False, "policy_model": True},
         }
+        self.default_configs = {"dlqn1d": "../environments/configs/dlqn1d.yaml"}
 
     def get_model_args(self, model_name: str) -> List[str]:
         return self.model_args[model_name]
@@ -142,3 +145,9 @@ class Register(object):
         if apply_norm_to not in self.norm_to_mode_codes.keys():
             raise ValueError("Invalid or unsupported value for `apply_norm_to` passed")
         return self.norm_to_mode_codes[apply_norm_to]
+
+    def get_default_config(self, model_name: str) -> Dict[str, Any]:
+        with open(self.default_configs[model_name], "rb") as f:
+            config = yaml.load(f, yaml.Loader)
+
+        return config

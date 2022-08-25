@@ -1,12 +1,12 @@
 import argparse
 import os
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 import yaml
 from numpy import ndarray
-from rlpack import pytorch
 
+from rlpack import pytorch
 from rlpack.dqn.dqn_agent import DqnAgent
 from rlpack.environments.environments import Environments
 from rlpack.utils.base import Agent
@@ -21,9 +21,24 @@ def reshape_func(x: ndarray) -> ndarray:
 
 
 class Simulator:
-    def __init__(self, config: Dict[str, Any]):
-        self.config = config
+    def __init__(
+        self,
+        config: Optional[Dict[str, Any]] = None,
+        algorithm: Optional[str] = None,
+        environment: Optional[str] = None,
+    ):
         self.register = Register()
+        # Check arguments and select config.
+        if config is None and algorithm is None and environment is None:
+            raise ValueError(
+                "At least one of the arguments, `config`, `algorithm` or `environments` must be passed!"
+            )
+        if config is None and algorithm is not None:
+            config = self.register.get_default_config(algorithm)
+        if environment is not None:
+            config["env_name"] = environment
+
+        self.config = config
         self.agent = self.setup_agent()
         self.env = Environments(
             agent=self.agent, config=self.config, reshape_func=reshape_func

@@ -1,10 +1,9 @@
 from typing import Any, Dict, List, Tuple, Type, Union
 
 import numpy as np
-from rlpack import pytorch
 from numpy import ndarray
 
-from rlpack import C_Memory
+from rlpack import C_Memory, pytorch
 
 
 class Memory(object):
@@ -80,7 +79,9 @@ class Memory(object):
 
     def sample(
         self, batch_size: int, force_terminal_state_probability: float = 0.0
-    ) -> Tuple[pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor]:
+    ) -> Tuple[
+        pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor
+    ]:
         samples = self.c_memory.sample(batch_size, force_terminal_state_probability)
         return (
             samples["states_current"],
