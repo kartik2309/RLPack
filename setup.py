@@ -5,21 +5,11 @@ import sys
 from pathlib import Path
 from site import getsitepackages
 
-from setuptools import Extension, setup
+from setuptools import setup
 from setuptools.command.build_ext import build_ext
 from torch.utils import cmake_prefix_path
 
 __version__ = "0.0.1"
-
-CIBW_CMAKE_OPTIONS = []
-if "CIBUILDWHEEL" in os.environ and os.environ["CIBUILDWHEEL"] == "1":
-    if sys.platform == "linux":
-        CIBW_CMAKE_OPTIONS += ["-DCMAKE_INSTALL_LIBDIR=lib"]
-
-
-class CMakeExtension(Extension):
-    def __init__(self, shell_script):
-        super().__init__(shell_script, sources=[])
 
 
 class BuildExternal(build_ext):
@@ -46,7 +36,6 @@ class BuildExternal(build_ext):
             "-DCALL_FROM_SETUP_PY:BOOL=TRUE",
             f"-DTorch_DIR={cmake_prefix_path}/Torch",
             f"-DTorch_PACKAGE_DIR={getsitepackages()[0]}/torch",
-            *CIBW_CMAKE_OPTIONS,
         ]
 
         build_args = ["--config", config, f"-j {os.cpu_count()}"]
@@ -82,6 +71,7 @@ setup(
         "rlpack.utils.base",
         "rlpack._C",
     ],
+    platforms='posix',
     package_dir={
         "rlpack": "rlpack",
         "rlpack.dqn": "rlpack/dqn",
@@ -93,16 +83,12 @@ setup(
     },
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent",
+        "Operating System :: POSIX",
     ],
     python_requires=">=3.7",
     entry_points={
         "console_scripts": ["rlpack_entry = rlpack.bin.__main__:main"],
     },
-    ext_modules=[
-        CMakeExtension(f"{Path().absolute()}"),
-    ],
     cmdclass={
         "build_ext": BuildExternal,
     },
