@@ -1,15 +1,13 @@
 import glob
 import os
 import shutil
-import site
 import sys
 from pathlib import Path
+from site import getsitepackages
 
-import torch
 from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext
-
-# from torch.utils import cpp_extension
+from torch.utils import cmake_prefix_path
 
 __version__ = "0.0.1"
 
@@ -46,8 +44,8 @@ class BuildExternal(build_ext):
             f"-DPython_ROOT_DIR={Path(sys.prefix)}",
             "-DBUILD_SHARED_LIBS:BOOL=TRUE",
             "-DCALL_FROM_SETUP_PY:BOOL=TRUE",
-            f"-DTorch_DIR={torch.utils.cmake_prefix_path}/Torch",
-            f"-DTorch_PACKAGE_DIR={site.getsitepackages()[0]}/torch",
+            f"-DTorch_DIR={cmake_prefix_path}/Torch",
+            f"-DTorch_PACKAGE_DIR={getsitepackages()[0]}/torch",
             *CIBW_CMAKE_OPTIONS,
         ]
 
@@ -104,10 +102,8 @@ setup(
     },
     ext_modules=[
         CMakeExtension(f"{Path().absolute()}"),
-        # cpp_extension.CppExtension("C_MemoryExtension", ["src/memory/binding.cpp"], extra_compile_args=['-std=c++17']),
     ],
     cmdclass={
         "build_ext": BuildExternal,
-        # "build_ext": cpp_extension.BuildExtension
     },
 )
