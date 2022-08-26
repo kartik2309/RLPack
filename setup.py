@@ -5,11 +5,16 @@ import sys
 from pathlib import Path
 from site import getsitepackages
 
-from setuptools import setup
+from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext
 from torch.utils import cmake_prefix_path
 
 __version__ = "0.0.1"
+
+
+class CMakeExtension(Extension):
+    def __init__(self, shell_script):
+        super().__init__(shell_script, sources=[])
 
 
 class BuildExternal(build_ext):
@@ -70,7 +75,7 @@ setup(
         "rlpack.utils.base",
         "rlpack._C",
     ],
-    platforms='posix',
+    platforms="posix",
     package_dir={
         "rlpack": "rlpack",
         "rlpack.dqn": "rlpack/dqn",
@@ -88,6 +93,7 @@ setup(
     entry_points={
         "console_scripts": ["rlpack_entry = rlpack.bin.__main__:main"],
     },
+    ext_modules=[CMakeExtension(f"{Path().absolute()}")],
     cmdclass={
         "build_ext": BuildExternal,
     },
