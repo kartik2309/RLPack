@@ -75,7 +75,9 @@ setup(
         "rlpack.utils.base",
         "rlpack._C",
     ],
+    package_data={"rlpack/environments/configs": ["rlpack/environments/configs/dlqn1d.yaml"]},
     platforms="posix",
+    include_package_data=True,
     package_dir={
         "rlpack": "rlpack",
         "rlpack.dqn": "rlpack/dqn",
