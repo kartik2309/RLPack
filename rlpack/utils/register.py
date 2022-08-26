@@ -1,5 +1,5 @@
 from typing import Any, Dict, List, TypeVar
-
+from site import getsitepackages
 import yaml
 
 from rlpack import pytorch
@@ -87,7 +87,7 @@ class Register(object):
         self.model_args_for_agents = {
             "dlqn1d": {"target_model": False, "policy_model": True},
         }
-        self.default_configs = {"dlqn1d": "../environments/configs/dlqn1d.yaml"}
+        self.default_configs = {"dlqn1d": f"{self.get_prefix_path()}/environments/configs/dlqn1d.yaml"}
 
     def get_model_args(self, model_name: str) -> List[str]:
         return self.model_args[model_name]
@@ -151,3 +151,7 @@ class Register(object):
             config = yaml.load(f, yaml.Loader)
 
         return config
+
+    @staticmethod
+    def get_prefix_path():
+        return f"{getsitepackages()[0]}/rlpack"
