@@ -1,39 +1,40 @@
-from typing import Any, Dict, List, Tuple, Type, Union
+import os
+from typing import Any, Dict, List, Tuple, Type, Union, Optional
 
 import numpy as np
-from numpy import ndarray
 
 from rlpack import C_Memory, pytorch
 
 
 class Memory(object):
-    def __init__(self, buffer_size=None, device="cpu"):
+    def __init__(self, buffer_size: Optional[int] = 32768, device: Optional[str] = "cpu"):
         self.c_memory = C_Memory.C_Memory(buffer_size, device)
         self.buffer_size = buffer_size
         self.device = device
-        self.__c_memory_attr = {
-            "data": lambda: {
-                k: v for k, v in self.c_memory.c_memory_data.data_deref.items()
-            },
-            "terminal_state_indices": lambda: [
-                v for v in self.c_memory.c_memory_data.terminal_state_indices_deref
-            ],
-            "states_current": lambda: {
-                k: v for k, v in self.c_memory.c_memory_data.data_deref.items()
-            }["states_current"],
-            "states_next": lambda: {
-                k: v for k, v in self.c_memory.c_memory_data.data_deref.items()
-            }["states_next"],
-            "rewards": lambda: {
-                k: v for k, v in self.c_memory.c_memory_data.data_deref.items()
-            }["rewards"],
-            "actions": lambda: {
-                k: v for k, v in self.c_memory.c_memory_data.data_deref.items()
-            }["actions"],
-            "dones": lambda: {
-                k: v for k, v in self.c_memory.c_memory_data.data_deref.items()
-            }["dones"],
+        self.data = lambda: {
+            k: v for k, v in self.c_memory.c_memory_data.data_deref.items()
         }
+        self.terminal_state_indices = lambda: {
+            k: v
+            for k, v in self.c_memory.c_memory_data.terminal_state_indices_deref.items()
+        }
+        self.states_current = lambda: {
+            k: v for k, v in self.c_memory.c_memory_data.data_deref.items()
+        }["states_current"]
+        self.states_next = lambda: {
+            k: v for k, v in self.c_memory.c_memory_data.data_deref.items()
+        }["states_next"]
+        self.rewards = lambda: {
+            k: v for k, v in self.c_memory.c_memory_data.data_deref.items()
+        }["rewards"]
+        self.actions = lambda: {
+            k: v for k, v in self.c_memory.c_memory_data.data_deref.items()
+        }["actions"]
+        self.dones = lambda: {
+            k: v for k, v in self.c_memory.c_memory_data.data_deref.items()
+        }["dones"]
+        os.environ["OMP_WAIT_POLICY"] = "ACTIVE"
+        os.environ["OMP_NUM_THREADS"] = f"{os.cpu_count()}"
 
     def insert(
         self,
@@ -44,45 +45,30 @@ class Memory(object):
         done: Union[np.ndarray, float],
     ) -> None:
         is_terminal_state = False
-        if not isinstance(reward, np.ndarray):
-            reward = np.array(reward)
-            reward = self._adjust_dims_for_array(
-                reward, len(state_current.shape), dtype=np.float32
-            )
-        if not isinstance(action, np.ndarray):
-            action = np.array(action)
-            action = self._adjust_dims_for_array(
-                action, len(state_current.shape), dtype=np.int64
-            )
-        if not isinstance(done, np.ndarray):
-            if isinstance(done, bool):
-                if done:
-                    is_terminal_state = True
-                done = int(done)
-            if done == 1:
-                is_terminal_state = True
-            done = np.array(done)
-            done = self._adjust_dims_for_array(
-                done, len(state_current.shape), dtype=np.int32
-            )
-        state_current = pytorch.from_numpy(state_current)
-        state_next = pytorch.from_numpy(state_next)
-        reward = pytorch.from_numpy(reward)
-        action = pytorch.from_numpy(action)
-        done = pytorch.from_numpy(done)
+        if isinstance(state_current, np.ndarray):
+            state_current = pytorch.from_numpy(state_current)
+        if isinstance(state_next, np.ndarray):
+            state_next = pytorch.from_numpy(state_next)
+        reward = pytorch.tensor(reward)
+        action = pytorch.tensor(action)
+        if done:
+            is_terminal_state = True
+        done = pytorch.tensor(done)
         self.c_memory.insert(
             state_current, state_next, reward, action, done, is_terminal_state
         )
 
-    def reserve(self, buffer_size: int) -> None:
-        self.c_memory.reserve(buffer_size)
-
     def sample(
-        self, batch_size: int, force_terminal_state_probability: float = 0.0
+        self,
+        batch_size: int,
+        force_terminal_state_probability: float = 0.0,
+        parallelism_size_threshold: int = 4096,
     ) -> Tuple[
         pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor
     ]:
-        samples = self.c_memory.sample(batch_size, force_terminal_state_probability)
+        samples = self.c_memory.sample(
+            batch_size, force_terminal_state_probability, parallelism_size_threshold
+        )
         return (
             samples["states_current"],
             samples["states_next"],
@@ -116,31 +102,27 @@ class Memory(object):
     def __setattr__(self, key: str, value: Any) -> None:
         self.__dict__[key] = value
 
-    def __getattr__(self, item: str) -> Union[ndarray, List[Union[float, int]]]:
-        if item not in self.__c_memory_attr.keys():
-            raise ValueError("Invalid attribute!")
-        result = self.__c_memory_attr[item]()
+    def __getattribute__(self, item: str) -> Any:
+        result = super(Memory, self).__getattribute__(item)
+        c_memory_attr = [
+            "data",
+            "terminal_state_indices",
+            "states_current",
+            "states_next",
+            "rewards",
+            "actions",
+            "dones",
+        ]
+        if item in c_memory_attr:
+            result = result()
         return result
+
+    def __getattr__(self, item: str) -> Any:
+        return self.__dict__[item]
 
     def __repr__(self) -> str:
         return f"<Python object for {self.c_memory.__repr__()} at {hex(id(self))}>"
 
     def __str__(self) -> str:
-        updated_attr = {k: v() for k, v in self.__c_memory_attr.items()}
+        updated_attr = {k: self.__dict__[v]() for k, v in self.__c_memory_attr}
         return f"{updated_attr}"
-
-    @staticmethod
-    def _adjust_dims_for_array(
-        array: np.ndarray, target_dim: int, dtype: Type[np.ndarray] = np.float
-    ) -> np.ndarray:
-        if target_dim is None:
-            return array
-        curr_dim = array.ndim
-        if target_dim > curr_dim:
-            for _ in range(target_dim - curr_dim):
-                array = np.expand_dims(array, axis=-1).astype(dtype)
-        else:
-            for _ in range(curr_dim - target_dim):
-                array = np.squeeze(array, axis=-1).astype(dtype)
-
-        return array

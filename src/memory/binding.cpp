@@ -4,11 +4,12 @@
 
 #include "C_Memory.h"
 #include <pybind11/stl_bind.h>
+#include <pybind11/stl.h>
 
-PYBIND11_MAKE_OPAQUE(std::vector<torch::Tensor>)
-PYBIND11_MAKE_OPAQUE(std::map<std::string, std::vector<torch::Tensor> *>)
-PYBIND11_MAKE_OPAQUE(std::map<std::string, std::vector<torch::Tensor>>)
-PYBIND11_MAKE_OPAQUE(std::vector<int64_t>)
+PYBIND11_MAKE_OPAQUE(std::map<std::string, torch::Tensor>)
+PYBIND11_MAKE_OPAQUE(std::map<std::string, std::deque<int64_t>>)
+PYBIND11_MAKE_OPAQUE(std::map<std::string, std::deque<torch::Tensor> *>)
+PYBIND11_MAKE_OPAQUE(std::map<std::string, std::deque<torch::Tensor>>)
 PYBIND11_MODULE(C_Memory, m) {
     m.doc() = "Module to provide Python binding for C_Memory class";
     pybind11::class_<C_Memory>(m, "C_Memory")
@@ -20,21 +21,14 @@ PYBIND11_MODULE(C_Memory, m) {
                  pybind11::arg("action"),
                  pybind11::arg("done"),
                  pybind11::arg("is_terminal"))
-            .def("reserve", &C_Memory::reserve, "Reserve method to reserve the memory size.",
-                 pybind11::arg("buffer_size"))
             .def("get_item", &C_Memory::get_item, "Get item method to get an item as per index.",
                  pybind11::return_value_policy::reference,
                  pybind11::arg("index"))
             .def("delete_item", &C_Memory::delete_item, "Delete item method to delete an item as per index.",
                  pybind11::arg("index"))
-            .def("sample", pybind11::overload_cast<int32_t, float_t>(&C_Memory::sample),
+            .def("sample", &C_Memory::sample,
                  "Sample items from memory."
                  " Overload for when we pass both batchSize and forceTerminalStateProbability."
-                 " This method samples items and arranges them quantity-wise.",
-                 pybind11::return_value_policy::reference)
-            .def("sample", pybind11::overload_cast<int32_t>(&C_Memory::sample),
-                 "Sample items from memory."
-                 " Overload for when we pass only batchSize."
                  " This method samples items and arranges them quantity-wise.",
                  pybind11::return_value_policy::reference)
             .def("initialize", &C_Memory::initialize, "Initialize the Memory with input vector of values.")
@@ -89,11 +83,11 @@ PYBIND11_MODULE(C_Memory, m) {
                          // __setstate__ method
                          [](pybind11::dict &init) {
                              C_Memory::C_MemoryData cMemoryData;
-                             auto terminalStateIndices = init["terminal_state_indices"].cast<
-                                     std::vector<int64_t>>();
+                             auto terminalStateIndices = init["terminal_state_indices"]
+                                     .cast<std::deque<int64_t>>();
                              cMemoryData.terminalStatesIndicesPtr = &terminalStateIndices;
-                             auto coreData = init["data"].cast<std::map<std::string,
-                                     std::vector<torch::Tensor>>>();
+                             auto coreData = init["data"]
+                                     .cast<std::map<std::string, std::deque<torch::Tensor>>>();
                              for (auto &pair: coreData) {
                                  cMemoryData.coreDataPtr[pair.first] = &pair.second;
                              }
@@ -122,25 +116,25 @@ PYBIND11_MODULE(C_Memory, m) {
                 reprString = "<MapOfTensors object at " + ss.str() + ">";
                 return reprString;
             });
-    pybind11::bind_vector<std::vector<int64_t>>(m, "VectorOfInt64")
-            .def("__repr__", [](std::vector<int64_t> &vectorOfInt64) {
-                std::string reprString;
-                std::stringstream ss;
-                ss << &vectorOfInt64;
-                reprString = "<VectorOfInt64 object at " + ss.str() + ">";
-                return reprString;
-            });
-    pybind11::bind_map<std::map<std::string, std::vector<torch::Tensor>>>(m, "C_MemoryDataMap")
-            .def("__repr__", [](std::map<std::string, std::vector<torch::Tensor>> &c_MemoryDataMap) {
+    pybind11::bind_map<std::map<std::string, std::deque<torch::Tensor>>>(m, "C_MemoryDataMap")
+            .def("__repr__", [](std::map<std::string, std::deque<torch::Tensor>> &c_MemoryDataMap) {
                 std::string reprString;
                 std::stringstream ss;
                 ss << &c_MemoryDataMap;
                 reprString = "<C_MemoryDataMap object at " + ss.str() + ">";
                 return reprString;
             });
-    pybind11::bind_map<std::map<std::string, std::vector<torch::Tensor> *>>(m, "C_MemoryDataMapPtr")
+    pybind11::bind_map<std::map<std::string, std::deque<int64_t>>>(m, "MapOfDequeOfInt64")
+            .def("__repr__", [](std::map<std::string, std::deque<int64_t>> &mapOfDequeOfInt64) {
+                std::string reprString;
+                std::stringstream ss;
+                ss << &mapOfDequeOfInt64;
+                reprString = "<MapOfDequeOfInt64 object at " + ss.str() + ">";
+                return reprString;
+            });
+    pybind11::bind_map<std::map<std::string, std::deque<torch::Tensor> *>>(m, "C_MemoryDataMapPtr")
             .def("__repr__", [](std::map<std::string,
-                    std::vector<torch::Tensor> *> &c_MemoryDataMapPtr) {
+                    std::deque<torch::Tensor> *> &c_MemoryDataMapPtr) {
                 std::string reprString;
                 std::stringstream ss;
                 ss << &c_MemoryDataMapPtr;
