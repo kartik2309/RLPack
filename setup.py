@@ -75,7 +75,9 @@ setup(
         "rlpack.utils.base",
         "rlpack._C",
     ],
-    package_data={"rlpack/environments/configs": ["rlpack/environments/configs/dlqn1d.yaml"]},
+    package_data={
+        "rlpack/environments/configs": ["rlpack/environments/configs/dlqn1d.yaml"]
+    },
     platforms="posix",
     include_package_data=True,
     package_dir={
@@ -83,6 +85,7 @@ setup(
         "rlpack.dqn": "rlpack/dqn",
         "rlpack.dqn.models": "rlpack/dqn/models",
         "rlpack.environments": "rlpack/environments",
+        "rlpack.environments.configs": "rlpack/environments/configs",
         "rlpack.utils": "rlpack/utils",
         "rlpack.utils.base": "rlpack/utils/base",
         "rlpack._C": "rlpack/_C",
@@ -92,8 +95,9 @@ setup(
         "Operating System :: POSIX",
     ],
     python_requires=">=3.7",
+    scripts=["rlpack/bin/simulator"],
     entry_points={
-        "console_scripts": ["rlpack_entry = rlpack.bin.__main__:main"],
+        "console_scripts": ["rlpack_entry = rlpack.bin.simulator.__main__:main"],
     },
     ext_modules=[CMakeExtension(f"{Path().absolute()}")],
     cmdclass={

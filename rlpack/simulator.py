@@ -143,25 +143,3 @@ class Simulator:
         else:
             raise ValueError("Invalid mode passed! Must be in `train` or `eval`")
         return
-
-
-if __name__ == "__main__":
-    simulator_argparse = argparse.ArgumentParser()
-    simulator_argparse.add_argument("--config_file", required=True)
-    simulator_argparse.add_argument(
-        "--render", required=False, type=bool, default=False
-    )
-    simulator_argparse.add_argument("--load", required=False, type=bool, default=False)
-    simulator_argparse.add_argument("--plot", required=False, type=bool, default=True)
-    simulator_args = simulator_argparse.parse_args()
-
-    if not os.path.isfile(simulator_args.config_file):
-        raise FileNotFoundError(
-            "The specified config file does not exist. Please check the path and try again!"
-        )
-    with open(simulator_args.config_file) as f:
-        config_ = yaml.load(f, yaml.Loader)
-    simulator = Simulator(config=config_)
-    simulator.run(
-        render=simulator_args.render, load=simulator_args.load, plot=simulator_args.plot
-    )

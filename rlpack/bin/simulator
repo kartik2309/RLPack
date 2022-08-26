@@ -1,0 +1,43 @@
+#!/usr/bin/env python
+
+import argparse
+import os
+
+import yaml
+
+from rlpack.simulator import Simulator
+
+if __name__ == "__main__":
+    simulator_argparse = argparse.ArgumentParser()
+    simulator_argparse.add_argument("--config_file", required=False, type=str)
+    simulator_argparse.add_argument("--algorithm", required=False, type=str)
+    simulator_argparse.add_argument("--environment", required=False, type=str)
+    simulator_argparse.add_argument(
+        "--render", required=False, type=bool, default=False
+    )
+    simulator_argparse.add_argument("--load", required=False, type=bool, default=False)
+    simulator_argparse.add_argument("--plot", required=False, type=bool, default=True)
+    simulator_args = simulator_argparse.parse_args()
+
+    if not os.path.isfile(simulator_args.config_file):
+        raise FileNotFoundError(
+            "The specified config file does not exist. Please check the path and try again!"
+        )
+    if simulator_args.config_file is not None:
+        with open(simulator_args.config_file) as f:
+            config_ = yaml.load(f, yaml.Loader)
+    elif simulator_args.algorithm is None and simulator_args.environment is None:
+        raise ValueError(
+            "Please pass either `config_file` path (--config_file=/path/to/config_file/)"
+            " or both algorithm and environment"
+        )
+    simulator = Simulator(
+        config=config_,
+        algorithm=simulator_args.algorithm,
+        environment=simulator_args.environment
+    )
+    simulator.run(
+        render=simulator_args.render,
+        load=simulator_args.load,
+        plot=simulator_args.plot
+    )
