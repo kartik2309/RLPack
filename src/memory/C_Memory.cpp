@@ -165,11 +165,11 @@ std::map<std::string, torch::Tensor> C_Memory::sample(int32_t batchSize,
     rewardsStacked = adjust_dimensions(rewardsStacked, targetSize);
 
     auto actionsStacked = torch::stack(sampledActions, 0).to(
-            device_, targetDataType);
+            device_, torch::kInt64);
     actionsStacked = adjust_dimensions(actionsStacked, targetSize);
 
     auto donesStacked = torch::stack(sampledDones, 0).to(
-            device_, targetDataType);
+            device_, torch::kInt32);
     donesStacked = adjust_dimensions(donesStacked, targetSize);
 
     std::map<std::string, torch::Tensor> samples = {

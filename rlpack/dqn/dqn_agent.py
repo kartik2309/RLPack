@@ -1,7 +1,7 @@
 import os
 import random
 from collections import OrderedDict
-from typing import List, Optional, TypeVar, Union
+from typing import List, Optional, TypeVar, Union, Tuple
 
 from numpy import ndarray
 
@@ -245,7 +245,6 @@ class DqnAgent(Agent):
         actions = self._adjust_dims_for_tensor(
             tensor=actions, target_dim=q_values_target.dim()
         )
-        actions = actions.to(pytorch.int64)
         q_values_gathered = pytorch.gather(q_values_policy, dim=-1, index=actions)
         self.optimizer.zero_grad()
 
@@ -290,7 +289,11 @@ class DqnAgent(Agent):
             self.epsilon = self.min_epsilon
         return
 
-    def __load_random_experiences(self) -> List[pytorch.Tensor]:
+    def __load_random_experiences(
+        self,
+    ) -> Tuple[
+        pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor
+    ]:
         samples = self.memory.sample(
             self.batch_size, self.force_terminal_state_selection_prob
         )
