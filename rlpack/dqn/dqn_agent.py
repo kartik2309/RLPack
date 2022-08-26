@@ -245,6 +245,7 @@ class DqnAgent(Agent):
         actions = self._adjust_dims_for_tensor(
             tensor=actions, target_dim=q_values_target.dim()
         )
+        actions = actions.to(pytorch.int64)
         q_values_gathered = pytorch.gather(q_values_policy, dim=-1, index=actions)
         self.optimizer.zero_grad()
 

@@ -8,8 +8,8 @@ C_Memory::C_MemoryData::C_MemoryData() = default;
 
 C_Memory::C_MemoryData::~C_MemoryData() = default;
 
-std::map<std::string, std::vector<torch::Tensor>> C_Memory::C_MemoryData::derefCoreData() {
-    std::map<std::string, std::vector<torch::Tensor>> derefData = {
+std::map<std::string, std::deque<torch::Tensor>> C_Memory::C_MemoryData::derefCoreData() {
+    std::map<std::string, std::deque<torch::Tensor>> derefData = {
             {"states_current", *coreDataPtr["states_current"]},
             {"states_next",    *coreDataPtr["states_next"]},
             {"rewards",        *coreDataPtr["rewards"]},
@@ -20,8 +20,10 @@ std::map<std::string, std::vector<torch::Tensor>> C_Memory::C_MemoryData::derefC
     return derefData;
 }
 
-std::vector<int64_t> C_Memory::C_MemoryData::derefTerminalStateIndices() const {
-    std::vector<int64_t> derefTerminalStates = *terminalStatesIndicesPtr;
+std::map<std::string, std::deque<int64_t>> C_Memory::C_MemoryData::derefTerminalStateIndices() const {
+    std::map<std::string, std::deque<int64_t>> derefTerminalStates = {
+            {"terminal_state_indices", *terminalStatesIndicesPtr}
+    };
     return derefTerminalStates;
 }
 
@@ -73,37 +75,48 @@ void C_Memory::insert(torch::Tensor &stateCurrent,
     }
 }
 
-void C_Memory::reserve(int64_t bufferSize) {
-    bufferSize_ = bufferSize;
-    statesCurrent_.reserve(bufferSize_);
-    statesNext_.reserve(bufferSize_);
-    rewards_.reserve(bufferSize_);
-    actions_.reserve(bufferSize_);
-    dones_.reserve(bufferSize_);
-}
-
-std::vector<torch::Tensor> C_Memory::get_item(int64_t index) {
-    std::vector<torch::Tensor> returnItems = {
-            statesCurrent_[index],
-            statesNext_[index],
-            rewards_[index],
-            actions_[index],
-            dones_[index],
+std::map<std::string, torch::Tensor> C_Memory::get_item(int64_t index) {
+    std::map<std::string, torch::Tensor> returnItems = {
+            {"states_current", statesCurrent_[index]},
+            {"states_next",    statesNext_[index]},
+            {"rewards",        rewards_[index]},
+            {"actions",        actions_[index]},
+            {"dones",          dones_[index]}
     };
     return returnItems;
 }
 
 void C_Memory::delete_item(int64_t index) {
-    statesCurrent_.erase(statesCurrent_.begin() + index);
-    statesNext_.erase(statesNext_.begin() + index);
-    rewards_.erase(rewards_.begin() + index);
-    actions_.erase(actions_.begin() + index);
-    dones_.erase(dones_.begin() + index);
+    if (index != 0) {
+        statesCurrent_.erase(statesCurrent_.begin() + index);
+        statesNext_.erase(statesNext_.begin() + index);
+        rewards_.erase(rewards_.begin() + index);
+        actions_.erase(actions_.begin() + index);
+        if (dones_[index].flatten().item<int32_t>() == 1) {
+            auto indexIter = std::find(terminalStateIndices_.begin(), terminalStateIndices_.end(), index);
+            if (indexIter != terminalStateIndices_.end()) {
+                terminalStateIndices_.erase(indexIter);
+            } else {
+                std::cerr << "Deletion of terminal state occurred but "
+                             "terminal state was not found in `terminalStateIndices_`" << std::endl;
+            }
+        }
+        dones_.erase(dones_.begin() + index);
+    } else {
+        statesCurrent_.pop_front();
+        statesNext_.pop_front();
+        rewards_.pop_front();
+        actions_.pop_front();
+        dones_.pop_front();
+        if (dones_[0].flatten().item<int32_t>() == 1) {
+            terminalStateIndices_.pop_front();
+        }
+    }
 }
 
-
 std::map<std::string, torch::Tensor> C_Memory::sample(int32_t batchSize,
-                                                      float_t forceTerminalStateProbability) {
+                                                      float_t forceTerminalStateProbability,
+                                                      int64_t parallelismSizeThreshold) {
     std::random_device rd;
     std::mt19937 generator(rd());
     std::uniform_real_distribution<float_t> distributionP(0, 1);
@@ -115,7 +128,7 @@ std::map<std::string, torch::Tensor> C_Memory::sample(int32_t batchSize,
     std::vector<torch::Tensor> sampledStateCurrent(batchSize), sampledStateNext(batchSize),
             sampledRewards(batchSize), sampledActions(batchSize), sampledDones(batchSize);
 
-    auto loadedIndices = shuffle_loaded_indices();
+    auto loadedIndices = shuffle_loaded_indices(parallelismSizeThreshold);
     std::vector<int64_t> loadedIndicesSlice = std::vector<int64_t>(loadedIndices.begin(),
                                                                    loadedIndices.begin() + batchSize);
     int64_t index = 0;
@@ -141,40 +154,30 @@ std::map<std::string, torch::Tensor> C_Memory::sample(int32_t batchSize,
         sampledDones[index] = dones_[loadedIndex];
         index++;
     }
-    std::map<std::string, torch::Tensor> samples = {
-            {"states_current", torch::stack(sampledStateCurrent, 0).to(device_)},
-            {"states_next",    torch::stack(sampledStateNext, 0).to(device_)},
-            {"rewards",        torch::stack(sampledRewards, 0).to(device_)},
-            {"actions",        torch::stack(sampledActions, 0).to(device_)},
-            {"dones",          torch::stack(sampledDones, 0).to(device_)}
-    };
-    return samples;
-}
+    auto statesCurrentStacked = torch::stack(sampledStateCurrent, 0).to(device_);
+    auto statesNextStacked = torch::stack(sampledStateNext, 0).to(device_);
 
-std::map<std::string, torch::Tensor> C_Memory::sample(int32_t batchSize) {
-    std::vector<torch::Tensor> sampledStateCurrent(batchSize), sampledStateNext(batchSize),
-            sampledRewards(batchSize), sampledActions(batchSize), sampledDones(batchSize);
-    auto loadedIndices = shuffle_loaded_indices();
-    std::vector<int64_t> loadedIndicesSlice = std::vector<int64_t>(loadedIndices.begin(),
-                                                                   loadedIndices.begin() + batchSize);
-    int64_t index = 0;
-    if ((int32_t) size() < batchSize) {
-        throw std::out_of_range("Requested batch size is larger than current Memory size!");
-    }
-    for (auto &loadedIndex: loadedIndicesSlice) {
-        sampledStateCurrent[index] = statesCurrent_[loadedIndex];
-        sampledStateNext[index] = statesNext_[loadedIndex];
-        sampledRewards[index] = rewards_[loadedIndex];
-        sampledActions[index] = actions_[loadedIndex];
-        sampledDones[index] = dones_[loadedIndex];
-        index++;
-    }
+    auto targetDataType = statesNextStacked.dtype();
+    auto targetSize = statesCurrentStacked.sizes();
+
+    auto rewardsStacked = torch::stack(sampledRewards, 0).to(
+            device_, targetDataType);
+    rewardsStacked = adjust_dimensions(rewardsStacked, targetSize);
+
+    auto actionsStacked = torch::stack(sampledActions, 0).to(
+            device_, targetDataType);
+    actionsStacked = adjust_dimensions(actionsStacked, targetSize);
+
+    auto donesStacked = torch::stack(sampledDones, 0).to(
+            device_, targetDataType);
+    donesStacked = adjust_dimensions(donesStacked, targetSize);
+
     std::map<std::string, torch::Tensor> samples = {
-            {"states_current", torch::stack(sampledStateCurrent, 0).to(device_)},
-            {"states_next",    torch::stack(sampledStateNext, 0).to(device_)},
-            {"rewards",        torch::stack(sampledRewards, 0).to(device_)},
-            {"actions",        torch::stack(sampledActions, 0).to(device_)},
-            {"dones",          torch::stack(sampledDones, 0).to(device_)}
+            {"states_current", statesCurrentStacked},
+            {"states_next",    statesNextStacked},
+            {"rewards",        rewardsStacked},
+            {"actions",        actionsStacked},
+            {"dones",          donesStacked}
     };
     return samples;
 }
@@ -212,7 +215,7 @@ size_t C_Memory::size() {
     return dones_.size();
 }
 
-std::vector<int64_t> C_Memory::shuffle_loaded_indices() {
+std::vector<int64_t> C_Memory::shuffle_loaded_indices(int64_t parallelismSizeThreshold) {
     std::random_device rd;
     std::mt19937 generator(rd());
     auto loadedIndicesSize = (int64_t) loadedIndices_.size();
@@ -221,10 +224,11 @@ std::vector<int64_t> C_Memory::shuffle_loaded_indices() {
                                                               loadedIndices_.end());
     std::uniform_int_distribution<int64_t> distributionOfLoadedIndices(0,
                                                                        loadedIndicesSize - 1);
+    bool enableParallelism = loadedIndicesSize > parallelismSizeThreshold;
 
     // Parallel region for shuffling the `loadedIndices_`.
     {
-#pragma omp parallel for default(none) shared(loadedIndices, loadedIndicesSize, distributionOfLoadedIndices, generator)
+#pragma omp parallel for if(enableParallelism) default(none) shared(loadedIndices, loadedIndicesSize, distributionOfLoadedIndices, generator)
         for (int64_t index = 0;
              index < loadedIndicesSize;
              index++) {
@@ -235,4 +239,19 @@ std::vector<int64_t> C_Memory::shuffle_loaded_indices() {
     // End of parallel region.
 
     return loadedIndices;
+}
+
+torch::Tensor C_Memory::adjust_dimensions(torch::Tensor &tensor, c10::IntArrayRef &targetDimensions) {
+    auto currentSize = tensor.sizes();
+    auto diffSizes = (int32_t) targetDimensions.size() - (int32_t) currentSize.size();
+    if (diffSizes > 0) {
+        for (int32_t _ = 0; _ != diffSizes; _++) {
+            tensor = tensor.unsqueeze(-1);
+        }
+    } else {
+        for (int32_t _ = 0; _ != diffSizes; _++) {
+            tensor = tensor.squeeze(-1);
+        }
+    }
+    return tensor;
 }
