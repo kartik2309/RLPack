@@ -9,9 +9,9 @@ from rlpack.simulator import Simulator
 
 if __name__ == "__main__":
     simulator_argparse = argparse.ArgumentParser()
-    simulator_argparse.add_argument("--config_file", required=False, type=str)
-    simulator_argparse.add_argument("--algorithm", required=False, type=str)
-    simulator_argparse.add_argument("--environment", required=False, type=str)
+    simulator_argparse.add_argument("--config_file", required=False, type=str, default=None)
+    simulator_argparse.add_argument("--algorithm", required=False, type=str, default=None)
+    simulator_argparse.add_argument("--environment", required=False, type=str, default=None)
     simulator_argparse.add_argument(
         "--render", required=False, type=bool, default=False
     )
