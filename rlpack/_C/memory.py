@@ -1,5 +1,5 @@
 import os
-from typing import Any, Dict, List, Tuple, Type, Union, Optional
+from typing import Any, Dict, List, Optional, Tuple, Type, Union
 
 import numpy as np
 
@@ -7,7 +7,9 @@ from rlpack import C_Memory, pytorch
 
 
 class Memory(object):
-    def __init__(self, buffer_size: Optional[int] = 32768, device: Optional[str] = "cpu"):
+    def __init__(
+        self, buffer_size: Optional[int] = 32768, device: Optional[str] = "cpu"
+    ):
         self.c_memory = C_Memory.C_Memory(buffer_size, device)
         self.buffer_size = buffer_size
         self.device = device
