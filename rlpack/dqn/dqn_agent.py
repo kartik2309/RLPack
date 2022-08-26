@@ -155,7 +155,7 @@ class DqnAgent(Agent):
         if self.lr_scheduler is not None:
             checkpoint_lr_scheduler = {"state_dict": self.lr_scheduler.state_dict()}
 
-        agent_state = {"epsilon": self.epsilon}
+        agent_state = {"epsilon": self.epsilon, "memory": self.memory.view()}
 
         pytorch.save(
             checkpoint_target,
@@ -175,7 +175,7 @@ class DqnAgent(Agent):
                 os.path.join(self.save_path, f"lr_scheduler{custom_name_suffix}.pt"),
             )
 
-        pytorch.save(agent_state, os.path.join(self.save_path, "agent_state.pt"))
+        pytorch.save(agent_state, os.path.join(self.save_path, "agent_states.pt"))
         return
 
     def load(self, custom_name_suffix: Optional[str] = None) -> None:
@@ -211,6 +211,7 @@ class DqnAgent(Agent):
 
         agent_state = pytorch.load(os.path.join(self.save_path, "agent_state.pt"))
         self.epsilon = agent_state["epsilon"]
+        self.memory.initialize(agent_state["memory"])
         return
 
     def __train_policy_model(self) -> None:

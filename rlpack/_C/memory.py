@@ -47,10 +47,15 @@ class Memory(object):
         done: Union[np.ndarray, float],
     ) -> None:
         is_terminal_state = False
-        if isinstance(state_current, np.ndarray):
-            state_current = pytorch.from_numpy(state_current)
-        if isinstance(state_next, np.ndarray):
-            state_next = pytorch.from_numpy(state_next)
+        if not isinstance(state_current, np.ndarray) or not isinstance(
+            state_next, np.ndarray
+        ):
+            raise TypeError(
+                f"Expected arguments `state_current` and `state_next` to be of type {np.ndarray}"
+            )
+
+        state_current = pytorch.from_numpy(state_current)
+        state_next = pytorch.from_numpy(state_next)
         reward = pytorch.tensor(reward)
         action = pytorch.tensor(action)
         if done:
@@ -84,6 +89,9 @@ class Memory(object):
 
     def view(self) -> C_Memory.C_MemoryData:
         return self.c_memory.view()
+
+    def initialize(self, memory_data: C_Memory.C_MemoryData) -> None:
+        self.c_memory.initialize(memory_data)
 
     def __getitem__(self, index: int) -> List[np.ndarray]:
         return self.c_memory.get_item(index)
