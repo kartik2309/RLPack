@@ -78,7 +78,8 @@ setup(
         "rlpack._C",
     ],
     package_data={
-        "rlpack/environments/configs": ["rlpack/environments/configs/dlqn1d.yaml"]
+        "rlpack/environments/configs": ["rlpack/environments/configs/dlqn1d.yaml"],
+        "license_files": ["LICENSE.md"]
     },
     platforms="posix",
     include_package_data=True,
@@ -94,8 +95,11 @@ setup(
     },
     classifiers=[
         "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
         "Operating System :: POSIX",
     ],
+    license="MIT",
+    license_file="LICENSE.md",
     python_requires=">=3.7",
     scripts=["rlpack/bin/simulator"],
     entry_points={
