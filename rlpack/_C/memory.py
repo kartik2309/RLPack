@@ -163,7 +163,13 @@ class Memory(object):
         Get state method for memory. This makes this Memory class pickleable.
         @:return (Dict[str, Any]): The state of the memory.
         """
-        return {"memory": self.view(), "__dict__": self.__dict__}
+        lambda_type = type(lambda x: x)
+        return {
+            "memory": self.view(),
+            "__dict__": {
+                k: v for k, v in self.__dict__.items() if not isinstance(v, lambda_type)
+            },
+        }
 
     def __setstate__(self, state: Dict[str, Any]) -> None:
         """
@@ -206,16 +212,8 @@ class Memory(object):
                 list of tensors of dones values seen so far.
         """
         result = super(Memory, self).__getattribute__(item)
-        c_memory_attr = [
-            "data",
-            "terminal_state_indices",
-            "states_current",
-            "states_next",
-            "rewards",
-            "actions",
-            "dones",
-        ]
-        if item in c_memory_attr:
+        lambda_type = type(lambda x: x)
+        if isinstance(result, lambda_type):
             result = result()
         return result
 

@@ -95,9 +95,6 @@ PYBIND11_MODULE(C_Memory, m) {
                          }),
                  "Pickle method for C_MemoryData.",
                  pybind11::return_value_policy::reference)
-            .def_property("_data_ref", [](C_Memory::C_MemoryData &cMemoryData) {
-                return cMemoryData.coreDataPtr;
-            }, nullptr, pybind11::return_value_policy::reference)
             .def_property("data_deref", [](C_Memory::C_MemoryData &cMemoryData) {
                               return cMemoryData.derefCoreData();
                           }, nullptr,
@@ -115,7 +112,27 @@ PYBIND11_MODULE(C_Memory, m) {
                 ss << &MapOfTensors;
                 reprString = "<MapOfTensors object at " + ss.str() + ">";
                 return reprString;
-            });
+            })
+            .def(pybind11::pickle(
+                         // __getstate__ method
+                         [](std::map<std::string, torch::Tensor> &mapOfTensors) {
+                             pybind11::dict mapOfTensorsDict;
+                             for (auto &pair: mapOfTensors) {
+                                 mapOfTensorsDict[pair.first.c_str()] = pair.second;
+                             }
+                             return mapOfTensorsDict;
+                         },
+                         // __setstate__ method
+                         [](pybind11::dict &init) {
+                             std::map<std::string, torch::Tensor> mapOfTensors;
+                             for (auto &pair: init) {
+                                 mapOfTensors[pair.first.cast<std::string>()] = pair.second.cast<torch::Tensor>();
+                             }
+                             return mapOfTensors;
+                         }),
+                 "Pickle method for C_MemoryData.",
+                 pybind11::return_value_policy::reference);
+
     pybind11::bind_map<std::map<std::string, std::deque<torch::Tensor>>>(m, "C_MemoryDataMap")
             .def("__repr__", [](std::map<std::string, std::deque<torch::Tensor>> &c_MemoryDataMap) {
                 std::string reprString;
@@ -123,7 +140,24 @@ PYBIND11_MODULE(C_Memory, m) {
                 ss << &c_MemoryDataMap;
                 reprString = "<C_MemoryDataMap object at " + ss.str() + ">";
                 return reprString;
-            });
+            })
+            .def(pybind11::pickle(
+                    // __getstate__ method
+                    [](std::map<std::string, std::deque<torch::Tensor>> &c_MemoryDataMap) {
+                        pybind11::dict c_MemoryDataMapDict;
+                        for (auto &pair: c_MemoryDataMap) {
+                            c_MemoryDataMapDict[pair.first.c_str()] = pair.second;
+                        }
+                        return c_MemoryDataMapDict;
+                    },
+                    // __setstate__ method
+                    [](pybind11::dict &init) {
+                        std::map<std::string, std::deque<torch::Tensor>> c_MemoryDataMap;
+                        for (auto &pair: init) {
+                            c_MemoryDataMap[pair.first.cast<std::string>()] = pair.second.cast<std::deque<torch::Tensor>>();
+                        }
+                        return c_MemoryDataMap;
+                    }));
     pybind11::bind_map<std::map<std::string, std::deque<int64_t>>>(m, "MapOfDequeOfInt64")
             .def("__repr__", [](std::map<std::string, std::deque<int64_t>> &mapOfDequeOfInt64) {
                 std::string reprString;
@@ -131,14 +165,22 @@ PYBIND11_MODULE(C_Memory, m) {
                 ss << &mapOfDequeOfInt64;
                 reprString = "<MapOfDequeOfInt64 object at " + ss.str() + ">";
                 return reprString;
-            });
-    pybind11::bind_map<std::map<std::string, std::deque<torch::Tensor> *>>(m, "C_MemoryDataMapPtr")
-            .def("__repr__", [](std::map<std::string,
-                    std::deque<torch::Tensor> *> &c_MemoryDataMapPtr) {
-                std::string reprString;
-                std::stringstream ss;
-                ss << &c_MemoryDataMapPtr;
-                reprString = "<C_MemoryDataMapPtr object at " + ss.str() + ">";
-                return reprString;
-            });
+            })
+            .def(pybind11::pickle(
+                    // __getstate__ method
+                    [](std::map<std::string, std::deque<int64_t>> &mapOfDequeOfInt64) {
+                        pybind11::dict mapOfDequeOfInt64Dict;
+                        for (auto &pair: mapOfDequeOfInt64) {
+                            mapOfDequeOfInt64Dict[pair.first.c_str()] = pair.second;
+                        }
+                        return mapOfDequeOfInt64Dict;
+                    },
+                    // __setstate__ method
+                    [](pybind11::dict &init) {
+                        std::map<std::string, std::deque<int64_t>> mapOfDequeOfInt64;
+                        for (auto &pair: init) {
+                            mapOfDequeOfInt64[pair.first.cast<std::string>()] = pair.second.cast<std::deque<int64_t>>();
+                        }
+                        return mapOfDequeOfInt64;
+                    }));
 }
