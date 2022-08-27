@@ -12,23 +12,7 @@ if (NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
 endif ()
 # ----------------------------------- Package Dependencies ---------------------------------- #
 find_package(Python REQUIRED COMPONENTS Interpreter Development)
-find_package(pybind11 QUIET)
-
-# Install pybind11 if not found.
-if (NOT pybind11_FOUND)
-    execute_process(
-            COMMAND sh ${CMAKE_SOURCE_DIR}/src/c_requirements/install_pybind11.sh
-            WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/"
-            COMMAND_ECHO STDOUT
-    )
-    if ("${CMAKE_PREFIX_PATH}" STREQUAL "")
-        set(CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/pybind11")
-    else ()
-        set(CMAKE_PREFIX_PATH "${CMAKE_PREFIX_PATH};${CMAKE_SOURCE_DIR}/pybind11")
-    endif ()
-    find_package(pybind11 REQUIRED)
-endif ()
-
+find_package(pybind11 REQUIRED)
 find_package(OpenMP REQUIRED)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")

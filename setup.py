@@ -8,6 +8,7 @@ from site import getsitepackages
 from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext
 from torch.utils import cmake_prefix_path
+from pybind11 import get_cmake_dir
 
 __version__ = "0.0.1"
 
@@ -41,6 +42,7 @@ class BuildExternal(build_ext):
             "-DCALL_FROM_SETUP_PY:BOOL=TRUE",
             f"-DTorch_DIR={cmake_prefix_path}/Torch",
             f"-DTorch_PACKAGE_DIR={getsitepackages()[0]}/torch",
+            f"-Dpybind11_DIR={get_cmake_dir()}",
         ]
 
         build_args = ["--config", config, f"-j {os.cpu_count()}"]
