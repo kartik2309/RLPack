@@ -242,7 +242,8 @@ class DqnAgent(Agent):
         if self.lr_scheduler is not None:
             checkpoint_lr_scheduler = {"state_dict": self.lr_scheduler.state_dict()}
 
-        agent_state = {"epsilon": self.epsilon, "memory": self.memory.view()}
+        save_memory = True if os.getenv("SAVE_MEMORY", False) == "TRUE" else False
+        agent_state = {"epsilon": self.epsilon, "memory": self.memory.view() if save_memory else None}
 
         pytorch.save(
             checkpoint_target,
