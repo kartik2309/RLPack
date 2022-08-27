@@ -69,7 +69,7 @@ setup(
     packages=[
         "rlpack",
         "rlpack.dqn",
-        "rlpack.dqn.models",
+        "rlpack.models",
         "rlpack.environments",
         "rlpack.utils",
         "rlpack.utils.base",
@@ -83,7 +83,7 @@ setup(
     package_dir={
         "rlpack": "rlpack",
         "rlpack.dqn": "rlpack/dqn",
-        "rlpack.dqn.models": "rlpack/dqn/models",
+        "rlpack.models": "rlpack/models",
         "rlpack.environments": "rlpack/environments",
         "rlpack.environments.configs": "rlpack/environments/configs",
         "rlpack.utils": "rlpack/utils",
