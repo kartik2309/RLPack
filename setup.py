@@ -8,6 +8,7 @@ from site import getsitepackages
 from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext
 from torch.utils import cmake_prefix_path
+from pybind11 import get_cmake_dir
 
 __version__ = "0.0.1"
 
@@ -41,6 +42,7 @@ class BuildExternal(build_ext):
             "-DCALL_FROM_SETUP_PY:BOOL=TRUE",
             f"-DTorch_DIR={cmake_prefix_path}/Torch",
             f"-DTorch_PACKAGE_DIR={getsitepackages()[0]}/torch",
+            f"-Dpybind11_DIR={get_cmake_dir()}",
         ]
 
         build_args = ["--config", config, f"-j {os.cpu_count()}"]
@@ -69,20 +71,23 @@ setup(
     packages=[
         "rlpack",
         "rlpack.dqn",
-        "rlpack.dqn.models",
+        "rlpack.models",
         "rlpack.environments",
         "rlpack.utils",
         "rlpack.utils.base",
         "rlpack._C",
     ],
-    package_data={"rlpack/environments/configs": ["rlpack/environments/configs/dlqn1d.yaml"]},
+    package_data={
+        "rlpack/environments/configs": ["rlpack/environments/configs/dlqn1d.yaml"]
+    },
     platforms="posix",
     include_package_data=True,
     package_dir={
         "rlpack": "rlpack",
         "rlpack.dqn": "rlpack/dqn",
-        "rlpack.dqn.models": "rlpack/dqn/models",
+        "rlpack.models": "rlpack/models",
         "rlpack.environments": "rlpack/environments",
+        "rlpack.environments.configs": "rlpack/environments/configs",
         "rlpack.utils": "rlpack/utils",
         "rlpack.utils.base": "rlpack/utils/base",
         "rlpack._C": "rlpack/_C",
@@ -92,8 +97,9 @@ setup(
         "Operating System :: POSIX",
     ],
     python_requires=">=3.7",
+    scripts=["rlpack/bin/simulator"],
     entry_points={
-        "console_scripts": ["rlpack_entry = rlpack.bin.__main__:main"],
+        "console_scripts": ["rlpack_entry = rlpack.bin.simulator.__main__:main"],
     },
     ext_modules=[CMakeExtension(f"{Path().absolute()}")],
     cmdclass={

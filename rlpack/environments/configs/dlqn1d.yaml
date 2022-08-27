@@ -1,6 +1,8 @@
 mode: 'eval'
 env_name: 'LunarLander-v2'
-model_name: 'dlqn1d'
+model_name: 'mlp'
+agent_name: 'dqn'
+suffix: 'best'
 num_episodes: 10000
 max_timesteps: 1000
 reward_logging_frequency: 100
@@ -22,9 +24,9 @@ agent_args: {
   min_epsilon: 0.01,
   num_actions: 4,
   memory_buffer_size: 1048576,
-  target_model_update_rate: 64,
+  target_model_update_rate: 128,
   policy_model_update_rate: 4,
-  min_lr: 1e-5,
+  lr_threshold: 1e-5,
   model_backup_frequency: 10000,
   batch_size: 64,
   epsilon_decay_rate: 0.995,

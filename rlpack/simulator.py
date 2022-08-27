@@ -1,32 +1,33 @@
-import argparse
 import os
 from typing import Any, Dict, List, Optional
 
-import numpy as np
 import yaml
-from numpy import ndarray
 
 from rlpack import pytorch
-from rlpack.dqn.dqn_agent import DqnAgent
 from rlpack.environments.environments import Environments
 from rlpack.utils.base import Agent
 from rlpack.utils.register import Register
 
-SHAPE = (1, 8)
-
-
-def reshape_func(x: ndarray) -> ndarray:
-    x = np.reshape(x, newshape=SHAPE)
-    return x
-
 
 class Simulator:
+    """
+    Simulator class simulates the environments and runs the agent through the environment. It also sets up
+    the models and agents for training and/or evaluation.
+    """
+
     def __init__(
         self,
         config: Optional[Dict[str, Any]] = None,
         algorithm: Optional[str] = None,
         environment: Optional[str] = None,
     ):
+        """
+        @:param config (Optional[Dict[str, Any]]): The configuration dictionary for setup. Default: None
+        @:param algorithm (Optional[str]): The algorithm to be used. Default: None
+        @:param environment (Optional[str]): The environment to be used. Default: None
+
+        Note that either `config` or both `algorithm` and `environment` must be passed.
+        """
         self.register = Register()
         # Check arguments and select config.
         if config is None and algorithm is None and environment is None:
@@ -40,18 +41,20 @@ class Simulator:
 
         self.config = config
         self.agent = self.setup_agent()
-        self.env = Environments(
-            agent=self.agent, config=self.config, reshape_func=reshape_func
-        )
+        self.env = Environments(agent=self.agent, config=self.config)
         return
 
     def setup_agent(self) -> Agent:
+        """
+        This method sets up agent by loading all the necessary arguments.
+        @:return (Agent): The loaded and initialized agent.
+        """
         models = self.setup_models()
         agent_args_for_models = [
             arg
-            for arg in self.register.agent_args[self.config["model_name"]]
+            for arg in self.register.agent_args[self.config["agent_name"]]
             if arg
-            in self.register.model_args_for_agents[self.config["model_name"]].keys()
+            in self.register.model_args_for_agents[self.config["agent_name"]].keys()
         ]
         agent_model_kwargs = {
             arg: models[idx] for idx, arg in enumerate(agent_args_for_models)
@@ -59,7 +62,7 @@ class Simulator:
         trainable_models = [
             model
             for model_arg_name, model in agent_model_kwargs.items()
-            if self.register.model_args_for_agents[self.config["model_name"]][
+            if self.register.model_args_for_agents[self.config["agent_name"]][
                 model_arg_name
             ]
         ]
@@ -112,15 +115,22 @@ class Simulator:
         }
         agent_kwargs = {
             k: processed_agent_args[k]
-            for k in self.register.agent_args[self.config["model_name"]]
+            for k in self.register.agent_args[self.config["agent_name"]]
         }
-        agent = DqnAgent(**agent_kwargs)
+        agent = self.register.get_agent(
+            agent_name=self.config["agent_name"], **agent_kwargs
+        )
         with open(os.path.join(save_path, "config.yaml"), "w") as conf:
             yaml.dump(self.config, conf)
 
         return agent
 
     def setup_models(self) -> List[pytorch.nn.Module]:
+        """
+        The method sets up the models. Depending on the requirement of the agent, returns a list of
+        models, all of which are loaded and initialized.
+        @:return (List[pytorch.nn.Module]): List of models.
+        """
         activation = self.register.get_activation(
             activation_args=self.config["activation_args"]
         )
@@ -130,12 +140,18 @@ class Simulator:
         }
         models = self.register.get_models(
             model_name=self.config["model_name"],
+            agent_name=self.config["agent_name"],
             **model_kwargs,
         )
 
         return models
 
     def run(self, **kwargs) -> None:
+        """
+        This method runs the simulator.
+
+        @:param kwargs: Additional keyword arguments for the training run.
+        """
         if self.env.is_train():
             self.env.train_agent(**kwargs)
         elif self.env.is_eval():
@@ -143,25 +159,3 @@ class Simulator:
         else:
             raise ValueError("Invalid mode passed! Must be in `train` or `eval`")
         return
-
-
-if __name__ == "__main__":
-    simulator_argparse = argparse.ArgumentParser()
-    simulator_argparse.add_argument("--config_file", required=True)
-    simulator_argparse.add_argument(
-        "--render", required=False, type=bool, default=False
-    )
-    simulator_argparse.add_argument("--load", required=False, type=bool, default=False)
-    simulator_argparse.add_argument("--plot", required=False, type=bool, default=True)
-    simulator_args = simulator_argparse.parse_args()
-
-    if not os.path.isfile(simulator_args.config_file):
-        raise FileNotFoundError(
-            "The specified config file does not exist. Please check the path and try again!"
-        )
-    with open(simulator_args.config_file) as f:
-        config_ = yaml.load(f, yaml.Loader)
-    simulator = Simulator(config=config_)
-    simulator.run(
-        render=simulator_args.render, load=simulator_args.load, plot=simulator_args.plot
-    )

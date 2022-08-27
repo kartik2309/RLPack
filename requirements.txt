@@ -5,3 +5,4 @@ matplotlib>=3.5.0
 PyYAML>=6.0
 pygame>=2.1.0
 box2d-py>=2.3.0
+pybind11>=2.10.0
