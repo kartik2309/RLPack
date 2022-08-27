@@ -1,7 +1,7 @@
 import os
 import random
 from collections import OrderedDict
-from typing import List, Optional, TypeVar, Union, Tuple
+from typing import List, Optional, Tuple, TypeVar, Union
 
 from numpy import ndarray
 
@@ -14,11 +14,13 @@ LRScheduler = TypeVar("LRScheduler")
 LossFunction = TypeVar("LossFunction")
 Activation = TypeVar("Activation")
 
-MEMORY_SHUFFLE_SEED_MIN = 1223372036854775807
-MEMORY_SHUFFLE_SEED_MAX = 9223372036854775807
-
 
 class DqnAgent(Agent):
+    """
+    The DqnAgent class which implements the DQN algorithm on arguments. This class inherits from `Agent`
+        class, which is the generic base class for all the agents in the project.
+    """
+
     def __init__(
         self,
         target_model: pytorch.nn.Module,
@@ -29,13 +31,13 @@ class DqnAgent(Agent):
         gamma: float,
         epsilon: float,
         min_epsilon: float,
-        epsilon_decay_rate: int,
+        epsilon_decay_rate: float,
         epsilon_decay_frequency: int,
         memory_buffer_size: int,
         target_model_update_rate: int,
         policy_model_update_rate: int,
         model_backup_frequency: int,
-        min_lr: float,
+        lr_threshold: float,
         batch_size: int,
         num_actions: int,
         save_path: str,
@@ -48,6 +50,60 @@ class DqnAgent(Agent):
         p_for_norm: int = 2,
         dim_for_norm: int = 0,
     ):
+        """
+        @:param target_model (nn.Module): The target network for DQN model. This the network which has
+            its weights frozen
+        @:param policy_model (nn.Module): The policy network for DQN model. This is the network which is trained.
+        @:param optimizer (optim.Optimizer): The optimizer wrapped with policy model's parameters.
+        @:param lr_scheduler (LRScheduler): The PyTorch LR Scheduler with wrapped optimizer.
+        @:param loss_function (LossFunction): The loss function from PyTorch's nn module. Initialized
+            instance must be passed.
+        @:param gamma (float): The gamma value for agent.
+        @:param epsilon (float): The initial epsilon for the agent.
+        @:param min_epsilon (float): The minimum epsilon for the agent. Once this value is reached,
+            it is maintained for all further episodes.
+        @:param epsilon_decay_rate (float): The decay multiplier to decay the epsilon.
+        @:param epsilon_decay_frequency (int): The number of timesteps after which the epsilon is decayed.
+        @:param memory_buffer_size (int): The buffer size of memory (or replay buffer) for DQN.
+        @:param target_model_update_rate (int): The timesteps after which target model's weights are updated with
+            policy model weights (weights are weighted as per `tau` (see below)).
+        @:param policy_model_update_rate (int): The timesteps after which policy model is trained. This involves
+            backpropagation through the policy network.
+        @:param model_backup_frequency (int): The timesteps after which models are backed up. This will also
+            save optimizer, lr_scheduler and agent_states (epsilon the time of saving and memory).
+        @:param lr_threshold (float): The threshold LR which once reached LR scheduler is not called further.
+        @:param batch_size (int): The batch size used for inference through target_model and train through policy model.
+        @:param num_actions (int): Number of actions for the environment.
+        @:param save_path (str): The save path for models (target_model and policy_model), optimizer,
+            lr_scheduler and agent_states.
+        @:param device (str): The device on which models are run. Default: "cpu"
+        @:param force_terminal_state_selection_prob (float): The probability for forcefully selecting a terminal state
+            in a batch. Default: 0.0
+        @:param tau (float): The weighted update of weights from policy_model to target_model. This is done by formula
+            target_weight = tau * policy_weight + (1 - tau) * target_weight/. Default: -1
+        @:param apply_norm (int): The code to select the normalization procedure to be applied on selected quantities
+            (selected by `apply_norm_to` (see below)). Default: -1
+        @:param apply_norm_to (int): The code to select the quantity to which normalization is to be applied.
+            Default: -1
+        @:param eps_for_norm (int): Epsilon value for normalization (for numeric stability). For min-max normalization
+            and standardized normalization. Default: 5e-12
+        @:param p_for_norm (int): The p value for p-normalization. Default: 2 (L2 Norm)
+        @:param dim_for_norm (int): The dimension across which normalization is to be performed. Default: 0.
+
+        NOTE:
+        The codes for `apply_norm` are given as follows: -
+            - No Normalization: -1
+            - Min-Max Normalization: 0
+            - Standardization: 1
+            - P-Normalization: 2
+        The codes for `apply_norm_to` are given as follows:
+            No Normalization: -1
+            On States only: 0
+            On Rewards only: 1
+            On TD value only: 2
+            On States and Rewards: 3
+            On States and TD: 4
+        """
         super(DqnAgent, self).__init__()
         self.target_model = target_model.to(device)
         self.policy_model = policy_model.to(device)
@@ -63,7 +119,7 @@ class DqnAgent(Agent):
         self.target_model_update_rate = target_model_update_rate
         self.policy_model_update_rate = policy_model_update_rate
         self.model_backup_frequency = model_backup_frequency
-        self.min_lr = float(min_lr)
+        self.min_lr = float(lr_threshold)
         self.batch_size = batch_size
         self.num_actions = num_actions
         self.save_path = save_path
@@ -98,6 +154,18 @@ class DqnAgent(Agent):
         action: Union[int, float],
         done: Union[bool, int],
     ) -> int:
+        """
+        The training method for agent, which accepts a transition from environment and returns an action for next
+            transition. Use this method when you intend to train the agent.
+        This method will also run the policy to yield the best action for the given state.
+
+        @:param state_current (Union[ndarray, pytorch.Tensor, List[float]]): The current state in the environment.
+        @:param state_next (Union[ndarray, pytorch.Tensor, List[float]]): The next state returned by the environment.
+        @:param reward (Union[int, float]): Reward obtained by performing the action for the transition.
+        @:param action Union[int, float]: Action taken for the transition
+        @:param done Union[bool, int]: Indicates weather episode has terminated or not.
+        @:return (int): The next action to be taken from `state_next`.
+        """
         self.memory.insert(state_current, state_next, reward, action, done)
 
         if (
@@ -125,6 +193,12 @@ class DqnAgent(Agent):
 
     @pytorch.no_grad()
     def policy(self, state_current: Union[ndarray, pytorch.Tensor, List[float]]) -> int:
+        """
+        The policy for the agent. This runs the inference on policy model with `state_current`
+        and uses q-values to obtain the best action.
+        @:param state_current (Union[ndarray, pytorch.Tensor, List[float]]): The current state agent is in.
+        @:return (int): The action to be taken.
+        """
         state_current = self._cast_to_tensor(state_current).to(self.device)
         state_current = pytorch.unsqueeze(state_current, 0)
         p = random.random()
@@ -143,8 +217,21 @@ class DqnAgent(Agent):
         return action
 
     def save(self, custom_name_suffix: Optional[str] = None) -> None:
+        """
+        This method saves the target_model, policy_model, optimizer, lr_scheduler and agent_states in the supplied
+            `save_path` argument in the DQN Agent class' constructor (also called __init__).
+        agent_states includes current memory and epsilon values in a dictionary.
+        @:param custom_name_suffix Optional[str]: If supplied, additional suffix is added to names of target_model,
+            policy_model, optimizer and lr_scheduler. Useful to save best model by a custom suffix supplied
+            during a train run. Default: None
+        """
         if custom_name_suffix is None:
             custom_name_suffix = ""
+        if not isinstance(custom_name_suffix, str):
+            raise TypeError(
+                f"Argument `custom_name_suffix` must be of type "
+                f"{str} or {type(None)}, but got of type {type(custom_name_suffix)}"
+            )
         checkpoint_target = {
             "state_dict": self.target_model.state_dict(),
         }
@@ -179,8 +266,20 @@ class DqnAgent(Agent):
         return
 
     def load(self, custom_name_suffix: Optional[str] = None) -> None:
+        """
+        This method loads the target_model, policy_model, optimizer, lr_scheduler and agent_states from
+            the supplied `save_path` argument in the DQN Agent class' constructor (also called __init__).
+        @:param custom_name_suffix Optional[str]: If supplied, additional suffix is added to names of target_model,
+            policy_model, optimizer and lr_scheduler. Useful to load the best model by a custom suffix supplied
+            for evaluation. Default: None
+        """
         if custom_name_suffix is None:
             custom_name_suffix = ""
+        if not isinstance(custom_name_suffix, str):
+            raise TypeError(
+                f"Argument `custom_name_suffix` must be of type "
+                f"{str} or {type(None)}, but got of type {type(custom_name_suffix)}"
+            )
         checkpoint_target = pytorch.load(
             os.path.join(self.save_path, f"target{custom_name_suffix}.pt"),
             map_location="cpu",
@@ -215,6 +314,12 @@ class DqnAgent(Agent):
         return
 
     def __train_policy_model(self) -> None:
+        """
+        Protected method of the class to train the policy model. This method is called every
+            `policy_model_update_rate` timesteps supplied in the DqnAgent class constructor.
+        This method will load the random samples from memory (number of samples depend on
+            `batch_size` supplied in DqnAgent constructor), and train the policy_model.
+        """
         random_experiences = self.__load_random_experiences()
         state_current, state_next, rewards, actions, dones = random_experiences
 
@@ -235,7 +340,7 @@ class DqnAgent(Agent):
 
         with pytorch.no_grad():
             q_values_target = self.target_model(state_next)
-            td_value = self.__temporal_difference(rewards, q_values_target, dones)
+            td_value = self.temporal_difference(rewards, q_values_target, dones)
 
         if self.apply_norm_to in self.td_norm_codes:
             td_value = self.normalization.apply_normalization(
@@ -261,6 +366,10 @@ class DqnAgent(Agent):
 
     @pytorch.no_grad()
     def __update_target_model(self) -> None:
+        """
+        Protected method of the class to update the target model. This method is called every
+            `target_model_update_rate` timesteps supplied in the DqnAgent class constructor.
+        """
         policy_parameters = self.policy_model.named_parameters()
         target_parameters = self.target_model.named_parameters()
         target_parameters = OrderedDict(target_parameters)
@@ -273,9 +382,17 @@ class DqnAgent(Agent):
         return
 
     @pytorch.no_grad()
-    def __temporal_difference(
+    def temporal_difference(
         self, rewards: pytorch.Tensor, q_values: pytorch.Tensor, dones: pytorch.Tensor
     ) -> pytorch.Tensor:
+        """
+        This method computes the temporal difference for given transitions.
+
+        @:param rewards (pytorch.Tensor): The sampled batch of rewards.
+        @:param q_values (pytorch.Tensor): The q-values inferred from target_model.
+        @:param dones (pytorch.Tensor): The done values for each transition in the batch.
+        @:return (pytorch.Tensor): The TD value for each sample in the batch.
+        """
         q_values_max_tuple = pytorch.max(q_values, dim=-1, keepdim=True)
         q_values_max = q_values_max_tuple.values
         rewards = self._adjust_dims_for_tensor(rewards, target_dim=q_values.dim())
@@ -284,6 +401,10 @@ class DqnAgent(Agent):
         return td_value
 
     def __decay_epsilon(self) -> None:
+        """
+        Protected method to decay epsilon. This method is called every `epsilon_decay_frequency` timesteps and
+            decays the epsilon by `epsilon_decay_rate`, both supplied in DqnAgent class' constructor.
+        """
         if self.min_epsilon < self.epsilon:
             self.epsilon *= self.epsilon_decay_rate
         if self.min_epsilon > self.epsilon:
@@ -295,6 +416,17 @@ class DqnAgent(Agent):
     ) -> Tuple[
         pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor
     ]:
+        """
+        This method loads random transitions from memory. This may also include forced terminal states
+            if supplied `force_terminal_state_selection_prob` > 0 in DqnAgent constructor for each batch. i.e. if
+            force_terminal_state_selection_prob = 0.1, approximately every 1 in 10 batches will have at least
+            one terminal state forced by the loader.
+
+        :return: Tuple[pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor]:
+            The tuple of randomly sampled transitions from memory in order of - states_current,
+            states_next, rewards, actions, dones.
+
+        """
         samples = self.memory.sample(
             self.batch_size, self.force_terminal_state_selection_prob
         )

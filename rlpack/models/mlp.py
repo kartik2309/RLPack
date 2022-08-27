@@ -5,16 +5,28 @@ from rlpack import pytorch
 Activation = TypeVar("Activation")
 
 
-class Dlqn1d(pytorch.nn.Module):
+class Mlp(pytorch.nn.Module):
+    """
+    This class is a PyTorch Model implementing the MLP model for 1-D or 2-D state values.
+    """
+
     def __init__(
         self,
         sequence_length: int,
         hidden_sizes: List[int],
         num_actions: int,
-        activation: Activation = pytorch.nn.ReLU,
+        activation: Activation = pytorch.nn.ReLU(),
         dropout: float = 0.5,
     ):
-        super(Dlqn1d, self).__init__()
+        """
+        @:param sequence_length (int): The sequence length of the expected tensor.
+        @:param hidden_sizes (List[int]): The list of hidden sizes for each layer.
+        @:param num_actions (int): The number of actions for the environment.
+        @:param activation (Activation): The activation function class for the model. Must be an initialized
+            activation object from PyTorch's nn (torch.nn) module.
+        @:param dropout (float): The dropout to be used in the final Linear (FC) layer.
+        """
+        super(Mlp, self).__init__()
         self.sequence_length = sequence_length
         self.hidden_sizes = hidden_sizes.copy()
         self.num_action = num_actions
@@ -40,6 +52,12 @@ class Dlqn1d(pytorch.nn.Module):
         )
 
     def forward(self, x: pytorch.Tensor) -> pytorch.Tensor:
+        """
+        The forwards method of the nn.Module.
+
+        @:param x (pytorch.Tensor): The model input.
+        @:return (pytorch.Tensor): The model output (logits).
+        """
 
         for layer_idx, layer_info in enumerate(self.linear_module_dict.items()):
             name, layer = layer_info
