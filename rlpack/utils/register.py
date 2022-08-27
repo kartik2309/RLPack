@@ -75,7 +75,7 @@ class Register(object):
                 "target_model_update_rate",
                 "policy_model_update_rate",
                 "model_backup_frequency",
-                "min_lr",
+                "lr_threshold",
                 "batch_size",
                 "num_actions",
                 "save_path",

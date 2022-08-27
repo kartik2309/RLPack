@@ -1,9 +1,7 @@
 import os
 from typing import Any, Dict, List, Optional
 
-import numpy as np
 import yaml
-from numpy import ndarray
 
 from rlpack import pytorch
 from rlpack.environments.environments import Environments
@@ -54,9 +52,9 @@ class Simulator:
         models = self.setup_models()
         agent_args_for_models = [
             arg
-            for arg in self.register.agent_args[self.config["model_name"]]
+            for arg in self.register.agent_args[self.config["agent_name"]]
             if arg
-            in self.register.model_args_for_agents[self.config["model_name"]].keys()
+            in self.register.model_args_for_agents[self.config["agent_name"]].keys()
         ]
         agent_model_kwargs = {
             arg: models[idx] for idx, arg in enumerate(agent_args_for_models)
@@ -64,7 +62,7 @@ class Simulator:
         trainable_models = [
             model
             for model_arg_name, model in agent_model_kwargs.items()
-            if self.register.model_args_for_agents[self.config["model_name"]][
+            if self.register.model_args_for_agents[self.config["agent_name"]][
                 model_arg_name
             ]
         ]
@@ -117,7 +115,7 @@ class Simulator:
         }
         agent_kwargs = {
             k: processed_agent_args[k]
-            for k in self.register.agent_args[self.config["model_name"]]
+            for k in self.register.agent_args[self.config["agent_name"]]
         }
         agent = self.register.get_agent(
             agent_name=self.config["agent_name"], **agent_kwargs
@@ -142,6 +140,7 @@ class Simulator:
         }
         models = self.register.get_models(
             model_name=self.config["model_name"],
+            agent_name=self.config["agent_name"],
             **model_kwargs,
         )
 

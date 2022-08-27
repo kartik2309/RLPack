@@ -280,20 +280,35 @@ class DqnAgent(Agent):
                 f"Argument `custom_name_suffix` must be of type "
                 f"{str} or {type(None)}, but got of type {type(custom_name_suffix)}"
             )
-        checkpoint_target = pytorch.load(
-            os.path.join(self.save_path, f"target{custom_name_suffix}.pt"),
-            map_location="cpu",
-        )
-        checkpoint_policy = pytorch.load(
-            os.path.join(self.save_path, f"policy{custom_name_suffix}.pt"),
-            map_location="cpu",
-        )
-        checkpoint_optimizer = pytorch.load(
-            os.path.join(self.save_path, f"optimizer{custom_name_suffix}.pt"),
-            map_location="cpu",
-        )
+        if os.path.isfile(
+            os.path.join(self.save_path, f"target{custom_name_suffix}.pt")
+        ):
+            checkpoint_target = pytorch.load(
+                os.path.join(self.save_path, f"target{custom_name_suffix}.pt"),
+                map_location="cpu",
+            )
+            self.target_model.load_state_dict(checkpoint_target["state_dict"])
 
-        checkpoint_lr_sc = None
+        if os.path.isfile(
+            os.path.join(self.save_path, f"policy{custom_name_suffix}.pt")
+        ):
+            checkpoint_policy = pytorch.load(
+                os.path.join(self.save_path, f"policy{custom_name_suffix}.pt"),
+                map_location="cpu",
+            )
+            self.policy_model.load_state_dict(checkpoint_policy["state_dict"])
+        else:
+            raise FileNotFoundError("The Policy model was not found in the given path!")
+
+        if os.path.isfile(
+            os.path.join(self.save_path, f"optimizer{custom_name_suffix}.pt")
+        ):
+            checkpoint_optimizer = pytorch.load(
+                os.path.join(self.save_path, f"optimizer{custom_name_suffix}.pt"),
+                map_location="cpu",
+            )
+            self.optimizer.load_state_dict(checkpoint_optimizer["state_dict"])
+
         if os.path.isfile(
             os.path.join(self.save_path, f"lr_scheduler{custom_name_suffix}.pt")
         ):
@@ -301,16 +316,12 @@ class DqnAgent(Agent):
                 os.path.join(self.save_path, f"lr_scheduler{custom_name_suffix}.pt"),
                 map_location="cpu",
             )
-
-        self.target_model.load_state_dict(checkpoint_target["state_dict"])
-        self.policy_model.load_state_dict(checkpoint_policy["state_dict"])
-        self.optimizer.load_state_dict(checkpoint_optimizer["state_dict"])
-        if self.lr_scheduler is not None and checkpoint_lr_sc is not None:
             self.lr_scheduler.load_state_dict(checkpoint_lr_sc["state_dict"])
 
-        agent_state = pytorch.load(os.path.join(self.save_path, "agent_state.pt"))
-        self.epsilon = agent_state["epsilon"]
-        self.memory.initialize(agent_state["memory"])
+        if os.path.isfile(os.path.join(self.save_path, "agent_state.pt")):
+            agent_state = pytorch.load(os.path.join(self.save_path, "agent_state.pt"))
+            self.epsilon = agent_state["epsilon"]
+            self.memory.initialize(agent_state["memory"])
         return
 
     def __train_policy_model(self) -> None:
