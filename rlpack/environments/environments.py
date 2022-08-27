@@ -112,7 +112,7 @@ class Environments:
                 )
                 logging.info(reward_log_message)
                 if highest_mv_avg_reward < mean_reward:
-                    self.agent.save(custom_name_suffix="_best")
+                    self.agent.save(custom_name_suffix=self.config.get("suffix", "best"))
                     highest_mv_avg_reward = mean_reward
 
                 # Log Mean Loss in the episode cycle

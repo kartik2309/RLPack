@@ -2,6 +2,7 @@ mode: 'eval'
 env_name: 'LunarLander-v2'
 model_name: 'mlp'
 agent_name: 'dqn'
+suffix: 'best'
 num_episodes: 10000
 max_timesteps: 1000
 reward_logging_frequency: 100
