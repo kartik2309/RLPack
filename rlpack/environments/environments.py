@@ -35,7 +35,7 @@ class Environments:
             self.reshape_func = self.__reshape_func_default
         else:
             self.reshape_func = reshape_func
-        self.new_shape = self.config.get("new_shape")
+        self.new_shape = tuple(self.config.get("new_shape"))
 
         render_mode = None
         if self.is_eval():
@@ -112,7 +112,7 @@ class Environments:
                 )
                 logging.info(reward_log_message)
                 if highest_mv_avg_reward < mean_reward:
-                    self.agent.save(custom_name_suffix=self.config.get("suffix", "best"))
+                    self.agent.save(custom_name_suffix=f'_{self.config.get("suffix", "best")}')
                     highest_mv_avg_reward = mean_reward
 
                 # Log Mean Loss in the episode cycle
