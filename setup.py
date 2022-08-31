@@ -79,7 +79,7 @@ setup(
     ],
     package_data={
         "rlpack/environments/configs": ["rlpack/environments/configs/dlqn1d.yaml"],
-        "license_files": ["LICENSE.md"]
+        "license_files": ["LICENSE.md"],
     },
     platforms="posix",
     include_package_data=True,
