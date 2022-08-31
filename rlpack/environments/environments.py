@@ -62,7 +62,7 @@ class Environments:
             logging.info("Currently operating in Evaluation Mode")
             return
         if load:
-            self.agent.load()
+            self.agent.load(f'_{self.config.get("suffix", "best")}')
         highest_mv_avg_reward, timestep = 0.0, 0
         rewards_collector = {k: list() for k in range(self.config["num_episodes"])}
         rewards = list()
@@ -136,7 +136,7 @@ class Environments:
             return
 
         # Load agent's necessary objects (models, states etc.)
-        self.agent.load()
+        self.agent.load(f'_{self.config.get("suffix", "best")}')
         # Temporarily save epsilon before setting it 0.0
         epsilon = self.agent.epsilon
         rewards = list()
