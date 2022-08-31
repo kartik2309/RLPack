@@ -30,17 +30,14 @@ class Environments:
         """
         self.agent = agent
         self.config = config
-
         if reshape_func is None:
             self.reshape_func = self.__reshape_func_default
         else:
             self.reshape_func = reshape_func
         self.new_shape = tuple(self.config.get("new_shape"))
-
         render_mode = None
         if self.is_eval():
             render_mode = "human"
-
         self.env = gym.make(
             self.config["env_name"], new_step_api=True, render_mode=render_mode
         )
@@ -66,11 +63,9 @@ class Environments:
             return
         if load:
             self.agent.load()
-
         highest_mv_avg_reward, timestep = 0.0, 0
         rewards_collector = {k: list() for k in range(self.config["num_episodes"])}
         rewards = list()
-
         for ep in range(self.config["num_episodes"]):
             observation_current = self.env.reset()
             action = self.env.action_space.sample()
@@ -100,7 +95,6 @@ class Environments:
                 )
             rewards.append(scores)
             if ep % self.config["reward_logging_frequency"] == 0:
-
                 # Log Mean Reward in the episode cycle
                 mean_reward = self.__list_mean(rewards)
                 reward_log_message = (
@@ -112,7 +106,6 @@ class Environments:
                         custom_name_suffix=f'_{self.config.get("suffix", "best")}'
                     )
                     highest_mv_avg_reward = mean_reward
-
                 # Log Mean Loss in the episode cycle
                 mean_loss = self.__list_mean(self.agent.loss)
                 if len(self.agent.loss) > 0:
@@ -146,7 +139,6 @@ class Environments:
         self.agent.load()
         # Temporarily save epsilon before setting it 0.0
         epsilon = self.agent.epsilon
-
         rewards = list()
         self.agent.epsilon, timestep, score, ep = 0.0, 0, 0, 0
         observation = self.env.reset()
