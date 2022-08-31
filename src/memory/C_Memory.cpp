@@ -228,7 +228,7 @@ std::vector<int64_t> C_Memory::shuffle_loaded_indices(int64_t parallelismSizeThr
 
     // Parallel region for shuffling the `loadedIndices_`.
     {
-#pragma omp parallel for if(enableParallelism) default(none) shared(loadedIndices, loadedIndicesSize, distributionOfLoadedIndices, generator)
+#pragma omp parallel for if(enableParallelism) default(none) private(loadedIndicesSize, distributionOfLoadedIndices, generator) shared(loadedIndices)
         for (int64_t index = 0;
              index < loadedIndicesSize;
              index++) {
