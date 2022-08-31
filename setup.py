@@ -5,10 +5,10 @@ import sys
 from pathlib import Path
 from site import getsitepackages
 
+from pybind11 import get_cmake_dir
 from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext
 from torch.utils import cmake_prefix_path
-from pybind11 import get_cmake_dir
 
 __version__ = "0.0.1"
 
