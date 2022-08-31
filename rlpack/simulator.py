@@ -153,7 +153,11 @@ class Simulator:
         @:param kwargs: Additional keyword arguments for the training run.
         """
         if self.env.is_train():
-            self.env.train_agent(**kwargs)
+            self.env.train_agent(
+                render=kwargs.get("render", self.config.get("render", False)),
+                load=kwargs.get("load", self.config.get("load", False)),
+                plot=kwargs.get("plot", self.config.get("plot", True)),
+            )
         elif self.env.is_eval():
             self.env.evaluate_agent()
         else:
