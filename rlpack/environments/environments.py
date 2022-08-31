@@ -30,17 +30,14 @@ class Environments:
         """
         self.agent = agent
         self.config = config
-
         if reshape_func is None:
             self.reshape_func = self.__reshape_func_default
         else:
             self.reshape_func = reshape_func
         self.new_shape = tuple(self.config.get("new_shape"))
-
         render_mode = None
-        if self.is_eval():
+        if self.is_eval() and config["render"]:
             render_mode = "human"
-
         self.env = gym.make(
             self.config["env_name"], new_step_api=True, render_mode=render_mode
         )
@@ -66,17 +63,13 @@ class Environments:
             return
         if load:
             self.agent.load()
-
-        timestep = 0
-        highest_mv_avg_reward = 0
+        highest_mv_avg_reward, timestep = 0.0, 0
         rewards_collector = {k: list() for k in range(self.config["num_episodes"])}
         rewards = list()
-
         for ep in range(self.config["num_episodes"]):
             observation_current = self.env.reset()
             action = self.env.action_space.sample()
             scores = 0
-
             for timestep in range(self.config["max_timesteps"]):
                 if render:
                     self.env.render()
@@ -96,15 +89,12 @@ class Environments:
                 observation_current = observation_next
                 if done:
                     break
-
             if timestep == self.config["max_timesteps"]:
                 logging.info(
                     f"Maximum timesteps of {timestep} reached in the episode {ep}"
                 )
             rewards.append(scores)
-
             if ep % self.config["reward_logging_frequency"] == 0:
-
                 # Log Mean Reward in the episode cycle
                 mean_reward = self.__list_mean(rewards)
                 reward_log_message = (
@@ -112,9 +102,10 @@ class Environments:
                 )
                 logging.info(reward_log_message)
                 if highest_mv_avg_reward < mean_reward:
-                    self.agent.save(custom_name_suffix=f'_{self.config.get("suffix", "best")}')
+                    self.agent.save(
+                        custom_name_suffix=f'_{self.config.get("suffix", "best")}'
+                    )
                     highest_mv_avg_reward = mean_reward
-
                 # Log Mean Loss in the episode cycle
                 mean_loss = self.__list_mean(self.agent.loss)
                 if len(self.agent.loss) > 0:
@@ -123,13 +114,11 @@ class Environments:
                 rewards.clear()
         self.env.close()
         self.agent.save()
-
         if plot:
             rewards_to_plot = [
                 sum(rewards_collector[k]) / len(rewards_collector[k])
                 for k in range(self.config["num_episodes"])
             ]
-
             plt.plot(range(self.config["num_episodes"]), rewards_to_plot)
             plt.xlabel("Episodes")
             plt.ylabel("Rewards")
@@ -145,24 +134,38 @@ class Environments:
         if not self.is_eval():
             logging.info("Currently operating in Training Mode")
             return
-        self.agent.load()
-        epsilon = self.agent.epsilon
-        self.agent.epsilon = 0
-        timestep = 0
-        score = 0
-        observation = self.env.reset()
-        for timestep in range(self.config["max_timesteps"]):
-            action = self.agent.policy(self.reshape_func(observation, self.new_shape))
-            observation, reward, done, info, _ = self.env.step(action=action)
-            score += reward
-            if done:
-                break
 
+        # Load agent's necessary objects (models, states etc.)
+        self.agent.load()
+        # Temporarily save epsilon before setting it 0.0
+        epsilon = self.agent.epsilon
+        rewards = list()
+        self.agent.epsilon, timestep, ep, score = 0.0, 0, 0, 0
+        for ep in range(self.config["num_episodes"]):
+            observation = self.env.reset()
+            score = 0
+            for timestep in range(self.config["max_timesteps"]):
+                action = self.agent.policy(
+                    self.reshape_func(observation, self.new_shape)
+                )
+                observation, reward, done, info, _ = self.env.step(action=action)
+                score += reward
+                if done:
+                    break
+            rewards.append(score)
         if timestep == self.config["max_timesteps"]:
             logging.info("Max timesteps was reached!")
-        logging.info(
-            f"Total Reward after {timestep} timesteps: {score}",
-        )
+        if ep < 1:
+            # When only single episode was performed and evaluated.
+            logging.info(
+                f"Total Reward after {timestep} timesteps: {score}",
+            )
+        else:
+            # When more than one episode was performed and evaluated.
+            logging.info(
+                f'Average Rewards after {self.config["num_episodes"]} episodes: {self.__list_mean(rewards)}'
+            )
+        # Restore epsilon value of the agent.
         self.agent.epsilon = epsilon
         self.env.close()
 
