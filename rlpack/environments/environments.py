@@ -36,7 +36,7 @@ class Environments:
             self.reshape_func = reshape_func
         self.new_shape = tuple(self.config.get("new_shape"))
         render_mode = None
-        if self.is_eval():
+        if self.is_eval() and config["render"]:
             render_mode = "human"
         self.env = gym.make(
             self.config["env_name"], new_step_api=True, render_mode=render_mode
@@ -140,9 +140,10 @@ class Environments:
         # Temporarily save epsilon before setting it 0.0
         epsilon = self.agent.epsilon
         rewards = list()
-        self.agent.epsilon, timestep, score, ep = 0.0, 0, 0, 0
-        observation = self.env.reset()
+        self.agent.epsilon, timestep, ep, score = 0.0, 0, 0, 0
         for ep in range(self.config["num_episodes"]):
+            observation = self.env.reset()
+            score = 0
             for timestep in range(self.config["max_timesteps"]):
                 action = self.agent.policy(
                     self.reshape_func(observation, self.new_shape)
@@ -152,7 +153,6 @@ class Environments:
                 if done:
                     break
             rewards.append(score)
-
         if timestep == self.config["max_timesteps"]:
             logging.info("Max timesteps was reached!")
         if ep < 1:
