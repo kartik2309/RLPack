@@ -25,7 +25,6 @@ class Simulator:
         @:param config (Optional[Dict[str, Any]]): The configuration dictionary for setup. Default: None
         @:param algorithm (Optional[str]): The algorithm to be used. Default: None
         @:param environment (Optional[str]): The environment to be used. Default: None
-
         Note that either `config` or both `algorithm` and `environment` must be passed.
         """
         self.register = Register()
