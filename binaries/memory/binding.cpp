@@ -90,14 +90,14 @@ PYBIND11_MODULE(C_Memory, m) {
            "Pickle method for C_MemoryData.",
            pybind11::return_value_policy::reference)
       .def("transitions", [](C_Memory::C_MemoryData &cMemoryData) {
-                      return cMemoryData.deref_transition_information_map();
-                    },
-                    pybind11::return_value_policy::reference)
+             return cMemoryData.deref_transition_information_map();
+           },
+           pybind11::return_value_policy::reference)
       .def("terminal_state_indices",
-                    [](C_Memory::C_MemoryData &cMemoryData) {
-                      return cMemoryData.deref_terminal_state_indices();
-                    },
-                    pybind11::return_value_policy::reference);
+           [](C_Memory::C_MemoryData &cMemoryData) {
+             return cMemoryData.deref_terminal_state_indices();
+           },
+           pybind11::return_value_policy::reference);
 
   /*
    * This is the binding of STL std::map<std::string, torch::Tensor> aliased C_Memory_TensorMap.
