@@ -149,7 +149,6 @@ class Simulator:
     def run(self, **kwargs) -> None:
         """
         This method runs the simulator.
-
         @:param kwargs: Additional keyword arguments for the training run.
         """
         if self.env.is_train():
