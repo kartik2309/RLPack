@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 import os
+from copy import deepcopy
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
@@ -12,38 +15,24 @@ class Memory(object):
     """
 
     def __init__(
-        self, buffer_size: Optional[int] = 32768, device: Optional[str] = "cpu"
+        self,
+        buffer_size: Optional[int] = 32768,
+        device: Optional[str] = "cpu",
+        parallelism_size_threshold: int = 8092,
     ):
         """
         @:param buffer_size (Optional[int]): The buffer size of the memory. No more than specified buffer
             elements are stored in the memory. Default: 32768
-        @:param device str: The device on which models are currently running. Default: "cpu"
+        @:param parallelism_size_threshold: The minimum size of memory beyond which parallelism is used to shuffle
+            and retrieve the batch of sample. Default: 4096.
+        @:param device str: The device on which models are currently running. Default: "cpu".
         """
-        self.c_memory = C_Memory.C_Memory(buffer_size, device)
+        self.c_memory = C_Memory.C_Memory(
+            buffer_size, device, parallelism_size_threshold
+        )
         self.buffer_size = buffer_size
         self.device = device
-        self.data = lambda: {
-            k: v for k, v in self.c_memory.c_memory_data.data_deref.items()
-        }
-        self.terminal_state_indices = lambda: {
-            k: v
-            for k, v in self.c_memory.c_memory_data.terminal_state_indices_deref.items()
-        }
-        self.states_current = lambda: {
-            k: v for k, v in self.c_memory.c_memory_data.data_deref.items()
-        }["states_current"]
-        self.states_next = lambda: {
-            k: v for k, v in self.c_memory.c_memory_data.data_deref.items()
-        }["states_next"]
-        self.rewards = lambda: {
-            k: v for k, v in self.c_memory.c_memory_data.data_deref.items()
-        }["rewards"]
-        self.actions = lambda: {
-            k: v for k, v in self.c_memory.c_memory_data.data_deref.items()
-        }["actions"]
-        self.dones = lambda: {
-            k: v for k, v in self.c_memory.c_memory_data.data_deref.items()
-        }["dones"]
+        self.parallelism_size_threshold = parallelism_size_threshold
         os.environ["OMP_WAIT_POLICY"] = "ACTIVE"
         os.environ["OMP_NUM_THREADS"] = f"{os.cpu_count()}"
 
@@ -87,7 +76,6 @@ class Memory(object):
         self,
         batch_size: int,
         force_terminal_state_probability: float = 0.0,
-        parallelism_size_threshold: int = 4096,
     ) -> Tuple[
         pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor
     ]:
@@ -97,14 +85,10 @@ class Memory(object):
         @:param batch_size (int): The desired batch size of the samples.
         @:param force_terminal_state_selection_prob (float): The probability for forcefully selecting a terminal state
             in a batch. Default: 0.0
-        @:param parallelism_size_threshold: The minimum size of memory beyond which parallelism is used to shuffle
-            and retrieve the batch of sample. Default: 4096.
         @:return (Tuple[pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor]): The tuple
             of tensors as (states_current, states_next, rewards, actions, dones).
         """
-        samples = self.c_memory.sample(
-            batch_size, force_terminal_state_probability, parallelism_size_threshold
-        )
+        samples = self.c_memory.sample(batch_size, force_terminal_state_probability)
         return (
             samples["states_current"],
             samples["states_next"],
@@ -133,6 +117,60 @@ class Memory(object):
         @:param memory_data (C_Memory.C_MemoryData): The C_MemoryData instance to load the memory form
         """
         self.c_memory.initialize(memory_data)
+
+    def get_terminal_state_indices(self) -> List[int]:
+        """
+        This retrieves the terminal state indices accumulated so far.
+        :return (List[int]): The list of terminal state indices
+        """
+        return [
+            v
+            for v in self.c_memory.view().terminal_state_indices()[
+                "terminal_state_indices"
+            ]
+        ]
+
+    def get_transitions(self) -> Dict[str, pytorch.Tensor]:
+        """
+        This retrieves all the transitions accumulated so far.
+        :return (Dict[str, pytorch.Tensor]): A dictionary with all transition information
+        """
+        return {k: v for k, v in self.c_memory.view().transitions().items()}
+
+    def get_states_current(self) -> List[pytorch.Tensor]:
+        """
+        This retrieves all the current states from transitions accumulated so far.
+        :return (List[pytorch.Tensor]): A list of tensors with current state values.
+        """
+        return [v for v in self.c_memory.view().transitions()["states_current"]]
+
+    def get_states_next(self) -> List[pytorch.Tensor]:
+        """
+        This retrieves all the next states from transitions accumulated so far.
+        :return (List[pytorch.Tensor]): A list of tensors with next state values.
+        """
+        return [v for v in self.c_memory.view().transitions()["states_next"]]
+
+    def get_rewards(self) -> List[pytorch.Tensor]:
+        """
+        This retrieves all the rewards from transitions accumulated so far.
+        :return (List[pytorch.Tensor]): A list of tensors with reward values.
+        """
+        return [v for v in self.c_memory.view().transitions()["rewards"]]
+
+    def get_actions(self) -> List[pytorch.Tensor]:
+        """
+        This retrieves all the actions from transitions accumulated so far.
+        :return (List[pytorch.Tensor]): A list of tensors with action values.
+        """
+        return [v for v in self.c_memory.view().transitions()["actions"]]
+
+    def get_dones(self) -> List[pytorch.Tensor]:
+        """
+        This retrieves all the dones from transitions accumulated so far.
+        :return (List[pytorch.Tensor]): A list of tensors with done values.
+        """
+        return [v for v in self.c_memory.view().transitions()()["dones"]]
 
     def __getitem__(self, index: int) -> List[pytorch.Tensor]:
         """
@@ -163,13 +201,7 @@ class Memory(object):
         Get state method for memory. This makes this Memory class pickleable.
         @:return (Dict[str, Any]): The state of the memory.
         """
-        lambda_type = type(lambda x: x)
-        return {
-            "memory": self.view(),
-            "__dict__": {
-                k: v for k, v in self.__dict__.items() if not isinstance(v, lambda_type)
-            },
-        }
+        return self.__dict__
 
     def __setstate__(self, state: Dict[str, Any]) -> None:
         """
@@ -177,8 +209,8 @@ class Memory(object):
         @:param state (Dict[str, Any]): This method loads the states back to memory instance. This helps unpickle
             the Memory.
         """
-        self.__dict__ = state["__dict__"]
-        self.c_memory.initialize(state["memory"])
+        for k, v in state.items():
+            setattr(self, k, v)
 
     def __setattr__(self, key: str, value: Any) -> None:
         """
@@ -188,34 +220,12 @@ class Memory(object):
         """
         self.__dict__[key] = value
 
-    def __getattribute__(self, item: str) -> Any:
+    def __delattr__(self, item: str) -> None:
         """
-        Get attribute method for memory
-        @:param item: The attribute name we wish to access
-        @:return (Any): The attribute value for the passed item
-
-        The following attributes are attributes from C_MemoryData and can be retrieved into python by calling
-        the attribute on the memory instance.
-            - data: A dictionary with keys states_current, states_next, rewards, actions, dones and their
-                corresponding value in list of tensors.
-            - terminal_state_indices: A dictionary with single key 'terminal_state_indices' with
-                list of tensors. of terminal state indices seen so far.
-            - states_current: A dictionary with single key 'states_current' with
-                list of tensors of states_current values seen so far.
-            - states_next: A dictionary with single key 'states_next' with
-                list of tensors of states_next values seen so far.
-            - rewards: A dictionary with single key 'rewards' with
-                list of tensors of rewards values seen so far.
-            - actions: A dictionary with single key 'actions' with
-                list of tensors of actions values seen so far.
-            - dones: A dictionary with single key 'dones' with
-                list of tensors of dones values seen so far.
+        Delete an attribute
+        :param item (str): The attribute name we wish to delete.
         """
-        result = super(Memory, self).__getattribute__(item)
-        lambda_type = type(lambda x: x)
-        if isinstance(result, lambda_type):
-            result = result()
-        return result
+        del self.__dict__[item]
 
     def __getattr__(self, item: str) -> Any:
         """
@@ -225,17 +235,41 @@ class Memory(object):
         """
         return self.__dict__[item]
 
+    def __copy__(self) -> Memory:
+        """
+        Performs shallow copy of memory instance.
+        :return (Memory): New Memory instance with reference to self (current instance).
+        """
+        cls = self.__class__
+        result = cls.__new__(cls)
+        result.__dict__.update(self.__dict__)
+        return result
+
+    def __deepcopy__(self, memo: Dict[Any, Any] = None) -> Memory:
+        """
+        Performs deep copy of memory instance.
+        :param memo (Dict[Any, Any]): Memo for deepcopy
+        :return (Memory): New memory instance with different storage.
+        """
+        if memo is None:
+            memo = dict()
+        cls = self.__class__
+        result = cls.__new__(cls)
+        memo[id(self)] = result
+        for k, v in self.__dict__.items():
+            setattr(result, k, deepcopy(v, memo))
+        return result
+
     def __repr__(self) -> str:
         """
         Repr method for memory.
         @:return (str): String with object's memory location
         """
-        return f"<Python object for {self.c_memory.__repr__()} at {hex(id(self))}>"
+        return f"<Python object for {repr(self.c_memory)} at {hex(id(self))}>"
 
     def __str__(self) -> str:
         """
         The str method for memory.
         :return: The dictionary with encapsulated data of memory.
         """
-        updated_attr = {**self.data, **self.terminal_state_indices}
-        return f"{updated_attr}"
+        return f"{self.get_transitions()}"
