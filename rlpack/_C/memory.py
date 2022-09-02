@@ -38,38 +38,27 @@ class Memory(object):
 
     def insert(
         self,
-        state_current: np.ndarray,
-        state_next: np.ndarray,
+        state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
+        state_next: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
         reward: Union[np.ndarray, float],
         action: Union[np.ndarray, float],
-        done: Union[np.ndarray, float],
+        done: Union[bool, int],
     ) -> None:
         """
         This method performs insertion to the memory.
-        @:param state_current (np.ndarray): The current state agent is in.
-        @:param state_next (np.ndarray): The next state agent will go in for the specified action.
+        @:param state_current Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]: The current
+            state agent is in.
+        @:param state_next Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]: The next
+            state agent will go in for the specified action.
         @:param reward (Union[np.ndarray, float]): The reward obtained in the transition.
         @:param action (Union[np.ndarray, float]): The action taken for the transition.
-        @:param done (Union[np.ndarray, float]): Indicates weather episodes ended or not, i.e.
+        @:param done Union[bool, int]: Indicates weather episodes ended or not, i.e.
             if state_next is a terminal state or not.
         """
-        is_terminal_state = False
-        if not isinstance(state_current, np.ndarray) or not isinstance(
-            state_next, np.ndarray
-        ):
-            raise TypeError(
-                f"Expected arguments `state_current` and `state_next` to be of type {np.ndarray}"
-            )
-
-        state_current = pytorch.from_numpy(state_current)
-        state_next = pytorch.from_numpy(state_next)
-        reward = pytorch.tensor(reward)
-        action = pytorch.tensor(action)
-        if done:
-            is_terminal_state = True
-        done = pytorch.tensor(done)
         self.c_memory.insert(
-            state_current, state_next, reward, action, done, is_terminal_state
+            *self.__prepare_inputs_c_memory_(
+                state_current, state_next, reward, action, done
+            )
         )
 
     def sample(
@@ -172,6 +161,116 @@ class Memory(object):
         """
         return [v for v in self.c_memory.view().transitions()()["dones"]]
 
+    @staticmethod
+    def __prepare_inputs_c_memory_(
+        state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
+        state_next: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
+        reward: Union[np.ndarray, float],
+        action: Union[np.ndarray, float],
+        done: Union[bool, int],
+    ) -> Tuple[
+        pytorch.Tensor,
+        pytorch.Tensor,
+        pytorch.Tensor,
+        pytorch.Tensor,
+        pytorch.Tensor,
+        bool,
+    ]:
+        """
+        Prepares inputs to be sent to C++ backend.
+
+        @:param state_current Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]: The current
+            state agent is in.
+        @:param state_next Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]: The next
+            state agent will go in for the specified action.
+        @:param reward (Union[np.ndarray, float]): The reward obtained in the transition.
+        @:param action (Union[np.ndarray, float]): The action taken for the transition.
+        @:param done Union[bool, int]: Indicates weather episodes ended or not, i.e.
+            if state_next is a terminal state or not.
+        @:return (Tuple[
+                pytorch.Tensor,
+                pytorch.Tensor,
+                pytorch.Tensor,
+                pytorch.Tensor,
+                pytorch.Tensor,
+                bool,
+            ]):  The tuple of in order of (state_current, state_next, reward, action, done, is_terminal_state),
+            where `is_terminal_state` indicates the if state was terminal or not, similar to `done`. Used internally
+            in C++ backend.
+            All the input values associated with transition tuple are type-casted to PyTorch Tensors.
+        """
+        is_terminal_state = False
+        if not isinstance(state_current, np.ndarray) or not isinstance(
+            state_next, np.ndarray
+        ):
+            raise TypeError(
+                f"Expected arguments `state_current` and `state_next` to be of type {np.ndarray}"
+            )
+
+        if isinstance(state_current, np.ndarray):
+            state_current = pytorch.from_numpy(state_current)
+        elif isinstance(state_current, list):
+            state_current = pytorch.tensor(state_current)
+        elif isinstance(state_current, pytorch.Tensor):
+            pass
+        else:
+            raise TypeError(
+                f"Expected argument `state_current` to be of type"
+                f" {pytorch.Tensor}, {np.ndarray} or {list}"
+                f" but got {type(state_current)}"
+            )
+
+        if isinstance(state_next, np.ndarray):
+            state_next = pytorch.from_numpy(state_next)
+        elif isinstance(state_next, list):
+            state_next = pytorch.tensor(state_next)
+        elif isinstance(state_next, pytorch.Tensor):
+            pass
+        else:
+            raise TypeError(
+                f"Expected argument `state_next` to be of type"
+                f" {pytorch.Tensor}, {np.ndarray} or {list}"
+                f" but got {type(state_next)}"
+            )
+
+        if isinstance(reward, np.ndarray):
+            reward = pytorch.from_numpy(reward)
+        elif isinstance(reward, float):
+            reward = pytorch.tensor(reward)
+        else:
+            raise TypeError(
+                f"Expected argument `reward` to be of type {np.ndarray} or {float} "
+                f"but got type {type(reward)}"
+            )
+
+        if isinstance(action, np.ndarray):
+            action = pytorch.from_numpy(action)
+        elif isinstance(action, float):
+            action = pytorch.tensor(action)
+        else:
+            raise TypeError(
+                f"Expected argument `action` to be of type {np.ndarray} or {float} "
+                f"but got type {type(action)}"
+            )
+
+        # Handle done variable
+        if isinstance(done, bool):
+            is_terminal_state = done
+            done = pytorch.tensor(int(done))
+        elif isinstance(done, int):
+            if is_terminal_state == 1:
+                is_terminal_state = True
+            else:
+                is_terminal_state = False
+            done = pytorch.tensor(done)
+        else:
+            raise TypeError(
+                f"Expected argument `done` to be of type {bool} or {int} "
+                f"but got type {type(done)}"
+            )
+
+        return state_current, state_next, reward, action, done, is_terminal_state
+
     def __getitem__(self, index: int) -> List[pytorch.Tensor]:
         """
         Indexing method for memory.
@@ -179,6 +278,39 @@ class Memory(object):
         @:return (List[pytorch.Tensor]): The transition as tensors from the memory.
         """
         return self.c_memory.get_item(index)
+
+    def __setitem__(
+        self,
+        index: int,
+        transition: Tuple[
+            Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
+            Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
+            Union[np.ndarray, float],
+            Union[np.ndarray, float],
+            Union[bool, int],
+        ],
+    ) -> None:
+        """
+        Set item method for the memory.
+        @:param index (int): index to insert
+        @:param transition (Tuple[
+                Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
+                Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
+                Union[np.ndarray, float],
+                Union[np.ndarray, float],
+                Union[bool, int]
+            ]): The transition tuple in the order (state_current, state_next, reward, action, done).
+        """
+        self.c_memory.set_item(
+            index,
+            *self.__prepare_inputs_c_memory_(
+                transition[0],
+                transition[1],
+                transition[2],
+                transition[3],
+                transition[4],
+            ),
+        )
 
     def __delitem__(self, index: int) -> None:
         """
