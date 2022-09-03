@@ -161,6 +161,13 @@ class Memory(object):
         """
         return [v for v in self.c_memory.view().transitions()()["dones"]]
 
+    def num_terminal_states(self) -> int:
+        """
+        Returns the number of terminal states
+        :return (int): Num of terminal states
+        """
+        return self.c_memory.num_terminal_states()
+
     @staticmethod
     def __prepare_inputs_c_memory_(
         state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],

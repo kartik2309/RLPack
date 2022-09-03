@@ -8,18 +8,13 @@ C_Memory::C_MemoryData::C_MemoryData(int64_t *bufferSizeRawPtr,
                                      int64_t *parallelismSizeThresholdRawPtr) {
   bufferSizeRawPtr_ = bufferSizeRawPtr;
   parallelismSizeThresholdRawPtr_ = parallelismSizeThresholdRawPtr;
-  transitionInformationMap_["states_current"].reserve(*bufferSizeRawPtr_);
-  transitionInformationMap_["states_next"].reserve(*bufferSizeRawPtr_);
-  transitionInformationMap_["rewards"].reserve(*bufferSizeRawPtr_);
-  transitionInformationMap_["actions"].reserve(*bufferSizeRawPtr_);
-  transitionInformationMap_["dones"].reserve(*bufferSizeRawPtr_);
 }
 
 C_Memory::C_MemoryData::~C_MemoryData() = default;
 
 std::map<std::string, std::vector<torch::Tensor>>
 C_Memory::C_MemoryData::deref_transition_information_map() {
-  size_t size = current_size();
+  size_t size = _size();
   std::vector<torch::Tensor> statesCurrent(size), statesNext(size),
       rewards(size), actions(size), dones(size);
   bool enableParallelism = size > *parallelismSizeThresholdRawPtr_;
@@ -105,14 +100,45 @@ C_Memory::C_MemoryData::set_terminal_state_index_reference(int64_t index,
 }
 
 void
+C_Memory::C_MemoryData::delete_transition_information_reference(int64_t index) {
+  if (index != 0) {
+    transitionInformationMap_["states_current"].erase(
+        transitionInformationMap_["states_current"].begin() + index);
+    transitionInformationMap_["states_next"].erase(
+        transitionInformationMap_["states_next"].begin() + index);
+    transitionInformationMap_["rewards"].erase(
+        transitionInformationMap_["rewards"].begin() + index);
+    transitionInformationMap_["actions"].erase(
+        transitionInformationMap_["actions"].begin() + index);
+    transitionInformationMap_["dones"].erase(
+        transitionInformationMap_["dones"].begin() + index);
+  } else {
+    transitionInformationMap_["states_current"].pop_front();
+    transitionInformationMap_["states_next"].pop_front();
+    transitionInformationMap_["rewards"].pop_front();
+    transitionInformationMap_["actions"].pop_front();
+    transitionInformationMap_["dones"].pop_front();
+  }
+}
+
+void
+C_Memory::C_MemoryData::delete_terminal_state_index_reference(int64_t terminalStateIndex) {
+  if (terminalStateIndex != 0) {
+    terminalStateIndexReferences_.erase(terminalStateIndexReferences_.begin() + terminalStateIndex);
+  } else {
+    terminalStateIndexReferences_.pop_front();
+  }
+}
+
+void
 C_Memory::C_MemoryData::initialize_data(
     std::map<std::string, std::vector<torch::Tensor>> &transitionInformationMap,
     std::map<std::string, std::vector<int64_t>> &terminalStateIndicesMap) {
   auto terminalIndicesVector = terminalStateIndicesMap["terminal_state_indices"];
-  std::vector<std::shared_ptr<int64_t>> terminalStateIndicesRef(terminalIndicesVector.size());
+  std::deque<std::shared_ptr<int64_t>> terminalStateIndicesRef(terminalIndicesVector.size());
   auto terminalIndicesVectorSize = terminalIndicesVector.size();
   auto transitionsSize = transitionInformationMap["states_current"].size();
-  std::vector<std::shared_ptr<torch::Tensor>> statesCurrent(transitionsSize), statesNext(transitionsSize),
+  std::deque<std::shared_ptr<torch::Tensor>> statesCurrent(transitionsSize), statesNext(transitionsSize),
       rewards(transitionsSize), actions(transitionsSize), dones(transitionsSize);
   bool enableParallelism = transitionsSize > *parallelismSizeThresholdRawPtr_;
   {
@@ -146,8 +172,12 @@ shared(terminalStateIndicesRef)
 }
 
 size_t
-C_Memory::C_MemoryData::current_size() {
+C_Memory::C_MemoryData::_size() {
   return transitionInformationMap_["dones"].size();
+}
+
+int64_t C_Memory::C_MemoryData::_num_of_terminal_states() {
+  return (int64_t) terminalStateIndexReferences_.size();
 }
 
 int64_t
@@ -189,49 +219,50 @@ C_Memory::insert(torch::Tensor &stateCurrent,
   if (size() > bufferSize_) {
     delete_item(0);
   }
-  if (stepCounter_ < bufferSize_) {
-    auto transitionInformation = std::make_shared<TransitionInformation_>();
-    transitionInformation->stateCurrent = stateCurrent;
-    transitionInformation->stateNext = stateNext;
-    transitionInformation->reward = reward;
-    transitionInformation->action = action;
-    transitionInformation->done = done;
-    transitionInformationBuffer_.push_back(transitionInformation);
-    if (isTerminalState) {
-      auto terminalStateIndex = std::make_shared<int64_t>((int64_t) size() - 1);
-      terminalStateIndices_.push_back(*terminalStateIndex);
-      cMemoryData->set_terminal_state_index_reference(terminalStateIndex);
-    }
-    if (size() < bufferSize_) {
-      loadedIndices_.push_back(stepCounter_);
-    }
-
-    // Convert to shared pointer and add to transition information in C_MemoryData
-    auto statesCurrentSharedPtr = std::make_shared<torch::Tensor>(
-        transitionInformation->stateCurrent);
-    auto statesNextSharedPtr = std::make_shared<torch::Tensor>(
-        transitionInformation->stateNext);
-    auto rewardsSharedPtr = std::make_shared<torch::Tensor>(
-        transitionInformation->reward);
-    auto actionsSharedPtr = std::make_shared<torch::Tensor>(
-        transitionInformation->action);
-    auto donesSharedPtr = std::make_shared<torch::Tensor>(
-        transitionInformation->done);
-    cMemoryData->set_transition_information_reference(statesCurrentSharedPtr,
-                                                      statesNextSharedPtr,
-                                                      rewardsSharedPtr,
-                                                      actionsSharedPtr,
-                                                      donesSharedPtr);
-  } else {
+  if (stepCounter_ >= bufferSize_) {
     stepCounter_ = -1;
   }
+  auto transitionInformation = std::make_shared<TransitionInformation_>();
+  transitionInformation->stateCurrent = stateCurrent;
+  transitionInformation->stateNext = stateNext;
+  transitionInformation->reward = reward;
+  transitionInformation->action = action;
+  transitionInformation->done = done;
+  transitionInformationBuffer_.push_back(transitionInformation);
+  if (isTerminalState) {
+    auto terminalStateIndex = std::make_shared<int64_t>((int64_t) size() - 1);
+    terminalStateIndices_.push_back(*terminalStateIndex);
+    cMemoryData->set_terminal_state_index_reference(terminalStateIndex);
+    terminalStateToTransitionBufferMap_[numOfTerminalStates() - 1] = transitionInformation;
+    transitionBufferToTerminalStateMap_[transitionInformation] = numOfTerminalStates() - 1;
+  }
+  if (size() < bufferSize_) {
+    loadedIndices_.push_back(stepCounter_);
+  }
+
+  // Get the shared pointer reference to tensors from transitions.
+  auto statesCurrentSharedPtr = std::make_shared<torch::Tensor>(
+      transitionInformation->stateCurrent);
+  auto statesNextSharedPtr = std::make_shared<torch::Tensor>(
+      transitionInformation->stateNext);
+  auto rewardsSharedPtr = std::make_shared<torch::Tensor>(
+      transitionInformation->reward);
+  auto actionsSharedPtr = std::make_shared<torch::Tensor>(
+      transitionInformation->action);
+  auto donesSharedPtr = std::make_shared<torch::Tensor>(
+      transitionInformation->done);
+  cMemoryData->set_transition_information_reference(statesCurrentSharedPtr,
+                                                    statesNextSharedPtr,
+                                                    rewardsSharedPtr,
+                                                    actionsSharedPtr,
+                                                    donesSharedPtr);
   stepCounter_ += 1;
 }
 
 std::map<std::string, torch::Tensor>
 C_Memory::get_item(int64_t index) {
   if (index >= size()) {
-    throw std::out_of_range("Given index exceeds the current_size of C_Memory");
+    throw std::out_of_range("Given index exceeds the _size of C_Memory");
   } else if (index < 0) {
     throw std::out_of_range("Index must be greater than 0");
   }
@@ -248,35 +279,45 @@ C_Memory::get_item(int64_t index) {
 
 void
 C_Memory::delete_item(int64_t index) {
+  if (index > size()) {
+    throw std::out_of_range("Passed index was larger than memory size!");
+  }
+  auto transition = transitionInformationBuffer_[index];
   if (index != 0) {
-    if (transitionInformationBuffer_[index]->done.flatten().item<int32_t>() == 1) {
-      auto indexIter = std::find(
-          terminalStateIndices_.begin(), terminalStateIndices_.end(), index);
-      if (indexIter != terminalStateIndices_.end()) {
-        terminalStateIndices_.erase(indexIter);
+    if (transition->done.flatten().item<int32_t>() != 1) {
+      transitionInformationBuffer_.erase(transitionInformationBuffer_.begin() + index);
+    } else {
+      auto terminalStateIndex = transitionBufferToTerminalStateMap_[transition];
+      terminalStateIndices_.erase(terminalStateIndices_.begin() + terminalStateIndex);
+    }
+  } else {
+    if (transition->done.flatten().item<int32_t>() != 1) {
+      transitionInformationBuffer_.pop_front();
+    } else {
+      auto terminalStateIndex = transitionBufferToTerminalStateMap_[transition];
+      if (terminalStateIndex != 0) {
+        std::cerr << "Expected head transition to be mapped with head terminal state index buffer!" << std::endl;
       } else {
-        std::cerr << "Deletion of terminal state occurred but "
-                     "terminal state was not found in `terminalStateIndices_`" << std::endl;
+        transitionBufferToTerminalStateMap_.erase(transition);
+        terminalStateToTransitionBufferMap_.erase(terminalStateIndex);
+        cMemoryData->delete_transition_information_reference(index);
+        cMemoryData->delete_terminal_state_index_reference(terminalStateIndex);
+        terminalStateIndices_.pop_front();
       }
     }
-    transitionInformationBuffer_.erase(transitionInformationBuffer_.begin() + index);
-  } else {
-    if (transitionInformationBuffer_[0]->done.flatten().item<int32_t>() == 1) {
-      terminalStateIndices_.pop_front();
-    }
-    transitionInformationBuffer_.pop_front();
   }
 }
 
-void C_Memory::set_item(int64_t index,
-                        torch::Tensor &stateCurrent,
-                        torch::Tensor &stateNext,
-                        torch::Tensor &reward,
-                        torch::Tensor &action,
-                        torch::Tensor &done,
-                        bool isTerminalState) {
-  if (index >= bufferSize_) {
-    throw std::out_of_range("Passed index is greater than set buffer size!");
+void
+C_Memory::set_item(int64_t index,
+                   torch::Tensor &stateCurrent,
+                   torch::Tensor &stateNext,
+                   torch::Tensor &reward,
+                   torch::Tensor &action,
+                   torch::Tensor &done,
+                   bool isTerminalState) {
+  if (index >= size()) {
+    throw std::out_of_range("Passed index is greater than current size!");
   }
   if (size() > bufferSize_) {
     delete_item(0);
@@ -289,22 +330,12 @@ void C_Memory::set_item(int64_t index,
   transitionInformation->done = done;
   transitionInformationBuffer_[index] = transitionInformation;
   if (isTerminalState) {
-    bool foundTerminalStateIndex = false;
-    {
-#pragma omp parallel for default(none) \
-firstprivate(index, foundTerminalStateIndex) \
-shared(terminalStateIndices_)
-      for (long long terminalStateIndex : terminalStateIndices_) {
-        if (terminalStateIndex != index) {
-          continue;
-        }
-        foundTerminalStateIndex = true;
-      }
-    }
-    if (foundTerminalStateIndex) {
+    if (terminalStateToTransitionBufferMap_.count(index) < 1) {
       auto terminalStateIndex = std::make_shared<int64_t>(index);
       terminalStateIndices_.push_back(index);
       cMemoryData->set_terminal_state_index_reference(index, terminalStateIndex);
+      terminalStateToTransitionBufferMap_[numOfTerminalStates() - 1] = transitionInformation;
+      transitionBufferToTerminalStateMap_[transitionInformation] = numOfTerminalStates() - 1;
     }
   }
   loadedIndices_[index] = index;
@@ -335,7 +366,7 @@ C_Memory::sample(int32_t batchSize,
   std::mt19937 generator(rd());
   std::uniform_real_distribution<float_t> distributionP(0, 1);
   std::uniform_int_distribution<int64_t> distributionOfTerminalIndex(0,
-                                                                     (int64_t) terminalStateIndices_.size() - 1);
+                                                                     numOfTerminalStates());
   std::vector<torch::Tensor> sampledStateCurrent(batchSize), sampledStateNext(batchSize),
       sampledRewards(batchSize), sampledActions(batchSize), sampledDones(batchSize);
   auto loadedIndices = shuffle_loaded_indices(parallelismSizeThreshold_);
@@ -345,9 +376,9 @@ C_Memory::sample(int32_t batchSize,
   bool forceTerminalState = false;
   float_t p = distributionP(generator);
   if (size() < batchSize) {
-    throw std::out_of_range("Requested batch size is larger than current Memory current_size!");
+    throw std::out_of_range("Requested batch size is larger than current Memory _size!");
   }
-  if (p < forceTerminalStateProbability && terminalStateIndices_.size() > 1) {
+  if (p < forceTerminalStateProbability && numOfTerminalStates() > 1) {
     forceTerminalState = true;
   }
   if (forceTerminalState) {
@@ -403,11 +434,13 @@ C_Memory::initialize(C_Memory::C_MemoryData &viewC_MemoryData) {
   auto transitionInformationDeref = cMemoryData->deref_transition_information_map();
   auto terminalIndicesDeref = cMemoryData->deref_terminal_state_indices();
   auto terminalIndicesDerefVector = terminalIndicesDeref["terminal_state_indices"];
-  auto transitionsSize = cMemoryData->current_size();
-  auto terminalIndicesDerefVectorSize = terminalIndicesDerefVector.size();
+  auto transitionsSize = cMemoryData->_size();
+  auto terminalIndicesDerefVectorSize = cMemoryData->_num_of_terminal_states();
   std::deque<std::shared_ptr<TransitionInformation_>> transitionInformationBuffer(transitionsSize);
   std::deque<int64_t> terminalStateIndices(terminalIndicesDerefVectorSize);
   std::vector<int64_t> loadedIndices(transitionsSize);
+  std::map<int64_t, std::shared_ptr<TransitionInformation_>> terminalStateToTransitionBufferMap;
+  std::map<std::shared_ptr<TransitionInformation_>, int64_t> transitionBufferToTerminalStateMap;
   bool enableParallelism = transitionsSize > parallelismSizeThreshold_;
   {
 #pragma omp parallel for if(enableParallelism) \
@@ -427,14 +460,19 @@ shared(transitionInformationBuffer, loadedIndices)
   {
 #pragma omp parallel for if(enableParallelism) \
 default(none) firstprivate(terminalIndicesDerefVectorSize, terminalIndicesDerefVector) \
-shared(terminalStateIndices)
+shared(terminalStateIndices, transitionInformationBuffer, terminalStateToTransitionBufferMap, \
+transitionBufferToTerminalStateMap)
     for (int64_t index = 0; index < terminalIndicesDerefVectorSize; index++) {
       terminalStateIndices[index] = terminalIndicesDerefVector[index];
+      terminalStateToTransitionBufferMap[index] = transitionInformationBuffer[terminalStateIndices[index]];
+      transitionBufferToTerminalStateMap[transitionInformationBuffer[terminalStateIndices[index]]] = index;
     }
   }
   transitionInformationBuffer_ = transitionInformationBuffer;
   terminalStateIndices_ = terminalStateIndices;
   loadedIndices_ = loadedIndices;
+  terminalStateToTransitionBufferMap_ = terminalStateToTransitionBufferMap;
+  transitionBufferToTerminalStateMap_ = transitionBufferToTerminalStateMap;
 }
 
 void
@@ -445,6 +483,11 @@ C_Memory::clear() {
 size_t
 C_Memory::size() {
   return transitionInformationBuffer_.size();
+}
+
+int64_t
+C_Memory::numOfTerminalStates() {
+  return (int64_t) terminalStateIndices_.size();
 }
 
 std::vector<int64_t>

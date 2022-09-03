@@ -51,9 +51,12 @@ PYBIND11_MODULE(C_Memory, m) {
            "Initialize the Memory with input vector of values.",
            pybind11::arg("c_memory_data"))
       .def("clear", &C_Memory::clear, "Clear all items in memory.")
-      .def("size", &C_Memory::size, "Return the current_size of the memory.",
+      .def("size", &C_Memory::size, "Return the size of the memory.",
            pybind11::return_value_policy::reference)
       .def("view", &C_Memory::view, "Return the current memory view.",
+           pybind11::return_value_policy::reference)
+      .def("num_terminal_states", &C_Memory::numOfTerminalStates,
+           "Return the number of terminal states in memory.",
            pybind11::return_value_policy::reference)
       .def("__repr__", [](C_Memory &cMemory) {
              std::string reprString;
@@ -153,8 +156,8 @@ PYBIND11_MODULE(C_Memory, m) {
    * This is the binding of STL std::map<std::string, std::vector<torch::Tensor>>
    * aliased C_Memory_MapOfVectorOfTensors.
    * C_Memory_MapOfVectorOfTensors will be returned from the following functions:
-   * - deref_transition_information_map (in C_Memory::C_MemoryData, access available as property
-   * `transitions` in Python).
+   * - deref_transition_information_map (in C_Memory::C_MemoryData, access available as method
+   * `get_transitions` in Python).
    */
   pybind11::bind_map<std::map<std::string, std::vector<torch::Tensor>>>(m,
                                                                         "C_Memory_MapOfVectorOfTensors")
@@ -167,11 +170,11 @@ PYBIND11_MODULE(C_Memory, m) {
       })
       .def(pybind11::pickle(
                [](std::map<std::string, std::vector<torch::Tensor>> &cMemoryMapOfVectorOfTensors) {
-                 pybind11::dict cMemoryTensorDict;
+                 pybind11::dict cMemoryVectorOfTensorsDict;
                  for (auto &pair : cMemoryMapOfVectorOfTensors) {
-                   cMemoryTensorDict[pair.first.c_str()] = pair.second;
+                   cMemoryVectorOfTensorsDict[pair.first.c_str()] = pair.second;
                  }
-                 return cMemoryTensorDict;
+                 return cMemoryVectorOfTensorsDict;
                },
                [](pybind11::dict &init) {
                  std::map<std::string, std::vector<torch::Tensor>> cMemoryMapOfVectorOfTensors;
@@ -194,16 +197,16 @@ PYBIND11_MODULE(C_Memory, m) {
         std::string reprString;
         std::stringstream ss;
         ss << &cMemoryMapOfVectorOfInt64;
-        reprString = "<C_Memory_MapOfVectorOfTensors object at " + ss.str() + ">";
+        reprString = "<C_Memory_MapOfVectorOfInt64 object at " + ss.str() + ">";
         return reprString;
       })
       .def(pybind11::pickle(
                [](std::map<std::string, std::vector<int64_t>> &cMemoryMapOfVectorOfInt64) {
-                 pybind11::dict cMemoryTensorDict;
+                 pybind11::dict cMemoryMapOfVectorOfInt64Dict;
                  for (auto &pair : cMemoryMapOfVectorOfInt64) {
-                   cMemoryTensorDict[pair.first.c_str()] = pair.second;
+                   cMemoryMapOfVectorOfInt64Dict[pair.first.c_str()] = pair.second;
                  }
-                 return cMemoryTensorDict;
+                 return cMemoryMapOfVectorOfInt64Dict;
                },
                [](pybind11::dict &init) {
                  std::map<std::string, std::vector<int64_t>> cMemoryMapOfVectorOfInt64;

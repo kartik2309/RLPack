@@ -36,14 +36,17 @@ class C_Memory {
     void set_terminal_state_index_reference(const std::shared_ptr<int64_t> &terminalStateIndex);
     void set_terminal_state_index_reference(int64_t index,
                                             const std::shared_ptr<int64_t> &terminalStateIndex);
+    void delete_transition_information_reference(int64_t index);
+    void delete_terminal_state_index_reference(int64_t terminalStateIndex);
     void initialize_data(std::map<std::string, std::vector<torch::Tensor>> &transitionInformationMap,
                          std::map<std::string, std::vector<int64_t>> &terminalStateIndicesMap);
-    size_t current_size();
+    size_t _size();
+    int64_t _num_of_terminal_states();
     [[nodiscard]] int64_t get_buffer_size() const;
     [[nodiscard]] int64_t get_parallelism_size_threshold() const;
    private:
-    std::map<std::string, std::vector<std::shared_ptr<torch::Tensor>>> transitionInformationMap_;
-    std::vector<std::shared_ptr<int64_t>> terminalStateIndexReferences_;
+    std::map<std::string, std::deque<std::shared_ptr<torch::Tensor>>> transitionInformationMap_;
+    std::deque<std::shared_ptr<int64_t>> terminalStateIndexReferences_;
     int64_t *bufferSizeRawPtr_;
     int64_t *parallelismSizeThresholdRawPtr_;
   };
@@ -74,6 +77,7 @@ class C_Memory {
   void initialize(C_MemoryData &viewC_Memory);
   void clear();
   size_t size();
+  int64_t numOfTerminalStates();
 
  private:
   struct TransitionInformation_ {
@@ -89,6 +93,8 @@ class C_Memory {
 
   std::deque<std::shared_ptr<TransitionInformation_>> transitionInformationBuffer_;
   std::deque<int64_t> terminalStateIndices_;
+  std::map<int64_t, std::shared_ptr<TransitionInformation_>> terminalStateToTransitionBufferMap_;
+  std::map<std::shared_ptr<TransitionInformation_>, int64_t> transitionBufferToTerminalStateMap_;
   std::vector<int64_t> loadedIndices_;
   int64_t parallelismSizeThreshold_ = 8092;
   torch::Device device_ = torch::kCPU;
