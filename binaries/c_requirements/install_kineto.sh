@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-# pybind11 Installation.
+# kineto Installation.
 CPUS=$(getconf _NPROCESSORS_ONLN)
 echo "Cloning git repository"
 cd "$1" || exit
