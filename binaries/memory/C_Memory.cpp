@@ -464,8 +464,10 @@ shared(terminalStateIndices, transitionInformationBuffer, terminalStateToTransit
 transitionBufferToTerminalStateMap)
     for (int64_t index = 0; index < terminalIndicesDerefVectorSize; index++) {
       terminalStateIndices[index] = terminalIndicesDerefVector[index];
-      terminalStateToTransitionBufferMap[index] = transitionInformationBuffer[terminalStateIndices[index]];
-      transitionBufferToTerminalStateMap[transitionInformationBuffer[terminalStateIndices[index]]] = index;
+      terminalStateToTransitionBufferMap.emplace(
+          index, transitionInformationBuffer[terminalIndicesDerefVector[index]]);
+      transitionBufferToTerminalStateMap.emplace(
+          transitionInformationBuffer[terminalIndicesDerefVector[index]], index);
     }
   }
   transitionInformationBuffer_ = transitionInformationBuffer;
