@@ -453,8 +453,8 @@ shared(transitionInformationBuffer, loadedIndices)
       transitionInformation->reward = transitionInformationDeref["rewards"][index];
       transitionInformation->action = transitionInformationDeref["actions"][index];
       transitionInformation->done = transitionInformationDeref["dones"][index];
-      transitionInformationBuffer[index] = transitionInformation;
-      loadedIndices[index] = index;
+      transitionInformationBuffer.at(index) = transitionInformation;
+      loadedIndices.at(index) = index;
     }
   }
   {
@@ -464,10 +464,13 @@ shared(terminalStateIndices, transitionInformationBuffer, terminalStateToTransit
 transitionBufferToTerminalStateMap)
     for (int64_t index = 0; index < terminalIndicesDerefVectorSize; index++) {
       terminalStateIndices[index] = terminalIndicesDerefVector[index];
-      terminalStateToTransitionBufferMap.emplace(
-          index, transitionInformationBuffer[terminalIndicesDerefVector[index]]);
-      transitionBufferToTerminalStateMap.emplace(
-          transitionInformationBuffer[terminalIndicesDerefVector[index]], index);
+      {
+#pragma omp critical
+        terminalStateToTransitionBufferMap.emplace(
+            index, transitionInformationBuffer[terminalIndicesDerefVector[index]]);
+        transitionBufferToTerminalStateMap.emplace(
+            transitionInformationBuffer[terminalIndicesDerefVector[index]], index);
+      }
     }
   }
   transitionInformationBuffer_ = transitionInformationBuffer;
