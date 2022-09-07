@@ -26,7 +26,9 @@ PYBIND11_MODULE(C_Memory, m) {
            pybind11::arg("reward"),
            pybind11::arg("action"),
            pybind11::arg("done"),
-           pybind11::arg("is_terminal"))
+           pybind11::arg("priority"),
+           pybind11::arg("probability"),
+           pybind11::arg("weight"))
       .def("get_item", &C_Memory::get_item, "Get item method to get an item as per index.",
            pybind11::return_value_policy::reference,
            pybind11::arg("index"))
@@ -39,14 +41,29 @@ PYBIND11_MODULE(C_Memory, m) {
            pybind11::arg("reward"),
            pybind11::arg("action"),
            pybind11::arg("done"),
-           pybind11::arg("is_terminal"))
-      .def("sample", &C_Memory::sample,
+           pybind11::arg("priority"),
+           pybind11::arg("probability"),
+           pybind11::arg("weight"))
+      .def("sample", pybind11::overload_cast<int32_t, float_t>(&C_Memory::sample),
            "Sample items from memory."
            " Overload for when we pass both batchSize and forceTerminalStateProbability."
            " This method samples items and arranges them quantity-wise.",
            pybind11::return_value_policy::reference,
            pybind11::arg("batch_size"),
            pybind11::arg("force_terminal_state_probability"))
+      .def("sample", pybind11::overload_cast<int32_t, float_t, float_t>(&C_Memory::sample),
+           "Sample items from memory for priority relay"
+           " Overload for when we pass both batchSize and forceTerminalStateProbability."
+           " This method samples items and arranges them quantity-wise.",
+           pybind11::return_value_policy::reference,
+           pybind11::arg("batch_size"),
+           pybind11::arg("force_terminal_state_probability"),
+           pybind11::arg("alpha"))
+      .def("update_transition_priorities", &C_Memory::update_transition_priorities,
+           "Update transition priorities and related probabilities and weights",
+           pybind11::arg("indices"),
+           pybind11::arg("new_priorities"),
+           pybind11::arg("beta"))
       .def("initialize", &C_Memory::initialize,
            "Initialize the Memory with input vector of values.",
            pybind11::arg("c_memory_data"))

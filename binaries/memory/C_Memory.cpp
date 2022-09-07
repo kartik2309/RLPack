@@ -61,17 +61,22 @@ shared(terminalStateIndexReferences_, terminalStateIndices)
   return _derefTerminalStates;
 }
 
-void
-C_Memory::C_MemoryData::set_transition_information_reference(std::shared_ptr<torch::Tensor> &stateCurrent,
-                                                             std::shared_ptr<torch::Tensor> &stateNext,
-                                                             std::shared_ptr<torch::Tensor> &reward,
-                                                             std::shared_ptr<torch::Tensor> &action,
-                                                             std::shared_ptr<torch::Tensor> &done) {
+void C_Memory::C_MemoryData::set_transition_information_reference(std::shared_ptr<torch::Tensor> &stateCurrent,
+                                                                  std::shared_ptr<torch::Tensor> &stateNext,
+                                                                  std::shared_ptr<torch::Tensor> &reward,
+                                                                  std::shared_ptr<torch::Tensor> &action,
+                                                                  std::shared_ptr<torch::Tensor> &done,
+                                                                  std::shared_ptr<torch::Tensor> &priority,
+                                                                  std::shared_ptr<torch::Tensor> &probability,
+                                                                  std::shared_ptr<torch::Tensor> &weight) {
   transitionInformationMap_["states_current"].push_back(stateCurrent);
   transitionInformationMap_["states_next"].push_back(stateNext);
   transitionInformationMap_["rewards"].push_back(reward);
   transitionInformationMap_["actions"].push_back(action);
   transitionInformationMap_["dones"].push_back(done);
+  transitionInformationMap_["priorities"].push_back(priority);
+  transitionInformationMap_["probabilities"].push_back(probability);
+  transitionInformationMap_["weights"].push_back(weight);
 }
 
 void
@@ -80,12 +85,18 @@ C_Memory::C_MemoryData::set_transition_information_reference(int64_t index,
                                                              std::shared_ptr<torch::Tensor> &stateNext,
                                                              std::shared_ptr<torch::Tensor> &reward,
                                                              std::shared_ptr<torch::Tensor> &action,
-                                                             std::shared_ptr<torch::Tensor> &done) {
+                                                             std::shared_ptr<torch::Tensor> &done,
+                                                             std::shared_ptr<torch::Tensor> &priority,
+                                                             std::shared_ptr<torch::Tensor> &probability,
+                                                             std::shared_ptr<torch::Tensor> &weight) {
   transitionInformationMap_["states_current"][index] = stateCurrent;
   transitionInformationMap_["states_next"][index] = stateNext;
   transitionInformationMap_["rewards"][index] = reward;
   transitionInformationMap_["actions"][index] = action;
   transitionInformationMap_["dones"][index] = done;
+  transitionInformationMap_["priorities"][index] = priority;
+  transitionInformationMap_["probabilities"][index] = probability;
+  transitionInformationMap_["weights"][index] = weight;
 }
 
 void
@@ -112,12 +123,21 @@ C_Memory::C_MemoryData::delete_transition_information_reference(int64_t index) {
         transitionInformationMap_["actions"].begin() + index);
     transitionInformationMap_["dones"].erase(
         transitionInformationMap_["dones"].begin() + index);
+    transitionInformationMap_["priorities"].erase(
+        transitionInformationMap_["priorities"].begin() + index);
+    transitionInformationMap_["probabilities"].erase(
+        transitionInformationMap_["probabilities"].begin() + index);
+    transitionInformationMap_["weights"].erase(
+        transitionInformationMap_["weights"].begin() + index);
   } else {
     transitionInformationMap_["states_current"].pop_front();
     transitionInformationMap_["states_next"].pop_front();
     transitionInformationMap_["rewards"].pop_front();
     transitionInformationMap_["actions"].pop_front();
     transitionInformationMap_["dones"].pop_front();
+    transitionInformationMap_["priorities"].pop_front();
+    transitionInformationMap_["probabilities"].pop_front();
+    transitionInformationMap_["weights"].pop_front();
   }
 }
 
@@ -129,6 +149,16 @@ C_Memory::C_MemoryData::delete_terminal_state_index_reference(int64_t terminalSt
     terminalStateIndexReferences_.pop_front();
   }
 }
+
+void C_Memory::C_MemoryData::update_transition_priority_references(int64_t index,
+                                                                   std::shared_ptr<torch::Tensor> &priority,
+                                                                   std::shared_ptr<torch::Tensor> &probability,
+                                                                   std::shared_ptr<torch::Tensor> &weight) {
+  transitionInformationMap_["priorities"][index] = priority;
+  transitionInformationMap_["probabilities"][index] = probability;
+  transitionInformationMap_["weights"][index] = weight;
+}
+
 
 void
 C_Memory::C_MemoryData::initialize_data(
@@ -199,12 +229,14 @@ C_Memory::C_Memory(pybind11::int_ &bufferSize,
   cMemoryData = std::make_shared<C_MemoryData>(
       &bufferSize_, &parallelismSizeThreshold_);
   loadedIndices_.reserve(bufferSize_);
+  maxWeight_ = torch::zeros({}, torch::kFloat32);
 }
 
 C_Memory::C_Memory() {
   loadedIndices_.reserve(bufferSize_);
   cMemoryData = std::make_shared<C_MemoryData>(
       &bufferSize_, &parallelismSizeThreshold_);
+  maxWeight_ = torch::zeros({}, torch::kFloat32);
 }
 
 C_Memory::~C_Memory() = default;
@@ -215,19 +247,26 @@ C_Memory::insert(torch::Tensor &stateCurrent,
                  torch::Tensor &reward,
                  torch::Tensor &action,
                  torch::Tensor &done,
-                 bool isTerminalState) {
+                 torch::Tensor &priority,
+                 torch::Tensor &probability,
+                 torch::Tensor &weight) {
   if (size() > bufferSize_) {
     delete_item(0);
   }
   if (stepCounter_ >= bufferSize_) {
     stepCounter_ = -1;
   }
+  bool isTerminalState = done.item<float_t>() == 1;
+  // Initialize TransitionInformation_ object and add its shared_ptr to transitionInformationBuffer_
   auto transitionInformation = std::make_shared<TransitionInformation_>();
   transitionInformation->stateCurrent = stateCurrent;
   transitionInformation->stateNext = stateNext;
   transitionInformation->reward = reward;
   transitionInformation->action = action;
   transitionInformation->done = done;
+  transitionInformation->priority = priority;
+  transitionInformation->probability = probability;
+  transitionInformation->weight = weight;
   transitionInformationBuffer_.push_back(transitionInformation);
   if (isTerminalState) {
     auto terminalStateIndex = std::make_shared<int64_t>((int64_t) size() - 1);
@@ -239,7 +278,12 @@ C_Memory::insert(torch::Tensor &stateCurrent,
   if (size() < bufferSize_) {
     loadedIndices_.push_back(stepCounter_);
   }
-
+  // Push transition priority value to priorities_ buffer.
+  priorities_.push_back(transitionInformation->priority.item<float_t>());
+  // Update maxWeight_ if required.
+  if (maxWeight_.item<float_t>() < transitionInformation->weight.item<float_t>()) {
+    maxWeight_ = transitionInformation->weight;
+  }
   // Get the shared pointer reference to tensors from transitions.
   auto statesCurrentSharedPtr = std::make_shared<torch::Tensor>(
       transitionInformation->stateCurrent);
@@ -251,11 +295,20 @@ C_Memory::insert(torch::Tensor &stateCurrent,
       transitionInformation->action);
   auto donesSharedPtr = std::make_shared<torch::Tensor>(
       transitionInformation->done);
+  auto prioritySharedPtr = std::make_shared<torch::Tensor>(
+      transitionInformation->priority);
+  auto probabilitySharedPtr = std::make_shared<torch::Tensor>(
+      transitionInformation->probability);
+  auto weightSharedPtr = std::make_shared<torch::Tensor>(
+      transitionInformation->weight);
   cMemoryData->set_transition_information_reference(statesCurrentSharedPtr,
                                                     statesNextSharedPtr,
                                                     rewardsSharedPtr,
                                                     actionsSharedPtr,
-                                                    donesSharedPtr);
+                                                    donesSharedPtr,
+                                                    prioritySharedPtr,
+                                                    probabilitySharedPtr,
+                                                    weightSharedPtr);
   stepCounter_ += 1;
 }
 
@@ -290,6 +343,7 @@ C_Memory::delete_item(int64_t index) {
       auto terminalStateIndex = transitionBufferToTerminalStateMap_[transition];
       terminalStateIndices_.erase(terminalStateIndices_.begin() + terminalStateIndex);
     }
+    priorities_.erase(priorities_.begin() + index);
   } else {
     if (transition->done.flatten().item<int32_t>() != 1) {
       transitionInformationBuffer_.pop_front();
@@ -305,6 +359,7 @@ C_Memory::delete_item(int64_t index) {
         terminalStateIndices_.pop_front();
       }
     }
+    priorities_.pop_front();
   }
 }
 
@@ -315,19 +370,25 @@ C_Memory::set_item(int64_t index,
                    torch::Tensor &reward,
                    torch::Tensor &action,
                    torch::Tensor &done,
-                   bool isTerminalState) {
+                   torch::Tensor &priority,
+                   torch::Tensor &probability,
+                   torch::Tensor &weight) {
   if (index >= size()) {
     throw std::out_of_range("Passed index is greater than current size!");
   }
   if (size() > bufferSize_) {
     delete_item(0);
   }
+  bool isTerminalState = done.item<float_t>() == 1;
   auto transitionInformation = std::make_shared<TransitionInformation_>();
   transitionInformation->stateCurrent = stateCurrent;
   transitionInformation->stateNext = stateNext;
   transitionInformation->reward = reward;
   transitionInformation->action = action;
   transitionInformation->done = done;
+  transitionInformation->priority = priority;
+  transitionInformation->probability = probability;
+  transitionInformation->weight = weight;
   transitionInformationBuffer_[index] = transitionInformation;
   if (isTerminalState) {
     if (terminalStateToTransitionBufferMap_.count(index) < 1) {
@@ -339,6 +400,7 @@ C_Memory::set_item(int64_t index,
     }
   }
   loadedIndices_[index] = index;
+  priorities_[index] = transitionInformation->priority.item<float_t>();
 
   // Convert to shared pointer and add to transition information in C_MemoryData
   auto statesCurrentSharedPtr = std::make_shared<torch::Tensor>(
@@ -351,12 +413,21 @@ C_Memory::set_item(int64_t index,
       transitionInformation->action);
   auto donesSharedPtr = std::make_shared<torch::Tensor>(
       transitionInformation->done);
+  auto prioritySharedPtr = std::make_shared<torch::Tensor>(
+      transitionInformation->priority);
+  auto probabilitySharedPtr = std::make_shared<torch::Tensor>(
+      transitionInformation->probability);
+  auto weightSharedPtr = std::make_shared<torch::Tensor>(
+      transitionInformation->weight);
   cMemoryData->set_transition_information_reference(index,
                                                     statesCurrentSharedPtr,
                                                     statesNextSharedPtr,
                                                     rewardsSharedPtr,
                                                     actionsSharedPtr,
-                                                    donesSharedPtr);
+                                                    donesSharedPtr,
+                                                    prioritySharedPtr,
+                                                    probabilitySharedPtr,
+                                                    weightSharedPtr);
 }
 
 std::map<std::string, torch::Tensor>
@@ -367,13 +438,27 @@ C_Memory::sample(int32_t batchSize,
   std::uniform_real_distribution<float_t> distributionP(0, 1);
   std::uniform_int_distribution<int64_t> distributionOfTerminalIndex(0,
                                                                      numOfTerminalStates());
+  std::uniform_int_distribution<int64_t> distribution(0, (int64_t) size());
   std::vector<torch::Tensor> sampledStateCurrent(batchSize), sampledStateNext(batchSize),
       sampledRewards(batchSize), sampledActions(batchSize), sampledDones(batchSize);
-  auto loadedIndices = shuffle_loaded_indices(parallelismSizeThreshold_);
-  std::vector<int64_t> loadedIndicesSlice = std::vector<int64_t>(loadedIndices.begin(),
-                                                                 loadedIndices.begin() + batchSize);
+  std::vector<int64_t> loadedIndicesSlice(batchSize);
   int64_t index = 0;
   bool forceTerminalState = false;
+
+  /*
+   * Create a list of random indices with uniform distribution without replacement.
+   * These indices are then used to samples from transitionInformationBuffer_.
+   */
+  for (int32_t index_lis = 0; index_lis != batchSize; index_lis++) {
+    auto randomIndex = distribution(generator);
+    if (
+        std::find(loadedIndicesSlice.begin(),
+                  loadedIndicesSlice.end(),
+                  randomIndex) != loadedIndicesSlice.end()) {
+      continue;
+    }
+    loadedIndicesSlice[index_lis] = randomIndex;
+  }
   float_t p = distributionP(generator);
   if (size() < batchSize) {
     throw std::out_of_range("Requested batch size is larger than current Memory _size!");
@@ -421,6 +506,117 @@ C_Memory::sample(int32_t batchSize,
       {"dones", donesStacked}
   };
   return samples;
+}
+
+std::map<std::string, torch::Tensor> C_Memory::sample(int32_t batchSize,
+                                                      float_t forceTerminalStateProbability,
+                                                      float_t alpha) {
+  std::random_device rd;
+  std::mt19937 generator(rd());
+  std::uniform_real_distribution<float_t> distributionP(0, 1);
+  std::uniform_int_distribution<int64_t> distributionOfTerminalIndex(0,
+                                                                     numOfTerminalStates());
+  std::discrete_distribution<int64_t> distribution(priorities_.begin(), priorities_.end());
+  std::vector<torch::Tensor> sampledStateCurrent(batchSize), sampledStateNext(batchSize),
+      sampledRewards(batchSize), sampledActions(batchSize), sampledDones(batchSize),
+      randomIndices(batchSize);
+  std::vector<int64_t> loadedIndicesSlice(batchSize);
+  int64_t index = 0;
+  bool forceTerminalState = false;
+  float_t p = distributionP(generator);
+  if (size() < batchSize) {
+    throw std::out_of_range("Requested batch size is larger than current Memory _size!");
+  }
+  if (p < forceTerminalStateProbability && numOfTerminalStates() > 1) {
+    forceTerminalState = true;
+  }
+  /*
+   * Create a list of random indices with discrete distribution (with weights/priorities) without replacement.
+   * These indices are then used to samples from transitionInformationBuffer_.
+   */
+  for (int32_t index_lis = 0; index_lis != batchSize; index_lis++) {
+    auto randomIndex = distribution(generator);
+    if (
+        std::find(loadedIndicesSlice.begin(),
+                  loadedIndicesSlice.end(),
+                  randomIndex) != loadedIndicesSlice.end()) {
+      continue;
+    }
+    loadedIndicesSlice[index_lis] = randomIndex;
+  }
+  if (forceTerminalState) {
+    int64_t randomIndexToInsertTerminalState = distributionOfTerminalIndex(generator) % batchSize;
+    int64_t randomTerminalStateInfoIndex = distributionOfTerminalIndex(generator);
+    int64_t randomTerminalStateIndex = terminalStateIndices_[randomTerminalStateInfoIndex];
+    loadedIndicesSlice[randomIndexToInsertTerminalState] = randomTerminalStateIndex;
+  }
+  for (auto &randomIndex : loadedIndicesSlice) {
+    sampledStateCurrent[index] = transitionInformationBuffer_.at(randomIndex)->stateCurrent;
+    sampledStateNext[index] = transitionInformationBuffer_.at(randomIndex)->stateNext;
+    sampledRewards[index] = transitionInformationBuffer_.at(randomIndex)->reward;
+    sampledActions[index] = transitionInformationBuffer_.at(randomIndex)->action;
+    sampledDones[index] = transitionInformationBuffer_.at(randomIndex)->done;
+    randomIndices[index] = torch::full({}, randomIndex);
+    index++;
+  }
+
+  auto statesCurrentStacked = torch::stack(sampledStateCurrent, 0).to(device_);
+  auto statesNextStacked = torch::stack(sampledStateNext, 0).to(device_);
+  auto targetDataType = statesNextStacked.dtype();
+  auto targetSize = statesCurrentStacked.sizes();
+
+  auto rewardsStacked = torch::stack(sampledRewards, 0).to(
+      device_, targetDataType);
+  rewardsStacked = adjust_dimensions(rewardsStacked, targetSize);
+
+  auto actionsStacked = torch::stack(sampledActions, 0).to(
+      device_, torch::kInt64);
+  actionsStacked = adjust_dimensions(actionsStacked, targetSize);
+
+  auto donesStacked = torch::stack(sampledDones, 0).to(
+      device_, torch::kInt32);
+  donesStacked = adjust_dimensions(donesStacked, targetSize);
+  auto randomIndicesStacked = torch::stack(randomIndices).to(device_, torch::kInt64);
+
+  std::map<std::string, torch::Tensor> samples = {
+      {"states_current", statesCurrentStacked},
+      {"states_next", statesNextStacked},
+      {"rewards", rewardsStacked},
+      {"actions", actionsStacked},
+      {"dones", donesStacked},
+      {"random_index", randomIndicesStacked}
+  };
+  return samples;
+}
+
+void C_Memory::update_transition_priorities(const std::vector<int64_t> &indices,
+                                            const std::vector<torch::Tensor> &newPriorities,
+                                            float_t beta) {
+  int32_t baseIndex = 0;
+  auto newPrioritiesStacked = torch::stack(newPriorities, 0);
+  auto newProbabilities = compute_probabilities(newPrioritiesStacked);
+  auto newWeights = compute_important_sampling_weights((int64_t) size(),
+                                                       newProbabilities,
+                                                       maxWeight_,
+                                                       beta);
+  for (auto &index : indices) {
+    transitionInformationBuffer_.at(index)->priority = newPriorities[baseIndex];
+    transitionInformationBuffer_.at(index)->probability = newProbabilities[baseIndex];
+    transitionInformationBuffer_.at(index)->weight = newWeights[baseIndex];
+
+    // Update the shared pointer references and point them to new values.
+    auto prioritySharedPtr = std::make_shared<torch::Tensor>(
+        transitionInformationBuffer_.at(index)->priority);
+    auto probabilitySharedPtr = std::make_shared<torch::Tensor>(
+        transitionInformationBuffer_.at(index)->probability);
+    auto weightSharedPtr = std::make_shared<torch::Tensor>(
+        transitionInformationBuffer_.at(index)->weight);
+    cMemoryData->update_transition_priority_references(index,
+                                                       prioritySharedPtr,
+                                                       probabilitySharedPtr,
+                                                       weightSharedPtr);
+    baseIndex++;
+  }
 }
 
 C_Memory::C_MemoryData
@@ -495,30 +691,6 @@ C_Memory::numOfTerminalStates() {
   return (int64_t) terminalStateIndices_.size();
 }
 
-std::vector<int64_t>
-C_Memory::shuffle_loaded_indices(int64_t parallelismSizeThreshold) {
-  std::random_device rd;
-  std::mt19937 generator(rd());
-  auto loadedIndicesSize = (int64_t) loadedIndices_.size();
-  std::vector<int64_t> loadedIndices = std::vector<int64_t>(loadedIndices_.begin(),
-                                                            loadedIndices_.end());
-  std::uniform_int_distribution<int64_t> distributionOfLoadedIndices(0,
-                                                                     loadedIndicesSize - 1);
-  bool enableParallelism = loadedIndicesSize > parallelismSizeThreshold;
-  {
-#pragma omp parallel for if(enableParallelism) \
-default(none) firstprivate(loadedIndicesSize, distributionOfLoadedIndices, generator) \
-shared(loadedIndices)
-    for (int64_t index = 0;
-         index < loadedIndicesSize;
-         index++) {
-      int64_t randomLoadedIndex = distributionOfLoadedIndices(generator) % (loadedIndicesSize - index);
-      std::iter_swap(loadedIndices.begin() + index, loadedIndices.begin() + index + randomLoadedIndex);
-    }
-  }
-  return loadedIndices;
-}
-
 torch::Tensor
 C_Memory::adjust_dimensions(torch::Tensor &tensor, c10::IntArrayRef &targetDimensions) {
   auto currentSize = tensor.sizes();
@@ -533,6 +705,18 @@ C_Memory::adjust_dimensions(torch::Tensor &tensor, c10::IntArrayRef &targetDimen
     }
   }
   return tensor;
+}
+
+torch::Tensor C_Memory::compute_probabilities(torch::Tensor &priorities) {
+  return priorities / torch::sum(priorities);
+}
+
+torch::Tensor C_Memory::compute_important_sampling_weights(int64_t currentSize,
+                                                           const torch::Tensor &probability,
+                                                           const torch::Tensor &maxWeight,
+                                                           float_t beta) {
+  auto important_sampling_weights = torch::pow(currentSize * probability, -beta) / maxWeight;
+  return important_sampling_weights;
 }
 
 C_Memory::TransitionInformation_::TransitionInformation_() = default;
