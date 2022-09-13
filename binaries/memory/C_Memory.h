@@ -22,6 +22,7 @@ class C_Memory {
 
     std::map<std::string, std::vector<torch::Tensor>> deref_transition_information_map();
     std::map<std::string, std::vector<int64_t>> deref_terminal_state_indices();
+    std::map<std::string, std::vector<float_t>> deref_priorities();
     void set_transition_information_reference(std::shared_ptr<torch::Tensor> &stateCurrent,
                                               std::shared_ptr<torch::Tensor> &stateNext,
                                               std::shared_ptr<torch::Tensor> &reward,
@@ -42,14 +43,19 @@ class C_Memory {
     void set_terminal_state_index_reference(const std::shared_ptr<int64_t> &terminalStateIndex);
     void set_terminal_state_index_reference(int64_t index,
                                             const std::shared_ptr<int64_t> &terminalStateIndex);
+    void set_priority_reference(const std::shared_ptr<float_t> &priority);
+    void set_priority_reference(int64_t index,
+                                const std::shared_ptr<float_t> &priority);
     void delete_transition_information_reference(int64_t index);
     void delete_terminal_state_index_reference(int64_t terminalStateIndex);
+    void delete_priority_reference(int64_t index);
     void update_transition_priority_references(int64_t index,
                                                std::shared_ptr<torch::Tensor> &priority,
                                                std::shared_ptr<torch::Tensor> &probability,
                                                std::shared_ptr<torch::Tensor> &weight);
     void initialize_data(std::map<std::string, std::vector<torch::Tensor>> &transitionInformationMap,
-                         std::map<std::string, std::vector<int64_t>> &terminalStateIndicesMap);
+                         std::map<std::string, std::vector<int64_t>> &terminalStateIndicesMap,
+                         std::map<std::string, std::vector<float_t>> &prioritiesReferencesMap);
     size_t _size();
     int64_t _num_of_terminal_states();
     [[nodiscard]] int64_t get_buffer_size() const;
@@ -57,6 +63,7 @@ class C_Memory {
    private:
     std::map<std::string, std::deque<std::shared_ptr<torch::Tensor>>> transitionInformationMap_;
     std::deque<std::shared_ptr<int64_t>> terminalStateIndexReferences_;
+    std::deque<std::shared_ptr<float_t>> prioritiesReferences_;
     int64_t *bufferSizeRawPtr_;
     int64_t *parallelismSizeThresholdRawPtr_;
   };
@@ -86,12 +93,16 @@ class C_Memory {
                 torch::Tensor &priority,
                 torch::Tensor &probability,
                 torch::Tensor &weight);
-  std::map<std::string, torch::Tensor> sample(int32_t batchSize, float_t forceTerminalStateProbability);
   std::map<std::string, torch::Tensor> sample(int32_t batchSize,
                                               float_t forceTerminalStateProbability,
-                                              float_t alpha);
-  void update_transition_priorities(const std::vector<int64_t> &indices,
-                                    const std::vector<torch::Tensor> &newPriorities,
+                                              bool prioritized);
+  void update_transition_priorities(std::vector<int64_t> &indices,
+                                    std::vector<torch::Tensor> &newPriorities,
+                                    float_t alpha,
+                                    float_t beta);
+  void update_transition_priorities(torch::Tensor &indices,
+                                    torch::Tensor &newPriorities,
+                                    float_t alpha,
                                     float_t beta);
   [[nodiscard]] C_MemoryData view() const;
   void initialize(C_MemoryData &viewC_Memory);
@@ -125,18 +136,25 @@ class C_Memory {
   torch::Device device_ = torch::kCPU;
   int64_t bufferSize_ = 32768;
   int64_t stepCounter_ = 0;
-  torch::Tensor maxWeight_;
+  torch::Tensor maxWeight_ = torch::zeros({}, torch::kFloat32);
   std::map<std::string, torch::DeviceType> deviceMap{
       {"cpu", torch::kCPU},
       {"cuda", torch::kCUDA},
       {"mps", torch::kMPS}
   };
-
+  std::vector<int64_t> get_loaded_indices(int32_t batchSize, float_t forceTerminalStateProbability, bool prioritized);
+  std::map<std::string, torch::Tensor> sample_(std::vector<int64_t> &loadedIndicesSlice, int32_t batchSize);
+  template<class Container>
+  static Container shuffle_indices(int64_t parallelismSizeThreshold, Container &indices);
+  void update_transition_priorities_(std::vector<int64_t> &indices,
+                                     torch::Tensor &newPriorities,
+                                     float_t alpha,
+                                     float_t beta);
   static torch::Tensor adjust_dimensions(torch::Tensor &tensor, c10::IntArrayRef &targetDimensions);
-  static torch::Tensor compute_probabilities(torch::Tensor &priorities);
+  static torch::Tensor compute_probabilities(torch::Tensor &priorities, float_t alpha);
   static torch::Tensor compute_important_sampling_weights(int64_t currentSize,
-                                                          const torch::Tensor &probability,
-                                                          const torch::Tensor &maxWeight,
+                                                          torch::Tensor &probability,
+                                                          torch::Tensor &maxWeight,
                                                           float_t beta);
 };
 

@@ -44,25 +44,33 @@ PYBIND11_MODULE(C_Memory, m) {
            pybind11::arg("priority"),
            pybind11::arg("probability"),
            pybind11::arg("weight"))
-      .def("sample", pybind11::overload_cast<int32_t, float_t>(&C_Memory::sample),
+      .def("sample", &C_Memory::sample,
            "Sample items from memory."
            " Overload for when we pass both batchSize and forceTerminalStateProbability."
            " This method samples items and arranges them quantity-wise.",
            pybind11::return_value_policy::reference,
            pybind11::arg("batch_size"),
-           pybind11::arg("force_terminal_state_probability"))
-      .def("sample", pybind11::overload_cast<int32_t, float_t, float_t>(&C_Memory::sample),
-           "Sample items from memory for priority relay"
-           " Overload for when we pass both batchSize and forceTerminalStateProbability."
-           " This method samples items and arranges them quantity-wise.",
-           pybind11::return_value_policy::reference,
-           pybind11::arg("batch_size"),
            pybind11::arg("force_terminal_state_probability"),
-           pybind11::arg("alpha"))
-      .def("update_transition_priorities", &C_Memory::update_transition_priorities,
+           pybind11::arg("prioritized"))
+      .def("update_transition_priorities",
+           pybind11::overload_cast<std::vector<int64_t> &,
+                                   std::vector<torch::Tensor> &,
+                                   float_t,
+                                   float_t>(&C_Memory::update_transition_priorities),
            "Update transition priorities and related probabilities and weights",
            pybind11::arg("indices"),
            pybind11::arg("new_priorities"),
+           pybind11::arg("alpha"),
+           pybind11::arg("beta"))
+      .def("update_transition_priorities",
+           pybind11::overload_cast<torch::Tensor &,
+                                   torch::Tensor &,
+                                   float_t,
+                                   float_t>(&C_Memory::update_transition_priorities),
+           "Update transition priorities and related probabilities and weights",
+           pybind11::arg("indices"),
+           pybind11::arg("new_priorities"),
+           pybind11::arg("alpha"),
            pybind11::arg("beta"))
       .def("initialize", &C_Memory::initialize,
            "Initialize the Memory with input vector of values.",
@@ -110,6 +118,7 @@ PYBIND11_MODULE(C_Memory, m) {
                  pybind11::dict cMemoryDataDict;
                  cMemoryDataDict["transition_information"] = cMemoryData.deref_transition_information_map();
                  cMemoryDataDict["terminal_state_indices"] = cMemoryData.deref_terminal_state_indices();
+                 cMemoryDataDict["priorities"] = cMemoryData.deref_priorities();
                  cMemoryDataDict["buffer_size"] = cMemoryData.get_buffer_size();
                  cMemoryDataDict["parallelism_size_threshold"] = cMemoryData.get_parallelism_size_threshold();
                  return cMemoryDataDict;
@@ -123,7 +132,9 @@ PYBIND11_MODULE(C_Memory, m) {
                      init["terminal_state_indices"].cast<std::map<std::string, std::vector<int64_t>>>();
                  auto transitionInformation =
                      init["transition_information"].cast<std::map<std::string, std::vector<torch::Tensor>>>();
-                 cMemoryData.initialize_data(transitionInformation, terminalStateIndices);
+                 auto priorities =
+                     init["priorities"].cast<std::map<std::string, std::vector<float_t>>>();
+                 cMemoryData.initialize_data(transitionInformation, terminalStateIndices, priorities);
                  return cMemoryData;
                }),
            "Pickle method for C_MemoryData.",
@@ -135,6 +146,11 @@ PYBIND11_MODULE(C_Memory, m) {
       .def("terminal_state_indices",
            [](C_Memory::C_MemoryData &cMemoryData) {
              return cMemoryData.deref_terminal_state_indices();
+           },
+           pybind11::return_value_policy::reference)
+      .def("priorities",
+           [](C_Memory::C_MemoryData &cMemoryData) {
+             return cMemoryData.deref_priorities();
            },
            pybind11::return_value_policy::reference);
 

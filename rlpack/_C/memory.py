@@ -102,9 +102,14 @@ class Memory(object):
         self,
         batch_size: int,
         force_terminal_state_probability: float = 0.0,
-        alpha: Optional[float] = None,
     ) -> Tuple[
-        pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor
+        pytorch.Tensor,
+        pytorch.Tensor,
+        pytorch.Tensor,
+        pytorch.Tensor,
+        pytorch.Tensor,
+        pytorch.Tensor,
+        pytorch.Tensor,
     ]:
         """
         Load random samples from memory for a given batch.
@@ -112,18 +117,11 @@ class Memory(object):
         @:param batch_size (int): The desired batch size of the samples.
         @:param force_terminal_state_selection_prob (float): The probability for forcefully selecting a terminal state
             in a batch. Default: 0.0
-        @:param alpha (Optional[float]): The alpha value for computing probabilities for the sampled minibatch.
-            Default: None
         @:return (Tuple[pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor]): The tuple
-            of tensors as (states_current, states_next, rewards, actions, dones).
+            of tensors as (states_current, states_next, rewards, actions, dones, random_indices, weights).
         """
-
-        if self.prioritized:
-            assert (
-                alpha is not None
-            ), "When using prioritized memory, argument `alpha` must be passed!"
         samples = self.c_memory.sample(
-            batch_size, force_terminal_state_probability, alpha
+            batch_size, force_terminal_state_probability, self.prioritized
         )
         return (
             samples["states_current"],
@@ -131,22 +129,27 @@ class Memory(object):
             samples["rewards"],
             samples["actions"],
             samples["dones"],
+            samples["random_indices"],
+            samples["weights"],
         )
 
     def update_transition_priorities(
         self,
-        indices: List[int],
+        indices: Union[pytorch.Tensor, List[int]],
         new_priorities: Union[List[pytorch.Tensor], pytorch.Tensor],
+        alpha: float,
         beta: float,
     ) -> None:
         """
         Updates the transition priorities. This will also update corresponding probabilities and weights.
-        @:param indices (List[int]): The indices in which changes are to be done.
-        @:param new_priorities (Union[List[pytorch.Tensor], pytorch.Tensor]): A list of Tensors or a single tensor,
+        @:param indices (List[int]): The indices in which changes are to be done. If tensor is passed, must be a 1d
+            tensor.
+        @:param new_priorities (Union[pytorch.Tensor, List[int]]): A list of Tensors or a single tensor,
             representing values of new priorities for each of the index in `indices`.
+        @:param alpha (float): The alpha value to compute probability for each transition.
         @:param beta (float): The beta value to update important sampling weights.
         """
-        self.c_memory.update_transition_priorities(indices, new_priorities, beta)
+        self.c_memory.update_transition_priorities(indices, new_priorities, alpha, beta)
 
     def clear(self) -> None:
         """
@@ -222,6 +225,13 @@ class Memory(object):
         :return (List[pytorch.Tensor]): A list of tensors with done values.
         """
         return [v for v in self.c_memory.view().transitions()()["dones"]]
+
+    def get_priorities(self) -> List[float]:
+        """
+        This retrieves all the priorities for all the transitions, ordered by index.
+        :return (List[float]): A list of priorities ordered by index.
+        """
+        return [v for v in self.c_memory.view().priorities()["priorities"]]
 
     def num_terminal_states(self) -> int:
         """
@@ -316,26 +326,26 @@ class Memory(object):
         # Handle reward
         if isinstance(reward, np.ndarray):
             reward = pytorch.from_numpy(reward)
-        elif isinstance(reward, float):
+        elif isinstance(reward, (int, float)):
             reward = pytorch.tensor(reward)
         elif isinstance(reward, pytorch.Tensor):
             pass
         else:
             raise TypeError(
-                f"Expected argument `reward` to be of type {pytorch.Tensor}, {np.ndarray} or {float} "
+                f"Expected argument `reward` to be of type {pytorch.Tensor}, {np.ndarray} or {float} or {int}"
                 f"but got type {type(reward)}"
             )
 
         # Handle action
         if isinstance(action, np.ndarray):
             action = pytorch.from_numpy(action)
-        elif isinstance(action, float):
+        elif isinstance(action, (float, int)):
             action = pytorch.tensor(action)
         elif isinstance(action, pytorch.Tensor):
             pass
         else:
             raise TypeError(
-                f"Expected argument `action` to be of type {pytorch.Tensor}, {np.ndarray} or {float} "
+                f"Expected argument `action` to be of type {pytorch.Tensor}, {np.ndarray}, {float} or {int}"
                 f"but got type {type(action)}"
             )
 
