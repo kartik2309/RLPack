@@ -273,13 +273,12 @@ std::map<std::string, torch::Tensor> C_Memory::sample(int32_t batchSize,
     loadedIndicesSlice = std::vector<int64_t>(loadedIndices.begin(),
                                               loadedIndices.begin() + batchSize);
   } else {
-    auto loadedPriorities = prioritiesFloat_;
-    std::discrete_distribution<int64_t> discreteDistribution(loadedPriorities.begin(), loadedPriorities.end());
+    auto seedValues = get_priority_seeds(sumTreeSharedPtr_->get_cumulative_sum(), parallelismSizeThreshold);
     for (int32_t batchIndex = 0; batchIndex < batchSize; batchIndex++) {
-      int64_t randomIndex = discreteDistribution(generator);
-      loadedPriorities[randomIndex] = 0;
+      auto seedValue = seedValues[batchIndex];
+      auto randomIndex = sumTreeSharedPtr_->sample_index(seedValue, (int64_t) size());
       loadedIndicesSlice.push_back(randomIndex);
-      discreteDistribution.reset();
+
     }
   }
 
@@ -330,7 +329,6 @@ std::map<std::string, torch::Tensor> C_Memory::sample(int32_t batchSize,
   auto weightsStacked = torch::stack(sampledWeights, 0).to(
       device_, targetDataType).unsqueeze(-1);
   auto sampledIndicesStacked = torch::stack(sampledIndices, 0).to(device_);
-
   std::map<std::string, torch::Tensor> samples = {
       {"states_current", statesCurrentStacked},
       {"states_next", statesNextStacked},
@@ -450,6 +448,39 @@ firstprivate(loadedIndicesSize, distributionOfLoadedIndices, generator) shared(l
   return loadedIndices;
 }
 
+std::vector<float_t> C_Memory::get_priority_seeds(float_t cumulativeSum,
+                                                  int64_t parallelismSizeThreshold) {
+  std::random_device rd;
+  std::mt19937 generator(rd());
+  auto indexSize = (int64_t)cumulativeSum;
+  std::uniform_real_distribution<float_t> distributionOfErrors(0.0, 1.0);
+  std::uniform_int_distribution<int64_t> distributionOfIndices(0,
+                                                               indexSize - 1);
+  std::vector<float_t> seeds(indexSize);
+  bool enableParallelism = parallelismSizeThreshold < indexSize;
+  {
+#pragma omp parallel for if(enableParallelism) default(none)\
+firstprivate(indexSize, distributionOfErrors, generator)\
+shared(seeds)
+    for(int64_t index = 0; index < indexSize; index++){
+      auto randomError = distributionOfErrors(generator);
+      seeds[index] = (float_t)index + randomError;
+    }
+  }
+  {
+#pragma omp parallel for if(enableParallelism) default(none)\
+firstprivate(indexSize, distributionOfIndices, generator)\
+shared(seeds)
+    for(int64_t index = 0; index < indexSize; index++){
+      int64_t randomLoadedIndex = distributionOfIndices(generator) % (indexSize - index);
+      std::iter_swap(seeds.begin() + index, seeds.begin() + index + randomLoadedIndex);
+    }
+  }
+
+  return seeds;
+}
+
+
 torch::Tensor C_Memory::adjust_dimensions(torch::Tensor &tensor, c10::IntArrayRef &targetDimensions) {
   auto currentSize = tensor.sizes();
   auto diffSizes = (int32_t) targetDimensions.size() - (int32_t) currentSize.size();
@@ -467,13 +498,19 @@ torch::Tensor C_Memory::adjust_dimensions(torch::Tensor &tensor, c10::IntArrayRe
 
 C_Memory::SumTreeNode_::SumTreeNode_(SumTreeNode_ *parent,
                                      float_t value,
+                                     int64_t treeIndex,
                                      int64_t index,
+                                     int64_t treeLevel,
+                                     bool allowTraversal,
                                      SumTreeNode_ *leftNode,
                                      SumTreeNode_ *rightNode) {
   parent_ = parent;
   leftNode_ = leftNode;
   rightNode_ = rightNode;
+  treeIndex_ = treeIndex;
   index_ = index;
+  treeLevel_ = treeLevel;
+  allowTraversal_ = allowTraversal;
   value_ = value;
 
   if (leftNode_ != nullptr || rightNode_ != nullptr) {
@@ -483,19 +520,32 @@ C_Memory::SumTreeNode_::SumTreeNode_(SumTreeNode_ *parent,
 
 C_Memory::SumTreeNode_::~SumTreeNode_() = default;
 
-void C_Memory::SumTreeNode_::change_value(float_t newValue) {
+void C_Memory::SumTreeNode_::set_value(float_t newValue) {
   value_ = newValue;
 }
 
-void C_Memory::SumTreeNode_::remove_child_node(int8_t code) {
-  switch (code) {
-    case 0:leftNode_ = nullptr;
-    case 1:rightNode_ = nullptr;
-    default:std::cerr << "Invalid code was received, did not remove any node!" << std::endl;
-      break;
+[[maybe_unused]] void C_Memory::SumTreeNode_::remove_left_node() {
+  leftNode_ = nullptr;
+}
+
+[[maybe_unused]] void C_Memory::SumTreeNode_::remove_right_node() {
+  rightNode_ = nullptr;
+}
+
+void C_Memory::SumTreeNode_::set_left_node(C_Memory::SumTreeNode_ *node) {
+  leftNode_ = node;
+  if (leftNode_ != nullptr || rightNode_ != nullptr) {
+    isLeaf_ = false;
   }
-  if (leftNode_ == nullptr && rightNode_ == nullptr) {
-    isLeaf_ = true;
+}
+
+void C_Memory::SumTreeNode_::set_right_node(C_Memory::SumTreeNode_ *node) {
+  if (leftNode_ == nullptr) {
+    throw std::runtime_error("Tried to add right node before setting left node!");
+  }
+  rightNode_ = node;
+  if (leftNode_ != nullptr || rightNode_ != nullptr) {
+    isLeaf_ = false;
   }
 }
 
@@ -503,8 +553,16 @@ float_t C_Memory::SumTreeNode_::get_value() const {
   return value_;
 }
 
+int64_t C_Memory::SumTreeNode_::get_tree_index() const {
+  return treeIndex_;
+}
+
 int64_t C_Memory::SumTreeNode_::get_index() const {
   return index_;
+}
+
+int64_t C_Memory::SumTreeNode_::get_tree_level() const {
+  return treeLevel_;
 }
 
 C_Memory::SumTreeNode_ *C_Memory::SumTreeNode_::get_parent() {
@@ -523,6 +581,10 @@ bool C_Memory::SumTreeNode_::is_leaf() const {
   return isLeaf_;
 }
 
+bool C_Memory::SumTreeNode_::is_traversal_allowed() const {
+  return allowTraversal_;
+}
+
 bool C_Memory::SumTreeNode_::is_head() {
   if (parent_ != nullptr) {
     return false;
@@ -530,22 +592,12 @@ bool C_Memory::SumTreeNode_::is_head() {
   return true;
 }
 
-void C_Memory::SumTreeNode_::set_child_node(int8_t code, SumTreeNode_ *node) {
-  if (leftNode_ == nullptr && code == 1) {
-    throw std::runtime_error("Tried to insert right node before setting left node!");
-  }
-  switch (code) {
-    case 0:leftNode_ = node;
-    case 1:rightNode_ = node;
-    default:std::cerr << "Invalid code was received, did not remove any node!" << std::endl;
-      break;
-  }
-  if (leftNode_ != nullptr || rightNode_ != nullptr) {
-    isLeaf_ = false;
-  }
-}
 void C_Memory::SumTreeNode_::set_parent_node(C_Memory::SumTreeNode_ *parent) {
   parent_ = parent;
+}
+
+void C_Memory::SumTreeNode_::set_allow_traversal(bool allowTraversal) {
+  allowTraversal_ = allowTraversal;
 }
 
 C_Memory::SumTree_::SumTree_(int32_t bufferSize) {
@@ -574,19 +626,21 @@ void C_Memory::SumTree_::create_tree(std::vector<float_t> &priorities,
       children.value().push_back(nullptr);
     }
   }
-  prioritiesSum.reserve(prioritiesForTree.size() / 2);
-  childrenForRecursion.reserve(prioritiesForTree.size() / 2);
+  prioritiesSum.reserve((prioritiesForTree.size() / 2) + 1);
+  childrenForRecursion.reserve((prioritiesForTree.size() / 2) + 1);
   for (int64_t index = 0; index < prioritiesForTree.size(); index = index + 2) {
     auto leftPriority = prioritiesForTree[index];
     auto rightPriority = prioritiesForTree[index + 1];
     auto sum = leftPriority + rightPriority;
     prioritiesSum.push_back(sum);
     if (!children.has_value()) {
-      auto parent = new SumTreeNode_(nullptr, sum, -1);
-      auto leftNode = new SumTreeNode_(parent, leftPriority, index);
-      auto rightNode = new SumTreeNode_(parent, rightPriority, index);
-      parent->set_child_node(0, leftNode);
-      parent->set_child_node(1, rightNode);
+      auto parent = new SumTreeNode_(nullptr, sum, (int64_t) sumTree_.size() + 2);
+      auto leftNode = new SumTreeNode_(parent, leftPriority, (int64_t) sumTree_.size(), index);
+      auto rightNode = new SumTreeNode_(parent, rightPriority, (int64_t) sumTree_.size() + 1, index + 1);
+      parent->set_left_node(leftNode);
+      parent->set_right_node(rightNode);
+      leftNode->set_allow_traversal(true);
+      rightNode->set_allow_traversal(true);
       sumTree_.push_back(leftNode);
       sumTree_.push_back(rightNode);
       sumTree_.push_back(parent);
@@ -594,15 +648,21 @@ void C_Memory::SumTree_::create_tree(std::vector<float_t> &priorities,
       leaves_[index + 1] = rightNode;
       childrenForRecursion.push_back(parent);
     } else {
+      treeHeight_++;
       auto leftChild = children.value()[index];
       auto rightChild = children.value()[index + 1];
       auto parent = new SumTreeNode_(nullptr,
                                      sum,
+                                     (int64_t) sumTree_.size(),
                                      -1,
+                                     treeHeight_,
+                                     false,
                                      leftChild,
                                      rightChild);
       leftChild->set_parent_node(parent);
-      rightChild->set_parent_node(parent);
+      if (rightChild != nullptr) {
+        rightChild->set_parent_node(parent);
+      }
       sumTree_.push_back(parent);
       childrenForRecursion.push_back(parent);
     }
@@ -623,21 +683,19 @@ void C_Memory::SumTree_::insert(float_t value) {
   if (stepCounter_ >= bufferSize_) {
     stepCounter_ = 0;
   }
-  auto node = leaves_[stepCounter_];
-  auto change = node->get_value() - value;
-  node->change_value(value);
-  propagate_changes_upwards(node, change);
+  update(stepCounter_, value);
   stepCounter_++;
 }
 
-int64_t C_Memory::SumTree_::sample_index(std::uniform_real_distribution<float_t> *distribution,
-                                         std::mt19937 *generator) {
-  auto distributionDereferenced = *distribution;
-  auto generatorDereferenced = *generator;
-  auto value = distributionDereferenced(generatorDereferenced);
-
+int64_t C_Memory::SumTree_::sample_index(float_t seedValue, int64_t currentSize) {
   auto parent = sumTree_.back();
-  return traverse(parent, value);
+  auto node = traverse(parent, seedValue);
+  auto index = node->get_index();
+  if (index > currentSize){
+    std::cerr << "Larger index than current size was generated " << index <<  std::endl;
+    index = index % currentSize;
+  }
+  return index;
 }
 
 void C_Memory::SumTree_::update(std::vector<int64_t> &indices,
@@ -650,37 +708,42 @@ void C_Memory::SumTree_::update(std::vector<int64_t> &indices,
 
 void C_Memory::SumTree_::update(int64_t index, float_t value) {
   auto leaf = leaves_[index];
-  auto change = leaf->get_value() - value;
-  leaf->change_value(value);
-  propagate_changes_upwards(leaf, change);
+  auto change = value - leaf->get_value();
+  leaf->set_value(value);
+  propagate_changes_upwards(leaf->get_parent(), change);
 }
 
 float_t C_Memory::SumTree_::get_cumulative_sum() {
-  return sumTree_.back()->get_value();
+  auto parentNode = sumTree_.back();
+  return parentNode->get_value();
 }
 
 void C_Memory::SumTree_::propagate_changes_upwards(SumTreeNode_ *node,
                                                    float_t change) {
-  while (!node->is_head()) {
-    node->change_value(node->get_value() + change);
+  auto newValue = node->get_value() + change;
+  node->set_value(newValue);
+  sumTree_[node->get_tree_index()]->set_value(newValue);
+  node->set_allow_traversal(true);
+  sumTree_[node->get_tree_index()]->set_allow_traversal(true);
+  if (!node->is_head()) {
     node = node->get_parent();
     propagate_changes_upwards(node, change);
   }
 }
 
-int64_t C_Memory::SumTree_::traverse(C_Memory::SumTreeNode_ *node, float_t value) {
+C_Memory::SumTreeNode_ *C_Memory::SumTree_::traverse(C_Memory::SumTreeNode_ *node, float_t value) {
   if (!node->is_leaf()) {
     auto leftNode = node->get_left_node();
     auto rightNode = node->get_right_node();
-    if (leftNode->get_value() >= value) {
+    if (leftNode->get_value() >= value || rightNode == nullptr) {
       node = leftNode;
     } else {
-      value = value - rightNode->get_value();
+      value = value - leftNode->get_value();
       node = rightNode;
     }
-    traverse(node, value);
+    node = traverse(node, value);
   }
-  return node->get_index();
+  return node;
 }
 
 #pragma clang diagnostic pop

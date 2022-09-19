@@ -16,6 +16,11 @@ class C_Memory {
  public:
 
   struct C_MemoryData {
+    /*
+     * The class C_MemoryData keeps the references to data that is associated with C_Memory. This class
+     * implements the functions necessary to retrieve the data by de-referencing the data associated with C_Memory.
+     */
+
     C_MemoryData();
     ~C_MemoryData();
 
@@ -81,29 +86,41 @@ class C_Memory {
   struct SumTreeNode_ {
     SumTreeNode_(SumTreeNode_ *parent,
                  float_t value,
+                 int64_t treeIndex = -1,
                  int64_t index = -1,
+                 int64_t treeLevel = 0,
+                 bool allowTraversal = false,
                  SumTreeNode_ *leftNode = nullptr,
                  SumTreeNode_ *rightNode = nullptr);
     ~SumTreeNode_();
 
-    void change_value(float_t newValue);
-    void remove_child_node(int8_t code);
-    void set_child_node(int8_t code, SumTreeNode_ *node);
+    void set_value(float_t newValue);
+    [[maybe_unused]] void remove_left_node();
+    [[maybe_unused]] void remove_right_node();
+    void set_left_node(SumTreeNode_ *node);
+    void set_right_node(SumTreeNode_ *node);
     void set_parent_node(SumTreeNode_ *parent);
+    void set_allow_traversal(bool allowTraversal);
     [[nodiscard]] float_t get_value() const;
+    [[nodiscard]] int64_t get_tree_index() const;
     [[nodiscard]] int64_t get_index() const;
+    [[nodiscard]] int64_t get_tree_level() const;
     SumTreeNode_ *get_parent();
     SumTreeNode_ *get_left_node();
     SumTreeNode_ *get_right_node();
     [[nodiscard]] bool is_leaf() const;
+    [[nodiscard]] bool is_traversal_allowed() const;
     bool is_head();
 
    private:
     SumTreeNode_ *parent_ = nullptr;
     SumTreeNode_ *leftNode_ = nullptr;
     SumTreeNode_ *rightNode_ = nullptr;
+    int64_t treeIndex_ = -1;
+    int64_t treeLevel_ = 0;
     int64_t index_ = -1;
     float_t value_ = 0;
+    bool allowTraversal_ = false;
     bool isLeaf_ = true;
 
   };
@@ -117,18 +134,18 @@ class C_Memory {
                      std::optional<std::vector<SumTreeNode_ *>> &children);
     void insert(float_t value);
     void reset();
-    int64_t sample_index(std::uniform_real_distribution<float_t> *distribution,
-                         std::mt19937 *generator);
+    int64_t sample_index(float_t seedValue, int64_t currentSize);
     void update(std::vector<int64_t> &indices, std::vector<float_t> &values);
     void update(int64_t index, float_t value);
     float_t get_cumulative_sum();
    private:
     void propagate_changes_upwards(SumTreeNode_ *node, float_t change);
-    int64_t traverse(C_Memory::SumTreeNode_ *node, float_t value);
+    C_Memory::SumTreeNode_ *traverse(C_Memory::SumTreeNode_ *node, float_t value);
     std::deque<SumTreeNode_ *> sumTree_;
     std::map<int64_t, SumTreeNode_ *> leaves_;
     int64_t bufferSize_ = 32768;
     int64_t stepCounter_ = 0;
+    int64_t treeHeight_ = 0;
   };
 
   std::deque<torch::Tensor> statesCurrent_;
@@ -153,6 +170,7 @@ class C_Memory {
   };
 
   std::vector<int64_t> shuffle_loaded_indices(int64_t parallelismSizeThreshold);
+  std::vector<float_t> get_priority_seeds(float_t cumulativeSum, int64_t parallelismSizeThreshold);
   static torch::Tensor adjust_dimensions(torch::Tensor &tensor, c10::IntArrayRef &targetDimensions);
 };
 
