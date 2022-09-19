@@ -5,72 +5,44 @@
 #ifndef RLPACK_C_MEMORY_H
 #define RLPACK_C_MEMORY_H
 
+#include <pybind11/pybind11.h>
 #include <random>
 #include <omp.h>
+#include <torch/extension.h>
 #include <vector>
 #include <deque>
-#include <pybind11/pybind11.h>
-#include <torch/extension.h>
 
 class C_Memory {
  public:
 
   struct C_MemoryData {
-    C_MemoryData(int64_t *bufferSizeRawPtr,
-                 int64_t *parallelismSizeThresholdRawPtr);
+    C_MemoryData();
     ~C_MemoryData();
 
-    std::map<std::string, std::vector<torch::Tensor>> deref_transition_information_map();
-    std::map<std::string, std::vector<int64_t>> deref_terminal_state_indices();
-    std::map<std::string, std::vector<float_t>> deref_priorities();
-    void set_transition_information_reference(std::shared_ptr<torch::Tensor> &stateCurrent,
-                                              std::shared_ptr<torch::Tensor> &stateNext,
-                                              std::shared_ptr<torch::Tensor> &reward,
-                                              std::shared_ptr<torch::Tensor> &action,
-                                              std::shared_ptr<torch::Tensor> &done,
-                                              std::shared_ptr<torch::Tensor> &priority,
-                                              std::shared_ptr<torch::Tensor> &probability,
-                                              std::shared_ptr<torch::Tensor> &weight);
-    void set_transition_information_reference(int64_t index,
-                                              std::shared_ptr<torch::Tensor> &stateCurrent,
-                                              std::shared_ptr<torch::Tensor> &stateNext,
-                                              std::shared_ptr<torch::Tensor> &reward,
-                                              std::shared_ptr<torch::Tensor> &action,
-                                              std::shared_ptr<torch::Tensor> &done,
-                                              std::shared_ptr<torch::Tensor> &priority,
-                                              std::shared_ptr<torch::Tensor> &probability,
-                                              std::shared_ptr<torch::Tensor> &weight);
-    void set_terminal_state_index_reference(const std::shared_ptr<int64_t> &terminalStateIndex);
-    void set_terminal_state_index_reference(int64_t index,
-                                            const std::shared_ptr<int64_t> &terminalStateIndex);
-    void set_priority_reference(const std::shared_ptr<float_t> &priority);
-    void set_priority_reference(int64_t index,
-                                const std::shared_ptr<float_t> &priority);
-    void delete_transition_information_reference(int64_t index);
-    void delete_terminal_state_index_reference(int64_t terminalStateIndex);
-    void delete_priority_reference(int64_t index);
-    void update_transition_priority_references(int64_t index,
-                                               std::shared_ptr<torch::Tensor> &priority,
-                                               std::shared_ptr<torch::Tensor> &probability,
-                                               std::shared_ptr<torch::Tensor> &weight);
-    void initialize_data(std::map<std::string, std::vector<torch::Tensor>> &transitionInformationMap,
-                         std::map<std::string, std::vector<int64_t>> &terminalStateIndicesMap,
-                         std::map<std::string, std::vector<float_t>> &prioritiesReferencesMap);
-    size_t _size();
-    int64_t _num_of_terminal_states();
-    [[nodiscard]] int64_t get_buffer_size() const;
-    [[nodiscard]] int64_t get_parallelism_size_threshold() const;
+    std::map<std::string, std::deque<torch::Tensor>> dereferenceTransitionInformation();
+    [[nodiscard]] std::map<std::string, std::deque<int64_t>> dereferenceTerminalStateIndices() const;
+    [[nodiscard]] std::map<std::string, std::deque<float_t>> dereferencePriorities() const;
+    void set_transition_information_references(std::deque<torch::Tensor> *&statesCurrent,
+                                               std::deque<torch::Tensor> *&statesNext,
+                                               std::deque<torch::Tensor> *&rewards,
+                                               std::deque<torch::Tensor> *&actions,
+                                               std::deque<torch::Tensor> *&dones,
+                                               std::deque<torch::Tensor> *&priorities,
+                                               std::deque<torch::Tensor> *&probabilities,
+                                               std::deque<torch::Tensor> *&weights);
+    void set_transition_information_references(std::string &key,
+                                               std::deque<torch::Tensor> *&reference);
+    void set_terminal_state_indices_reference(std::deque<int64_t> *&terminalStateIndicesReference);
+    void set_priorities_reference(std::deque<float_t> *&prioritiesFloatReference);
+
    private:
-    std::map<std::string, std::deque<std::shared_ptr<torch::Tensor>>> transitionInformationMap_;
-    std::deque<std::shared_ptr<int64_t>> terminalStateIndexReferences_;
-    std::deque<std::shared_ptr<float_t>> prioritiesReferences_;
-    int64_t *bufferSizeRawPtr_;
-    int64_t *parallelismSizeThresholdRawPtr_;
+    std::map<std::string, std::deque<torch::Tensor> *> transitionInformationReference_;
+    std::deque<int64_t> *terminalIndicesReference_ = nullptr;
+    std::deque<float_t> *prioritiesFloatReference_ = nullptr;
   };
   std::shared_ptr<C_MemoryData> cMemoryData;
-  explicit C_Memory(pybind11::int_ &bufferSize,
-                    pybind11::str &device,
-                    const pybind11::int_ &parallelismSizeThreshold);
+
+  explicit C_Memory(pybind11::int_ &bufferSize, pybind11::str &device);
   explicit C_Memory();
   ~C_Memory();
 
@@ -81,9 +53,9 @@ class C_Memory {
               torch::Tensor &done,
               torch::Tensor &priority,
               torch::Tensor &probability,
-              torch::Tensor &weight);
+              torch::Tensor &weight,
+              bool isTerminalState);
   std::map<std::string, torch::Tensor> get_item(int64_t index);
-  void delete_item(int64_t index);
   void set_item(int64_t index,
                 torch::Tensor &stateCurrent,
                 torch::Tensor &stateNext,
@@ -92,70 +64,96 @@ class C_Memory {
                 torch::Tensor &done,
                 torch::Tensor &priority,
                 torch::Tensor &probability,
-                torch::Tensor &weight);
+                torch::Tensor &weight,
+                bool isTerminalState);
+  void delete_item(int64_t index);
   std::map<std::string, torch::Tensor> sample(int32_t batchSize,
                                               float_t forceTerminalStateProbability,
-                                              bool prioritized);
-  void update_transition_priorities(std::vector<int64_t> &indices,
-                                    std::vector<torch::Tensor> &newPriorities,
-                                    float_t alpha,
-                                    float_t beta);
-  void update_transition_priorities(torch::Tensor &indices,
-                                    torch::Tensor &newPriorities,
-                                    float_t alpha,
-                                    float_t beta);
+                                              int64_t parallelismSizeThreshold,
+                                              bool isPrioritized);
   [[nodiscard]] C_MemoryData view() const;
   void initialize(C_MemoryData &viewC_Memory);
   void clear();
   size_t size();
-  int64_t numOfTerminalStates();
+  int64_t num_terminal_states();
 
  private:
-  struct TransitionInformation_ {
-    torch::Tensor stateCurrent;
-    torch::Tensor stateNext;
-    torch::Tensor reward;
-    torch::Tensor action;
-    torch::Tensor done;
+  struct SumTreeNode_ {
+    SumTreeNode_(SumTreeNode_ *parent,
+                 float_t value,
+                 int64_t index = -1,
+                 SumTreeNode_ *leftNode = nullptr,
+                 SumTreeNode_ *rightNode = nullptr);
+    ~SumTreeNode_();
 
-    torch::Tensor priority;
-    torch::Tensor probability;
-    torch::Tensor weight;
+    void change_value(float_t newValue);
+    void remove_child_node(int8_t code);
+    void set_child_node(int8_t code, SumTreeNode_ *node);
+    void set_parent_node(SumTreeNode_ *parent);
+    [[nodiscard]] float_t get_value() const;
+    [[nodiscard]] int64_t get_index() const;
+    SumTreeNode_ *get_parent();
+    SumTreeNode_ *get_left_node();
+    SumTreeNode_ *get_right_node();
+    [[nodiscard]] bool is_leaf() const;
+    bool is_head();
 
-    TransitionInformation_();
-    ~TransitionInformation_();
+   private:
+    SumTreeNode_ *parent_ = nullptr;
+    SumTreeNode_ *leftNode_ = nullptr;
+    SumTreeNode_ *rightNode_ = nullptr;
+    int64_t index_ = -1;
+    float_t value_ = 0;
+    bool isLeaf_ = true;
+
   };
 
-  std::deque<std::shared_ptr<TransitionInformation_>> transitionInformationBuffer_;
+  struct SumTree_ {
+    explicit SumTree_(int32_t bufferSize);
+    SumTree_();
+    ~SumTree_();
+
+    void create_tree(std::vector<float_t> &priorities,
+                     std::optional<std::vector<SumTreeNode_ *>> &children);
+    void insert(float_t value);
+    void reset();
+    int64_t sample_index(std::uniform_real_distribution<float_t> *distribution,
+                         std::mt19937 *generator);
+    void update(std::vector<int64_t> &indices, std::vector<float_t> &values);
+    void update(int64_t index, float_t value);
+    float_t get_cumulative_sum();
+   private:
+    void propagate_changes_upwards(SumTreeNode_ *node, float_t change);
+    int64_t traverse(C_Memory::SumTreeNode_ *node, float_t value);
+    std::deque<SumTreeNode_ *> sumTree_;
+    std::map<int64_t, SumTreeNode_ *> leaves_;
+    int64_t bufferSize_ = 32768;
+    int64_t stepCounter_ = 0;
+  };
+
+  std::deque<torch::Tensor> statesCurrent_;
+  std::deque<torch::Tensor> statesNext_;
+  std::deque<torch::Tensor> rewards_;
+  std::deque<torch::Tensor> actions_;
+  std::deque<torch::Tensor> dones_;
+  std::deque<torch::Tensor> priorities_;
+  std::deque<torch::Tensor> probabilities_;
+  std::deque<torch::Tensor> weights_;
   std::deque<int64_t> terminalStateIndices_;
-  std::map<int64_t, std::shared_ptr<TransitionInformation_>> terminalStateToTransitionBufferMap_;
-  std::map<std::shared_ptr<TransitionInformation_>, int64_t> transitionBufferToTerminalStateMap_;
+  std::deque<float_t> prioritiesFloat_;
   std::vector<int64_t> loadedIndices_;
-  std::deque<float_t> priorities_;
-  int64_t parallelismSizeThreshold_ = 8092;
+  std::shared_ptr<SumTree_> sumTreeSharedPtr_;
   torch::Device device_ = torch::kCPU;
   int64_t bufferSize_ = 32768;
   int64_t stepCounter_ = 0;
-  torch::Tensor maxWeight_ = torch::zeros({}, torch::kFloat32);
   std::map<std::string, torch::DeviceType> deviceMap{
       {"cpu", torch::kCPU},
       {"cuda", torch::kCUDA},
       {"mps", torch::kMPS}
   };
-  std::vector<int64_t> get_loaded_indices(int32_t batchSize, float_t forceTerminalStateProbability, bool prioritized);
-  std::map<std::string, torch::Tensor> sample_(std::vector<int64_t> &loadedIndicesSlice, int32_t batchSize);
-  template<class Container>
-  static Container shuffle_indices(int64_t parallelismSizeThreshold, Container &indices);
-  void update_transition_priorities_(std::vector<int64_t> &indices,
-                                     torch::Tensor &newPriorities,
-                                     float_t alpha,
-                                     float_t beta);
+
+  std::vector<int64_t> shuffle_loaded_indices(int64_t parallelismSizeThreshold);
   static torch::Tensor adjust_dimensions(torch::Tensor &tensor, c10::IntArrayRef &targetDimensions);
-  static torch::Tensor compute_probabilities(torch::Tensor &priorities, float_t alpha);
-  static torch::Tensor compute_important_sampling_weights(int64_t currentSize,
-                                                          torch::Tensor &probability,
-                                                          torch::Tensor &maxWeight,
-                                                          float_t beta);
 };
 
 #endif //RLPACK_C_MEMORY_H
