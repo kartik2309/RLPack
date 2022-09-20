@@ -222,6 +222,7 @@ PYBIND11_MODULE(C_Memory, m) {
             }
             return c_MemoryDataMap;
           }), pybind11::return_value_policy::reference);
+
   pybind11::bind_map<std::map<std::string, std::deque<int64_t>>>(m, "MapOfDequeOfInt64")
       .def("__repr__", [](std::map<std::string, std::deque<int64_t>> &mapOfDequeOfInt64) {
         std::string reprString;
