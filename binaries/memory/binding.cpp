@@ -8,7 +8,6 @@
 
 PYBIND11_MAKE_OPAQUE(std::map<std::string, torch::Tensor>)
 PYBIND11_MAKE_OPAQUE(std::map<std::string, std::deque<int64_t>>)
-PYBIND11_MAKE_OPAQUE(std::map<std::string, std::deque<torch::Tensor> *>)
 PYBIND11_MAKE_OPAQUE(std::map<std::string, std::deque<torch::Tensor>>)
 PYBIND11_MODULE(C_Memory, m) {
   m.doc() = "Module to provide Python binding for C_Memory class";
