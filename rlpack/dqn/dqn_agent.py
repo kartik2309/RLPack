@@ -1,8 +1,9 @@
 import os
 import random
 from collections import OrderedDict
-from typing import List, Optional, Tuple, TypeVar, Union
+from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
 
+import numpy as np
 from numpy import ndarray
 
 from rlpack import pytorch
@@ -42,6 +43,7 @@ class DqnAgent(Agent):
         num_actions: int,
         save_path: str,
         device: str = "cpu",
+        prioritization_params: Optional[Dict[str, Any]] = None,
         force_terminal_state_selection_prob: float = 0.0,
         tau: float = 1.0,
         apply_norm: int = -1,
@@ -77,6 +79,8 @@ class DqnAgent(Agent):
         @:param save_path (str): The save path for models (target_model and policy_model), optimizer,
             lr_scheduler and agent_states.
         @:param device (str): The device on which models are run. Default: "cpu"
+        @:param prioritization_params (Optional[Dict[str, Any]]): The parameters for prioritization in prioritized
+            memory (or relay buffer). Default: None
         @:param force_terminal_state_selection_prob (float): The probability for forcefully selecting a terminal state
             in a batch. Default: 0.0
         @:param tau (float): The weighted update of weights from policy_model to target_model. This is done by formula
@@ -91,6 +95,9 @@ class DqnAgent(Agent):
         @:param dim_for_norm (int): The dimension across which normalization is to be performed. Default: 0.
 
         NOTE:
+        For prioritization_params, when None (the default) is passed, prioritized memory is not used. To use
+            prioritized memory, pass a dictionary with keys `alpha` and `beta`. You can also pass `alpha_decay_rate`
+            and `beta_decay_rate` additionally.
         The codes for `apply_norm` are given as follows: -
             - No Normalization: -1
             - Min-Max Normalization: 0
@@ -124,6 +131,15 @@ class DqnAgent(Agent):
         self.num_actions = num_actions
         self.save_path = save_path
         self.device = device
+
+        if prioritization_params is not None:
+            assert (
+                "alpha" in prioritization_params.keys()
+            ), "`alpha` must be passed when passing prioritization_params"
+            assert (
+                "beta" in prioritization_params.keys()
+            ), "`beta` must be passed when passing prioritization_params"
+        self.prioritization_params = prioritization_params
         self.force_terminal_state_selection_prob = force_terminal_state_selection_prob
 
         if tau < 0 or tau > 1:
@@ -138,9 +154,13 @@ class DqnAgent(Agent):
         self.p_for_norm = p_for_norm
         self.dim_for_norm = dim_for_norm
 
-        self.memory = Memory(buffer_size=memory_buffer_size, device=self.device)
+        self.memory = Memory(
+            buffer_size=memory_buffer_size,
+            device=device,
+        )
         self.step_counter = 1
 
+        # Disable gradients for target network.
         for n, p in self.target_model.named_parameters():
             p.requires_grad = False
 
@@ -148,25 +168,50 @@ class DqnAgent(Agent):
 
     def train(
         self,
-        state_current: Union[ndarray, pytorch.Tensor, List[float]],
-        state_next: Union[ndarray, pytorch.Tensor, List[float]],
+        state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
+        state_next: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
         reward: Union[int, float],
         action: Union[int, float],
         done: Union[bool, int],
+        priority: Optional[Union[pytorch.Tensor, np.ndarray, float]] = 1.0,
+        probability: Optional[Union[pytorch.Tensor, np.ndarray, float]] = 1.0,
+        weight: Optional[Union[pytorch.Tensor, np.ndarray, float]] = 1.0,
     ) -> int:
         """
-        The training method for agent, which accepts a transition from environment and returns an action for next
+        - The training method for agent, which accepts a transition from environment and returns an action for next
             transition. Use this method when you intend to train the agent.
-        This method will also run the policy to yield the best action for the given state.
+        - This method will also run the policy to yield the best action for the given state.
+        - For each transition (or experience) being passed, associated priority, probability and weight
+            can be passed.
 
-        @:param state_current (Union[ndarray, pytorch.Tensor, List[float]]): The current state in the environment.
-        @:param state_next (Union[ndarray, pytorch.Tensor, List[float]]): The next state returned by the environment.
+        @:param state_current (Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]): The current
+            state in the environment.
+        @:param state_next (Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]): The next
+            state returned by the environment.
         @:param reward (Union[int, float]): Reward obtained by performing the action for the transition.
         @:param action Union[int, float]: Action taken for the transition
         @:param done Union[bool, int]: Indicates weather episode has terminated or not.
+         @:param priority (Optional[Union[pytorch.Tensor, np.ndarray, float]]): The priority of the
+            transition (for priority relay memory). Default: 1.0
+        @:param probability (Optional[Union[pytorch.Tensor, np.ndarray, float]]): The probability of the transition
+            (for priority relay memory). Default: 1.0
+        @:param weight (Optional[Union[pytorch.Tensor, np.ndarray, float]]): The important sampling weight
+            of the transition (for priority relay memory). Default: 1.0
         @:return (int): The next action to be taken from `state_next`.
         """
-        self.memory.insert(state_current, state_next, reward, action, done)
+        if self.prioritization_params is not None:
+            self.memory.insert(
+                state_current,
+                state_next,
+                reward,
+                action,
+                done,
+                priority,
+                probability,
+                weight,
+            )
+        else:
+            self.memory.insert(state_current, state_next, reward, action, done)
 
         if (
             self.step_counter % self.policy_model_update_rate == 0
@@ -325,7 +370,7 @@ class DqnAgent(Agent):
         if os.path.isfile(os.path.join(self.save_path, "agent_state.pt")):
             agent_state = pytorch.load(os.path.join(self.save_path, "agent_state.pt"))
             self.epsilon = agent_state["epsilon"]
-            self.memory.initialize(agent_state["memory"])
+            self.memory = agent_state["memory"]
         return
 
     def __train_policy_model(self) -> None:
@@ -336,7 +381,17 @@ class DqnAgent(Agent):
             `batch_size` supplied in DqnAgent constructor), and train the policy_model.
         """
         random_experiences = self.__load_random_experiences()
-        state_current, state_next, rewards, actions, dones = random_experiences
+        (
+            state_current,
+            state_next,
+            rewards,
+            actions,
+            dones,
+            priorities,
+            probabilities,
+            weights,
+            random_indices,
+        ) = random_experiences
 
         if self.apply_norm_to in self.state_norm_codes:
             state_current = self.normalization.apply_normalization(
@@ -368,10 +423,20 @@ class DqnAgent(Agent):
         )
         q_values_gathered = pytorch.gather(q_values_policy, dim=-1, index=actions)
         self.optimizer.zero_grad()
-
-        loss = self.loss_function(q_values_gathered, td_value.detach())
+        if self.prioritization_params is not None:
+            weights = self._adjust_dims_for_tensor(weights, td_value.dim())
+            td_value = td_value * weights
+        td_value = td_value.detach()
+        loss = self.loss_function(q_values_gathered, td_value)
         loss.backward()
         self.loss.append(loss.item())
+        if self.prioritization_params is not None:
+            self.memory.update_priorities(
+                random_indices,
+                pytorch.abs(td_value.cpu()),
+                self.prioritization_params["alpha"],
+                self.prioritization_params["beta"],
+            )
         self.optimizer.step()
         if (
             self.lr_scheduler is not None
@@ -429,7 +494,15 @@ class DqnAgent(Agent):
     def __load_random_experiences(
         self,
     ) -> Tuple[
-        pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor
+        pytorch.Tensor,
+        pytorch.Tensor,
+        pytorch.Tensor,
+        pytorch.Tensor,
+        pytorch.Tensor,
+        pytorch.Tensor,
+        pytorch.Tensor,
+        pytorch.Tensor,
+        pytorch.Tensor,
     ]:
         """
         This method loads random transitions from memory. This may also include forced terminal states
@@ -437,12 +510,24 @@ class DqnAgent(Agent):
             force_terminal_state_selection_prob = 0.1, approximately every 1 in 10 batches will have at least
             one terminal state forced by the loader.
 
-        :return: Tuple[pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor]:
-            The tuple of randomly sampled transitions from memory in order of - states_current,
-            states_next, rewards, actions, dones.
+        :return: Tuple[
+                pytorch.Tensor,
+                pytorch.Tensor,
+                pytorch.Tensor,
+                pytorch.Tensor,
+                pytorch.Tensor,
+                pytorch.Tensor,
+                pytorch.Tensor,
+                pytorch.Tensor,
+                pytorch.Tensor,
+            ]:
+           The tuple of tensors as (states_current, states_next, rewards, actions, dones, priorities,
+            probabilities, weights, random_indices).
 
         """
         samples = self.memory.sample(
-            self.batch_size, self.force_terminal_state_selection_prob
+            self.batch_size,
+            self.force_terminal_state_selection_prob,
+            is_prioritized=True if self.prioritization_params is not None else False,
         )
         return samples
