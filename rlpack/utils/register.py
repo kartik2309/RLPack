@@ -80,6 +80,7 @@ class Register(object):
                 "num_actions",
                 "save_path",
                 "device",
+                "prioritization_params",
                 "force_terminal_state_selection_prob",
                 "tau",
                 "apply_norm",
