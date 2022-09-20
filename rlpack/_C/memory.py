@@ -123,6 +123,29 @@ class Memory(object):
             samples["random_indices"],
         )
 
+    def update_priorities(
+        self,
+        random_indices: pytorch.Tensor,
+        new_priorities: pytorch.Tensor,
+        alpha: float,
+        beta: float,
+        random_error_upper_limit: float = 5e-5,
+    ) -> None:
+        """
+        This method updates the priorities when prioritized memory is used. It will also update
+            associated probabilities and important sampling weights.
+        @:param random_indices (pytorch.Tensor): The list of random indices which were sampled previously. These
+            indices are used to update the corresponding values. Must be a 1-D PyTorch Tensor.
+        @:param new_priorities (pytorch.Tensor): The list of new priorities corresponding to `random_indices` passed.
+        @:param alpha (float): The alpha value for computation of probabilities.
+        @:param beta (float): The beta value for computation of important sampling weights.
+        @:param random_error_upper_limit (float): Upper limit of a small random error to be added to the
+            priorities. Default: 5e-5
+        """
+        self.c_memory.update_priorities(
+            random_indices, new_priorities, alpha, beta, random_error_upper_limit
+        )
+
     def clear(self) -> None:
         """
         This method clear the memory and renders it empty
@@ -213,6 +236,13 @@ class Memory(object):
         :return (int): Num of terminal states
         """
         return self.c_memory.num_terminal_states()
+
+    def tree_height(self) -> int:
+        """
+        Returns the height of the Sum Tree when using prioritized memory. This is only relevant when
+            using prioritized buffer.
+        :return (int): The height of the tree.
+        """
 
     @staticmethod
     def __prepare_inputs_c_memory_(
@@ -448,7 +478,7 @@ class Memory(object):
         @:param index (int): Index at which we want to delete an item.
         Note that this operation can be expensive depending on the size of memory; O(n).
         """
-        self.c_memory.delete_item(index)
+        self.c_memory.delete_item(index, False)
 
     def __len__(self) -> int:
         """

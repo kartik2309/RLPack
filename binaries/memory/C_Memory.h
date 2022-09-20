@@ -71,16 +71,22 @@ class C_Memory {
                 torch::Tensor &probability,
                 torch::Tensor &weight,
                 bool isTerminalState);
-  void delete_item(int64_t index);
+  void delete_item(int64_t index, bool internal = false);
   std::map<std::string, torch::Tensor> sample(int32_t batchSize,
                                               float_t forceTerminalStateProbability,
                                               int64_t parallelismSizeThreshold,
                                               bool isPrioritized);
+  void update_priorities(torch::Tensor &randomIndices,
+                         torch::Tensor &newPriorities,
+                         float_t alpha,
+                         float_t beta,
+                         float_t randomErrorUpperLimit = 5e-5);
   [[nodiscard]] C_MemoryData view() const;
   void initialize(C_MemoryData &viewC_Memory);
   void clear();
   size_t size();
   int64_t num_terminal_states();
+  int64_t tree_height();
 
  private:
   struct SumTreeNode_ {
@@ -134,15 +140,15 @@ class C_Memory {
                      std::optional<std::vector<SumTreeNode_ *>> &children);
     void insert(float_t value);
     void reset();
-    int64_t sample_index(float_t seedValue, int64_t currentSize);
-    void update(std::vector<int64_t> &indices, std::vector<float_t> &values);
+    int64_t sample(float_t seedValue, int64_t currentSize);
     void update(int64_t index, float_t value);
     float_t get_cumulative_sum();
+    int64_t get_tree_height();
    private:
     void propagate_changes_upwards(SumTreeNode_ *node, float_t change);
     C_Memory::SumTreeNode_ *traverse(C_Memory::SumTreeNode_ *node, float_t value);
-    std::deque<SumTreeNode_ *> sumTree_;
-    std::map<int64_t, SumTreeNode_ *> leaves_;
+    std::vector<SumTreeNode_ *> sumTree_;
+    std::vector<SumTreeNode_ *> leaves_;
     int64_t bufferSize_ = 32768;
     int64_t stepCounter_ = 0;
     int64_t treeHeight_ = 0;
@@ -163,14 +169,21 @@ class C_Memory {
   torch::Device device_ = torch::kCPU;
   int64_t bufferSize_ = 32768;
   int64_t stepCounter_ = 0;
+  float_t maxWeight_ = 0.0;
   std::map<std::string, torch::DeviceType> deviceMap{
       {"cpu", torch::kCPU},
       {"cuda", torch::kCUDA},
       {"mps", torch::kMPS}
   };
 
-  std::vector<int64_t> shuffle_loaded_indices(int64_t parallelismSizeThreshold);
-  std::vector<float_t> get_priority_seeds(float_t cumulativeSum, int64_t parallelismSizeThreshold);
+  static std::vector<int64_t> get_loaded_indices(std::vector<int64_t> &loadedIndices,
+                                                 int64_t parallelismSizeThreshold);
+  static std::vector<float_t> get_priority_seeds(float_t cumulativeSum, int64_t parallelismSizeThreshold);
+  static torch::Tensor compute_probabilities(torch::Tensor &priorities, float_t alpha);
+  static torch::Tensor compute_important_sampling_weights(torch::Tensor &probabilities,
+                                                          int64_t currentSize,
+                                                          float_t beta,
+                                                          float_t maxWeight);
   static torch::Tensor adjust_dimensions(torch::Tensor &tensor, c10::IntArrayRef &targetDimensions);
 };
 

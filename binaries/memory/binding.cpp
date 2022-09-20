@@ -39,7 +39,8 @@ PYBIND11_MODULE(C_Memory, m) {
            pybind11::arg("weight"),
            pybind11::arg("is_terminal"))
       .def("delete_item", &C_Memory::delete_item, "Delete item method to delete an item as per index.",
-           pybind11::arg("index"))
+           pybind11::arg("index"),
+           pybind11::arg("internal"))
       .def("sample", &C_Memory::sample,
            "Sample items from memory. This method samples items and arranges them quantity-wise.",
            pybind11::arg("batch_size"),
@@ -47,6 +48,13 @@ PYBIND11_MODULE(C_Memory, m) {
            pybind11::arg("parallelism_size_threshold"),
            pybind11::arg("is_prioritized"),
            pybind11::return_value_policy::reference)
+      .def("update_priorities", &C_Memory::update_priorities,
+           "Method to update priorities and associated prioritization values",
+           pybind11::arg("random_indices"),
+           pybind11::arg("new_priorities"),
+           pybind11::arg("alpha"),
+           pybind11::arg("beta"),
+           pybind11::arg("random_error_upper_limit"))
       .def("initialize", &C_Memory::initialize, "Initialize the Memory with input vector of values.",
            pybind11::arg("c_memory_data"))
       .def("clear", &C_Memory::clear, "Clear all items in memory.")
@@ -54,6 +62,9 @@ PYBIND11_MODULE(C_Memory, m) {
            pybind11::return_value_policy::reference)
       .def("num_terminal_states", &C_Memory::num_terminal_states,
            "Returns the number of terminal accumulated so far",
+           pybind11::return_value_policy::reference)
+      .def("tree_height", &C_Memory::tree_height,
+           "Returns the height of the tree. Relevant only if using prioritized memory.",
            pybind11::return_value_policy::reference)
       .def("view", &C_Memory::view, "Return the current memory view.",
            pybind11::return_value_policy::reference)
@@ -70,7 +81,7 @@ PYBIND11_MODULE(C_Memory, m) {
       .def(pybind11::pickle(
                [](C_Memory &cMemory) { return cMemory.view(); },
                [](C_Memory::C_MemoryData &init) {
-                 auto cMemory = std::make_shared<C_Memory>();
+                 auto cMemory = new C_Memory();
                  cMemory->initialize(init);
                  return *cMemory;
                }),
@@ -86,35 +97,6 @@ PYBIND11_MODULE(C_Memory, m) {
         reprString = "<C_Memory::C_MemoryData object at " + ss.str() + ">";
         return reprString;
       })
-      .def(pybind11::pickle(
-               [](C_Memory::C_MemoryData &cMemoryData) {
-                 pybind11::dict cMemoryDataDict;
-                 cMemoryDataDict["transition_information"] = cMemoryData.dereferenceTransitionInformation();
-                 cMemoryDataDict["terminal_state_indices"] = cMemoryData.dereferenceTerminalStateIndices();
-                 cMemoryDataDict["priorities"] = cMemoryData.dereferencePriorities();
-                 return cMemoryDataDict;
-               },
-               [](pybind11::dict &init) {
-                 auto cMemoryData = std::make_shared<C_Memory::C_MemoryData>();
-                 auto transitionInformation = init["transition_information"]
-                     .cast<std::map<std::string, std::deque<torch::Tensor>>>();
-                 for (auto &pair : transitionInformation) {
-                   auto key = pair.first;
-                   auto data = &pair.second;
-                   cMemoryData->set_transition_information_references(key, data);
-                 }
-                 auto terminalStateIndices = init["terminal_state_indices"]
-                     .cast<std::deque<int64_t>>();
-                 auto terminalStateIndicesSharedPointer = &terminalStateIndices;
-                 cMemoryData->set_terminal_state_indices_reference(terminalStateIndicesSharedPointer);
-                 auto priorities = init["priorities"]
-                     .cast<std::deque<float_t>>();
-                 auto prioritiesSharedPointer = &priorities;
-                 cMemoryData->set_priorities_reference(prioritiesSharedPointer);
-                 return *cMemoryData;
-               }),
-           "Pickle method for C_MemoryData.",
-           pybind11::return_value_policy::reference)
       .def("transition_information", [](C_Memory::C_MemoryData &cMemoryData) {
              return cMemoryData.dereferenceTransitionInformation();
            },
@@ -128,6 +110,40 @@ PYBIND11_MODULE(C_Memory, m) {
            [](C_Memory::C_MemoryData &cMemoryData) {
              return cMemoryData.dereferencePriorities();
            },
+           pybind11::return_value_policy::reference)
+      .def(pybind11::pickle(
+               [](C_Memory::C_MemoryData &cMemoryData) {
+                 pybind11::dict cMemoryDataDict;
+                 cMemoryDataDict["transition_information"] = cMemoryData.dereferenceTransitionInformation();
+                 cMemoryDataDict["terminal_state_indices"] = cMemoryData.dereferenceTerminalStateIndices();
+                 cMemoryDataDict["priorities"] = cMemoryData.dereferencePriorities();
+                 return cMemoryDataDict;
+               },
+               [](pybind11::dict &init) {
+                 auto *cMemoryData = new C_Memory::C_MemoryData();
+                 auto transitionInformation = init["transition_information"]
+                     .cast<std::map<std::string, std::deque<torch::Tensor>>>();
+                 for (auto &pair : transitionInformation) {
+                   auto key = pair.first;
+                   auto data = pair.second;
+                   auto dataDynamicallyAllocated = new std::deque<torch::Tensor>(data.begin(), data.end());
+                   cMemoryData->set_transition_information_references(key, dataDynamicallyAllocated);
+                 }
+                 auto terminalStateIndices = init["terminal_state_indices"]
+                     .cast<std::map<std::string, std::deque<int64_t>>>()["terminal_state_indices"];
+                 auto *terminalStateIndicesDynamicallyAllocated = new std::deque<int64_t>(terminalStateIndices.begin(),
+                                                                                          terminalStateIndices.end());
+                 cMemoryData->set_terminal_state_indices_reference(terminalStateIndicesDynamicallyAllocated);
+                 auto priorities = init["priorities"]
+                     .cast<std::map<std::string, std::deque<float_t>>>()["priorities"];
+                 auto *prioritiesDynamicallyAllocated = new std::deque<float_t>(priorities.begin(),
+                                                                                priorities.end());
+                 std::copy(priorities.begin(), priorities.end(),
+                           prioritiesDynamicallyAllocated->begin());
+                 cMemoryData->set_priorities_reference(prioritiesDynamicallyAllocated);
+                 return *cMemoryData;
+               }),
+           "Pickle method for C_MemoryData.",
            pybind11::return_value_policy::reference);
 
   pybind11::bind_map<std::map<std::string, torch::Tensor>>(m, "MapOfTensors")
