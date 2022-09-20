@@ -243,6 +243,7 @@ class Memory(object):
             using prioritized buffer.
         :return (int): The height of the tree.
         """
+        return self.c_memory.tree_height()
 
     @staticmethod
     def __prepare_inputs_c_memory_(
