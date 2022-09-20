@@ -52,8 +52,7 @@ PYBIND11_MODULE(C_Memory, m) {
            pybind11::arg("random_indices"),
            pybind11::arg("new_priorities"),
            pybind11::arg("alpha"),
-           pybind11::arg("beta"),
-           pybind11::arg("random_error_upper_limit"))
+           pybind11::arg("beta"))
       .def("initialize", &C_Memory::initialize, "Initialize the Memory with input vector of values.",
            pybind11::arg("c_memory_data"))
       .def("clear", &C_Memory::clear, "Clear all items in memory.")

@@ -350,12 +350,8 @@ std::map<std::string, torch::Tensor> C_Memory::sample(int32_t batchSize,
 void C_Memory::update_priorities(torch::Tensor &randomIndices,
                                  torch::Tensor &newPriorities,
                                  float_t alpha,
-                                 float_t beta,
-                                 float_t randomErrorUpperLimit) {
-  std::random_device rd;
-  std::mt19937 generator(rd());
-  std::uniform_real_distribution<float_t> distributionOfErrors(0.0, randomErrorUpperLimit);
-  newPriorities = newPriorities.flatten() + distributionOfErrors(generator);
+                                 float_t beta) {
+  newPriorities = newPriorities.flatten();
   auto newProbabilities = compute_probabilities(newPriorities, alpha);
   auto newWeights = compute_important_sampling_weights(newProbabilities,
                                                        (int64_t) size(),

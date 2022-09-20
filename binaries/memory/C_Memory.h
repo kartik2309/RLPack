@@ -79,8 +79,7 @@ class C_Memory {
   void update_priorities(torch::Tensor &randomIndices,
                          torch::Tensor &newPriorities,
                          float_t alpha,
-                         float_t beta,
-                         float_t randomErrorUpperLimit = 5e-5);
+                         float_t beta);
   [[nodiscard]] C_MemoryData view() const;
   void initialize(C_MemoryData &viewC_Memory);
   void clear();

@@ -129,7 +129,6 @@ class Memory(object):
         new_priorities: pytorch.Tensor,
         alpha: float,
         beta: float,
-        random_error_upper_limit: float = 5e-5,
     ) -> None:
         """
         This method updates the priorities when prioritized memory is used. It will also update
@@ -139,11 +138,9 @@ class Memory(object):
         @:param new_priorities (pytorch.Tensor): The list of new priorities corresponding to `random_indices` passed.
         @:param alpha (float): The alpha value for computation of probabilities.
         @:param beta (float): The beta value for computation of important sampling weights.
-        @:param random_error_upper_limit (float): Upper limit of a small random error to be added to the
-            priorities. Default: 5e-5
         """
         self.c_memory.update_priorities(
-            random_indices, new_priorities, alpha, beta, random_error_upper_limit
+            random_indices, new_priorities, alpha, beta
         )
 
     def clear(self) -> None:
