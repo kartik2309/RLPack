@@ -636,6 +636,7 @@ void C_Memory::SumTree_::create_tree(std::vector<float_t> &priorities,
                                      std::optional<std::vector<SumTreeNode_ *>> &children) {
   if (children.has_value()) {
     assert(priorities.size() == children.value().size());
+    treeHeight_++;
   }
   std::vector<float_t> prioritiesForTree(priorities.begin(), priorities.end());
   std::vector<float_t> prioritiesSum;
@@ -668,7 +669,6 @@ void C_Memory::SumTree_::create_tree(std::vector<float_t> &priorities,
       leaves_[index + 1] = rightNode;
       childrenForRecursion.push_back(parent);
     } else {
-      treeHeight_++;
       auto leftChild = children.value()[index];
       auto rightChild = children.value()[index + 1];
       auto parent = new SumTreeNode_(nullptr,
