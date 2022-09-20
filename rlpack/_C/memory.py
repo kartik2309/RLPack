@@ -241,6 +241,7 @@ class Memory(object):
         """
         Returns the height of the Sum Tree when using prioritized memory. This is only relevant when
             using prioritized buffer.
+        Note that tree height is given as per buffer size and not as per number of elements.
         :return (int): The height of the tree.
         """
         return self.c_memory.tree_height()
