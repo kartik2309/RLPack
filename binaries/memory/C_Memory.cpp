@@ -367,6 +367,10 @@ void C_Memory::update_priorities(torch::Tensor &randomIndices,
     probabilities_[selectIndex] = newProbabilities[index];
     weights_[selectIndex] = newWeights[index];
     prioritiesFloat_[selectIndex] = newPriority;
+    auto newWeightFloat = newWeights[index].item<float_t>();
+    if(newWeightFloat > maxWeight_){
+      maxWeight_ = newWeightFloat;
+    }
   }
 }
 
