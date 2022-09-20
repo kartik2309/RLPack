@@ -4,6 +4,7 @@ from collections import OrderedDict
 from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
 
 import numpy as np
+import torch
 from numpy import ndarray
 
 from rlpack import pytorch
@@ -431,9 +432,11 @@ class DqnAgent(Agent):
         loss.backward()
         self.loss.append(loss.item())
         if self.prioritization_params is not None:
+            error = float(self.prioritization_params.get("error", 5e-5))
+            new_priorities = pytorch.abs(td_value.cpu()) + error
             self.memory.update_priorities(
                 random_indices,
-                pytorch.abs(td_value.cpu()),
+                new_priorities,
                 self.prioritization_params["alpha"],
                 self.prioritization_params["beta"],
             )
