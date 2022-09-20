@@ -75,8 +75,6 @@ PYBIND11_MODULE(C_Memory, m) {
              reprString = "<C_Memory object at " + ss.str() + ">";
              return reprString;
            },
-           pybind11::return_value_policy::copy)
-      .def("__len__", [](C_Memory &cMemory) { return cMemory.size(); },
            pybind11::return_value_policy::reference)
       .def(pybind11::pickle(
                [](C_Memory &cMemory) { return cMemory.view(); },
@@ -131,8 +129,9 @@ PYBIND11_MODULE(C_Memory, m) {
                  }
                  auto terminalStateIndices = init["terminal_state_indices"]
                      .cast<std::map<std::string, std::deque<int64_t>>>()["terminal_state_indices"];
-                 auto *terminalStateIndicesDynamicallyAllocated = new std::deque<int64_t>(terminalStateIndices.begin(),
-                                                                                          terminalStateIndices.end());
+                 auto *terminalStateIndicesDynamicallyAllocated = new std::deque<int64_t>(
+                     terminalStateIndices.begin(),
+                     terminalStateIndices.end());
                  cMemoryData->set_terminal_state_indices_reference(terminalStateIndicesDynamicallyAllocated);
                  auto priorities = init["priorities"]
                      .cast<std::map<std::string, std::deque<float_t>>>()["priorities"];
@@ -147,13 +146,25 @@ PYBIND11_MODULE(C_Memory, m) {
            pybind11::return_value_policy::reference);
 
   pybind11::bind_map<std::map<std::string, torch::Tensor>>(m, "MapOfTensors")
-      .def("__repr__", [](std::map<std::string, torch::Tensor> &MapOfTensors) {
+      .def("__repr__", [](std::map<std::string, torch::Tensor> &mapOfTensors) {
         std::string reprString;
         std::stringstream ss;
-        ss << &MapOfTensors;
-        reprString = "<MapOfTensors object at " + ss.str() + ">";
+        ss << &mapOfTensors;
+        reprString = "<mapOfTensors object at " + ss.str() + ">";
         return reprString;
-      })
+      }, pybind11::return_value_policy::reference)
+      .def("__str__", [](std::map<std::string, torch::Tensor> &mapOfTensors) {
+        std::string strString;
+        std::stringstream tensorString;
+        strString.append("{\n");
+        for (auto &pair : mapOfTensors) {
+          tensorString << pair.second;
+          strString.append("\t" + pair.first + ":" + tensorString.str() + "\n");
+          tensorString.clear();
+        }
+        strString.append("}");
+        return strString;
+      }, pybind11::return_value_policy::reference)
       .def(pybind11::pickle(
                [](std::map<std::string, torch::Tensor> &mapOfTensors) {
                  pybind11::dict mapOfTensorsDict;
@@ -179,7 +190,23 @@ PYBIND11_MODULE(C_Memory, m) {
         ss << &c_MemoryDataMap;
         reprString = "<C_MemoryDataMap object at " + ss.str() + ">";
         return reprString;
-      })
+      }, pybind11::return_value_policy::reference)
+      .def("__str__", [](std::map<std::string, std::deque<torch::Tensor>> &c_MemoryDataMap) {
+        std::string strString;
+        std::stringstream tensorString;
+        strString.append("{");
+        for (auto &pair : c_MemoryDataMap) {
+          strString.append(pair.first);
+          strString.append(": [");
+          for (auto &tensor : pair.second) {
+            tensorString << tensor;
+            strString.append(tensorString.str() + ", ");
+          }
+          strString.append("]");
+        }
+        strString.append("}");
+        return strString;
+      }, pybind11::return_value_policy::reference)
       .def(pybind11::pickle(
           [](std::map<std::string, std::deque<torch::Tensor>> &c_MemoryDataMap) {
             pybind11::dict c_MemoryDataMapDict;
@@ -194,7 +221,7 @@ PYBIND11_MODULE(C_Memory, m) {
               c_MemoryDataMap[pair.first.cast<std::string>()] = pair.second.cast<std::deque<torch::Tensor>>();
             }
             return c_MemoryDataMap;
-          }));
+          }), pybind11::return_value_policy::reference);
   pybind11::bind_map<std::map<std::string, std::deque<int64_t>>>(m, "MapOfDequeOfInt64")
       .def("__repr__", [](std::map<std::string, std::deque<int64_t>> &mapOfDequeOfInt64) {
         std::string reprString;
@@ -202,7 +229,22 @@ PYBIND11_MODULE(C_Memory, m) {
         ss << &mapOfDequeOfInt64;
         reprString = "<MapOfDequeOfInt64 object at " + ss.str() + ">";
         return reprString;
-      })
+      }, pybind11::return_value_policy::reference)
+      .def("__str__", [](std::map<std::string, std::deque<int64_t>> &mapOfDequeOfInt64) {
+        std::string strString;
+        std::stringstream tensorString;
+        strString.append("{");
+        for (auto &pair : mapOfDequeOfInt64) {
+          strString.append(pair.first + "\n");
+          strString.append(": [");
+          for (auto &value : pair.second) {
+            strString.append(std::to_string(value) + ", ");
+          }
+          strString.append("]\n");
+        }
+        strString.append("}");
+        return strString;
+      }, pybind11::return_value_policy::reference)
       .def(pybind11::pickle(
           [](std::map<std::string, std::deque<int64_t>> &mapOfDequeOfInt64) {
             pybind11::dict mapOfDequeOfInt64Dict;
@@ -217,5 +259,5 @@ PYBIND11_MODULE(C_Memory, m) {
               mapOfDequeOfInt64[pair.first.cast<std::string>()] = pair.second.cast<std::deque<int64_t>>();
             }
             return mapOfDequeOfInt64;
-          }));
+          }), pybind11::return_value_policy::reference);
 }
