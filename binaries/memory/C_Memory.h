@@ -140,17 +140,21 @@ class C_Memory {
     void insert(float_t value);
     void reset();
     int64_t sample(float_t seedValue, int64_t currentSize);
-    void update(int64_t index, float_t value);
+    void update(int64_t index, float_t value, bool isCMemoryIndex = false);
     float_t get_cumulative_sum();
     int64_t get_tree_height();
+    [[nodiscard]] int64_t get_leaf_index(int64_t cMemoryIndex) const;
+    [[nodiscard]] int64_t get_c_memory_index(int64_t leafIndex) const;
    private:
-    void propagate_changes_upwards(SumTreeNode_ *node, float_t change);
-    C_Memory::SumTreeNode_ *traverse(C_Memory::SumTreeNode_ *node, float_t value);
     std::vector<SumTreeNode_ *> sumTree_;
     std::vector<SumTreeNode_ *> leaves_;
     int64_t bufferSize_ = 32768;
     int64_t stepCounter_ = 0;
+    bool isFirstCycle_ = true;
     int64_t treeHeight_ = 0;
+
+    void propagate_changes_upwards(SumTreeNode_ *node, float_t change);
+    C_Memory::SumTreeNode_ *traverse(C_Memory::SumTreeNode_ *node, float_t value);
   };
 
   std::deque<torch::Tensor> statesCurrent_;

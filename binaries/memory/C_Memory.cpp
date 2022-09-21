@@ -211,7 +211,7 @@ void C_Memory::set_item(int64_t index,
   }
   prioritiesFloat_[index] = priority.item<float_t>();
   loadedIndices_[index] = index;
-  sumTreeSharedPtr_->update(index, priority.item<float_t>());
+  sumTreeSharedPtr_->update(index, priority.item<float_t>(), false);
 }
 
 void C_Memory::delete_item(int64_t index, bool internal) {
@@ -250,8 +250,8 @@ void C_Memory::delete_item(int64_t index, bool internal) {
       terminalStateIndices_.pop_front();
     }
   }
-  if (!internal){
-    sumTreeSharedPtr_->update(index, 0);
+  if (!internal) {
+    sumTreeSharedPtr_->update(index, 0, false);
   }
 }
 
@@ -362,13 +362,13 @@ void C_Memory::update_priorities(torch::Tensor &randomIndices,
   for (int32_t index = 0; index < size; index++) {
     auto selectIndex = randomIndices[index].item<int64_t>();
     auto newPriority = newPriorities[index].item<float_t>();
-    sumTreeSharedPtr_->update(selectIndex, newPriority);
+    sumTreeSharedPtr_->update(selectIndex, newPriority, true);
     priorities_[selectIndex] = newPriorities[index];
     probabilities_[selectIndex] = newProbabilities[index];
     weights_[selectIndex] = newWeights[index];
     prioritiesFloat_[selectIndex] = newPriority;
     auto newWeightFloat = newWeights[index].item<float_t>();
-    if(newWeightFloat > maxWeight_){
+    if (newWeightFloat > maxWeight_) {
       maxWeight_ = newWeightFloat;
     }
   }
@@ -386,7 +386,7 @@ void C_Memory::initialize(C_Memory::C_MemoryData &viewC_MemoryData) {
   statesCurrent_ = transitionInformation["states_current"];
   statesNext_ = transitionInformation["states_next"];
   rewards_ = transitionInformation["rewards"];
-  actions_ =transitionInformation["actions"];
+  actions_ = transitionInformation["actions"];
   dones_ = transitionInformation["dones"];
   priorities_ = transitionInformation["priorities"];
   probabilities_ = transitionInformation["probabilities"];
@@ -424,7 +424,6 @@ int64_t C_Memory::num_terminal_states() {
 int64_t C_Memory::tree_height() {
   return sumTreeSharedPtr_->get_tree_height();
 }
-
 
 std::vector<int64_t> C_Memory::get_loaded_indices(std::vector<int64_t> &loadedIndices,
                                                   int64_t parallelismSizeThreshold) {
@@ -621,7 +620,7 @@ void C_Memory::SumTreeNode_::set_allow_traversal(bool allowTraversal) {
 C_Memory::SumTree_::SumTree_(int32_t bufferSize) {
   bufferSize_ = bufferSize;
   leaves_.reserve(bufferSize_);
-  sumTree_.reserve(bufferSize_);
+  sumTree_.reserve(2 * bufferSize_ - 1);
   std::vector<float_t> priorities(bufferSize, 0.0);
   auto nullOptional = std::make_optional<std::vector<SumTreeNode_ * >>();
   nullOptional = std::nullopt;
@@ -657,7 +656,8 @@ void C_Memory::SumTree_::create_tree(std::vector<float_t> &priorities,
     if (!children.has_value()) {
       auto parent = new SumTreeNode_(nullptr, sum, (int64_t) sumTree_.size() + 2);
       auto leftNode = new SumTreeNode_(parent, leftPriority, (int64_t) sumTree_.size(), index);
-      auto rightNode = new SumTreeNode_(parent, rightPriority, (int64_t) sumTree_.size() + 1, index + 1);
+      auto rightNode = new SumTreeNode_(parent, rightPriority,
+                                        (int64_t) sumTree_.size() + 1, index + 1);
       parent->set_left_node(leftNode);
       parent->set_right_node(rightNode);
       leftNode->set_allow_traversal(true);
@@ -702,8 +702,9 @@ void C_Memory::SumTree_::reset() {
 void C_Memory::SumTree_::insert(float_t value) {
   if (stepCounter_ >= bufferSize_) {
     stepCounter_ = 0;
+    isFirstCycle_ = false;
   }
-  update(stepCounter_, value);
+  update(stepCounter_, value, false);
   stepCounter_++;
 }
 
@@ -715,14 +716,19 @@ int64_t C_Memory::SumTree_::sample(float_t seedValue, int64_t currentSize) {
     std::cerr << "Larger index than current size was generated " << index << std::endl;
     index = index % currentSize;
   }
+  index = get_c_memory_index(index);
   return index;
 }
 
-void C_Memory::SumTree_::update(int64_t index, float_t value) {
+void C_Memory::SumTree_::update(int64_t index, float_t value, bool isCMemoryIndex) {
+  if (isCMemoryIndex) {
+    index = get_leaf_index(index);
+  }
   auto leaf = leaves_[index];
   auto change = value - leaf->get_value();
+  auto parent = leaf->get_parent();
   leaf->set_value(value);
-  propagate_changes_upwards(leaf->get_parent(), change);
+  propagate_changes_upwards(parent, change);
 }
 
 float_t C_Memory::SumTree_::get_cumulative_sum() {
@@ -733,6 +739,38 @@ float_t C_Memory::SumTree_::get_cumulative_sum() {
 int64_t C_Memory::SumTree_::get_tree_height() {
   auto parent = sumTree_.back();
   return parent->get_tree_level();
+}
+
+int64_t C_Memory::SumTree_::get_leaf_index(int64_t cMemoryIndex) const {
+  int64_t leafIndex = 0;
+  if (!isFirstCycle_) {
+    auto oldValuesSize = bufferSize_ - stepCounter_ - 1;
+    if (cMemoryIndex > oldValuesSize) {
+      leafIndex = stepCounter_ - cMemoryIndex;
+    } else {
+      leafIndex = stepCounter_ + cMemoryIndex;
+    }
+  } else {
+    leafIndex = cMemoryIndex;
+  }
+  return leafIndex;
+}
+
+int64_t C_Memory::SumTree_::get_c_memory_index(int64_t leafIndex) const {
+  int64_t cMemoryIndex = 0;
+  if (!isFirstCycle_) {
+    auto oldValuesSize = bufferSize_ - stepCounter_ - 1;
+    if (leafIndex > stepCounter_) {
+      cMemoryIndex = leafIndex - stepCounter_;
+    }
+    else{
+      cMemoryIndex = stepCounter_ + oldValuesSize + leafIndex;
+    }
+
+  } else {
+    cMemoryIndex = leafIndex;
+  }
+  return cMemoryIndex;
 }
 
 void C_Memory::SumTree_::propagate_changes_upwards(SumTreeNode_ *node,
@@ -749,7 +787,7 @@ void C_Memory::SumTree_::propagate_changes_upwards(SumTreeNode_ *node,
 }
 
 C_Memory::SumTreeNode_ *C_Memory::SumTree_::traverse(C_Memory::SumTreeNode_ *node, float_t value) {
-  if (!node->is_traversal_allowed()){
+  if (!node->is_traversal_allowed()) {
     std::cerr << "WARNING: Traversed through restricted Node" << std::endl;
   }
   if (!node->is_leaf()) {
