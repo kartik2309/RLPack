@@ -7,6 +7,7 @@ from rlpack import pytorch
 from rlpack.environments.environments import Environments
 from rlpack.utils.base import Agent
 from rlpack.utils.register import Register
+from rlpack.utils.sanity_check import SanityCheck
 
 
 class Simulator:
@@ -37,7 +38,8 @@ class Simulator:
             config = self.register.get_default_config(algorithm)
         if environment is not None:
             config["env_name"] = environment
-
+        # Perform sanity check before starting.
+        SanityCheck(config)
         self.config = config
         self.agent = self.setup_agent()
         self.env = Environments(agent=self.agent, config=self.config)
@@ -84,6 +86,11 @@ class Simulator:
             if self.config["agent_args"].get("save_path") is not None
             else os.getenv("SAVE_PATH")
         )
+        if save_path is None:
+            raise ValueError(
+                "The argument `save_path` was not set. "
+                "Either pass it in config dictionary or set the environment variable `SAVE_PATH`"
+            )
         processed_agent_args = dict(
             **agent_model_kwargs,
             optimizer=optimizers[0] if len(optimizers) == 1 else optimizers,
