@@ -47,7 +47,7 @@ class C_Memory {
   };
   std::shared_ptr<C_MemoryData> cMemoryData;
 
-  explicit C_Memory(pybind11::int_ &bufferSize, pybind11::str &device);
+  explicit C_Memory(pybind11::int_ &bufferSize, pybind11::str &device, const pybind11::bool_& isPrioritized);
   explicit C_Memory();
   ~C_Memory();
 
@@ -71,15 +71,16 @@ class C_Memory {
                 torch::Tensor &probability,
                 torch::Tensor &weight,
                 bool isTerminalState);
-  void delete_item(int64_t index, bool internal = false);
+  void delete_item(int64_t index);
   std::map<std::string, torch::Tensor> sample(int32_t batchSize,
                                               float_t forceTerminalStateProbability,
                                               int64_t parallelismSizeThreshold,
-                                              bool isPrioritized);
+                                              float_t alpha = 0.0,
+                                              float_t beta = 0.0);
   void update_priorities(torch::Tensor &randomIndices,
                          torch::Tensor &newPriorities,
-                         float_t alpha,
-                         float_t beta);
+                         torch::Tensor &newProbabilities,
+                         torch::Tensor &newWeights);
   [[nodiscard]] C_MemoryData view() const;
   void initialize(C_MemoryData &viewC_Memory);
   void clear();
@@ -94,7 +95,6 @@ class C_Memory {
                  int64_t treeIndex = -1,
                  int64_t index = -1,
                  int64_t treeLevel = 0,
-                 bool allowTraversal = false,
                  SumTreeNode_ *leftNode = nullptr,
                  SumTreeNode_ *rightNode = nullptr);
     ~SumTreeNode_();
@@ -105,7 +105,7 @@ class C_Memory {
     void set_left_node(SumTreeNode_ *node);
     void set_right_node(SumTreeNode_ *node);
     void set_parent_node(SumTreeNode_ *parent);
-    void set_allow_traversal(bool allowTraversal);
+    void set_leaf_status(bool isLeaf);
     [[nodiscard]] float_t get_value() const;
     [[nodiscard]] int64_t get_tree_index() const;
     [[nodiscard]] int64_t get_index() const;
@@ -114,7 +114,6 @@ class C_Memory {
     SumTreeNode_ *get_left_node();
     SumTreeNode_ *get_right_node();
     [[nodiscard]] bool is_leaf() const;
-    [[nodiscard]] bool is_traversal_allowed() const;
     bool is_head();
 
    private:
@@ -125,7 +124,6 @@ class C_Memory {
     int64_t treeLevel_ = 0;
     int64_t index_ = -1;
     float_t value_ = 0;
-    bool allowTraversal_ = false;
     bool isLeaf_ = true;
 
   };
@@ -135,22 +133,18 @@ class C_Memory {
     SumTree_();
     ~SumTree_();
 
-    void create_tree(std::vector<float_t> &priorities,
-                     std::optional<std::vector<SumTreeNode_ *>> &children);
-    void insert(float_t value);
-    void reset();
+    void create_tree(std::deque<float_t> &priorities,
+                     std::optional<std::vector<SumTreeNode_ *>> &children,
+                     int64_t parallelismSizeThreshold);
+    void reset(int64_t parallelismSizeThreshold = 4096);
     int64_t sample(float_t seedValue, int64_t currentSize);
-    void update(int64_t index, float_t value, bool isCMemoryIndex = false);
+    void update(int64_t index, float_t value);
     float_t get_cumulative_sum();
     int64_t get_tree_height();
-    [[nodiscard]] int64_t get_leaf_index(int64_t cMemoryIndex) const;
-    [[nodiscard]] int64_t get_c_memory_index(int64_t leafIndex) const;
    private:
     std::vector<SumTreeNode_ *> sumTree_;
     std::vector<SumTreeNode_ *> leaves_;
     int64_t bufferSize_ = 32768;
-    int64_t stepCounter_ = 0;
-    bool isFirstCycle_ = true;
     int64_t treeHeight_ = 0;
 
     void propagate_changes_upwards(SumTreeNode_ *node, float_t change);
@@ -173,6 +167,8 @@ class C_Memory {
   int64_t bufferSize_ = 32768;
   int64_t stepCounter_ = 0;
   float_t maxWeight_ = 0.0;
+  float_t cumulativeSum_ = -1;
+  bool isPrioritized_ = false;
   std::map<std::string, torch::DeviceType> deviceMap{
       {"cpu", torch::kCPU},
       {"cuda", torch::kCUDA},
@@ -185,8 +181,7 @@ class C_Memory {
   static torch::Tensor compute_probabilities(torch::Tensor &priorities, float_t alpha);
   static torch::Tensor compute_important_sampling_weights(torch::Tensor &probabilities,
                                                           int64_t currentSize,
-                                                          float_t beta,
-                                                          float_t maxWeight);
+                                                          float_t beta);
   static torch::Tensor adjust_dimensions(torch::Tensor &tensor, c10::IntArrayRef &targetDimensions);
 };
 

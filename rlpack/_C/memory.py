@@ -1,3 +1,4 @@
+import logging
 import os
 from typing import Any, Dict, List, Optional, Tuple, Union
 
@@ -12,15 +13,20 @@ class Memory(object):
     """
 
     def __init__(
-        self, buffer_size: Optional[int] = 32768, device: Optional[str] = "cpu"
+        self,
+        buffer_size: Optional[int] = 32768,
+        device: Optional[str] = "cpu",
+        is_prioritized: bool = False,
     ):
         """
         @:param buffer_size (Optional[int]): The buffer size of the memory. No more than specified buffer
             elements are stored in the memory. Default: 32768
         @:param device (str): The device on which models are currently running. Default: "cpu"
+        @:param prioritized (bool): Indicates if prioritized memory is to be used. Default: False
         """
-        self.c_memory = C_Memory.C_Memory(buffer_size, device)
+        self.c_memory = C_Memory.C_Memory(buffer_size, device, is_prioritized)
         self.buffer_size = buffer_size
+        self.is_prioritized = is_prioritized
         self.device = device
         os.environ["OMP_WAIT_POLICY"] = "ACTIVE"
         os.environ["OMP_NUM_THREADS"] = f"{os.cpu_count()}"
@@ -32,7 +38,7 @@ class Memory(object):
         reward: Union[np.ndarray, float],
         action: Union[np.ndarray, float],
         done: Union[bool, int],
-        priority: Optional[Union[pytorch.Tensor, np.ndarray, float]] = 1.0,
+        priority: Optional[Union[pytorch.Tensor, np.ndarray, float]] = 9e5,
         probability: Optional[Union[pytorch.Tensor, np.ndarray, float]] = 1.0,
         weight: Optional[Union[pytorch.Tensor, np.ndarray, float]] = 1.0,
     ) -> None:
@@ -47,11 +53,11 @@ class Memory(object):
         @:param done Union[bool, int]: Indicates weather episodes ended or not, i.e.
             if state_next is a terminal state or not.
         @:param priority (Optional[Union[pytorch.Tensor, np.ndarray, float]]): The priority of the
-            transition (for priority relay memory). Default: None
+            transition (for priority relay memory). Default: 9e5
         @:param probability (Optional[Union[pytorch.Tensor, np.ndarray, float]]): The probability of the transition
-            (for priority relay memory). Default: None
+            (for priority relay memory). Default: 1.0
         @:param weight (Optional[Union[pytorch.Tensor, np.ndarray, float]]): The important sampling weight
-            of the transition (for priority relay memory). Default: None
+            of the transition (for priority relay memory). Default: 1.0
         """
 
         self.c_memory.insert(
@@ -72,7 +78,8 @@ class Memory(object):
         batch_size: int,
         force_terminal_state_probability: float = 0.0,
         parallelism_size_threshold: int = 4096,
-        is_prioritized: bool = False,
+        alpha: float = 0.0,
+        beta: float = 0.0,
     ) -> Tuple[
         pytorch.Tensor,
         pytorch.Tensor,
@@ -91,7 +98,8 @@ class Memory(object):
             in a batch. Default: 0.0
         @:param parallelism_size_threshold: The minimum size of memory beyond which parallelism is used to shuffle
             and retrieve the batch of sample. Default: 4096.
-        @:param is_prioritized (bool): If memory is prioritized or non-prioritized. Default: False
+        @:param alpha (float): The alpha value for computation of probabilities. Default: 0.0
+        @:param beta (float): The beta value for computation of important sampling weights. Default: 0.0
         @:return (Tuple[
                 pytorch.Tensor,
                 pytorch.Tensor,
@@ -109,7 +117,8 @@ class Memory(object):
             batch_size,
             force_terminal_state_probability,
             parallelism_size_threshold,
-            is_prioritized,
+            alpha,
+            beta,
         )
         return (
             samples["states_current"],
@@ -127,8 +136,8 @@ class Memory(object):
         self,
         random_indices: pytorch.Tensor,
         new_priorities: pytorch.Tensor,
-        alpha: float,
-        beta: float,
+        new_probabilities: pytorch.Tensor,
+        new_weights: pytorch.Tensor,
     ) -> None:
         """
         This method updates the priorities when prioritized memory is used. It will also update
@@ -136,11 +145,12 @@ class Memory(object):
         @:param random_indices (pytorch.Tensor): The list of random indices which were sampled previously. These
             indices are used to update the corresponding values. Must be a 1-D PyTorch Tensor.
         @:param new_priorities (pytorch.Tensor): The list of new priorities corresponding to `random_indices` passed.
-        @:param alpha (float): The alpha value for computation of probabilities.
-        @:param beta (float): The beta value for computation of important sampling weights.
+        @:param new_probabilities (pytorch.Tensor): The list of new probabilities corresponding to
+            `random_indices` passed.
+        @:param new_weights (pytorch.Tensor): The list of new weights corresponding to `random_indices` passed.
         """
         self.c_memory.update_priorities(
-            random_indices, new_priorities, alpha, beta
+            random_indices, new_priorities, new_probabilities, new_weights
         )
 
     def clear(self) -> None:
@@ -241,7 +251,10 @@ class Memory(object):
         Note that tree height is given as per buffer size and not as per number of elements.
         :return (int): The height of the tree.
         """
-        return self.c_memory.tree_height()
+        if self.is_prioritized:
+            return self.c_memory.tree_height()
+        logging.warning("Tree height cannot be accessed for un-prioritized memory!")
+        return 0
 
     @staticmethod
     def __prepare_inputs_c_memory_(

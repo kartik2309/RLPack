@@ -74,9 +74,10 @@ void C_Memory::C_MemoryData::set_priorities_reference(
   prioritiesFloatReference_ = prioritiesFloatReference;
 }
 
-C_Memory::C_Memory(pybind11::int_ &bufferSize, pybind11::str &device) {
+C_Memory::C_Memory(pybind11::int_ &bufferSize, pybind11::str &device, const pybind11::bool_ &isPrioritized) {
   bufferSize_ = bufferSize.cast<int64_t>();
   device_ = deviceMap[device.cast<std::string>()];
+  isPrioritized_ = isPrioritized.cast<bool>();
   cMemoryData = std::make_shared<C_MemoryData>();
   auto statesCurrentRawPointer = &statesCurrent_;
   auto statesNextRawPointer = &statesNext_;
@@ -99,7 +100,10 @@ C_Memory::C_Memory(pybind11::int_ &bufferSize, pybind11::str &device) {
   auto prioritiesFloatRawPointer = &prioritiesFloat_;
   cMemoryData->set_priorities_reference(prioritiesFloatRawPointer);
   loadedIndices_.reserve(bufferSize_);
-  sumTreeSharedPtr_ = std::make_shared<SumTree_>(bufferSize_);
+  sumTreeSharedPtr_ = nullptr;
+  if (isPrioritized_) {
+    sumTreeSharedPtr_ = std::make_shared<SumTree_>(bufferSize_);
+  }
 }
 
 C_Memory::C_Memory() {
@@ -125,7 +129,9 @@ C_Memory::C_Memory() {
   auto prioritiesFloatRawPointer = &prioritiesFloat_;
   cMemoryData->set_priorities_reference(prioritiesFloatRawPointer);
   loadedIndices_.reserve(bufferSize_);
-  sumTreeSharedPtr_ = std::make_shared<SumTree_>(bufferSize_);
+  if (isPrioritized_) {
+    sumTreeSharedPtr_ = std::make_shared<SumTree_>(bufferSize_);
+  }
 }
 
 C_Memory::~C_Memory() = default;
@@ -140,7 +146,7 @@ void C_Memory::insert(torch::Tensor &stateCurrent,
                       torch::Tensor &weight,
                       bool isTerminalState) {
   if (size() > bufferSize_) {
-    delete_item(0, true);
+    delete_item(0);
   }
   statesCurrent_.push_back(stateCurrent);
   statesNext_.push_back(stateNext);
@@ -158,7 +164,6 @@ void C_Memory::insert(torch::Tensor &stateCurrent,
   if (weight.item<float_t>() > maxWeight_) {
     maxWeight_ = weight.item<float_t>();
   }
-  sumTreeSharedPtr_->insert(priority.item<float_t>());
   if (isTerminalState) {
     terminalStateIndices_.push_back((int64_t) size() - 1);
   }
@@ -211,10 +216,12 @@ void C_Memory::set_item(int64_t index,
   }
   prioritiesFloat_[index] = priority.item<float_t>();
   loadedIndices_[index] = index;
-  sumTreeSharedPtr_->update(index, priority.item<float_t>(), false);
+  if (isPrioritized_) {
+    sumTreeSharedPtr_->update(index, priority.item<float_t>());
+  }
 }
 
-void C_Memory::delete_item(int64_t index, bool internal) {
+void C_Memory::delete_item(int64_t index) {
   if (index >= size()) {
     throw std::out_of_range("Index is larger than current size of memory!");
   }
@@ -229,7 +236,7 @@ void C_Memory::delete_item(int64_t index, bool internal) {
       if (indexIter != terminalStateIndices_.end()) {
         terminalStateIndices_.erase(indexIter);
       } else {
-        std::cerr << "Deletion of terminal state occurred but "
+        std::cerr << "WARNING: Deletion of terminal state occurred but "
                      "terminal state was not found in `terminalStateIndices_`" << std::endl;
       }
     }
@@ -237,6 +244,7 @@ void C_Memory::delete_item(int64_t index, bool internal) {
     priorities_.erase(priorities_.begin() + index);
     probabilities_.erase(probabilities_.begin() + index);
     weights_.erase(weights_.begin() + index);
+    prioritiesFloat_.erase(prioritiesFloat_.begin() + index);
   } else {
     statesCurrent_.pop_front();
     statesNext_.pop_front();
@@ -249,16 +257,15 @@ void C_Memory::delete_item(int64_t index, bool internal) {
     if (dones_[0].flatten().item<int32_t>() == 1) {
       terminalStateIndices_.pop_front();
     }
-  }
-  if (!internal) {
-    sumTreeSharedPtr_->update(index, 0, false);
+    prioritiesFloat_.pop_front();
   }
 }
 
 std::map<std::string, torch::Tensor> C_Memory::sample(int32_t batchSize,
                                                       float_t forceTerminalStateProbability,
                                                       int64_t parallelismSizeThreshold,
-                                                      bool isPrioritized) {
+                                                      float_t alpha,
+                                                      float_t beta) {
   std::random_device rd;
   std::mt19937 generator(rd());
   std::uniform_real_distribution<float_t> distributionP(0, 1);
@@ -266,26 +273,28 @@ std::map<std::string, torch::Tensor> C_Memory::sample(int32_t batchSize,
                                                                      (int64_t) terminalStateIndices_.size() - 1);
   std::vector<torch::Tensor> sampledStateCurrent(batchSize), sampledStateNext(batchSize),
       sampledRewards(batchSize), sampledActions(batchSize), sampledDones(batchSize),
-      sampledPriorities(batchSize), sampledProbabilities(batchSize), sampledWeights(batchSize),
-      sampledIndices(batchSize);
+      sampledPriorities(batchSize), sampledIndices(batchSize);
   std::vector<int64_t> loadedIndicesSlice;
   loadedIndicesSlice.reserve(batchSize);
   int64_t index = 0;
   bool forceTerminalState = false;
-  if (!isPrioritized) {
+  if (!isPrioritized_) {
     auto loadedIndices = get_loaded_indices(loadedIndices_, parallelismSizeThreshold);
     loadedIndicesSlice = std::vector<int64_t>(loadedIndices.begin(),
                                               loadedIndices.begin() + batchSize);
   } else {
-    auto seedValues = get_priority_seeds(
-        sumTreeSharedPtr_->get_cumulative_sum(), parallelismSizeThreshold);
+    sumTreeSharedPtr_->reset(parallelismSizeThreshold);
+    std::optional<std::vector<SumTreeNode_ *>> nullOpt = std::nullopt;
+    sumTreeSharedPtr_->create_tree(prioritiesFloat_, nullOpt, parallelismSizeThreshold);
+    cumulativeSum_ = sumTreeSharedPtr_->get_cumulative_sum();
+    auto seedValues = get_priority_seeds(cumulativeSum_, parallelismSizeThreshold);
     for (int32_t batchIndex = 0; batchIndex < batchSize; batchIndex++) {
       auto seedValue = seedValues[batchIndex];
-      auto randomIndex = sumTreeSharedPtr_->sample(seedValue, (int64_t) size());
+      auto randomIndex = sumTreeSharedPtr_->sample(seedValue,
+                                                   (int64_t) size());
       loadedIndicesSlice.push_back(randomIndex);
     }
   }
-
   float_t p = distributionP(generator);
   if (size() < batchSize) {
     throw std::out_of_range("Requested batch size is larger than current Memory size!");
@@ -299,7 +308,6 @@ std::map<std::string, torch::Tensor> C_Memory::sample(int32_t batchSize,
     int64_t randomTerminalStateIndex = terminalStateIndices_[randomTerminalStateInfoIndex];
     loadedIndicesSlice[randomIndexToInsertTerminalState] = randomTerminalStateIndex;
   }
-
   for (auto &loadedIndex : loadedIndicesSlice) {
     sampledStateCurrent[index] = statesCurrent_[loadedIndex];
     sampledStateNext[index] = statesNext_[loadedIndex];
@@ -307,32 +315,23 @@ std::map<std::string, torch::Tensor> C_Memory::sample(int32_t batchSize,
     sampledActions[index] = actions_[loadedIndex];
     sampledDones[index] = dones_[loadedIndex];
     sampledPriorities[index] = priorities_[loadedIndex];
-    sampledProbabilities[index] = probabilities_[loadedIndex];
-    sampledWeights[index] = weights_[loadedIndex];
     sampledIndices[index] = torch::full({}, loadedIndex);
     index++;
   }
   auto statesCurrentStacked = torch::stack(sampledStateCurrent, 0).to(device_);
   auto statesNextStacked = torch::stack(sampledStateNext, 0).to(device_);
-
   auto targetDataType = statesNextStacked.dtype();
   auto targetSize = statesCurrentStacked.sizes();
-
   auto rewardsStacked = torch::stack(sampledRewards, 0).to(
       device_, targetDataType);
-
   auto actionsStacked = torch::stack(sampledActions, 0).to(
       device_, torch::kInt64);
   actionsStacked = adjust_dimensions(actionsStacked, targetSize);
-
   auto donesStacked = torch::stack(sampledDones, 0).to(
       device_, torch::kInt32);
-
   auto prioritiesStacked = torch::stack(sampledPriorities, 0).to(device_);
-  auto probabilitiesStacked = torch::stack(sampledProbabilities, 0).to(device_);
-  auto weightsStacked = torch::stack(sampledWeights, 0).to(
-      device_, targetDataType);
   auto sampledIndicesStacked = torch::stack(sampledIndices, 0).to(device_);
+
   std::map<std::string, torch::Tensor> samples = {
       {"states_current", statesCurrentStacked},
       {"states_next", statesNextStacked},
@@ -340,37 +339,40 @@ std::map<std::string, torch::Tensor> C_Memory::sample(int32_t batchSize,
       {"actions", actionsStacked},
       {"dones", donesStacked},
       {"priorities", prioritiesStacked},
-      {"probabilities", probabilitiesStacked},
-      {"weights", weightsStacked},
       {"random_indices", sampledIndicesStacked}
   };
+  if (isPrioritized_) {
+    auto probabilities = compute_probabilities(prioritiesStacked, alpha).to(device_);
+    auto weights = compute_important_sampling_weights(probabilities,
+                                                          (int64_t) size(),
+                                                          beta).to(device_);
+    samples["probabilities"] = probabilities;
+    samples["weights"] = weights;
+  } else {
+    samples["probabilities"] = torch::zeros(prioritiesStacked.sizes(), device_);
+    samples["weights"] = torch::zeros(prioritiesStacked.sizes(), device_);
+  }
   return samples;
 }
 
 void C_Memory::update_priorities(torch::Tensor &randomIndices,
                                  torch::Tensor &newPriorities,
-                                 float_t alpha,
-                                 float_t beta) {
+                                 torch::Tensor &newProbabilities,
+                                 torch::Tensor &newWeights) {
+  if (!isPrioritized_) {
+    throw std::runtime_error("`update_priorities` method called in C++ backend when C_Memory is un-prioritized!");
+  }
   newPriorities = newPriorities.flatten();
-  auto newProbabilities = compute_probabilities(newPriorities, alpha);
-  auto newWeights = compute_important_sampling_weights(newProbabilities,
-                                                       (int64_t) size(),
-                                                       beta,
-                                                       maxWeight_);
   randomIndices = randomIndices.flatten();
   auto size = randomIndices.size(0);
   for (int32_t index = 0; index < size; index++) {
     auto selectIndex = randomIndices[index].item<int64_t>();
     auto newPriority = newPriorities[index].item<float_t>();
-    sumTreeSharedPtr_->update(selectIndex, newPriority, true);
+    sumTreeSharedPtr_->update(selectIndex, newPriority);
     priorities_[selectIndex] = newPriorities[index];
     probabilities_[selectIndex] = newProbabilities[index];
     weights_[selectIndex] = newWeights[index];
     prioritiesFloat_[selectIndex] = newPriority;
-    auto newWeightFloat = newWeights[index].item<float_t>();
-    if (newWeightFloat > maxWeight_) {
-      maxWeight_ = newWeightFloat;
-    }
   }
 }
 
@@ -436,8 +438,11 @@ std::vector<int64_t> C_Memory::get_loaded_indices(std::vector<int64_t> &loadedIn
   std::uniform_int_distribution<int64_t> distributionOfLoadedIndices(0,
                                                                      loadedIndicesSize - 1);
   bool enableParallelism = loadedIndicesSize > parallelismSizeThreshold;
-
-  // Parallel region for shuffling the `loadedIndices_`.
+  auto targetDevice = omp_get_num_devices() > 0 ? 1 : 0;
+  /*
+   * The OpenMP parallel region. Number of threads are defaulted to number of CPUs.
+   * TODO: Use Boost.Compute library to offload to GPU when available.
+   */
   {
 #pragma omp parallel for if(enableParallelism) default(none) \
 firstprivate(loadedIndicesSize, distributionOfLoadedIndices, generator) shared(loadedIndicesCopy)
@@ -445,11 +450,12 @@ firstprivate(loadedIndicesSize, distributionOfLoadedIndices, generator) shared(l
          index < loadedIndicesSize;
          index++) {
       int64_t randomLoadedIndex = distributionOfLoadedIndices(generator) % (loadedIndicesSize - index);
-      std::iter_swap(loadedIndicesCopy.begin() + index, loadedIndicesCopy.begin() + index + randomLoadedIndex);
+      std::iter_swap(loadedIndicesCopy.begin() + index,
+                     loadedIndicesCopy.begin() + index + randomLoadedIndex);
     }
   }
-  // End of parallel region.
-  return loadedIndices;
+
+  return loadedIndicesCopy;
 }
 
 std::vector<float_t> C_Memory::get_priority_seeds(float_t cumulativeSum,
@@ -462,6 +468,10 @@ std::vector<float_t> C_Memory::get_priority_seeds(float_t cumulativeSum,
                                                                indexSize - 1);
   std::vector<float_t> seeds(indexSize);
   bool enableParallelism = parallelismSizeThreshold < indexSize;
+  /*
+   * The OpenMP parallel region. Number of threads are defaulted to number of CPUs.
+   * TODO: Use Boost.Compute library to offload to GPU when available.
+   */
   {
 #pragma omp parallel for if(enableParallelism) default(none)\
 firstprivate(indexSize, distributionOfErrors, generator)\
@@ -491,10 +501,10 @@ torch::Tensor C_Memory::compute_probabilities(torch::Tensor &priorities, float_t
 
 torch::Tensor C_Memory::compute_important_sampling_weights(torch::Tensor &probabilities,
                                                            int64_t currentSize,
-                                                           float_t beta,
-                                                           float_t maxWeight) {
+                                                           float_t beta) {
   auto weights = torch::pow(currentSize * probabilities, -beta);
-  weights = weights / maxWeight;
+  auto maxWeightInBatch = weights.max().item<float_t>();
+  weights = weights / maxWeightInBatch;
   return weights;
 }
 
@@ -518,7 +528,6 @@ C_Memory::SumTreeNode_::SumTreeNode_(SumTreeNode_ *parent,
                                      int64_t treeIndex,
                                      int64_t index,
                                      int64_t treeLevel,
-                                     bool allowTraversal,
                                      SumTreeNode_ *leftNode,
                                      SumTreeNode_ *rightNode) {
   parent_ = parent;
@@ -527,7 +536,6 @@ C_Memory::SumTreeNode_::SumTreeNode_(SumTreeNode_ *parent,
   treeIndex_ = treeIndex;
   index_ = index;
   treeLevel_ = treeLevel;
-  allowTraversal_ = allowTraversal;
   value_ = value;
 
   if (leftNode_ != nullptr || rightNode_ != nullptr) {
@@ -598,10 +606,6 @@ bool C_Memory::SumTreeNode_::is_leaf() const {
   return isLeaf_;
 }
 
-bool C_Memory::SumTreeNode_::is_traversal_allowed() const {
-  return allowTraversal_;
-}
-
 bool C_Memory::SumTreeNode_::is_head() {
   if (parent_ != nullptr) {
     return false;
@@ -613,41 +617,37 @@ void C_Memory::SumTreeNode_::set_parent_node(C_Memory::SumTreeNode_ *parent) {
   parent_ = parent;
 }
 
-void C_Memory::SumTreeNode_::set_allow_traversal(bool allowTraversal) {
-  allowTraversal_ = allowTraversal;
+void C_Memory::SumTreeNode_::set_leaf_status(bool isLeaf) {
+  isLeaf_ = isLeaf;
 }
 
 C_Memory::SumTree_::SumTree_(int32_t bufferSize) {
   bufferSize_ = bufferSize;
   leaves_.reserve(bufferSize_);
   sumTree_.reserve(2 * bufferSize_ - 1);
-  std::vector<float_t> priorities(bufferSize, 0.0);
-  auto nullOptional = std::make_optional<std::vector<SumTreeNode_ * >>();
-  nullOptional = std::nullopt;
-  create_tree(priorities, nullOptional);
 }
 
 C_Memory::SumTree_::~SumTree_() = default;
 
 C_Memory::SumTree_::SumTree_() = default;
 
-void C_Memory::SumTree_::create_tree(std::vector<float_t> &priorities,
-                                     std::optional<std::vector<SumTreeNode_ *>> &children) {
+void C_Memory::SumTree_::create_tree(std::deque<float_t> &priorities,
+                                     std::optional<std::vector<SumTreeNode_ *>> &children,
+                                     int64_t parallelismSizeThreshold) {
   if (children.has_value()) {
     assert(priorities.size() == children.value().size());
     treeHeight_++;
   }
-  std::vector<float_t> prioritiesForTree(priorities.begin(), priorities.end());
-  std::vector<float_t> prioritiesSum;
+  std::deque<float_t> prioritiesForTree(priorities.begin(), priorities.end()), prioritiesSum;
   std::vector<SumTreeNode_ *> childrenForRecursion;
+  childrenForRecursion.reserve((prioritiesForTree.size() / 2) + 1);
   if (prioritiesForTree.size() % 2 != 0 && prioritiesForTree.size() != 1) {
     prioritiesForTree.push_back(0);
     if (children.has_value()) {
       children.value().push_back(nullptr);
     }
   }
-  prioritiesSum.reserve((prioritiesForTree.size() / 2) + 1);
-  childrenForRecursion.reserve((prioritiesForTree.size() / 2) + 1);
+  bool enableParallelism = parallelismSizeThreshold < priorities.size();
   for (int64_t index = 0; index < prioritiesForTree.size(); index = index + 2) {
     auto leftPriority = prioritiesForTree[index];
     auto rightPriority = prioritiesForTree[index + 1];
@@ -660,13 +660,11 @@ void C_Memory::SumTree_::create_tree(std::vector<float_t> &priorities,
                                         (int64_t) sumTree_.size() + 1, index + 1);
       parent->set_left_node(leftNode);
       parent->set_right_node(rightNode);
-      leftNode->set_allow_traversal(true);
-      rightNode->set_allow_traversal(true);
       sumTree_.push_back(leftNode);
       sumTree_.push_back(rightNode);
       sumTree_.push_back(parent);
-      leaves_[index] = leftNode;
-      leaves_[index + 1] = rightNode;
+      leaves_.push_back(leftNode);
+      leaves_.push_back(rightNode);
       childrenForRecursion.push_back(parent);
     } else {
       auto leftChild = children.value()[index];
@@ -676,9 +674,9 @@ void C_Memory::SumTree_::create_tree(std::vector<float_t> &priorities,
                                      (int64_t) sumTree_.size(),
                                      -1,
                                      treeHeight_,
-                                     false,
                                      leftChild,
                                      rightChild);
+      parent->set_leaf_status(false);
       leftChild->set_parent_node(parent);
       if (rightChild != nullptr) {
         rightChild->set_parent_node(parent);
@@ -691,21 +689,20 @@ void C_Memory::SumTree_::create_tree(std::vector<float_t> &priorities,
     return;
   }
   children = childrenForRecursion;
-  create_tree(prioritiesSum, children);
+  create_tree(prioritiesSum, children, parallelismSizeThreshold);
 }
 
-void C_Memory::SumTree_::reset() {
+void C_Memory::SumTree_::reset(int64_t parallelismSizeThreshold) {
+  {
+    auto enableParallelism = (int64_t) sumTree_.size() > parallelismSizeThreshold;
+#pragma omp parallel for if(enableParallelism) default(none) shared(sumTree_)
+    for (int64_t index = 0; index < sumTree_.size(); index++) {// NOLINT(modernize-loop-convert)
+      delete sumTree_[index];
+    }
+  }
   sumTree_.clear();
   leaves_.clear();
-}
-
-void C_Memory::SumTree_::insert(float_t value) {
-  if (stepCounter_ >= bufferSize_) {
-    stepCounter_ = 0;
-    isFirstCycle_ = false;
-  }
-  update(stepCounter_, value, false);
-  stepCounter_++;
+  treeHeight_ = 0;
 }
 
 int64_t C_Memory::SumTree_::sample(float_t seedValue, int64_t currentSize) {
@@ -713,22 +710,18 @@ int64_t C_Memory::SumTree_::sample(float_t seedValue, int64_t currentSize) {
   auto node = traverse(parent, seedValue);
   auto index = node->get_index();
   if (index > currentSize) {
-    std::cerr << "Larger index than current size was generated " << index << std::endl;
+    std::cerr << "WARNING: Larger index than current size was generated " << index << std::endl;
     index = index % currentSize;
   }
-  index = get_c_memory_index(index);
   return index;
 }
 
-void C_Memory::SumTree_::update(int64_t index, float_t value, bool isCMemoryIndex) {
-  if (isCMemoryIndex) {
-    index = get_leaf_index(index);
-  }
+void C_Memory::SumTree_::update(int64_t index, float_t value) {
   auto leaf = leaves_[index];
   auto change = value - leaf->get_value();
-  auto parent = leaf->get_parent();
+  auto immediateParent = leaf->get_parent();
   leaf->set_value(value);
-  propagate_changes_upwards(parent, change);
+  propagate_changes_upwards(immediateParent, change);
 }
 
 float_t C_Memory::SumTree_::get_cumulative_sum() {
@@ -741,45 +734,11 @@ int64_t C_Memory::SumTree_::get_tree_height() {
   return parent->get_tree_level();
 }
 
-int64_t C_Memory::SumTree_::get_leaf_index(int64_t cMemoryIndex) const {
-  int64_t leafIndex = 0;
-  if (!isFirstCycle_) {
-    auto oldValuesSize = bufferSize_ - stepCounter_ - 1;
-    if (cMemoryIndex > oldValuesSize) {
-      leafIndex = stepCounter_ - cMemoryIndex;
-    } else {
-      leafIndex = stepCounter_ + cMemoryIndex;
-    }
-  } else {
-    leafIndex = cMemoryIndex;
-  }
-  return leafIndex;
-}
-
-int64_t C_Memory::SumTree_::get_c_memory_index(int64_t leafIndex) const {
-  int64_t cMemoryIndex = 0;
-  if (!isFirstCycle_) {
-    auto oldValuesSize = bufferSize_ - stepCounter_ - 1;
-    if (leafIndex > stepCounter_) {
-      cMemoryIndex = leafIndex - stepCounter_;
-    }
-    else{
-      cMemoryIndex = stepCounter_ + oldValuesSize + leafIndex;
-    }
-
-  } else {
-    cMemoryIndex = leafIndex;
-  }
-  return cMemoryIndex;
-}
-
 void C_Memory::SumTree_::propagate_changes_upwards(SumTreeNode_ *node,
                                                    float_t change) {
   auto newValue = node->get_value() + change;
   node->set_value(newValue);
   sumTree_[node->get_tree_index()]->set_value(newValue);
-  node->set_allow_traversal(true);
-  sumTree_[node->get_tree_index()]->set_allow_traversal(true);
   if (!node->is_head()) {
     node = node->get_parent();
     propagate_changes_upwards(node, change);
@@ -787,9 +746,6 @@ void C_Memory::SumTree_::propagate_changes_upwards(SumTreeNode_ *node,
 }
 
 C_Memory::SumTreeNode_ *C_Memory::SumTree_::traverse(C_Memory::SumTreeNode_ *node, float_t value) {
-  if (!node->is_traversal_allowed()) {
-    std::cerr << "WARNING: Traversed through restricted Node" << std::endl;
-  }
   if (!node->is_leaf()) {
     auto leftNode = node->get_left_node();
     auto rightNode = node->get_right_node();

@@ -12,7 +12,7 @@ PYBIND11_MAKE_OPAQUE(std::map<std::string, std::deque<torch::Tensor>>)
 PYBIND11_MODULE(C_Memory, m) {
   m.doc() = "Module to provide Python binding for C_Memory class";
   pybind11::class_<C_Memory>(m, "C_Memory")
-      .def(pybind11::init<pybind11::int_ &, pybind11::str &>())
+      .def(pybind11::init<pybind11::int_ &, pybind11::str &, pybind11::bool_ &>())
       .def("insert", &C_Memory::insert, "Insertion method to memory.",
            pybind11::arg("state_current"),
            pybind11::arg("state_next"),
@@ -38,21 +38,21 @@ PYBIND11_MODULE(C_Memory, m) {
            pybind11::arg("weight"),
            pybind11::arg("is_terminal"))
       .def("delete_item", &C_Memory::delete_item, "Delete item method to delete an item as per index.",
-           pybind11::arg("index"),
-           pybind11::arg("internal"))
+           pybind11::arg("index"))
       .def("sample", &C_Memory::sample,
            "Sample items from memory. This method samples items and arranges them quantity-wise.",
            pybind11::arg("batch_size"),
            pybind11::arg("force_terminal_state_probability"),
            pybind11::arg("parallelism_size_threshold"),
-           pybind11::arg("is_prioritized"),
+           pybind11::arg("alpha"),
+           pybind11::arg("beta"),
            pybind11::return_value_policy::reference)
       .def("update_priorities", &C_Memory::update_priorities,
            "Method to update priorities and associated prioritization values",
            pybind11::arg("random_indices"),
            pybind11::arg("new_priorities"),
-           pybind11::arg("alpha"),
-           pybind11::arg("beta"))
+           pybind11::arg("new_probabilities"),
+           pybind11::arg("new_weights"))
       .def("initialize", &C_Memory::initialize, "Initialize the Memory with input vector of values.",
            pybind11::arg("c_memory_data"))
       .def("clear", &C_Memory::clear, "Clear all items in memory.")
