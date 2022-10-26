@@ -11,6 +11,12 @@ PYBIND11_MAKE_OPAQUE(std::map<std::string, std::deque<int64_t>>)
 PYBIND11_MAKE_OPAQUE(std::map<std::string, std::deque<torch::Tensor>>)
 PYBIND11_MODULE(C_Memory, m) {
   m.doc() = "Module to provide Python binding for C_Memory class";
+  /*
+   * Python bindings for C_Memory, C_MemoryData and all the opaque objects. All bindings are pickleable.
+   *
+   * ~~~~~~~~~~~~~~~~~~~~~~~~
+   * Python binding for C_Memory class. Only relevant methods are exposed to Python
+   */
   pybind11::class_<C_Memory>(m, "C_Memory")
       .def(pybind11::init<pybind11::int_ &, pybind11::str &, pybind11::int_ &>(),
            "Class constructor for C_Memory",
@@ -97,7 +103,10 @@ PYBIND11_MODULE(C_Memory, m) {
            "Pickle method for C_Memory.",
            pybind11::return_value_policy::reference
       );
-
+  /*
+  * Python binding for C_MemoryData class. Only relevant methods are exposed to Python.
+   * This will be available only via C_Memory object.
+  */
   pybind11::class_<C_Memory::C_MemoryData>(m, "C_MemoryData")
       .def("__repr__", [](C_Memory::C_MemoryData &cMemoryData) {
         std::string reprString;
@@ -107,25 +116,25 @@ PYBIND11_MODULE(C_Memory, m) {
         return reprString;
       })
       .def("transition_information", [](C_Memory::C_MemoryData &cMemoryData) {
-             return cMemoryData.dereferenceTransitionInformation();
+             return cMemoryData.dereference_transition_information();
            },
            pybind11::return_value_policy::reference)
       .def("terminal_state_indices",
            [](C_Memory::C_MemoryData &cMemoryData) {
-             return cMemoryData.dereferenceTerminalStateIndices();
+             return cMemoryData.dereference_terminal_state_indices();
            },
            pybind11::return_value_policy::reference)
       .def("priorities",
            [](C_Memory::C_MemoryData &cMemoryData) {
-             return cMemoryData.dereferencePriorities();
+             return cMemoryData.dereference_priorities();
            },
            pybind11::return_value_policy::reference)
       .def(pybind11::pickle(
                [](C_Memory::C_MemoryData &cMemoryData) {
                  pybind11::dict cMemoryDataDict;
-                 cMemoryDataDict["transition_information"] = cMemoryData.dereferenceTransitionInformation();
-                 cMemoryDataDict["terminal_state_indices"] = cMemoryData.dereferenceTerminalStateIndices();
-                 cMemoryDataDict["priorities"] = cMemoryData.dereferencePriorities();
+                 cMemoryDataDict["transition_information"] = cMemoryData.dereference_transition_information();
+                 cMemoryDataDict["terminal_state_indices"] = cMemoryData.dereference_terminal_state_indices();
+                 cMemoryDataDict["priorities"] = cMemoryData.dereference_priorities();
                  return cMemoryDataDict;
                },
                [](pybind11::dict &init) {
@@ -155,13 +164,16 @@ PYBIND11_MODULE(C_Memory, m) {
                }),
            "Pickle method for C_MemoryData.",
            pybind11::return_value_policy::reference);
-
+  /*
+   * Binding the opaque object std::map<std::string, torch::Tensor> to Python.
+   * This will be exposed as MapOfTensors to Python.
+   */
   pybind11::bind_map<std::map<std::string, torch::Tensor>>(m, "MapOfTensors")
       .def("__repr__", [](std::map<std::string, torch::Tensor> &mapOfTensors) {
         std::string reprString;
         std::stringstream ss;
         ss << &mapOfTensors;
-        reprString = "<mapOfTensors object at " + ss.str() + ">";
+        reprString = "<MapOfTensors object at " + ss.str() + ">";
         return reprString;
       }, pybind11::return_value_policy::reference)
       .def("__str__", [](std::map<std::string, torch::Tensor> &mapOfTensors) {
@@ -193,7 +205,10 @@ PYBIND11_MODULE(C_Memory, m) {
                }),
            "Pickle method for C_MemoryData.",
            pybind11::return_value_policy::reference);
-
+  /*
+   * Binding the opaque object std::map<std::string, std::deque<torch::Tensor>> to Python.
+   * This will be exposed as C_MemoryDataMap to Python.
+   */
   pybind11::bind_map<std::map<std::string, std::deque<torch::Tensor>>>(m, "C_MemoryDataMap")
       .def("__repr__", [](std::map<std::string, std::deque<torch::Tensor>> &c_MemoryDataMap) {
         std::string reprString;
@@ -233,7 +248,10 @@ PYBIND11_MODULE(C_Memory, m) {
             }
             return c_MemoryDataMap;
           }), pybind11::return_value_policy::reference);
-
+  /*
+   * Binding the opaque object std::map<std::string, std::deque<int64_t>> to Python.
+   * This will be exposed as MapOfDequeOfInt64 to Python.
+   */
   pybind11::bind_map<std::map<std::string, std::deque<int64_t>>>(m, "MapOfDequeOfInt64")
       .def("__repr__", [](std::map<std::string, std::deque<int64_t>> &mapOfDequeOfInt64) {
         std::string reprString;

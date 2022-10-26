@@ -14,6 +14,10 @@
 #include <algorithm>
 
 class C_Memory {
+  /*
+   * The class C_Memory is the C++ backend for memory-buffer used in algorithms that stores transitions in a buffer.
+   * This class contains optimized routines to support Python front-end of Memory class.
+   */
  public:
 
   struct C_MemoryData {
@@ -25,9 +29,9 @@ class C_Memory {
     C_MemoryData();
     ~C_MemoryData();
 
-    std::map<std::string, std::deque<torch::Tensor>> dereferenceTransitionInformation();
-    [[nodiscard]] std::map<std::string, std::deque<int64_t>> dereferenceTerminalStateIndices() const;
-    [[nodiscard]] std::map<std::string, std::deque<float_t>> dereferencePriorities() const;
+    std::map<std::string, std::deque<torch::Tensor>> dereference_transition_information();
+    [[nodiscard]] std::map<std::string, std::deque<int64_t>> dereference_terminal_state_indices() const;
+    [[nodiscard]] std::map<std::string, std::deque<float_t>> dereference_priorities() const;
     void set_transition_information_references(std::deque<torch::Tensor> *&statesCurrent,
                                                std::deque<torch::Tensor> *&statesNext,
                                                std::deque<torch::Tensor> *&rewards,
@@ -94,6 +98,10 @@ class C_Memory {
 
  private:
   struct SumTreeNode_ {
+    /*
+     * The class SumTreeNode_ is a private class which represents a node in Sum-Tree. This is only used
+     * when we use proportional prioritization.
+     */
     SumTreeNode_(SumTreeNode_ *parent,
                  float_t value,
                  int64_t treeIndex = -1,
@@ -133,6 +141,10 @@ class C_Memory {
   };
 
   struct SumTree_ {
+    /*
+     * The class SumTree_ is a private class which represents the Sum-Tree which is used in proportional
+     * prioritization. It implements all the methods necessary to create the Sum-Tree and sample from it.
+     */
     explicit SumTree_(int32_t bufferSize);
     SumTree_();
     ~SumTree_();
@@ -192,12 +204,12 @@ class C_Memory {
   static void arg_mergesort_for_pair_vector(std::vector<std::pair<float_t, int64_t>> &priorityFloatIndicesPair,
                                             int64_t begin,
                                             int64_t end,
-                                            const bool enableParallelism);
+                                            bool enableParallelism);
   static void arg_merge_for_pair_vector(std::vector<std::pair<float_t, int64_t>> &priorityFloatIndicesPair,
-                                        const int64_t left,
-                                        const int64_t mid,
-                                        const int64_t right,
-                                        const bool enableParallelism);
+                                        int64_t left,
+                                        int64_t mid,
+                                        int64_t right,
+                                        bool enableParallelism);
 };
 
 #endif //RLPACK_C_MEMORY_H

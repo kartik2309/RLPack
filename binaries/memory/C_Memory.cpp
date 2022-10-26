@@ -10,7 +10,7 @@ C_Memory::C_MemoryData::C_MemoryData() = default;
 
 C_Memory::C_MemoryData::~C_MemoryData() = default;
 
-std::map<std::string, std::deque<torch::Tensor>> C_Memory::C_MemoryData::dereferenceTransitionInformation() {
+std::map<std::string, std::deque<torch::Tensor>> C_Memory::C_MemoryData::dereference_transition_information() {
   std::map<std::string, std::deque<torch::Tensor>> dereferencedTransitionInformation = {
       {"states_current", *transitionInformationReference_["states_current"]},
       {"states_next", *transitionInformationReference_["states_next"]},
@@ -25,14 +25,14 @@ std::map<std::string, std::deque<torch::Tensor>> C_Memory::C_MemoryData::derefer
   return dereferencedTransitionInformation;
 }
 
-std::map<std::string, std::deque<int64_t>> C_Memory::C_MemoryData::dereferenceTerminalStateIndices() const {
+std::map<std::string, std::deque<int64_t>> C_Memory::C_MemoryData::dereference_terminal_state_indices() const {
   std::map<std::string, std::deque<int64_t>> dereferencedTerminalStates = {
       {"terminal_state_indices", *terminalIndicesReference_}
   };
   return dereferencedTerminalStates;
 }
 
-std::map<std::string, std::deque<float_t>> C_Memory::C_MemoryData::dereferencePriorities() const {
+std::map<std::string, std::deque<float_t>> C_Memory::C_MemoryData::dereference_priorities() const {
   std::map<std::string, std::deque<float_t>> dereferencedPriorities = {
       {"priorities", *prioritiesFloatReference_}
   };
@@ -432,9 +432,9 @@ C_Memory::C_MemoryData C_Memory::view() const {
 
 void C_Memory::initialize(C_Memory::C_MemoryData &viewC_MemoryData) {
   cMemoryData = std::make_shared<C_MemoryData>(viewC_MemoryData);
-  auto transitionInformation = cMemoryData->dereferenceTransitionInformation();
-  auto terminalStateIndices = cMemoryData->dereferenceTerminalStateIndices();
-  auto prioritiesFloat = cMemoryData->dereferencePriorities();
+  auto transitionInformation = cMemoryData->dereference_transition_information();
+  auto terminalStateIndices = cMemoryData->dereference_terminal_state_indices();
+  auto prioritiesFloat = cMemoryData->dereference_priorities();
   statesCurrent_ = transitionInformation["states_current"];
   statesNext_ = transitionInformation["states_next"];
   rewards_ = transitionInformation["rewards"];
