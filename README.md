@@ -113,9 +113,9 @@ To install RLPack, simply follow the following steps: <br>
   device: 'cuda'
   ```
   This config will train a dqn model in CUDA with rank-based prioritization.
+  
+# Issues and bugs
+Please raise an issue on GitHub to report a bug. Pull Requests can be raised after discussion on the raised issue.
 
 # License
 RLPack is released under [MIT LICENSE](LICENSE.md).  
-
-Please raise an issue on GitHub to report a bug. Pull Requests can be raised after discussion on the raise issue.
-
