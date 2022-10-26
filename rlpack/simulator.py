@@ -1,5 +1,5 @@
 import os
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 import yaml
 
@@ -7,6 +7,7 @@ from rlpack import pytorch
 from rlpack.environments.environments import Environments
 from rlpack.utils.base import Agent
 from rlpack.utils.register import Register
+from rlpack.utils.sanity_check import SanityCheck
 
 
 class Simulator:
@@ -17,29 +18,16 @@ class Simulator:
 
     def __init__(
         self,
-        config: Optional[Dict[str, Any]] = None,
-        algorithm: Optional[str] = None,
-        environment: Optional[str] = None,
+        config: Dict[str, Any]
     ):
         """
         @:param config (Optional[Dict[str, Any]]): The configuration dictionary for setup. Default: None
-        @:param algorithm (Optional[str]): The algorithm to be used. Default: None
-        @:param environment (Optional[str]): The environment to be used. Default: None
-
-        Note that either `config` or both `algorithm` and `environment` must be passed.
         """
         self.register = Register()
-        # Check arguments and select config.
-        if config is None and algorithm is None and environment is None:
-            raise ValueError(
-                "At least one of the arguments, `config`, `algorithm` or `environments` must be passed!"
-            )
-        if config is None and algorithm is not None:
-            config = self.register.get_default_config(algorithm)
-        if environment is not None:
-            config["env_name"] = environment
-
+        # Perform sanity check before starting.
+        SanityCheck(config)
         self.config = config
+        # Setup agent and initialize environment.
         self.agent = self.setup_agent()
         self.env = Environments(agent=self.agent, config=self.config)
         return
@@ -85,6 +73,11 @@ class Simulator:
             if self.config["agent_args"].get("save_path") is not None
             else os.getenv("SAVE_PATH")
         )
+        if save_path is None:
+            raise ValueError(
+                "The argument `save_path` was not set. "
+                "Either pass it in config dictionary or set the environment variable `SAVE_PATH`"
+            )
         processed_agent_args = dict(
             **agent_model_kwargs,
             optimizer=optimizers[0] if len(optimizers) == 1 else optimizers,
@@ -149,7 +142,6 @@ class Simulator:
     def run(self, **kwargs) -> None:
         """
         This method runs the simulator.
-
         @:param kwargs: Additional keyword arguments for the training run.
         """
         if self.env.is_train():

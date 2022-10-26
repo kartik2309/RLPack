@@ -20,10 +20,13 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 find_package(CUDAToolkit QUIET)
 if (NOT CUDA_FOUND)
     set(CUDA_SOURCE_DIR "")
+else ()
+    set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} --ptxas-options=-v --generate-line-info
+    --use_fast_math --relocatable-device-code=true -Xcompiler")
 endif ()
 if (NOT EXISTS "${Torch_PACKAGE_DIR}/kineto/")
     execute_process(
-            COMMAND sh "${CMAKE_SOURCE_DIR}/src/c_requirements/install_kineto.sh"
+            COMMAND sh "${CMAKE_SOURCE_DIR}/binaries/c_requirements/install_kineto.sh"
             "${Torch_PACKAGE_DIR}" "${CUDAToolkit_TARGET_DIR}"
             WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/"
             COMMAND_ECHO STDOUT
@@ -32,7 +35,7 @@ endif ()
 set(kineto_LIBRARY "${Torch_PACKAGE_DIR}/kineto/libkineto/build/libkineto.a")
 find_package(Torch QUIET)
 if (NOT Torch_FOUND)
-    message(FATAL "Cannot find a valid PyTorch installation!")
+    message(FATAL_ERROR "Cannot find a valid PyTorch installation!")
 endif ()
 find_library(TORCH_PYTHON_LIBRARY torch_python PATHS "${TORCH_INSTALL_PREFIX}/lib")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")

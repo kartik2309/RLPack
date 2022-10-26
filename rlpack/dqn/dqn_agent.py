@@ -1,8 +1,10 @@
+import logging
 import os
 import random
 from collections import OrderedDict
-from typing import List, Optional, Tuple, TypeVar, Union
+from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
 
+import numpy as np
 from numpy import ndarray
 
 from rlpack import pytorch
@@ -42,6 +44,7 @@ class DqnAgent(Agent):
         num_actions: int,
         save_path: str,
         device: str = "cpu",
+        prioritization_params: Optional[Dict[str, Any]] = None,
         force_terminal_state_selection_prob: float = 0.0,
         tau: float = 1.0,
         apply_norm: int = -1,
@@ -77,6 +80,8 @@ class DqnAgent(Agent):
         @:param save_path (str): The save path for models (target_model and policy_model), optimizer,
             lr_scheduler and agent_states.
         @:param device (str): The device on which models are run. Default: "cpu"
+        @:param prioritization_params (Optional[Dict[str, Any]]): The parameters for prioritization in prioritized
+            memory (or relay buffer). Default: None
         @:param force_terminal_state_selection_prob (float): The probability for forcefully selecting a terminal state
             in a batch. Default: 0.0
         @:param tau (float): The weighted update of weights from policy_model to target_model. This is done by formula
@@ -91,6 +96,9 @@ class DqnAgent(Agent):
         @:param dim_for_norm (int): The dimension across which normalization is to be performed. Default: 0.
 
         NOTE:
+        For prioritization_params, when None (the default) is passed, prioritized memory is not used. To use
+            prioritized memory, pass a dictionary with keys `alpha` and `beta`. You can also pass `alpha_decay_rate`
+            and `beta_decay_rate` additionally.
         The codes for `apply_norm` are given as follows: -
             - No Normalization: -1
             - Min-Max Normalization: 0
@@ -124,69 +132,109 @@ class DqnAgent(Agent):
         self.num_actions = num_actions
         self.save_path = save_path
         self.device = device
+        # Process `prioritization_params` and set flags accordingly.
+        self.prioritization_strategy_code = (
+            prioritization_params.get("prioritization_strategy", 0)
+            if prioritization_params is not None
+            else 0
+        )
+        self.prioritization_params = prioritization_params
         self.force_terminal_state_selection_prob = force_terminal_state_selection_prob
-
+        # Sanity check for tau value.
         if tau < 0 or tau > 1:
             ValueError(
                 "Invalid value for tau passed! Expected value is between 0 and 1"
             )
-
-        self.tau = tau
+        self.tau = float(tau)
         self.apply_norm = apply_norm
         self.apply_norm_to = apply_norm_to
         self.eps_for_norm = eps_for_norm
         self.p_for_norm = p_for_norm
         self.dim_for_norm = dim_for_norm
-
-        self.memory = Memory(buffer_size=memory_buffer_size, device=self.device)
         self.step_counter = 1
-
+        # Set necessary prioritization parameters. Depending on `prioritization_params`, appropriate values are set.
+        self.prioritization_params = self.__process_prioritization_params(
+            self.prioritization_params
+        )
+        # Initialize Memory.
+        self.memory = Memory(
+            buffer_size=memory_buffer_size,
+            device=device,
+            prioritization_strategy_code=self.prioritization_strategy_code,
+        )
+        # Disable gradients for target network.
         for n, p in self.target_model.named_parameters():
             p.requires_grad = False
-
+        # Initialize Normalization tool.
         self.normalization = Normalization(apply_norm=apply_norm)
 
     def train(
         self,
-        state_current: Union[ndarray, pytorch.Tensor, List[float]],
-        state_next: Union[ndarray, pytorch.Tensor, List[float]],
+        state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
+        state_next: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
         reward: Union[int, float],
         action: Union[int, float],
         done: Union[bool, int],
+        priority: Optional[Union[pytorch.Tensor, np.ndarray, float]] = 1e3,
+        probability: Optional[Union[pytorch.Tensor, np.ndarray, float]] = 1.0,
+        weight: Optional[Union[pytorch.Tensor, np.ndarray, float]] = 1.0,
     ) -> int:
         """
-        The training method for agent, which accepts a transition from environment and returns an action for next
+        - The training method for agent, which accepts a transition from environment and returns an action for next
             transition. Use this method when you intend to train the agent.
-        This method will also run the policy to yield the best action for the given state.
+        - This method will also run the policy to yield the best action for the given state.
+        - For each transition (or experience) being passed, associated priority, probability and weight
+            can be passed.
 
-        @:param state_current (Union[ndarray, pytorch.Tensor, List[float]]): The current state in the environment.
-        @:param state_next (Union[ndarray, pytorch.Tensor, List[float]]): The next state returned by the environment.
+        @:param state_current (Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]): The current
+            state in the environment.
+        @:param state_next (Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]): The next
+            state returned by the environment.
         @:param reward (Union[int, float]): Reward obtained by performing the action for the transition.
         @:param action Union[int, float]: Action taken for the transition
         @:param done Union[bool, int]: Indicates weather episode has terminated or not.
+         @:param priority (Optional[Union[pytorch.Tensor, np.ndarray, float]]): The priority of the
+            transition (for priority relay memory). Default: 1e3
+        @:param probability (Optional[Union[pytorch.Tensor, np.ndarray, float]]): The probability of the transition
+            (for priority relay memory). Default: 1.0
+        @:param weight (Optional[Union[pytorch.Tensor, np.ndarray, float]]): The important sampling weight
+            of the transition (for priority relay memory). Default: 1.0
         @:return (int): The next action to be taken from `state_next`.
         """
-        self.memory.insert(state_current, state_next, reward, action, done)
-
+        # Insert the sample into memory.
+        self.memory.insert(
+            state_current,
+            state_next,
+            reward,
+            action,
+            done,
+            priority,
+            probability,
+            weight,
+        )
+        # Train policy model every at every `policy_model_update_rate` steps.
         if (
             self.step_counter % self.policy_model_update_rate == 0
             and len(self.memory) >= self.batch_size
         ):
             self.__train_policy_model()
-
+        # Update target model every `target_model_update_rate` steps.
         if self.step_counter % self.target_model_update_rate == 0:
             self.__update_target_model()
-
+        # Decay epsilon every `epsilon_decay_frequency` steps.
         if self.step_counter % self.epsilon_decay_frequency == 0:
             self.__decay_epsilon()
-
+        # Backup model every `model_backup_frequency` steps.
         if self.step_counter % self.model_backup_frequency == 0:
             self.save()
-
-        if len(self.memory) == self.memory_buffer_size:
-            self.loss.clear()
+        # Restart `step_counter` if `it has reached the buffer size.
+        if self.step_counter == self.memory_buffer_size:
             self.step_counter = 0
-
+        # If using prioritized memory, anneal alpha and beta.
+        if self.prioritization_strategy_code > 0:
+            self.__anneal_alpha()
+            self.__anneal_beta()
+        # Increment `step_counter` and use policy model to get next action.
         self.step_counter += 1
         action = self.policy(state_current)
         return action
@@ -247,7 +295,6 @@ class DqnAgent(Agent):
             "epsilon": self.epsilon,
             "memory": self.memory.view() if save_memory else None,
         }
-
         pytorch.save(
             checkpoint_target,
             os.path.join(self.save_path, f"target{custom_name_suffix}.pt"),
@@ -265,7 +312,6 @@ class DqnAgent(Agent):
                 checkpoint_lr_scheduler,
                 os.path.join(self.save_path, f"lr_scheduler{custom_name_suffix}.pt"),
             )
-
         pytorch.save(agent_state, os.path.join(self.save_path, "agent_states.pt"))
         return
 
@@ -292,7 +338,6 @@ class DqnAgent(Agent):
                 map_location="cpu",
             )
             self.target_model.load_state_dict(checkpoint_target["state_dict"])
-
         if os.path.isfile(
             os.path.join(self.save_path, f"policy{custom_name_suffix}.pt")
         ):
@@ -303,7 +348,6 @@ class DqnAgent(Agent):
             self.policy_model.load_state_dict(checkpoint_policy["state_dict"])
         else:
             raise FileNotFoundError("The Policy model was not found in the given path!")
-
         if os.path.isfile(
             os.path.join(self.save_path, f"optimizer{custom_name_suffix}.pt")
         ):
@@ -312,7 +356,6 @@ class DqnAgent(Agent):
                 map_location="cpu",
             )
             self.optimizer.load_state_dict(checkpoint_optimizer["state_dict"])
-
         if os.path.isfile(
             os.path.join(self.save_path, f"lr_scheduler{custom_name_suffix}.pt")
         ):
@@ -321,11 +364,10 @@ class DqnAgent(Agent):
                 map_location="cpu",
             )
             self.lr_scheduler.load_state_dict(checkpoint_lr_sc["state_dict"])
-
         if os.path.isfile(os.path.join(self.save_path, "agent_state.pt")):
             agent_state = pytorch.load(os.path.join(self.save_path, "agent_state.pt"))
             self.epsilon = agent_state["epsilon"]
-            self.memory.initialize(agent_state["memory"])
+            self.memory = agent_state["memory"]
         return
 
     def __train_policy_model(self) -> None:
@@ -336,8 +378,18 @@ class DqnAgent(Agent):
             `batch_size` supplied in DqnAgent constructor), and train the policy_model.
         """
         random_experiences = self.__load_random_experiences()
-        state_current, state_next, rewards, actions, dones = random_experiences
-
+        (
+            state_current,
+            state_next,
+            rewards,
+            actions,
+            dones,
+            priorities,
+            probabilities,
+            weights,
+            random_indices,
+        ) = random_experiences
+        # Apply normalization if required to states.
         if self.apply_norm_to in self.state_norm_codes:
             state_current = self.normalization.apply_normalization(
                 state_current, self.eps_for_norm, self.p_for_norm, self.dim_for_norm
@@ -345,33 +397,61 @@ class DqnAgent(Agent):
             state_next = self.normalization.apply_normalization(
                 state_next, self.eps_for_norm, self.p_for_norm, self.dim_for_norm
             )
-
+        # Apply normalization if required to rewards.
         if self.apply_norm_to in self.reward_norm_codes:
             rewards = self.normalization.apply_normalization(
                 rewards, self.eps_for_norm, self.p_for_norm, self.dim_for_norm
             )
+        # Set policy model to training mode.
         if not self.policy_model.training:
             self.policy_model.train()
-
+        # Compute target q-values from target model and temporal difference values.
         with pytorch.no_grad():
             q_values_target = self.target_model(state_next)
             td_value = self.temporal_difference(rewards, q_values_target, dones)
-
+        # Apply normalization if required to TD values.
         if self.apply_norm_to in self.td_norm_codes:
             td_value = self.normalization.apply_normalization(
                 td_value, self.eps_for_norm, self.p_for_norm, self.dim_for_norm
             )
-
+        # Compute current q-values from policy model.
         q_values_policy = self.policy_model(state_current)
         actions = self._adjust_dims_for_tensor(
             tensor=actions, target_dim=q_values_target.dim()
         )
+        # Choose best q-values corresponding to actions
         q_values_gathered = pytorch.gather(q_values_policy, dim=-1, index=actions)
         self.optimizer.zero_grad()
-
-        loss = self.loss_function(q_values_gathered, td_value.detach())
+        # If prioritized memory is used, multiply weights from sampling process to TD values.
+        if self.prioritization_strategy_code > 0:
+            weights_ = self._adjust_dims_for_tensor(weights, td_value.dim())
+            td_value = td_value * weights_
+        td_value = td_value.detach()
+        loss = self.loss_function(q_values_gathered, td_value)
         loss.backward()
         self.loss.append(loss.item())
+        if self.prioritization_strategy_code > 0:
+            if self.prioritization_strategy_code == 1:
+                new_priorities = (
+                    pytorch.abs(td_value.cpu()) + self.prioritization_params["error"]
+                )
+            elif self.prioritization_strategy_code == 2:
+                _, sorted_td_indices = pytorch.sort(
+                    pytorch.abs(td_value.cpu()),
+                    dim=0,
+                    descending=True
+                )
+                new_priorities = 1 / (sorted_td_indices + 1)
+            else:
+                raise NotImplementedError(
+                    f"The given prioritization strategy {self.prioritization_strategy_code} has not been implemented"
+                )
+            self.memory.update_priorities(
+                random_indices,
+                new_priorities,
+                probabilities,
+                weights,
+            )
         self.optimizer.step()
         if (
             self.lr_scheduler is not None
@@ -429,7 +509,15 @@ class DqnAgent(Agent):
     def __load_random_experiences(
         self,
     ) -> Tuple[
-        pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor
+        pytorch.Tensor,
+        pytorch.Tensor,
+        pytorch.Tensor,
+        pytorch.Tensor,
+        pytorch.Tensor,
+        pytorch.Tensor,
+        pytorch.Tensor,
+        pytorch.Tensor,
+        pytorch.Tensor,
     ]:
         """
         This method loads random transitions from memory. This may also include forced terminal states
@@ -437,12 +525,222 @@ class DqnAgent(Agent):
             force_terminal_state_selection_prob = 0.1, approximately every 1 in 10 batches will have at least
             one terminal state forced by the loader.
 
-        :return: Tuple[pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor]:
-            The tuple of randomly sampled transitions from memory in order of - states_current,
-            states_next, rewards, actions, dones.
+        :return: Tuple[
+                pytorch.Tensor,
+                pytorch.Tensor,
+                pytorch.Tensor,
+                pytorch.Tensor,
+                pytorch.Tensor,
+                pytorch.Tensor,
+                pytorch.Tensor,
+                pytorch.Tensor,
+                pytorch.Tensor,
+            ]:
+           The tuple of tensors as (states_current, states_next, rewards, actions, dones, priorities,
+            probabilities, weights, random_indices).
 
         """
         samples = self.memory.sample(
-            self.batch_size, self.force_terminal_state_selection_prob
+            self.batch_size,
+            self.force_terminal_state_selection_prob,
+            alpha=self.prioritization_params["alpha"],
+            beta=self.prioritization_params["beta"],
+            num_segments=self.prioritization_params["num_segments"],
         )
         return samples
+
+    @staticmethod
+    def __anneal_alpha_default_fn(alpha: float, alpha_annealing_factor: float) -> float:
+        """
+        Protected method to anneal alpha parameter for important sampling weights. This will be called
+            every `alpha_annealing_frequency` times. `alpha_annealing_frequency` is a key to be passed in dictionary
+            `prioritization_params` argument in the DqnAgent class' constructor. This method is called by default
+            to anneal alpha.
+
+        If `alpha_annealing_frequency` is not passed in `prioritization_params`, the annealing of alpha will not take
+            place. This method uses another value `alpha_annealing_factor` that must also be passed in
+            `prioritization_params`. `alpha_annealing_factor` is typically below 1 to slowly annealed it to
+            0 or `min_alpha`.
+        """
+        alpha *= alpha_annealing_factor
+        return alpha
+
+    @staticmethod
+    def __anneal_beta_default_fn(beta: float, beta_annealing_factor: float) -> float:
+        """
+        Protected method to anneal beta parameter for important sampling weights. This will be called
+            every `beta_annealing_frequency` times. `beta_annealing_frequency` is a key to be passed in dictionary
+            `prioritization_params` argument in the DqnAgent class' constructor.
+
+        If `beta_annealing_frequency` is not passed in `prioritization_params`, the annealing of beta will not take
+            place. This method uses another value `beta_annealing_factor` that must also be passed in
+            `prioritization_params`. `beta_annealing_factor` is typically above 1 to slowly annealed it to
+            1 or `max_beta`
+        """
+        beta *= beta_annealing_factor
+        return beta
+
+    def __anneal_alpha(self):
+        if (
+            self.prioritization_params["to_anneal_alpha"]
+            and (
+                self.step_counter
+                % self.prioritization_params["alpha_annealing_frequency"]
+                == 0
+            )
+            and self.prioritization_params["alpha"]
+            > self.prioritization_params["min_alpha"]
+        ):
+            self.prioritization_params["alpha"] = self.prioritization_params[
+                "alpha_annealing_fn"
+            ](
+                self.prioritization_params["alpha"],
+                *self.prioritization_params["alpha_annealing_fn_args"],
+                **self.prioritization_params["alpha_annealing_fn_kwargs"],
+            )
+            if (
+                self.prioritization_params["alpha"]
+                < self.prioritization_params["min_alpha"]
+            ):
+                self.prioritization_params["alpha"] = self.prioritization_params[
+                    "min_alpha"
+                ]
+
+    def __anneal_beta(self):
+        if (
+            self.prioritization_params["to_anneal_beta"]
+            and (
+                self.step_counter
+                % self.prioritization_params["beta_annealing_frequency"]
+                == 0
+            )
+            and self.prioritization_params["beta"]
+            < self.prioritization_params["max_beta"]
+        ):
+            self.prioritization_params["beta"] = self.prioritization_params[
+                "beta_annealing_fn"
+            ](
+                self.prioritization_params["beta"],
+                *self.prioritization_params["beta_annealing_fn_args"],
+                **self.prioritization_params["beta_annealing_fn_kwargs"],
+            )
+            if (
+                self.prioritization_params["beta"]
+                > self.prioritization_params["max_beta"]
+            ):
+                self.prioritization_params["beta"] = self.prioritization_params[
+                    "max_beta"
+                ]
+
+    def __process_prioritization_params(
+        self, prioritization_params: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """
+        Private method to process the prioritization parameters. This includes sanity check and loading of default
+            values of mandatory parameters.
+        @:param prioritization_params (Dict[str, Any]): The prioritization parameters for when
+            we use prioritized memory
+        @:return (Dict[str, Any]): The processed prioritization parameters with necessary parameters loaded.
+        """
+        to_anneal_alpha = False
+        to_anneal_beta = False
+        if prioritization_params is not None and self.prioritization_strategy_code > 0:
+            assert (
+                "alpha" in prioritization_params.keys()
+            ), "`alpha` must be passed when passing prioritization_params"
+            assert (
+                "beta" in prioritization_params.keys()
+            ), "`beta` must be passed when passing prioritization_params"
+        else:
+            prioritization_params = dict()
+        alpha = float(prioritization_params.get("alpha", -1))
+        beta = float(prioritization_params.get("beta", -1))
+        min_alpha = float(prioritization_params.get("min_alpha", 1.0))
+        max_beta = float(prioritization_params.get("max_beta", 1.0))
+        alpha_annealing_frequency = int(
+            prioritization_params.get("alpha_annealing_frequency", -1)
+        )
+        beta_annealing_frequency = int(
+            prioritization_params.get("beta_annealing_frequency", -1)
+        )
+        alpha_annealing_fn = prioritization_params.get("alpha_annealing_fn")
+        beta_annealing_fn = prioritization_params.get("beta_annealing_fn")
+        if alpha_annealing_fn is None:
+            alpha_annealing_fn = self.__anneal_alpha_default_fn
+            # Set annealing parameters for alpha.
+            alpha_annealing_factor = float(
+                prioritization_params.get("alpha_annealing_factor", -1)
+            )
+            # Check if to anneal alpha based on input parameters.
+            if alpha_annealing_frequency != -1 and alpha_annealing_factor != -1:
+                to_anneal_alpha = True
+            elif alpha_annealing_frequency == -1 and alpha_annealing_factor != -1:
+                logging.warning(
+                    "alpha_annealing_factor was passed but alpha_annealing_frequency was not passed! "
+                    "This will prevent annealing of alpha."
+                )
+            elif alpha_annealing_frequency != -1 and alpha_annealing_factor == -1:
+                logging.warning(
+                    "alpha_annealing_frequency was passed but alpha_annealing_factor was not passed! "
+                    "This will prevent annealing of alpha."
+                )
+            alpha_annealing_fn_args = (alpha_annealing_factor,)
+            alpha_annealing_fn_kwargs = dict()
+        else:
+            alpha_annealing_fn = alpha_annealing_fn
+            alpha_annealing_fn_args = prioritization_params.get(
+                "alpha_annealing_fn_args"
+            )
+            alpha_annealing_fn_kwargs = prioritization_params.get(
+                "alpha_annealing_fn_kwargs"
+            )
+        if beta_annealing_fn is None:
+            beta_annealing_fn = self.__anneal_beta_default_fn
+            # Set annealing parameters for beta.
+            beta_annealing_factor = float(
+                prioritization_params.get("beta_annealing_factor", -1)
+            )
+            # Check if to anneal beta based on input parameters.
+            if beta_annealing_frequency != -1 and beta_annealing_factor != -1:
+                to_anneal_beta = True
+            elif beta_annealing_frequency == -1 and beta_annealing_factor != -1:
+                logging.warning(
+                    "beta_annealing_factor was passed but beta_annealing_frequency was not passed! "
+                    "This will prevent annealing of beta."
+                )
+            elif beta_annealing_frequency != -1 and beta_annealing_factor == -1:
+                logging.warning(
+                    "beta_annealing_frequency was passed but beta_annealing_factor was not passed! "
+                    "This will prevent annealing of beta."
+                )
+            beta_annealing_fn_args = (beta_annealing_factor,)
+            beta_annealing_fn_kwargs = dict()
+        else:
+            beta_annealing_fn_args = prioritization_params.get("beta_annealing_fn_args")
+            beta_annealing_fn_kwargs = prioritization_params.get(
+                "beta_annealing_fn_kwargs"
+            )
+        # Error for proportional based prioritized memory.
+        error = float(prioritization_params.get("error", 5e-3))
+        # Number of segments for rank-based prioritized memory.
+        num_segments = prioritization_params.get("num_segments", self.batch_size)
+        # Creation of final process dictionary for prioritization_params
+        prioritization_params_processed = {
+            "to_anneal_alpha": to_anneal_alpha,
+            "to_anneal_beta": to_anneal_beta,
+            "alpha": alpha,
+            "beta": beta,
+            "min_alpha": min_alpha,
+            "max_beta": max_beta,
+            "alpha_annealing_frequency": alpha_annealing_frequency,
+            "beta_annealing_frequency": beta_annealing_frequency,
+            "alpha_annealing_fn": alpha_annealing_fn,
+            "alpha_annealing_fn_args": alpha_annealing_fn_args,
+            "alpha_annealing_fn_kwargs": alpha_annealing_fn_kwargs,
+            "beta_annealing_fn": beta_annealing_fn,
+            "beta_annealing_fn_args": beta_annealing_fn_args,
+            "beta_annealing_fn_kwargs": beta_annealing_fn_kwargs,
+            "error": error,
+            "num_segments": num_segments,
+        }
+        return prioritization_params_processed

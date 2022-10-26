@@ -32,7 +32,7 @@ class BuildExternal(build_ext):
         build_temp.mkdir(parents=True, exist_ok=True)
         external_dir = Path(self.get_ext_fullpath(ext.name))
         external_dir.mkdir(parents=True, exist_ok=True)
-        lib_directories = ["src/memory"]
+        lib_directories = ["binaries/memory"]
 
         config = "Debug" if self.debug else "Release"
         cmake_args = [
@@ -78,7 +78,6 @@ setup(
         "rlpack._C",
     ],
     package_data={
-        "rlpack/environments/configs": ["rlpack/environments/configs/dlqn1d.yaml"],
         "license_files": ["LICENSE.md"],
     },
     platforms="posix",
@@ -88,7 +87,6 @@ setup(
         "rlpack.dqn": "rlpack/dqn",
         "rlpack.models": "rlpack/models",
         "rlpack.environments": "rlpack/environments",
-        "rlpack.environments.configs": "rlpack/environments/configs",
         "rlpack.utils": "rlpack/utils",
         "rlpack.utils.base": "rlpack/utils/base",
         "rlpack._C": "rlpack/_C",

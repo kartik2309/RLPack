@@ -80,6 +80,7 @@ class Register(object):
                 "num_actions",
                 "save_path",
                 "device",
+                "prioritization_params",
                 "force_terminal_state_selection_prob",
                 "tau",
                 "apply_norm",
@@ -95,6 +96,12 @@ class Register(object):
         self.default_configs = {
             "dqn": f"{self.get_prefix_path()}/environments/configs/dlqn1d.yaml"
         }
+        self.prioritization_strategy_codes = {
+            "uniform": 0,
+            "proportional": 1,
+            "rank-based": 2,
+        }
+        self.agents_with_prioritized_memory = ("dqn",)
 
     def get_model_args(self, model_name: str) -> List[str]:
         """
@@ -129,6 +136,17 @@ class Register(object):
         @:param kwargs: The additional keyword arguments required by the model.
         :return (Agent): The initialized agent.
         """
+        if agent_name in self.agents_with_prioritized_memory:
+            prioritization_params = kwargs.get("prioritization_params")
+            if prioritization_params is not None:
+                prioritization_params[
+                    "prioritization_strategy"
+                ] = self.get_prioritization_code(
+                    prioritization_strategy=prioritization_params.get(
+                        "prioritization_strategy", "uniform"
+                    )
+                )
+                kwargs["prioritization_params"] = prioritization_params
         return self.agents[agent_name](*args, **kwargs)
 
     def get_optimizer(
@@ -214,6 +232,7 @@ class Register(object):
 
     def get_apply_norm_to_mode_code(self, apply_norm_to: List[str]) -> int:
         """
+        This method retrieves the apply_norm code_to from the given string. This code is to be supplied to agents.
         @:param apply_norm_to (List[str]): The apply_norm_to list, specifying the quantities on which we wish to
             apply normalization specified by `apply_norm`.
             *See the notes below to see the accepted values.
@@ -232,6 +251,28 @@ class Register(object):
         if apply_norm_to not in self.norm_to_mode_codes.keys():
             raise ValueError("Invalid or unsupported value for `apply_norm_to` passed")
         return self.norm_to_mode_codes[apply_norm_to]
+
+    def get_prioritization_code(self, prioritization_strategy: str) -> int:
+        """
+        This method retrieves the prioritization code for corresponding strategy passed as string
+            in prioritized parameters.
+        @:param prioritization_strategy (str): A dictionary containing memory prioritization parameters for
+            agents that may use it.
+            *See the notes below to see the accepted values.
+        :return: int: The prioritization code for corresponding string value.
+
+        *NOTE:
+        The accepted values for `prioritization_strategy` are as follows:
+            - "uniform": No prioritization is done, i.e., uniform sampling takes place.
+            - "proportional": Proportional prioritization takes place when sampling transition.
+            - "rank-based": Rank based prioritization takes place when sampling transitions.
+        """
+        if prioritization_strategy not in self.prioritization_strategy_codes.keys():
+            raise NotImplementedError(
+                f"The provided prioritization strategy {prioritization_strategy} is not supported or is invalid!"
+            )
+        code = self.prioritization_strategy_codes[prioritization_strategy]
+        return code
 
     def get_default_config(self, model_name: str) -> Dict[str, Any]:
         """

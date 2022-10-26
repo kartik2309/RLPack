@@ -38,9 +38,7 @@ class Environments:
         render_mode = None
         if self.is_eval() and config["render"]:
             render_mode = "human"
-        self.env = gym.make(
-            self.config["env_name"], new_step_api=True, render_mode=render_mode
-        )
+        self.env = gym.make(self.config["env_name"], render_mode=render_mode)
         self.env.spec.max_episode_steps = self.config["max_timesteps"]
 
     def train_agent(
@@ -62,12 +60,12 @@ class Environments:
             logging.info("Currently operating in Evaluation Mode")
             return
         if load:
-            self.agent.load()
+            self.agent.load(self.config.get("custom_suffix", "_best"))
         highest_mv_avg_reward, timestep = 0.0, 0
         rewards_collector = {k: list() for k in range(self.config["num_episodes"])}
         rewards = list()
         for ep in range(self.config["num_episodes"]):
-            observation_current = self.env.reset()
+            observation_current, _ = self.env.reset()
             action = self.env.action_space.sample()
             scores = 0
             for timestep in range(self.config["max_timesteps"]):
@@ -103,14 +101,29 @@ class Environments:
                 logging.info(reward_log_message)
                 if highest_mv_avg_reward < mean_reward:
                     self.agent.save(
-                        custom_name_suffix=f'_{self.config.get("suffix", "best")}'
+                        custom_name_suffix=self.config.get("suffix", "_best")
                     )
                     highest_mv_avg_reward = mean_reward
                 # Log Mean Loss in the episode cycle
                 mean_loss = self.__list_mean(self.agent.loss)
                 if len(self.agent.loss) > 0:
                     logging.info(f"Average Loss after {ep} episodes: {mean_loss}")
+                # Log current epsilon value
+                if hasattr(self.agent, "epsilon"):
+                    logging.info(f"Epsilon after {ep} episodes: {self.agent.epsilon}")
+                # Log current alpha and beta values - for prioritized relay
+                if hasattr(self.agent, "prioritization_params"):
+                    if "beta" in self.agent.prioritization_params.keys():
+                        logging.info(
+                            f"Beta after {ep} episodes: {self.agent.prioritization_params['beta']}"
+                        )
+                if hasattr(self.agent, "prioritization_params"):
+                    if "alpha" in self.agent.prioritization_params.keys():
+                        logging.info(
+                            f"Beta after {ep} episodes: {self.agent.prioritization_params['alpha']}"
+                        )
                 logging.info(f"{'~' * len(reward_log_message)}\n")
+
                 rewards.clear()
         self.env.close()
         self.agent.save()
@@ -136,13 +149,13 @@ class Environments:
             return
 
         # Load agent's necessary objects (models, states etc.)
-        self.agent.load()
+        self.agent.load(self.config.get("custom_suffix", "_best"))
         # Temporarily save epsilon before setting it 0.0
         epsilon = self.agent.epsilon
         rewards = list()
         self.agent.epsilon, timestep, ep, score = 0.0, 0, 0, 0
         for ep in range(self.config["num_episodes"]):
-            observation = self.env.reset()
+            observation, _ = self.env.reset()
             score = 0
             for timestep in range(self.config["max_timesteps"]):
                 action = self.agent.policy(

@@ -80,7 +80,7 @@ class Agent(object):
         curr_dim = tensor.dim()
         if target_dim > curr_dim:
             for _ in range(target_dim - curr_dim):
-                tensor = tensor.unsqueeze(tensor, dim=-1)
+                tensor = pytorch.unsqueeze(tensor, dim=-1)
         else:
             for _ in range(curr_dim - target_dim):
                 tensor = pytorch.squeeze(tensor, dim=-1)
