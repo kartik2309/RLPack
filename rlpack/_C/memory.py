@@ -1,5 +1,4 @@
 import logging
-import os
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
@@ -16,20 +15,20 @@ class Memory(object):
         self,
         buffer_size: Optional[int] = 32768,
         device: Optional[str] = "cpu",
-        is_prioritized: bool = False,
+        prioritization_strategy_code: int = 0,
     ):
         """
         @:param buffer_size (Optional[int]): The buffer size of the memory. No more than specified buffer
             elements are stored in the memory. Default: 32768
         @:param device (str): The device on which models are currently running. Default: "cpu"
-        @:param prioritized (bool): Indicates if prioritized memory is to be used. Default: False
+        @:param prioritization_strategy_code (int): Indicates code for prioritization strategy. Default: 0
         """
-        self.c_memory = C_Memory.C_Memory(buffer_size, device, is_prioritized)
+        self.c_memory = C_Memory.C_Memory(
+            buffer_size, device, prioritization_strategy_code
+        )
         self.buffer_size = buffer_size
-        self.is_prioritized = is_prioritized
+        self.prioritization_strategy_code = prioritization_strategy_code
         self.device = device
-        os.environ["OMP_WAIT_POLICY"] = "ACTIVE"
-        os.environ["OMP_NUM_THREADS"] = f"{os.cpu_count()}"
 
     def insert(
         self,
@@ -59,7 +58,6 @@ class Memory(object):
         @:param weight (Optional[Union[pytorch.Tensor, np.ndarray, float]]): The important sampling weight
             of the transition (for priority relay memory). Default: 1.0
         """
-
         self.c_memory.insert(
             *self.__prepare_inputs_c_memory_(
                 state_current,
@@ -80,6 +78,7 @@ class Memory(object):
         parallelism_size_threshold: int = 4096,
         alpha: float = 0.0,
         beta: float = 0.0,
+        num_segments: int = 1,
     ) -> Tuple[
         pytorch.Tensor,
         pytorch.Tensor,
@@ -100,6 +99,7 @@ class Memory(object):
             and retrieve the batch of sample. Default: 4096.
         @:param alpha (float): The alpha value for computation of probabilities. Default: 0.0
         @:param beta (float): The beta value for computation of important sampling weights. Default: 0.0
+        @:param num_segments (int): The number of segments to use to uniformly sample for rank-based prioritization
         @:return (Tuple[
                 pytorch.Tensor,
                 pytorch.Tensor,
@@ -119,6 +119,7 @@ class Memory(object):
             parallelism_size_threshold,
             alpha,
             beta,
+            num_segments,
         )
         return (
             samples["states_current"],
@@ -251,7 +252,7 @@ class Memory(object):
         Note that tree height is given as per buffer size and not as per number of elements.
         :return (int): The height of the tree.
         """
-        if self.is_prioritized:
+        if self.prioritization_strategy_code == 0:
             return self.c_memory.tree_height()
         logging.warning("Tree height cannot be accessed for un-prioritized memory!")
         return 0
@@ -314,7 +315,7 @@ class Memory(object):
             raise TypeError(
                 f"Expected arguments `state_current` and `state_next` to be of type {np.ndarray}"
             )
-
+        # If numpy array or list, convert to torch tensor - current state
         if isinstance(state_current, np.ndarray):
             state_current = pytorch.from_numpy(state_current)
         elif isinstance(state_current, list):
@@ -327,7 +328,7 @@ class Memory(object):
                 f" {pytorch.Tensor}, {np.ndarray} or {list}"
                 f" but got {type(state_current)}"
             )
-
+        # If numpy array or list, convert to torch tensor - next state
         if isinstance(state_next, np.ndarray):
             state_next = pytorch.from_numpy(state_next)
         elif isinstance(state_next, list):
@@ -340,8 +341,7 @@ class Memory(object):
                 f" {pytorch.Tensor}, {np.ndarray} or {list}"
                 f" but got {type(state_next)}"
             )
-
-        # Handle reward
+        # If numpy array, float or int, convert to torch tensor - reward
         if isinstance(reward, np.ndarray):
             reward = pytorch.from_numpy(reward)
         elif isinstance(reward, (int, float)):
@@ -353,8 +353,7 @@ class Memory(object):
                 f"Expected argument `reward` to be of type {pytorch.Tensor}, {np.ndarray} or {float} or {int}"
                 f"but got type {type(reward)}"
             )
-
-        # Handle action
+        # If numpy array, float or int, convert to torch tensor - action
         if isinstance(action, np.ndarray):
             action = pytorch.from_numpy(action)
         elif isinstance(action, (float, int)):
@@ -366,8 +365,7 @@ class Memory(object):
                 f"Expected argument `action` to be of type {pytorch.Tensor}, {np.ndarray}, {float} or {int}"
                 f"but got type {type(action)}"
             )
-
-        # Handle done variable
+        # If numpy bool or int, convert to torch tensor - done
         is_terminal_state = False
         if isinstance(done, bool):
             is_terminal_state = done
@@ -381,8 +379,7 @@ class Memory(object):
                 f"Expected argument `done` to be of type {bool} or {int} "
                 f"but got type {type(done)}"
             )
-
-        # Handle priority
+        # If numpy array or float, convert to torch tensor - priority
         if isinstance(priority, np.ndarray):
             priority = pytorch.from_numpy(priority)
         elif isinstance(priority, float):
@@ -394,8 +391,7 @@ class Memory(object):
                 f"Expected argument `priority` to be of type {pytorch.Tensor}, {np.ndarray} or {float} "
                 f"but got type {type(priority)}"
             )
-
-        # Handle probability
+        # If numpy array or float, convert to torch tensor - priority
         if isinstance(probability, np.ndarray):
             probability = pytorch.from_numpy(probability)
         elif isinstance(probability, float):
@@ -407,8 +403,7 @@ class Memory(object):
                 f"Expected argument `probability` to be of type {pytorch.Tensor}, {np.ndarray} or {float} "
                 f"but got type {type(probability)}"
             )
-
-        # Handle weight
+        # If numpy array or float, convert to torch tensor - priority
         if isinstance(weight, np.ndarray):
             weight = pytorch.from_numpy(weight)
         elif isinstance(weight, float):
@@ -420,7 +415,6 @@ class Memory(object):
                 f"Expected argument `weight` to be of type {pytorch.Tensor}, {np.ndarray} or {float} "
                 f"but got type {type(weight)}"
             )
-
         return (
             state_current,
             state_next,
@@ -490,7 +484,7 @@ class Memory(object):
         @:param index (int): Index at which we want to delete an item.
         Note that this operation can be expensive depending on the size of memory; O(n).
         """
-        self.c_memory.delete_item(index, False)
+        self.c_memory.delete_item(index)
 
     def __len__(self) -> int:
         """

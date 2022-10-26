@@ -74,10 +74,12 @@ void C_Memory::C_MemoryData::set_priorities_reference(
   prioritiesFloatReference_ = prioritiesFloatReference;
 }
 
-C_Memory::C_Memory(pybind11::int_ &bufferSize, pybind11::str &device, const pybind11::bool_ &isPrioritized) {
+C_Memory::C_Memory(const pybind11::int_ &bufferSize,
+                   const pybind11::str &device,
+                   const pybind11::int_ &prioritizationStrategyCode) {
   bufferSize_ = bufferSize.cast<int64_t>();
-  device_ = deviceMap[device.cast<std::string>()];
-  isPrioritized_ = isPrioritized.cast<bool>();
+  device_ = deviceMap_[device.cast<std::string>()];
+  prioritizationStrategyCode_ = prioritizationStrategyCode.cast<int32_t>();
   cMemoryData = std::make_shared<C_MemoryData>();
   auto statesCurrentRawPointer = &statesCurrent_;
   auto statesNextRawPointer = &statesNext_;
@@ -101,8 +103,9 @@ C_Memory::C_Memory(pybind11::int_ &bufferSize, pybind11::str &device, const pybi
   cMemoryData->set_priorities_reference(prioritiesFloatRawPointer);
   loadedIndices_.reserve(bufferSize_);
   sumTreeSharedPtr_ = nullptr;
-  if (isPrioritized_) {
-    sumTreeSharedPtr_ = std::make_shared<SumTree_>(bufferSize_);
+  switch (prioritizationStrategyCode_) {
+    case 1:sumTreeSharedPtr_ = std::make_shared<SumTree_>(bufferSize_);
+    default:break;
   }
 }
 
@@ -129,8 +132,9 @@ C_Memory::C_Memory() {
   auto prioritiesFloatRawPointer = &prioritiesFloat_;
   cMemoryData->set_priorities_reference(prioritiesFloatRawPointer);
   loadedIndices_.reserve(bufferSize_);
-  if (isPrioritized_) {
-    sumTreeSharedPtr_ = std::make_shared<SumTree_>(bufferSize_);
+  switch (prioritizationStrategyCode_) {
+    case 1:sumTreeSharedPtr_ = std::make_shared<SumTree_>(bufferSize_);
+    default:break;
   }
 }
 
@@ -160,9 +164,6 @@ void C_Memory::insert(torch::Tensor &stateCurrent,
   if (size() < bufferSize_) {
     loadedIndices_.push_back(stepCounter_);
     stepCounter_ += 1;
-  }
-  if (weight.item<float_t>() > maxWeight_) {
-    maxWeight_ = weight.item<float_t>();
   }
   if (isTerminalState) {
     terminalStateIndices_.push_back((int64_t) size() - 1);
@@ -216,8 +217,9 @@ void C_Memory::set_item(int64_t index,
   }
   prioritiesFloat_[index] = priority.item<float_t>();
   loadedIndices_[index] = index;
-  if (isPrioritized_) {
-    sumTreeSharedPtr_->update(index, priority.item<float_t>());
+  switch (prioritizationStrategyCode_) {
+    case 1:sumTreeSharedPtr_->update(index, priority.item<float_t>());
+    default:break;
   }
 }
 
@@ -265,7 +267,8 @@ std::map<std::string, torch::Tensor> C_Memory::sample(int32_t batchSize,
                                                       float_t forceTerminalStateProbability,
                                                       int64_t parallelismSizeThreshold,
                                                       float_t alpha,
-                                                      float_t beta) {
+                                                      float_t beta,
+                                                      int64_t numSegments) {
   std::random_device rd;
   std::mt19937 generator(rd());
   std::uniform_real_distribution<float_t> distributionP(0, 1);
@@ -278,22 +281,72 @@ std::map<std::string, torch::Tensor> C_Memory::sample(int32_t batchSize,
   loadedIndicesSlice.reserve(batchSize);
   int64_t index = 0;
   bool forceTerminalState = false;
-  if (!isPrioritized_) {
-    auto loadedIndices = get_loaded_indices(loadedIndices_, parallelismSizeThreshold);
-    loadedIndicesSlice = std::vector<int64_t>(loadedIndices.begin(),
-                                              loadedIndices.begin() + batchSize);
-  } else {
-    sumTreeSharedPtr_->reset(parallelismSizeThreshold);
-    std::optional<std::vector<SumTreeNode_ *>> nullOpt = std::nullopt;
-    sumTreeSharedPtr_->create_tree(prioritiesFloat_, nullOpt, parallelismSizeThreshold);
-    cumulativeSum_ = sumTreeSharedPtr_->get_cumulative_sum();
-    auto seedValues = get_priority_seeds(cumulativeSum_, parallelismSizeThreshold);
-    for (int32_t batchIndex = 0; batchIndex < batchSize; batchIndex++) {
-      auto seedValue = seedValues[batchIndex];
-      auto randomIndex = sumTreeSharedPtr_->sample(seedValue,
-                                                   (int64_t) size());
-      loadedIndicesSlice.push_back(randomIndex);
+  switch (prioritizationStrategyCode_) {
+    case 0: {
+      auto loadedIndices = get_shuffled_vector(loadedIndices_, parallelismSizeThreshold);
+      loadedIndicesSlice = std::vector<int64_t>(loadedIndices.begin(),
+                                                loadedIndices.begin() + batchSize);
     }
+    case 1: {
+      std::vector<float_t> seedValues;
+      {
+//        Parallel region to execute resetting and creation of tree simultaneously with getting priority seeds.
+//        Two threads are spawned for each associated function.
+//        Thread 0: Executes resetting and creation of tree.
+//        Thread 1: Executes computation of cumulative sum and generates priority seeds.
+
+#pragma omp parallel sections default(none) \
+firstprivate(parallelismSizeThreshold) \
+shared(sumTreeSharedPtr_, prioritiesFloat_, seedValues)
+        {
+#pragma omp section
+          {
+            sumTreeSharedPtr_->reset(parallelismSizeThreshold);
+            std::optional<std::vector<SumTreeNode_ *>> nullOptVector = std::nullopt;
+            sumTreeSharedPtr_->create_tree(prioritiesFloat_,
+                                           nullOptVector);
+          }
+#pragma omp section
+          {
+            auto cumulativeSum = get_cumulative_sum_of_deque(prioritiesFloat_,
+                                                             parallelismSizeThreshold);
+            seedValues.reserve((size_t) cumulativeSum);
+            seedValues = get_priority_seeds(cumulativeSum, parallelismSizeThreshold);
+          }
+        }
+      }
+      for (int32_t batchIndex = 0; batchIndex < batchSize; batchIndex++) {
+        auto seedValue = seedValues[batchIndex];
+        auto randomIndex = sumTreeSharedPtr_->sample(seedValue,
+                                                     (int64_t) size());
+        loadedIndicesSlice.push_back(randomIndex);
+      }
+    }
+    case 2: {
+      int64_t previousQuantileIndex = 0, generatedRandomIndex = 0;
+      std::uniform_int_distribution<int64_t> distributionOfSegment(-1, 1);
+      auto segmentQuantileIndices = compute_quantile_segment_indices(numSegments,
+                                                                     prioritiesFloat_,
+                                                                     loadedIndices_,
+                                                                     &get_cumulative_sum_of_deque,
+                                                                     parallelismSizeThreshold);
+      for (auto &segmentQuantileIndex : segmentQuantileIndices) {
+        if ((segmentQuantileIndex - previousQuantileIndex - 1) <= 1) {
+          generatedRandomIndex = previousQuantileIndex;
+        } else {
+          distributionOfSegment.reset();
+          distributionOfSegment.param(
+              std::uniform_int_distribution<int64_t>::param_type(previousQuantileIndex,
+                                                                 segmentQuantileIndex - 1)
+          );
+          generatedRandomIndex = distributionOfSegment(generator);
+        }
+        loadedIndicesSlice.push_back(loadedIndices_[generatedRandomIndex]);
+        previousQuantileIndex = segmentQuantileIndex;
+      }
+      loadedIndicesSlice = get_shuffled_vector(loadedIndicesSlice, parallelismSizeThreshold);
+    }
+    default:break;
   }
   float_t p = distributionP(generator);
   if (size() < batchSize) {
@@ -321,17 +374,14 @@ std::map<std::string, torch::Tensor> C_Memory::sample(int32_t batchSize,
   auto statesCurrentStacked = torch::stack(sampledStateCurrent, 0).to(device_);
   auto statesNextStacked = torch::stack(sampledStateNext, 0).to(device_);
   auto targetDataType = statesNextStacked.dtype();
-  auto targetSize = statesCurrentStacked.sizes();
   auto rewardsStacked = torch::stack(sampledRewards, 0).to(
       device_, targetDataType);
   auto actionsStacked = torch::stack(sampledActions, 0).to(
       device_, torch::kInt64);
-  actionsStacked = adjust_dimensions(actionsStacked, targetSize);
   auto donesStacked = torch::stack(sampledDones, 0).to(
       device_, torch::kInt32);
   auto prioritiesStacked = torch::stack(sampledPriorities, 0).to(device_);
   auto sampledIndicesStacked = torch::stack(sampledIndices, 0).to(device_);
-
   std::map<std::string, torch::Tensor> samples = {
       {"states_current", statesCurrentStacked},
       {"states_next", statesNextStacked},
@@ -341,11 +391,11 @@ std::map<std::string, torch::Tensor> C_Memory::sample(int32_t batchSize,
       {"priorities", prioritiesStacked},
       {"random_indices", sampledIndicesStacked}
   };
-  if (isPrioritized_) {
+  if (prioritizationStrategyCode_ != 0) {
     auto probabilities = compute_probabilities(prioritiesStacked, alpha).to(device_);
     auto weights = compute_important_sampling_weights(probabilities,
-                                                          (int64_t) size(),
-                                                          beta).to(device_);
+                                                      (int64_t) size(),
+                                                      beta).to(device_);
     samples["probabilities"] = probabilities;
     samples["weights"] = weights;
   } else {
@@ -359,7 +409,7 @@ void C_Memory::update_priorities(torch::Tensor &randomIndices,
                                  torch::Tensor &newPriorities,
                                  torch::Tensor &newProbabilities,
                                  torch::Tensor &newWeights) {
-  if (!isPrioritized_) {
+  if (prioritizationStrategyCode_ == 0) {
     throw std::runtime_error("`update_priorities` method called in C++ backend when C_Memory is un-prioritized!");
   }
   newPriorities = newPriorities.flatten();
@@ -367,12 +417,10 @@ void C_Memory::update_priorities(torch::Tensor &randomIndices,
   auto size = randomIndices.size(0);
   for (int32_t index = 0; index < size; index++) {
     auto selectIndex = randomIndices[index].item<int64_t>();
-    auto newPriority = newPriorities[index].item<float_t>();
-    sumTreeSharedPtr_->update(selectIndex, newPriority);
     priorities_[selectIndex] = newPriorities[index];
     probabilities_[selectIndex] = newProbabilities[index];
     weights_[selectIndex] = newWeights[index];
-    prioritiesFloat_[selectIndex] = newPriority;
+    prioritiesFloat_[selectIndex] = newPriorities[index].item<float_t>();
   }
 }
 
@@ -397,9 +445,7 @@ void C_Memory::initialize(C_Memory::C_MemoryData &viewC_MemoryData) {
   for (int64_t index = 0; index < size(); index++) {
     loadedIndices[index] = index;
   }
-  std::copy(loadedIndices.begin(),
-            loadedIndices.end(),
-            loadedIndices_.begin());
+  loadedIndices_ = loadedIndices;
   stepCounter_ = (int64_t) size();
 }
 
@@ -427,8 +473,25 @@ int64_t C_Memory::tree_height() {
   return sumTreeSharedPtr_->get_tree_height();
 }
 
-std::vector<int64_t> C_Memory::get_loaded_indices(std::vector<int64_t> &loadedIndices,
-                                                  int64_t parallelismSizeThreshold) {
+float_t C_Memory::get_cumulative_sum_of_deque(const std::deque<float_t> &prioritiesFloat,
+                                              int64_t parallelismSizeThreshold) {
+  float_t cumulativeSum = 0;
+  bool enableParallelism = parallelismSizeThreshold < prioritiesFloat.size();
+  // Compute sum with reduction.
+  {
+#pragma omp parallel for if(enableParallelism) default(none) \
+firstprivate(prioritiesFloat) \
+reduction(+:cumulativeSum) \
+schedule(static)
+    for (float priority : prioritiesFloat) {
+      cumulativeSum += priority;
+    }
+  }
+  return cumulativeSum;
+}
+
+std::vector<int64_t> C_Memory::get_shuffled_vector(std::vector<int64_t> &loadedIndices,
+                                                   int64_t parallelismSizeThreshold) {
   std::random_device rd;
   std::mt19937 generator(rd());
   auto loadedIndicesSize = (int64_t) loadedIndices.size();
@@ -438,14 +501,12 @@ std::vector<int64_t> C_Memory::get_loaded_indices(std::vector<int64_t> &loadedIn
   std::uniform_int_distribution<int64_t> distributionOfLoadedIndices(0,
                                                                      loadedIndicesSize - 1);
   bool enableParallelism = loadedIndicesSize > parallelismSizeThreshold;
-  auto targetDevice = omp_get_num_devices() > 0 ? 1 : 0;
-  /*
-   * The OpenMP parallel region. Number of threads are defaulted to number of CPUs.
-   * TODO: Use Boost.Compute library to offload to GPU when available.
-   */
+  // Shuffle the vector using `iter_swap`
   {
 #pragma omp parallel for if(enableParallelism) default(none) \
-firstprivate(loadedIndicesSize, distributionOfLoadedIndices, generator) shared(loadedIndicesCopy)
+firstprivate(loadedIndicesSize, distributionOfLoadedIndices, generator) \
+shared(loadedIndicesCopy) \
+schedule(static)
     for (int64_t index = 0;
          index < loadedIndicesSize;
          index++) {
@@ -454,7 +515,6 @@ firstprivate(loadedIndicesSize, distributionOfLoadedIndices, generator) shared(l
                      loadedIndicesCopy.begin() + index + randomLoadedIndex);
     }
   }
-
   return loadedIndicesCopy;
 }
 
@@ -468,23 +528,23 @@ std::vector<float_t> C_Memory::get_priority_seeds(float_t cumulativeSum,
                                                                indexSize - 1);
   std::vector<float_t> seeds(indexSize);
   bool enableParallelism = parallelismSizeThreshold < indexSize;
-  /*
-   * The OpenMP parallel region. Number of threads are defaulted to number of CPUs.
-   * TODO: Use Boost.Compute library to offload to GPU when available.
-   */
+  // Create seeds with random error.
   {
-#pragma omp parallel for if(enableParallelism) default(none)\
+#pragma omp parallel for if(enableParallelism) default(none) \
 firstprivate(indexSize, distributionOfErrors, generator)\
-shared(seeds)
+shared(seeds)\
+schedule(static)
     for (int64_t index = 0; index < indexSize; index++) {
       auto randomError = distributionOfErrors(generator);
       seeds[index] = (float_t) index + randomError;
     }
   }
+  // Shuffle the created seeds.
   {
-#pragma omp parallel for if(enableParallelism) default(none)\
+#pragma omp parallel for if(enableParallelism) default(none) \
 firstprivate(indexSize, distributionOfIndices, generator)\
-shared(seeds)
+shared(seeds)\
+schedule(static)
     for (int64_t index = 0; index < indexSize; index++) {
       int64_t randomLoadedIndex = distributionOfIndices(generator) % (indexSize - index);
       std::iter_swap(seeds.begin() + index, seeds.begin() + index + randomLoadedIndex);
@@ -508,19 +568,51 @@ torch::Tensor C_Memory::compute_important_sampling_weights(torch::Tensor &probab
   return weights;
 }
 
-torch::Tensor C_Memory::adjust_dimensions(torch::Tensor &tensor, c10::IntArrayRef &targetDimensions) {
-  auto currentSize = tensor.sizes();
-  auto diffSizes = (int32_t) targetDimensions.size() - (int32_t) currentSize.size();
-  if (diffSizes > 0) {
-    for (int32_t _ = 0; _ != diffSizes; _++) {
-      tensor = tensor.unsqueeze(-1);
-    }
-  } else {
-    for (int32_t _ = 0; _ != diffSizes; _++) {
-      tensor = tensor.squeeze(-1);
+std::vector<int64_t> C_Memory::compute_quantile_segment_indices(int64_t numSegments,
+                                                                const std::deque<float_t> &prioritiesFloat,
+                                                                const std::vector<int64_t> &loadedIndices,
+                                                                const std::function<float_t(const std::deque<float_t> &,
+                                                                                            int64_t)> &cumulativeSumFunction,
+                                                                int64_t parallelismSizeThreshold) {
+  std::deque<float_t> uniquePriorities, priorityFrequencies;
+  std::vector<int64_t> sortedIndices(loadedIndices.begin(), loadedIndices.end()),
+      segmentsInfo(numSegments);
+  float_t cumulativeFrequencySum = 0.0;
+  {
+#pragma omp parallel sections default(none) \
+firstprivate(prioritiesFloat, parallelismSizeThreshold) \
+shared(sortedIndices, uniquePriorities, priorityFrequencies, cumulativeFrequencySum, cumulativeSumFunction)
+    {
+#pragma omp section
+      {
+        stable_sort(sortedIndices.begin(), sortedIndices.end(),
+                    [&prioritiesFloat](size_t i1, size_t i2) {
+                      return prioritiesFloat[i1] < prioritiesFloat[i2];
+                    }
+        );
+      }
+#pragma omp section
+      {
+        // Compute unique priority values and their corresponding frequencies.
+        for (float priority : prioritiesFloat) {
+          if (uniquePriorities.empty() or uniquePriorities.back() != priority) {
+            uniquePriorities.push_back(priority);
+            priorityFrequencies.push_back(1.0);
+            continue;
+          }
+          priorityFrequencies.back() += 1.0;
+        }
+        // Cumulative sun of the frequencies.
+        cumulativeFrequencySum = cumulativeSumFunction(priorityFrequencies, parallelismSizeThreshold);
+      }
     }
   }
-  return tensor;
+  // `segmentsInfo` will store quantile index as a pair of sorted indices, original indices.
+  for (int64_t index = 1; index < numSegments + 1; index++) {
+    auto quantileIndex = (int64_t) ceil(cumulativeFrequencySum * ((float_t) index / (float_t) numSegments));
+    segmentsInfo[index - 1] = sortedIndices[quantileIndex - 1];
+  }
+  return segmentsInfo;
 }
 
 C_Memory::SumTreeNode_::SumTreeNode_(SumTreeNode_ *parent,
@@ -632,8 +724,7 @@ C_Memory::SumTree_::~SumTree_() = default;
 C_Memory::SumTree_::SumTree_() = default;
 
 void C_Memory::SumTree_::create_tree(std::deque<float_t> &priorities,
-                                     std::optional<std::vector<SumTreeNode_ *>> &children,
-                                     int64_t parallelismSizeThreshold) {
+                                     std::optional<std::vector<SumTreeNode_ *>> &children) {
   if (children.has_value()) {
     assert(priorities.size() == children.value().size());
     treeHeight_++;
@@ -647,7 +738,6 @@ void C_Memory::SumTree_::create_tree(std::deque<float_t> &priorities,
       children.value().push_back(nullptr);
     }
   }
-  bool enableParallelism = parallelismSizeThreshold < priorities.size();
   for (int64_t index = 0; index < prioritiesForTree.size(); index = index + 2) {
     auto leftPriority = prioritiesForTree[index];
     auto rightPriority = prioritiesForTree[index + 1];
@@ -689,15 +779,15 @@ void C_Memory::SumTree_::create_tree(std::deque<float_t> &priorities,
     return;
   }
   children = childrenForRecursion;
-  create_tree(prioritiesSum, children, parallelismSizeThreshold);
+  create_tree(prioritiesSum, children);
 }
 
 void C_Memory::SumTree_::reset(int64_t parallelismSizeThreshold) {
   {
     auto enableParallelism = (int64_t) sumTree_.size() > parallelismSizeThreshold;
-#pragma omp parallel for if(enableParallelism) default(none) shared(sumTree_)
-    for (int64_t index = 0; index < sumTree_.size(); index++) {// NOLINT(modernize-loop-convert)
-      delete sumTree_[index];
+#pragma omp parallel for if(enableParallelism) default(none) shared(sumTree_) schedule(static)
+    for (auto &node : sumTree_) {
+      delete node;
     }
   }
   sumTree_.clear();

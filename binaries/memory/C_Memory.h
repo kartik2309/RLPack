@@ -11,6 +11,7 @@
 #include <torch/extension.h>
 #include <vector>
 #include <deque>
+#include <algorithm>
 
 class C_Memory {
  public:
@@ -47,7 +48,9 @@ class C_Memory {
   };
   std::shared_ptr<C_MemoryData> cMemoryData;
 
-  explicit C_Memory(pybind11::int_ &bufferSize, pybind11::str &device, const pybind11::bool_& isPrioritized);
+  explicit C_Memory(const pybind11::int_ &bufferSize,
+                    const pybind11::str &device,
+                    const pybind11::int_ &prioritizationStrategyCode);
   explicit C_Memory();
   ~C_Memory();
 
@@ -76,7 +79,8 @@ class C_Memory {
                                               float_t forceTerminalStateProbability,
                                               int64_t parallelismSizeThreshold,
                                               float_t alpha = 0.0,
-                                              float_t beta = 0.0);
+                                              float_t beta = 0.0,
+                                              int64_t numSegments = 0);
   void update_priorities(torch::Tensor &randomIndices,
                          torch::Tensor &newPriorities,
                          torch::Tensor &newProbabilities,
@@ -132,14 +136,12 @@ class C_Memory {
     explicit SumTree_(int32_t bufferSize);
     SumTree_();
     ~SumTree_();
-
     void create_tree(std::deque<float_t> &priorities,
-                     std::optional<std::vector<SumTreeNode_ *>> &children,
-                     int64_t parallelismSizeThreshold);
+                     std::optional<std::vector<SumTreeNode_ *>> &children);
     void reset(int64_t parallelismSizeThreshold = 4096);
     int64_t sample(float_t seedValue, int64_t currentSize);
     void update(int64_t index, float_t value);
-    float_t get_cumulative_sum();
+    [[maybe_unused]] float_t get_cumulative_sum();
     int64_t get_tree_height();
    private:
     std::vector<SumTreeNode_ *> sumTree_;
@@ -166,23 +168,27 @@ class C_Memory {
   torch::Device device_ = torch::kCPU;
   int64_t bufferSize_ = 32768;
   int64_t stepCounter_ = 0;
-  float_t maxWeight_ = 0.0;
-  float_t cumulativeSum_ = -1;
-  bool isPrioritized_ = false;
-  std::map<std::string, torch::DeviceType> deviceMap{
+  int32_t prioritizationStrategyCode_ = 0;
+  std::map<std::string, torch::DeviceType> deviceMap_{
       {"cpu", torch::kCPU},
       {"cuda", torch::kCUDA},
       {"mps", torch::kMPS}
   };
-
-  static std::vector<int64_t> get_loaded_indices(std::vector<int64_t> &loadedIndices,
-                                                 int64_t parallelismSizeThreshold);
+  static float_t get_cumulative_sum_of_deque(const std::deque<float_t> &prioritiesFloat,
+                                             int64_t parallelismSizeThreshold);
+  static std::vector<int64_t> get_shuffled_vector(std::vector<int64_t> &loadedIndices,
+                                                  int64_t parallelismSizeThreshold);
   static std::vector<float_t> get_priority_seeds(float_t cumulativeSum, int64_t parallelismSizeThreshold);
   static torch::Tensor compute_probabilities(torch::Tensor &priorities, float_t alpha);
   static torch::Tensor compute_important_sampling_weights(torch::Tensor &probabilities,
                                                           int64_t currentSize,
                                                           float_t beta);
-  static torch::Tensor adjust_dimensions(torch::Tensor &tensor, c10::IntArrayRef &targetDimensions);
+  static std::vector<int64_t> compute_quantile_segment_indices(int64_t numSegments,
+                                                               const std::deque<float_t> &prioritiesFloat,
+                                                               const std::vector<int64_t> &loadedIndices,
+                                                               const std::function<float_t(const std::deque<float_t> &,
+                                                                                   int64_t)> &cumulativeSumFunction,
+                                                               int64_t parallelismSizeThreshold);
 };
 
 #endif //RLPACK_C_MEMORY_H

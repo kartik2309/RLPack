@@ -12,8 +12,13 @@ PYBIND11_MAKE_OPAQUE(std::map<std::string, std::deque<torch::Tensor>>)
 PYBIND11_MODULE(C_Memory, m) {
   m.doc() = "Module to provide Python binding for C_Memory class";
   pybind11::class_<C_Memory>(m, "C_Memory")
-      .def(pybind11::init<pybind11::int_ &, pybind11::str &, pybind11::bool_ &>())
-      .def("insert", &C_Memory::insert, "Insertion method to memory.",
+      .def(pybind11::init<pybind11::int_ &, pybind11::str &, pybind11::int_ &>(),
+           "Class constructor for C_Memory",
+           pybind11::arg("buffer_size"),
+           pybind11::arg("device"),
+           pybind11::arg("prioritization_strategy_code"))
+      .def("insert", &C_Memory::insert,
+           "Insertion method to memory.",
            pybind11::arg("state_current"),
            pybind11::arg("state_next"),
            pybind11::arg("reward"),
@@ -23,10 +28,12 @@ PYBIND11_MODULE(C_Memory, m) {
            pybind11::arg("probability"),
            pybind11::arg("weight"),
            pybind11::arg("is_terminal"))
-      .def("get_item", &C_Memory::get_item, "Get item method to get an item as per index.",
+      .def("get_item", &C_Memory::get_item,
+           "Get item method to get an item as per index.",
            pybind11::return_value_policy::reference,
            pybind11::arg("index"))
-      .def("set_item", &C_Memory::set_item, "Set Item method to set item at an index.",
+      .def("set_item", &C_Memory::set_item,
+           "Set Item method to set item at an index.",
            pybind11::arg("index"),
            pybind11::arg("state_current"),
            pybind11::arg("state_next"),
@@ -37,7 +44,8 @@ PYBIND11_MODULE(C_Memory, m) {
            pybind11::arg("probability"),
            pybind11::arg("weight"),
            pybind11::arg("is_terminal"))
-      .def("delete_item", &C_Memory::delete_item, "Delete item method to delete an item as per index.",
+      .def("delete_item", &C_Memory::delete_item,
+           "Delete item method to delete an item as per index.",
            pybind11::arg("index"))
       .def("sample", &C_Memory::sample,
            "Sample items from memory. This method samples items and arranges them quantity-wise.",
@@ -46,6 +54,7 @@ PYBIND11_MODULE(C_Memory, m) {
            pybind11::arg("parallelism_size_threshold"),
            pybind11::arg("alpha"),
            pybind11::arg("beta"),
+           pybind11::arg("num_segments"),
            pybind11::return_value_policy::reference)
       .def("update_priorities", &C_Memory::update_priorities,
            "Method to update priorities and associated prioritization values",
@@ -53,10 +62,13 @@ PYBIND11_MODULE(C_Memory, m) {
            pybind11::arg("new_priorities"),
            pybind11::arg("new_probabilities"),
            pybind11::arg("new_weights"))
-      .def("initialize", &C_Memory::initialize, "Initialize the Memory with input vector of values.",
+      .def("initialize", &C_Memory::initialize,
+           "Initialize the Memory with input vector of values.",
            pybind11::arg("c_memory_data"))
-      .def("clear", &C_Memory::clear, "Clear all items in memory.")
-      .def("size", &C_Memory::size, "Return the size of the memory.",
+      .def("clear", &C_Memory::clear,
+           "Clear all items in memory.")
+      .def("size", &C_Memory::size,
+           "Return the size of the memory.",
            pybind11::return_value_policy::reference)
       .def("num_terminal_states", &C_Memory::num_terminal_states,
            "Returns the number of terminal accumulated so far",
@@ -64,7 +76,8 @@ PYBIND11_MODULE(C_Memory, m) {
       .def("tree_height", &C_Memory::tree_height,
            "Returns the height of the tree. Relevant only if using prioritized memory.",
            pybind11::return_value_policy::reference)
-      .def("view", &C_Memory::view, "Return the current memory view.",
+      .def("view", &C_Memory::view,
+           "Return the current memory view.",
            pybind11::return_value_policy::reference)
       .def("__repr__", [](C_Memory &cMemory) {
              std::string reprString;

@@ -133,17 +133,11 @@ class DqnAgent(Agent):
         self.save_path = save_path
         self.device = device
         # Process `prioritization_params` and set flags accordingly.
-        self.is_prioritized_memory = True
-        if prioritization_params is not None:
-            assert (
-                "alpha" in prioritization_params.keys()
-            ), "`alpha` must be passed when passing prioritization_params"
-            assert (
-                "beta" in prioritization_params.keys()
-            ), "`beta` must be passed when passing prioritization_params"
-        else:
-            prioritization_params = dict()
-            self.is_prioritized_memory = False
+        self.prioritization_strategy_code = (
+            prioritization_params.get("prioritization_strategy", 0)
+            if prioritization_params is not None
+            else 0
+        )
         self.prioritization_params = prioritization_params
         self.force_terminal_state_selection_prob = force_terminal_state_selection_prob
         # Sanity check for tau value.
@@ -159,59 +153,14 @@ class DqnAgent(Agent):
         self.dim_for_norm = dim_for_norm
         self.step_counter = 1
         # Set necessary prioritization parameters. Depending on `prioritization_params`, appropriate values are set.
-        self.to_anneal_beta = False
-        self.to_anneal_alpha = False
-        self.alpha = float(self.prioritization_params.get("alpha", -1))
-        self.beta = float(self.prioritization_params.get("beta", -1))
-        self.min_alpha = float(self.prioritization_params.get("min_alpha", 0.0))
-        self.max_beta = float(self.prioritization_params.get("max_beta", 1.0))
-        # Set annealing parameters for alpha.
-        self.alpha_annealing_frequency = int(
-            self.prioritization_params.get("alpha_annealing_frequency", -1)
+        self.prioritization_params = self.__process_prioritization_params(
+            self.prioritization_params
         )
-        self.alpha_annealing_factor = float(
-            self.prioritization_params.get("alpha_annealing_factor", -1)
-        )
-        # Set beta parameters for alpha.
-        self.beta_annealing_frequency = int(
-            self.prioritization_params.get("beta_annealing_frequency", -1)
-        )
-        self.beta_annealing_factor = float(
-            self.prioritization_params.get("beta_annealing_factor", -1)
-        )
-        # Check if to anneal alpha based on input parameters.
-        if self.alpha_annealing_frequency != -1 and self.alpha_annealing_factor != -1:
-            self.to_anneal_alpha = True
-        elif self.alpha_annealing_frequency == -1 and self.alpha_annealing_factor != -1:
-            logging.warning(
-                "alpha_annealing_factor was passed but alpha_annealing_frequency was not passed! "
-                "This will prevent annealing of alpha."
-            )
-        elif self.alpha_annealing_frequency != -1 and self.alpha_annealing_factor == -1:
-            logging.warning(
-                "alpha_annealing_frequency was passed but alpha_annealing_factor was not passed! "
-                "This will prevent annealing of alpha."
-            )
-        # Check if to anneal beta based on input parameters.
-        if self.beta_annealing_frequency != -1 and self.beta_annealing_factor != -1:
-            self.to_anneal_beta = True
-        elif self.beta_annealing_frequency == -1 and self.beta_annealing_factor != -1:
-            logging.warning(
-                "beta_annealing_factor was passed but beta_annealing_frequency was not passed! "
-                "This will prevent annealing of beta."
-            )
-        elif self.beta_annealing_frequency != -1 and self.beta_annealing_factor == -1:
-            logging.warning(
-                "beta_annealing_frequency was passed but beta_annealing_factor was not passed! "
-                "This will prevent annealing of beta."
-            )
-
-        self.error = float(self.prioritization_params.get("error", 5e-3))
         # Initialize Memory.
         self.memory = Memory(
             buffer_size=memory_buffer_size,
             device=device,
-            is_prioritized=self.is_prioritized_memory,
+            prioritization_strategy_code=self.prioritization_strategy_code,
         )
         # Disable gradients for target network.
         for n, p in self.target_model.named_parameters():
@@ -282,11 +231,9 @@ class DqnAgent(Agent):
         if self.step_counter == self.memory_buffer_size:
             self.step_counter = 0
         # If using prioritized memory, anneal alpha and beta.
-        if self.is_prioritized_memory:
-            if self.to_anneal_beta and (self.step_counter % self.beta_annealing_frequency == 0):
-                self.__anneal_beta()
-            if self.to_anneal_alpha and (self.step_counter % self.alpha_annealing_frequency == 0):
-                self.__anneal_alpha()
+        if self.prioritization_strategy_code > 0:
+            self.__anneal_alpha()
+            self.__anneal_beta()
         # Increment `step_counter` and use policy model to get next action.
         self.step_counter += 1
         action = self.policy(state_current)
@@ -348,7 +295,6 @@ class DqnAgent(Agent):
             "epsilon": self.epsilon,
             "memory": self.memory.view() if save_memory else None,
         }
-
         pytorch.save(
             checkpoint_target,
             os.path.join(self.save_path, f"target{custom_name_suffix}.pt"),
@@ -366,7 +312,6 @@ class DqnAgent(Agent):
                 checkpoint_lr_scheduler,
                 os.path.join(self.save_path, f"lr_scheduler{custom_name_suffix}.pt"),
             )
-
         pytorch.save(agent_state, os.path.join(self.save_path, "agent_states.pt"))
         return
 
@@ -393,7 +338,6 @@ class DqnAgent(Agent):
                 map_location="cpu",
             )
             self.target_model.load_state_dict(checkpoint_target["state_dict"])
-
         if os.path.isfile(
             os.path.join(self.save_path, f"policy{custom_name_suffix}.pt")
         ):
@@ -404,7 +348,6 @@ class DqnAgent(Agent):
             self.policy_model.load_state_dict(checkpoint_policy["state_dict"])
         else:
             raise FileNotFoundError("The Policy model was not found in the given path!")
-
         if os.path.isfile(
             os.path.join(self.save_path, f"optimizer{custom_name_suffix}.pt")
         ):
@@ -413,7 +356,6 @@ class DqnAgent(Agent):
                 map_location="cpu",
             )
             self.optimizer.load_state_dict(checkpoint_optimizer["state_dict"])
-
         if os.path.isfile(
             os.path.join(self.save_path, f"lr_scheduler{custom_name_suffix}.pt")
         ):
@@ -422,7 +364,6 @@ class DqnAgent(Agent):
                 map_location="cpu",
             )
             self.lr_scheduler.load_state_dict(checkpoint_lr_sc["state_dict"])
-
         if os.path.isfile(os.path.join(self.save_path, "agent_state.pt")):
             agent_state = pytorch.load(os.path.join(self.save_path, "agent_state.pt"))
             self.epsilon = agent_state["epsilon"]
@@ -448,7 +389,7 @@ class DqnAgent(Agent):
             weights,
             random_indices,
         ) = random_experiences
-
+        # Apply normalization if required to states.
         if self.apply_norm_to in self.state_norm_codes:
             state_current = self.normalization.apply_normalization(
                 state_current, self.eps_for_norm, self.p_for_norm, self.dim_for_norm
@@ -456,38 +397,55 @@ class DqnAgent(Agent):
             state_next = self.normalization.apply_normalization(
                 state_next, self.eps_for_norm, self.p_for_norm, self.dim_for_norm
             )
-
+        # Apply normalization if required to rewards.
         if self.apply_norm_to in self.reward_norm_codes:
             rewards = self.normalization.apply_normalization(
                 rewards, self.eps_for_norm, self.p_for_norm, self.dim_for_norm
             )
+        # Set policy model to training mode.
         if not self.policy_model.training:
             self.policy_model.train()
-
+        # Compute target q-values from target model and temporal difference values.
         with pytorch.no_grad():
             q_values_target = self.target_model(state_next)
             td_value = self.temporal_difference(rewards, q_values_target, dones)
-
+        # Apply normalization if required to TD values.
         if self.apply_norm_to in self.td_norm_codes:
             td_value = self.normalization.apply_normalization(
                 td_value, self.eps_for_norm, self.p_for_norm, self.dim_for_norm
             )
-
+        # Compute current q-values from policy model.
         q_values_policy = self.policy_model(state_current)
         actions = self._adjust_dims_for_tensor(
             tensor=actions, target_dim=q_values_target.dim()
         )
+        # Choose best q-values corresponding to actions
         q_values_gathered = pytorch.gather(q_values_policy, dim=-1, index=actions)
         self.optimizer.zero_grad()
-        if self.prioritization_params is not None:
+        # If prioritized memory is used, multiply weights from sampling process to TD values.
+        if self.prioritization_strategy_code > 0:
             weights_ = self._adjust_dims_for_tensor(weights, td_value.dim())
             td_value = td_value * weights_
         td_value = td_value.detach()
         loss = self.loss_function(q_values_gathered, td_value)
         loss.backward()
         self.loss.append(loss.item())
-        if self.is_prioritized_memory:
-            new_priorities = pytorch.abs(td_value.cpu()) + self.error
+        if self.prioritization_strategy_code > 0:
+            if self.prioritization_strategy_code == 1:
+                new_priorities = (
+                    pytorch.abs(td_value.cpu()) + self.prioritization_params["error"]
+                )
+            elif self.prioritization_strategy_code == 2:
+                _, sorted_td_indices = pytorch.sort(
+                    pytorch.abs(td_value.cpu()),
+                    dim=0,
+                    descending=True
+                )
+                new_priorities = 1 / (sorted_td_indices + 1)
+            else:
+                raise NotImplementedError(
+                    f"The given prioritization strategy {self.prioritization_strategy_code} has not been implemented"
+                )
             self.memory.update_priorities(
                 random_indices,
                 new_priorities,
@@ -548,38 +506,6 @@ class DqnAgent(Agent):
             self.epsilon = self.min_epsilon
         return
 
-    def __anneal_beta(self) -> None:
-        """
-        Protected method to anneal beta parameter for important sampling weights. This will be called
-            every `beta_annealing_frequency` times. `beta_annealing_frequency` is a key to be passed in dictionary
-            `prioritization_params` argument in the DqnAgent class' constructor.
-
-        If `beta_annealing_frequency` is not passed in `prioritization_params`, the annealing of beta will not take
-            place. This method uses another value `beta_annealing_factor` that must also be passed in
-            `prioritization_params`. `beta_annealing_factor` is typically above 1 to slowly annealed it to
-            1 or `max_beta`
-        """
-        if self.prioritization_params and self.to_anneal_beta and self.beta < self.max_beta:
-            self.beta *= self.beta_annealing_factor
-        if self.beta > self.max_beta:
-            self.beta = self.max_beta
-
-    def __anneal_alpha(self) -> None:
-        """
-        Protected method to anneal alpha parameter for important sampling weights. This will be called
-            every `alpha_annealing_frequency` times. `alpha_annealing_frequency` is a key to be passed in dictionary
-            `prioritization_params` argument in the DqnAgent class' constructor.
-
-        If `alpha_annealing_frequency` is not passed in `prioritization_params`, the annealing of alpha will not take
-            place. This method uses another value `alpha_annealing_factor` that must also be passed in
-            `prioritization_params`. `alpha_annealing_factor` is typically below 1 to slowly annealed it to
-            0 or `min_alpha`.
-        """
-        if self.prioritization_params and self.to_anneal_alpha and self.alpha > self.min_alpha:
-            self.alpha *= self.alpha_annealing_factor
-        if self.alpha < self.min_alpha:
-            self.alpha = self.min_alpha
-
     def __load_random_experiences(
         self,
     ) -> Tuple[
@@ -617,7 +543,204 @@ class DqnAgent(Agent):
         samples = self.memory.sample(
             self.batch_size,
             self.force_terminal_state_selection_prob,
-            alpha=self.alpha,
-            beta=self.beta,
+            alpha=self.prioritization_params["alpha"],
+            beta=self.prioritization_params["beta"],
+            num_segments=self.prioritization_params["num_segments"],
         )
         return samples
+
+    @staticmethod
+    def __anneal_alpha_default_fn(alpha: float, alpha_annealing_factor: float) -> float:
+        """
+        Protected method to anneal alpha parameter for important sampling weights. This will be called
+            every `alpha_annealing_frequency` times. `alpha_annealing_frequency` is a key to be passed in dictionary
+            `prioritization_params` argument in the DqnAgent class' constructor. This method is called by default
+            to anneal alpha.
+
+        If `alpha_annealing_frequency` is not passed in `prioritization_params`, the annealing of alpha will not take
+            place. This method uses another value `alpha_annealing_factor` that must also be passed in
+            `prioritization_params`. `alpha_annealing_factor` is typically below 1 to slowly annealed it to
+            0 or `min_alpha`.
+        """
+        alpha *= alpha_annealing_factor
+        return alpha
+
+    @staticmethod
+    def __anneal_beta_default_fn(beta: float, beta_annealing_factor: float) -> float:
+        """
+        Protected method to anneal beta parameter for important sampling weights. This will be called
+            every `beta_annealing_frequency` times. `beta_annealing_frequency` is a key to be passed in dictionary
+            `prioritization_params` argument in the DqnAgent class' constructor.
+
+        If `beta_annealing_frequency` is not passed in `prioritization_params`, the annealing of beta will not take
+            place. This method uses another value `beta_annealing_factor` that must also be passed in
+            `prioritization_params`. `beta_annealing_factor` is typically above 1 to slowly annealed it to
+            1 or `max_beta`
+        """
+        beta *= beta_annealing_factor
+        return beta
+
+    def __anneal_alpha(self):
+        if (
+            self.prioritization_params["to_anneal_alpha"]
+            and (
+                self.step_counter
+                % self.prioritization_params["alpha_annealing_frequency"]
+                == 0
+            )
+            and self.prioritization_params["alpha"]
+            > self.prioritization_params["min_alpha"]
+        ):
+            self.prioritization_params["alpha"] = self.prioritization_params[
+                "alpha_annealing_fn"
+            ](
+                self.prioritization_params["alpha"],
+                *self.prioritization_params["alpha_annealing_fn_args"],
+                **self.prioritization_params["alpha_annealing_fn_kwargs"],
+            )
+            if (
+                self.prioritization_params["alpha"]
+                < self.prioritization_params["min_alpha"]
+            ):
+                self.prioritization_params["alpha"] = self.prioritization_params[
+                    "min_alpha"
+                ]
+
+    def __anneal_beta(self):
+        if (
+            self.prioritization_params["to_anneal_beta"]
+            and (
+                self.step_counter
+                % self.prioritization_params["beta_annealing_frequency"]
+                == 0
+            )
+            and self.prioritization_params["beta"]
+            < self.prioritization_params["max_beta"]
+        ):
+            self.prioritization_params["beta"] = self.prioritization_params[
+                "beta_annealing_fn"
+            ](
+                self.prioritization_params["beta"],
+                *self.prioritization_params["beta_annealing_fn_args"],
+                **self.prioritization_params["beta_annealing_fn_kwargs"],
+            )
+            if (
+                self.prioritization_params["beta"]
+                > self.prioritization_params["max_beta"]
+            ):
+                self.prioritization_params["beta"] = self.prioritization_params[
+                    "max_beta"
+                ]
+
+    def __process_prioritization_params(
+        self, prioritization_params: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """
+        Private method to process the prioritization parameters. This includes sanity check and loading of default
+            values of mandatory parameters.
+        @:param prioritization_params (Dict[str, Any]): The prioritization parameters for when
+            we use prioritized memory
+        @:return (Dict[str, Any]): The processed prioritization parameters with necessary parameters loaded.
+        """
+        to_anneal_alpha = False
+        to_anneal_beta = False
+        if prioritization_params is not None and self.prioritization_strategy_code > 0:
+            assert (
+                "alpha" in prioritization_params.keys()
+            ), "`alpha` must be passed when passing prioritization_params"
+            assert (
+                "beta" in prioritization_params.keys()
+            ), "`beta` must be passed when passing prioritization_params"
+        else:
+            prioritization_params = dict()
+        alpha = float(prioritization_params.get("alpha", -1))
+        beta = float(prioritization_params.get("beta", -1))
+        min_alpha = float(prioritization_params.get("min_alpha", 1.0))
+        max_beta = float(prioritization_params.get("max_beta", 1.0))
+        alpha_annealing_frequency = int(
+            prioritization_params.get("alpha_annealing_frequency", -1)
+        )
+        beta_annealing_frequency = int(
+            prioritization_params.get("beta_annealing_frequency", -1)
+        )
+        alpha_annealing_fn = prioritization_params.get("alpha_annealing_fn")
+        beta_annealing_fn = prioritization_params.get("beta_annealing_fn")
+        if alpha_annealing_fn is None:
+            alpha_annealing_fn = self.__anneal_alpha_default_fn
+            # Set annealing parameters for alpha.
+            alpha_annealing_factor = float(
+                prioritization_params.get("alpha_annealing_factor", -1)
+            )
+            # Check if to anneal alpha based on input parameters.
+            if alpha_annealing_frequency != -1 and alpha_annealing_factor != -1:
+                to_anneal_alpha = True
+            elif alpha_annealing_frequency == -1 and alpha_annealing_factor != -1:
+                logging.warning(
+                    "alpha_annealing_factor was passed but alpha_annealing_frequency was not passed! "
+                    "This will prevent annealing of alpha."
+                )
+            elif alpha_annealing_frequency != -1 and alpha_annealing_factor == -1:
+                logging.warning(
+                    "alpha_annealing_frequency was passed but alpha_annealing_factor was not passed! "
+                    "This will prevent annealing of alpha."
+                )
+            alpha_annealing_fn_args = (alpha_annealing_factor,)
+            alpha_annealing_fn_kwargs = dict()
+        else:
+            alpha_annealing_fn = alpha_annealing_fn
+            alpha_annealing_fn_args = prioritization_params.get(
+                "alpha_annealing_fn_args"
+            )
+            alpha_annealing_fn_kwargs = prioritization_params.get(
+                "alpha_annealing_fn_kwargs"
+            )
+        if beta_annealing_fn is None:
+            beta_annealing_fn = self.__anneal_beta_default_fn
+            # Set annealing parameters for beta.
+            beta_annealing_factor = float(
+                prioritization_params.get("beta_annealing_factor", -1)
+            )
+            # Check if to anneal beta based on input parameters.
+            if beta_annealing_frequency != -1 and beta_annealing_factor != -1:
+                to_anneal_beta = True
+            elif beta_annealing_frequency == -1 and beta_annealing_factor != -1:
+                logging.warning(
+                    "beta_annealing_factor was passed but beta_annealing_frequency was not passed! "
+                    "This will prevent annealing of beta."
+                )
+            elif beta_annealing_frequency != -1 and beta_annealing_factor == -1:
+                logging.warning(
+                    "beta_annealing_frequency was passed but beta_annealing_factor was not passed! "
+                    "This will prevent annealing of beta."
+                )
+            beta_annealing_fn_args = (beta_annealing_factor,)
+            beta_annealing_fn_kwargs = dict()
+        else:
+            beta_annealing_fn_args = prioritization_params.get("beta_annealing_fn_args")
+            beta_annealing_fn_kwargs = prioritization_params.get(
+                "beta_annealing_fn_kwargs"
+            )
+        # Error for proportional based prioritized memory.
+        error = float(prioritization_params.get("error", 5e-3))
+        # Number of segments for rank-based prioritized memory.
+        num_segments = prioritization_params.get("num_segments", self.batch_size)
+        # Creation of final process dictionary for prioritization_params
+        prioritization_params_processed = {
+            "to_anneal_alpha": to_anneal_alpha,
+            "to_anneal_beta": to_anneal_beta,
+            "alpha": alpha,
+            "beta": beta,
+            "min_alpha": min_alpha,
+            "max_beta": max_beta,
+            "alpha_annealing_frequency": alpha_annealing_frequency,
+            "beta_annealing_frequency": beta_annealing_frequency,
+            "alpha_annealing_fn": alpha_annealing_fn,
+            "alpha_annealing_fn_args": alpha_annealing_fn_args,
+            "alpha_annealing_fn_kwargs": alpha_annealing_fn_kwargs,
+            "beta_annealing_fn": beta_annealing_fn,
+            "beta_annealing_fn_args": beta_annealing_fn_args,
+            "beta_annealing_fn_kwargs": beta_annealing_fn_kwargs,
+            "error": error,
+            "num_segments": num_segments,
+        }
+        return prioritization_params_processed
