@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Any, Dict
 
 
 class SanityCheck:
@@ -13,11 +13,11 @@ class SanityCheck:
             "reward_logging_frequency",
             "render",
             "model_args",
-            "optimizer_args"
+            "optimizer_args",
         )
 
         args = list(input_config.keys())
-        missing_args = [k in mandatory_keys for k in args]
+        missing_args = [k in args for k in mandatory_keys]
         if not all(missing_args):
             raise ValueError(
                 f"The following arguments were not received: "
