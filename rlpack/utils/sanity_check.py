@@ -3,6 +3,10 @@ from typing import Any, Dict
 
 class SanityCheck:
     def __new__(cls, input_config: Dict[str, Any]):
+        """
+        This class does the basic sanity check of input_config.
+        @:param input_config (Dict[str, Any]): The input config that is to be used for training.
+        """
         mandatory_keys = (
             "mode",
             "env_name",
