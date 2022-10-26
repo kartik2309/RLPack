@@ -78,7 +78,6 @@ setup(
         "rlpack._C",
     ],
     package_data={
-        "rlpack/environments/configs": ["rlpack/environments/configs/dlqn1d.yaml"],
         "license_files": ["LICENSE.md"],
     },
     platforms="posix",
@@ -88,7 +87,6 @@ setup(
         "rlpack.dqn": "rlpack/dqn",
         "rlpack.models": "rlpack/models",
         "rlpack.environments": "rlpack/environments",
-        "rlpack.environments.configs": "rlpack/environments/configs",
         "rlpack.utils": "rlpack/utils",
         "rlpack.utils.base": "rlpack/utils/base",
         "rlpack._C": "rlpack/_C",

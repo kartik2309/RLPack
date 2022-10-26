@@ -1,5 +1,5 @@
 import os
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 import yaml
 
@@ -18,29 +18,16 @@ class Simulator:
 
     def __init__(
         self,
-        config: Optional[Dict[str, Any]] = None,
-        algorithm: Optional[str] = None,
-        environment: Optional[str] = None,
+        config: Dict[str, Any]
     ):
         """
         @:param config (Optional[Dict[str, Any]]): The configuration dictionary for setup. Default: None
-        @:param algorithm (Optional[str]): The algorithm to be used. Default: None
-        @:param environment (Optional[str]): The environment to be used. Default: None
-        Note that either `config` or both `algorithm` and `environment` must be passed.
         """
         self.register = Register()
-        # Check arguments and select config.
-        if config is None and algorithm is None and environment is None:
-            raise ValueError(
-                "At least one of the arguments, `config`, `algorithm` or `environments` must be passed!"
-            )
-        if config is None and algorithm is not None:
-            config = self.register.get_default_config(algorithm)
-        if environment is not None:
-            config["env_name"] = environment
         # Perform sanity check before starting.
         SanityCheck(config)
         self.config = config
+        # Setup agent and initialize environment.
         self.agent = self.setup_agent()
         self.env = Environments(agent=self.agent, config=self.config)
         return
