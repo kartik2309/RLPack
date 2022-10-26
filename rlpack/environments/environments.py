@@ -108,7 +108,22 @@ class Environments:
                 mean_loss = self.__list_mean(self.agent.loss)
                 if len(self.agent.loss) > 0:
                     logging.info(f"Average Loss after {ep} episodes: {mean_loss}")
+                # Log current epsilon value
+                if hasattr(self.agent, "epsilon"):
+                    logging.info(f"Epsilon after {ep} episodes: {self.agent.epsilon}")
+                # Log current alpha and beta values - for prioritized relay
+                if hasattr(self.agent, "prioritization_params"):
+                    if "beta" in self.agent.prioritization_params.keys():
+                        logging.info(
+                            f"Beta after {ep} episodes: {self.agent.prioritization_params['beta']}"
+                        )
+                if hasattr(self.agent, "prioritization_params"):
+                    if "alpha" in self.agent.prioritization_params.keys():
+                        logging.info(
+                            f"Beta after {ep} episodes: {self.agent.prioritization_params['alpha']}"
+                        )
                 logging.info(f"{'~' * len(reward_log_message)}\n")
+
                 rewards.clear()
         self.env.close()
         self.agent.save()
