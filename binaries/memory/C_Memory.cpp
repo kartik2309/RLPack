@@ -564,7 +564,7 @@ torch::Tensor C_Memory::compute_probabilities(torch::Tensor &priorities, float_t
 torch::Tensor C_Memory::compute_important_sampling_weights(torch::Tensor &probabilities,
                                                            int64_t currentSize,
                                                            float_t beta) {
-  auto weights = torch::pow(currentSize * probabilities, -beta);
+  auto weights = torch::pow(1 / (currentSize * probabilities), beta);
   auto maxWeightInBatch = weights.max().item<float_t>();
   weights = weights / maxWeightInBatch;
   return weights;
