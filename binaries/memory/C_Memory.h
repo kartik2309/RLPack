@@ -197,9 +197,9 @@ class C_Memory {
                                                           float_t beta);
   static std::vector<int64_t> compute_quantile_segment_indices(int64_t numSegments,
                                                                const std::deque<float_t> &prioritiesFloat,
-                                                               const std::function<float_t(const std::deque<
-                                                                   float_t> &,
-                                                                                           int64_t)> &cumulativeSumFunction,
+                                                               const std::function<float_t(
+                                                                   const std::deque<float_t> &, int64_t
+                                                               )> &cumulativeSumFunction,
                                                                int64_t parallelismSizeThreshold);
   static void arg_mergesort_for_pair_vector(std::vector<std::pair<float_t, int64_t>> &priorityFloatIndicesPair,
                                             int64_t begin,

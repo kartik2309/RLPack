@@ -291,12 +291,13 @@ std::map<std::string, torch::Tensor> C_Memory::sample(int32_t batchSize,
       // Proportional prioritization sampling.
       std::vector<float_t> seedValues;
       {
+        bool enableParallelism = parallelismSizeThreshold < prioritiesFloat_.size();
 //        Parallel region to execute resetting and creation of tree simultaneously with getting priority seeds.
 //        Two sections are spawned for each associated function.
 //        Sections 0: Executes resetting and creation of tree.
 //        Sections 1: Executes computation of cumulative sum and generates priority seeds.
 
-#pragma omp parallel sections default(none) \
+#pragma omp parallel sections if(enableParallelism) default(none) \
 firstprivate(parallelismSizeThreshold) \
 shared(sumTreeSharedPtr_, prioritiesFloat_, seedValues)
         {
@@ -479,8 +480,8 @@ float_t C_Memory::get_cumulative_sum_of_deque(const std::deque<float_t> &priorit
                                               int64_t parallelismSizeThreshold) {
   float_t cumulativeSum = 0;
   bool enableParallelism = parallelismSizeThreshold < prioritiesFloat.size();
-  // Compute sum with reduction.
   {
+    // Compute sum with reduction.
 #pragma omp parallel for if(enableParallelism) default(none) \
 firstprivate(prioritiesFloat) \
 reduction(+:cumulativeSum) \
@@ -497,7 +498,6 @@ std::vector<int64_t> C_Memory::get_shuffled_vector(std::vector<int64_t> &loadedI
   std::random_device rd;
   std::mt19937 generator(rd());
   auto loadedIndicesSize = (int64_t) loadedIndices.size();
-
   std::vector<int64_t> loadedIndicesCopy = std::vector<int64_t>(loadedIndices.begin(),
                                                                 loadedIndices.end());
   std::uniform_int_distribution<int64_t> distributionOfLoadedIndices(0,
@@ -572,68 +572,75 @@ torch::Tensor C_Memory::compute_important_sampling_weights(torch::Tensor &probab
 
 std::vector<int64_t> C_Memory::compute_quantile_segment_indices(int64_t numSegments,
                                                                 const std::deque<float_t> &prioritiesFloat,
-                                                                const std::function<float_t(const std::deque<
-                                                                    float_t> &,
-                                                                                            int64_t)> &cumulativeSumFunction,
+                                                                const std::function<float_t(
+                                                                    const std::deque<float_t> &, int64_t
+                                                                )> &cumulativeSumFunction,
                                                                 int64_t parallelismSizeThreshold) {
-  std::deque<float_t> uniquePriorities, priorityFrequencies;
+
+  bool enableParallelism = parallelismSizeThreshold < prioritiesFloat.size();
+  auto priorityFloatSize = (int64_t) prioritiesFloat.size();
+  std::deque<float_t> uniquePriorities, priorityFrequencies, prioritiesSorted(priorityFloatSize);
   std::vector<int64_t> sortedIndices(prioritiesFloat.size()), segmentsInfo(numSegments);
-  float_t cumulativeFrequencySum;
+  std::vector<std::pair<float_t, int64_t>> priorityFloatIndicesPair(priorityFloatSize);
   {
-    // Two sections are launched in this parallel regions.
-    // Section 0: Creates sorted indices
-    // Section 1: Creates frequency table and computes cumulative sum.
-#pragma omp parallel sections default(none) \
-firstprivate(prioritiesFloat, parallelismSizeThreshold) \
-shared(sortedIndices, uniquePriorities, priorityFrequencies, cumulativeFrequencySum, cumulativeSumFunction)
-    {
-#pragma omp section
-      {
-        bool enableParallelism = parallelismSizeThreshold < prioritiesFloat.size();
-        auto priorityFloatSize = (int64_t) prioritiesFloat.size();
-        std::vector<std::pair<float_t, int64_t>> priorityFloatIndicesPair(priorityFloatSize);
-        {
-          // Creates vector of pairs with priority value (float) and corresponding indices.
+    // Creates vector of pairs with priority value (float) and corresponding indices.
 #pragma omp parallel for if(enableParallelism) default(none) \
 firstprivate(priorityFloatSize, prioritiesFloat) \
 shared(priorityFloatIndicesPair) \
 schedule(static)
-          for (int64_t index = 0; index < priorityFloatSize; index++) {
-            priorityFloatIndicesPair[index] = {prioritiesFloat[index], index};
-          }
-        }
-        // Performs merge sort as per priority value (float).
-        arg_mergesort_for_pair_vector(priorityFloatIndicesPair,
-                                      0,
-                                      priorityFloatSize - 1,
-                                      enableParallelism);
-        {
-          // Extracts sorted indices from vector of pairs.
+    for (int64_t index = 0; index < priorityFloatSize; index++) {
+      priorityFloatIndicesPair[index] = {prioritiesFloat[index], index};
+    }
+  }
+  // Performs merge sort as per priority value (float).
+  arg_mergesort_for_pair_vector(priorityFloatIndicesPair,
+                                0,
+                                priorityFloatSize - 1,
+                                enableParallelism);
+  {
+#pragma omp parallel sections if(enableParallelism) default(none) \
+firstprivate(enableParallelism, priorityFloatSize, priorityFloatIndicesPair) \
+shared(prioritiesSorted, sortedIndices)
+    {
+      // Parallel Region for to populate prioritiesSorted and sortedIndices.
+      // Section 0: Populates prioritiesSorted from sorted vector of pair; first value in the pair.
+      // Section 1: Populates sortedIndices from sorted vector of pair; second value in the pair
+#pragma omp section
+      {
+        // Extracts sorted indices from vector of pairs.
 #pragma omp parallel for if(enableParallelism) default(none) \
 firstprivate(priorityFloatSize, priorityFloatIndicesPair) \
-shared(sortedIndices) \
+shared(prioritiesSorted) \
 schedule(static)
-          for (int64_t index = 0; index < priorityFloatSize; index++) {
-            sortedIndices[index] = priorityFloatIndicesPair[index].second;
-          }
+        for (int64_t index = 0; index < priorityFloatSize; index++) {
+          prioritiesSorted[index] = priorityFloatIndicesPair[index].first;
         }
       }
 #pragma omp section
       {
-        // Compute unique priority values and their corresponding frequencies.
-        for (float priority : prioritiesFloat) {
-          if (uniquePriorities.empty() or uniquePriorities.back() != priority) {
-            uniquePriorities.push_back(priority);
-            priorityFrequencies.push_back(1.0);
-            continue;
-          }
-          priorityFrequencies.back() += 1.0;
+        // Extracts sorted indices from vector of pairs.
+#pragma omp parallel for if(enableParallelism) default(none) \
+firstprivate(priorityFloatSize, priorityFloatIndicesPair) \
+shared(sortedIndices) \
+schedule(static)
+        for (int64_t index = 0; index < priorityFloatSize; index++) {
+          sortedIndices[index] = priorityFloatIndicesPair[index].second;
         }
-        // Cumulative sun of the frequencies.
-        cumulativeFrequencySum = cumulativeSumFunction(priorityFrequencies, parallelismSizeThreshold);
       }
     }
   }
+  // Compute unique priority values and their corresponding frequencies.
+  for (float &priority : prioritiesSorted) {
+    if (uniquePriorities.empty() or uniquePriorities.back() != priority) {
+      uniquePriorities.push_back(priority);
+      priorityFrequencies.push_back(1.0);
+      continue;
+    }
+    priorityFrequencies.back() += 1.0;
+  }
+  // Cumulative sun of the frequencies.
+  auto cumulativeFrequencySum = cumulativeSumFunction(priorityFrequencies, parallelismSizeThreshold);
+
   // `segmentsInfo` will store quantile index as a pair of sorted indices, original indices.
   for (int64_t index = 1; index < numSegments + 1; index++) {
     auto quantileIndex = (int64_t) ceil(cumulativeFrequencySum * ((float_t) index / (float_t) numSegments));
@@ -650,8 +657,23 @@ void C_Memory::arg_mergesort_for_pair_vector(std::vector<std::pair<float_t, int6
     return;
   }
   auto mid = begin + (end - begin) / 2;
-  arg_mergesort_for_pair_vector(priorityFloatIndicesPair, begin, mid, enableParallelism);
-  arg_mergesort_for_pair_vector(priorityFloatIndicesPair, mid + 1, end, enableParallelism);
+
+#pragma omp parallel sections if(enableParallelism) default(none) \
+firstprivate(begin, mid, end, enableParallelism) \
+shared(priorityFloatIndicesPair)
+  {
+    // Parallel regions for each split in merge sort.
+    // Section 0: Calls `arg_mergesort_for_pair_vector` recursively from begin to mid.
+    // Section 1: Calls `arg_mergesort_for_pair_vector` recursively from mid + 1 to end.
+#pragma omp section
+    {
+      arg_mergesort_for_pair_vector(priorityFloatIndicesPair, begin, mid, enableParallelism);
+    }
+#pragma omp section
+    {
+      arg_mergesort_for_pair_vector(priorityFloatIndicesPair, mid + 1, end, enableParallelism);
+    }
+  }
   arg_merge_for_pair_vector(priorityFloatIndicesPair, begin, mid, end, enableParallelism);
 }
 
