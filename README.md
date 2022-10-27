@@ -1,6 +1,6 @@
 # RLPack
 
-Implementation of RL Algorithms with PyTorch. Heavy workloads have
+Implementation of RL Algorithms built on top of PyTorch. Heavy workloads have
 been optimized with C++ backend.
 
 # Installation
