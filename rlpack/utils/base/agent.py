@@ -11,32 +11,63 @@ class Agent(object):
     """
 
     def __init__(self):
+        """
+        The class initializer. Defines basic variables useful for all agents.
+        """
         self.state_norm_codes = (0, 3, 4)
         self.reward_norm_codes = (1, 3)
         self.td_norm_codes = (2, 4)
         self.loss = list()
-        self.save_path = ""
+        self.save_path = str()
 
-    def train(self, *args, **kwargs):
+    def train(self, *args, **kwargs) -> Any:
+        """
+        Training method for the agent. This class needs to be overriden for every agent that inherits it.
+        @:param args: Positional arguments for train method
+        @:param kwargs: Keyword arguments for train method.
+        @:return (Any): Action to be taken
+        """
         pass
 
-    def policy(self, *args, **kwargs):
+    def policy(self, *args, **kwargs) -> Any:
+        """
+        Policy method for the agent. This class needs to be overriden for every agent that inherits it.
+        @:param args: Positional arguments for policy method
+        @:param kwargs: Keyword arguments for policy method.
+        @:return (Any): Action to be taken
+        """
         pass
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
+        """
+        Save method for the agent. This class needs to be overriden for every agent that inherits it.
+        All necessary agent states and attributes must be saved in the implementation such that training can
+        be restarted.
+        @:param args: Positional arguments for save method
+        @:param kwargs: Keyword arguments for save method.
+        """
         pass
 
-    def load(self, *args, **kwargs):
+    def load(self, *args, **kwargs) -> None:
+        """
+        Load method for the agent. This class needs to be overriden for every agent that inherits it.
+        All necessary agent states and attributes must be loaded in the implementation such that training can
+        be restarted.
+        @:param args: Positional arguments for load method
+        @:param kwargs: Keyword arguments for load method.
+        """
         pass
 
     def __getstate__(self) -> Dict[str, Any]:
         """
+        To get the agent's current state (dict of attributes).
         @:return (Dict[str, Any]): The agent's states in dictionary.
         """
         return self.__dict__
 
     def __setstate__(self, state: Dict[str, Any]) -> None:
         """
+        To load the agent's current state (dict of attributes).
         @:param state (Dict[str, Any]): The agent's states in dictionary.
         """
         self.__dict__ = state

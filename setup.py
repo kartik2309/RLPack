@@ -9,22 +9,39 @@ from pybind11 import get_cmake_dir
 from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext
 from torch.utils import cmake_prefix_path
+from typing import Any
 
 __version__ = "0.0.1"
 
 
 class CMakeExtension(Extension):
-    def __init__(self, shell_script):
+    """
+    Helper class to build the CMake files for C++ Backend.
+    """
+    def __init__(self, shell_script: str) -> None:
+        """
+        @:param shell_script (str): The shell script to be passed to be run in the Extension.
+        """
         super().__init__(shell_script, sources=[])
 
 
 class BuildExternal(build_ext):
-    def run(self):
+    """
+    Helper tool to build external files with custom commands.
+    """
+    def run(self) -> None:
+        """
+        Runs the provided method `build_cmake` to build the extension.
+        """
         for ext in self.extensions:
             self.build_cmake(ext)
         super().run()
 
-    def build_cmake(self, ext):
+    def build_cmake(self, ext: Any) -> None:
+        """
+        Builds the binaries for RLPack backend with C++
+        @:param ext (Any): The external extensions to be used to build the cmake.
+        """
         cwd = Path().absolute()
 
         build_temp = Path(self.build_temp)
@@ -59,6 +76,7 @@ class BuildExternal(build_ext):
                 shutil.copy2(lib, os.path.join(str(build_lib), "rlpack", "lib"))
 
 
+# Call to setup method to build the package.
 setup(
     name="RLPack",
     version=__version__,
