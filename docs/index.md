@@ -72,10 +72,13 @@ simulator.run()
 ```
 `run` method can provide callbacks which can enable us to pass custom models to be used inside the agent. 
 
-## Supported Agents
+## Agents
 
-- [Deep Q-Networks (DQN)](agents/dqn.md)
+RLPack implements variety of agents to be easily used via config dict for training and evaluating. Learn more about 
+them [here](agents/index.md) 
 
-## Supported Models
 
-- [Multi-Layered Perceptron (MLP)](models/in_built/mlp.md)
+## Supported Models and Tools
+
+RLPack implements variety of models and corresponding tools to be used for training and evaluating which can be easily 
+used via config dictionary. Learn more about them [here](agents/index.md) 
