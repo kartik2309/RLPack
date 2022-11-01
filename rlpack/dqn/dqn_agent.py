@@ -431,10 +431,12 @@ class DqnAgent(Agent):
         loss.backward()
         self.loss.append(loss.item())
         if self.prioritization_strategy_code > 0:
+            # Proportional-Based prioritization.
             if self.prioritization_strategy_code == 1:
                 new_priorities = (
                     pytorch.abs(td_value.cpu()) + self.prioritization_params["error"]
                 )
+            # Rank-Based prioritization.
             elif self.prioritization_strategy_code == 2:
                 _, sorted_td_indices = pytorch.sort(
                     pytorch.abs(td_value.cpu()),
