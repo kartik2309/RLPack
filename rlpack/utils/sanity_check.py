@@ -1,4 +1,5 @@
 import logging
+import re
 from typing import Any, Dict, List
 
 from rlpack.utils.base.register import Register
@@ -95,21 +96,21 @@ class SanityCheck(Register):
             raise NotImplementedError(
                 f"The requested agent {agent_name} is not supported."
             )
-        agent_args_from_input_config = list(self.input_config.get("agent_args", list()))
-        agent_args = [
-            agent_arg
-            for agent_arg in self.agent_args[agent_name]
-            if agent_arg not in self.agent_args_default[agent_name]
-            and (only_model_arg_check or "model" in agent_arg)
-        ]
-        present_agent_init_args = [
-            k in agent_args_from_input_config for k in agent_args
-        ]
-        if not all(present_agent_init_args):
-            raise ValueError(
-                f"Cannot initialize agent with custom model for given Agent; "
-                f"{self.__error_message('agent_args', present_agent_init_args)}"
-            )
+        if only_model_arg_check:
+            agent_args_from_input_config = list(self.input_config.get("agent_args", list()))
+            agent_args = [
+                agent_arg
+                for agent_arg in self.agent_args[agent_name]
+                if agent_arg not in self.agent_args_default[agent_name] and re.match(r".*model$", agent_arg) is not None
+            ]
+            present_agent_init_args = [
+                k in agent_args_from_input_config for k in agent_args
+            ]
+            if not all(present_agent_init_args):
+                raise ValueError(
+                    f"Cannot initialize agent with custom model for given Agent; "
+                    f"{self.__error_message('agent_args', present_agent_init_args)}"
+                )
 
     def check_activation_init_sanity(self) -> None:
         """

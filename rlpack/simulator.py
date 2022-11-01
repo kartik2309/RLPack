@@ -29,6 +29,9 @@ class Simulator:
         # Setup agent and initialize environment.
         self.agent = self.setup_agent()
         self.env = Environments(agent=self.agent, config=self.config)
+        # Input
+        self.is_custom_model = False
+        self.agent_model_args = list()
         return
 
     def setup_agent(self) -> Agent:
@@ -118,8 +121,12 @@ class Simulator:
         agent = self.register.get_agent(
             agent_name=self.config["agent_name"], **agent_kwargs
         )
+        config = self.config.copy()
+        if self.is_custom_model and len(self.agent_model_args) > 0:
+            for k in self.agent_model_args:
+                config['agent_args'].pop(k)
         with open(os.path.join(save_path, "config.yaml"), "w") as conf:
-            yaml.dump(self.config, conf)
+            yaml.dump(config, conf)
         return agent
 
     def setup_models(self) -> List[pytorch.nn.Module]:
@@ -128,20 +135,24 @@ class Simulator:
         models, all of which are loaded and initialized.
         :return: List[pytorch.nn.Module]: List of models.
         """
-        self.sanity_check.check_model_init_sanity()
-        activation = self.register.get_activation(
-            activation_name=self.config["activation_name"],
-            activation_args=self.config["activation_args"],
-        )
-        model_kwargs = {
-            k: self.config["model_args"][k] if k != "activation" else activation
-            for k in self.register.get_model_args(self.config["model_name"])
-        }
-        models = self.register.get_models(
-            model_name=self.config["model_name"],
-            agent_name=self.config["agent_name"],
-            **model_kwargs,
-        )
+        self.is_custom_model = self.sanity_check.check_model_init_sanity()
+        if not self.is_custom_model:
+            activation = self.register.get_activation(
+                activation_name=self.config["activation_name"],
+                activation_args=self.config["activation_args"],
+            )
+            model_kwargs = {
+                k: self.config["model_args"][k] if k != "activation" else activation
+                for k in self.register.get_model_args(self.config["model_name"])
+            }
+            models = self.register.get_models(
+                model_name=self.config["model_name"],
+                agent_name=self.config["agent_name"],
+                **model_kwargs,
+            )
+        else:
+            self.agent_model_args = self.register.get_agent_model_args(agent_name=self.config['agent_name'])
+            models = [self.config["agent_args"][agent_model_arg] for agent_model_arg in self.agent_model_args]
         return models
 
     def run(self, **kwargs) -> None:

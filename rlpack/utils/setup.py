@@ -1,3 +1,4 @@
+import re
 from typing import Any, Dict, List, Optional, TypeVar
 
 from rlpack import pytorch
@@ -39,6 +40,14 @@ class Setup(Register):
             self.models[model_name](*args, **kwargs)
             for _ in range(len(self.model_args_for_agents[agent_name].keys()))
         ]
+
+    def get_agent_model_args(self, agent_name: str):
+        agent_model_args = [
+            agent_arg
+            for agent_arg in self.agent_args[agent_name]
+            if re.match(r".*model$", agent_arg) is not None
+        ]
+        return agent_model_args
 
     def get_agent(self, agent_name: str, *args, **kwargs) -> Agent:
         """
