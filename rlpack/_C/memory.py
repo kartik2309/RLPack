@@ -18,10 +18,10 @@ class Memory(object):
         prioritization_strategy_code: int = 0,
     ):
         """
-        @:param buffer_size (Optional[int]): The buffer size of the memory. No more than specified buffer
+        :param buffer_size: Optional[int]: The buffer size of the memory. No more than specified buffer
             elements are stored in the memory. Default: 32768
-        @:param device (str): The device on which models are currently running. Default: "cpu"
-        @:param prioritization_strategy_code (int): Indicates code for prioritization strategy. Default: 0
+        :param device: str: The device on which models are currently running. Default: "cpu"
+        :param prioritization_strategy_code: int: Indicates code for prioritization strategy. Default: 0
         """
         self.c_memory = C_Memory.C_Memory(
             buffer_size, device, prioritization_strategy_code
@@ -43,20 +43,20 @@ class Memory(object):
     ) -> None:
         """
         This method performs insertion to the memory.
-        @:param state_current Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]: The current
+        :param state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]: The current
             state agent is in.
-        @:param state_next Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]: The next
+        :param state_next: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]: The next
             state agent will go in for the specified action.
-        @:param reward (Union[np.ndarray, float]): The reward obtained in the transition.
-        @:param action (Union[np.ndarray, float]): The action taken for the transition.
-        @:param done Union[bool, int]: Indicates weather episodes ended or not, i.e.
+        :param reward: Union[np.ndarray, float]: The reward obtained in the transition.
+        :param action: Union[np.ndarray, float]: The action taken for the transition.
+        :param done: Union[bool, int]: Indicates weather episodes ended or not, i.e.
             if state_next is a terminal state or not.
-        @:param priority (Optional[Union[pytorch.Tensor, np.ndarray, float]]): The priority of the
-            transition (for priority relay memory). Default: 9e5
-        @:param probability (Optional[Union[pytorch.Tensor, np.ndarray, float]]): The probability of the transition
-            (for priority relay memory). Default: 1.0
-        @:param weight (Optional[Union[pytorch.Tensor, np.ndarray, float]]): The important sampling weight
-            of the transition (for priority relay memory). Default: 1.0
+        :param priority: Optional[Union[pytorch.Tensor, np.ndarray, float]]: The priority of the
+            transition: for priority relay memory). Default: 9e5
+        :param probability: Optional[Union[pytorch.Tensor, np.ndarray, float]]: The probability of the transition
+           : for priority relay memory). Default: 1.0
+        :param weight: Optional[Union[pytorch.Tensor, np.ndarray, float]]: The important sampling weight
+            of the transition: for priority relay memory). Default: 1.0
         """
         self.c_memory.insert(
             *self.__prepare_inputs_c_memory_(
@@ -92,15 +92,15 @@ class Memory(object):
     ]:
         """
         Load random samples from memory for a given batch.
-        @:param batch_size (int): The desired batch size of the samples.
-        @:param force_terminal_state_selection_prob (float): The probability for forcefully selecting a terminal state
+        :param batch_size: int: The desired batch size of the samples.
+        :param force_terminal_state_probability: float: The probability for forcefully selecting a terminal state
             in a batch. Default: 0.0
-        @:param parallelism_size_threshold: The minimum size of memory beyond which parallelism is used to shuffle
+        :param parallelism_size_threshold: int: The minimum size of memory beyond which parallelism is used to shuffle
             and retrieve the batch of sample. Default: 4096.
-        @:param alpha (float): The alpha value for computation of probabilities. Default: 0.0
-        @:param beta (float): The beta value for computation of important sampling weights. Default: 0.0
-        @:param num_segments (int): The number of segments to use to uniformly sample for rank-based prioritization
-        @:return (Tuple[
+        :param alpha: float: The alpha value for computation of probabilities. Default: 0.0
+        :param beta: float: The beta value for computation of important sampling weights. Default: 0.0
+        :param num_segments: int: The number of segments to use to uniformly sample for rank-based prioritization
+        :return:Tuple[
                 pytorch.Tensor,
                 pytorch.Tensor,
                 pytorch.Tensor,
@@ -110,7 +110,7 @@ class Memory(object):
                 pytorch.Tensor,
                 pytorch.Tensor,
                 pytorch.Tensor,
-            ]): The tuple of tensors as (states_current, states_next, rewards, actions, dones, priorities,
+            ]: The tuple of tensors as:states_current, states_next, rewards, actions, dones, priorities,
             probabilities, weights, random_indices).
         """
         samples = self.c_memory.sample(
@@ -143,12 +143,12 @@ class Memory(object):
         """
         This method updates the priorities when prioritized memory is used. It will also update
             associated probabilities and important sampling weights.
-        @:param random_indices (pytorch.Tensor): The list of random indices which were sampled previously. These
+        :param random_indices: pytorch.Tensor: The list of random indices which were sampled previously. These
             indices are used to update the corresponding values. Must be a 1-D PyTorch Tensor.
-        @:param new_priorities (pytorch.Tensor): The list of new priorities corresponding to `random_indices` passed.
-        @:param new_probabilities (pytorch.Tensor): The list of new probabilities corresponding to
+        :param new_priorities: pytorch.Tensor: The list of new priorities corresponding to `random_indices` passed.
+        :param new_probabilities: pytorch.Tensor: The list of new probabilities corresponding to
             `random_indices` passed.
-        @:param new_weights (pytorch.Tensor): The list of new weights corresponding to `random_indices` passed.
+        :param new_weights: pytorch.Tensor: The list of new weights corresponding to `random_indices` passed.
         """
         self.c_memory.update_priorities(
             random_indices, new_priorities, new_probabilities, new_weights
@@ -171,14 +171,14 @@ class Memory(object):
     def initialize(self, memory_data: C_Memory.C_MemoryData) -> None:
         """
         This loads the memory from the provided C_MemoryData instance.
-        @:param memory_data (C_Memory.C_MemoryData): The C_MemoryData instance to load the memory form
+        :param memory_data: C_Memory.C_MemoryData: The C_MemoryData instance to load the memory form
         """
         self.c_memory.initialize(memory_data)
 
     def get_terminal_state_indices(self) -> List[int]:
         """
         This retrieves the terminal state indices accumulated so far.
-        :return (List[int]): The list of terminal state indices
+        :return: List[int]: The list of terminal state indices
         """
         return [
             v
@@ -190,14 +190,14 @@ class Memory(object):
     def get_transitions(self) -> Dict[str, pytorch.Tensor]:
         """
         This retrieves all the transitions accumulated so far.
-        :return (Dict[str, pytorch.Tensor]): A dictionary with all transition information
+        :return: Dict[str, pytorch.Tensor]: A dictionary with all transition information
         """
         return {k: v for k, v in self.c_memory.view().transition_information().items()}
 
     def get_states_current(self) -> List[pytorch.Tensor]:
         """
         This retrieves all the current states from transitions accumulated so far.
-        :return (List[pytorch.Tensor]): A list of tensors with current state values.
+        :return: List[pytorch.Tensor]: A list of tensors with current state values.
         """
         return [
             v for v in self.c_memory.view().transition_information()["states_current"]
@@ -206,42 +206,42 @@ class Memory(object):
     def get_states_next(self) -> List[pytorch.Tensor]:
         """
         This retrieves all the next states from transitions accumulated so far.
-        :return (List[pytorch.Tensor]): A list of tensors with next state values.
+        :return: List[pytorch.Tensor]: A list of tensors with next state values.
         """
         return [v for v in self.c_memory.view().transition_information()["states_next"]]
 
     def get_rewards(self) -> List[pytorch.Tensor]:
         """
         This retrieves all the rewards from transitions accumulated so far.
-        :return (List[pytorch.Tensor]): A list of tensors with reward values.
+        :return: List[pytorch.Tensor]: A list of tensors with reward values.
         """
         return [v for v in self.c_memory.view().transition_information()["rewards"]]
 
     def get_actions(self) -> List[pytorch.Tensor]:
         """
         This retrieves all the actions from transitions accumulated so far.
-        :return (List[pytorch.Tensor]): A list of tensors with action values.
+        :return: List[pytorch.Tensor]: A list of tensors with action values.
         """
         return [v for v in self.c_memory.view().transition_information()["actions"]]
 
     def get_dones(self) -> List[pytorch.Tensor]:
         """
         This retrieves all the dones from transitions accumulated so far.
-        :return (List[pytorch.Tensor]): A list of tensors with done values.
+        :return: List[pytorch.Tensor]: A list of tensors with done values.
         """
         return [v for v in self.c_memory.view().transition_information()()["dones"]]
 
     def get_priorities(self) -> List[float]:
         """
         This retrieves all the priorities for all the transitions, ordered by index.
-        :return (List[float]): A list of priorities ordered by index.
+        :return: List[float]: A list of priorities ordered by index.
         """
         return [v for v in self.c_memory.view().priorities()["priorities"]]
 
     def num_terminal_states(self) -> int:
         """
         Returns the number of terminal states
-        :return (int): Num of terminal states
+        :return: int: Num of terminal states
         """
         return self.c_memory.num_terminal_states()
 
@@ -250,7 +250,7 @@ class Memory(object):
         Returns the height of the Sum Tree when using prioritized memory. This is only relevant when
             using prioritized buffer.
         Note that tree height is given as per buffer size and not as per number of elements.
-        :return (int): The height of the tree.
+        :return: int: The height of the tree.
         """
         if self.prioritization_strategy_code == 0:
             return self.c_memory.tree_height()
