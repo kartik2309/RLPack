@@ -23,9 +23,9 @@ class Environments:
         ] = None,
     ):
         """
-        @:param agent (Agent): The agent to be trained and/or evaluated in the environment specified in `config`.
-        @:param config (Dict[str, Any]): The configuration setting for experiment.
-        @:param reshape_func (Optional[Callable[[np.ndarray, Tuple[int, ...]], np.ndarray]]): The function to reshape
+        :param agent: Agent: The agent to be trained and/or evaluated in the environment specified in `config`.
+        :param config: Dict[str, Any]: The configuration setting for experiment.
+        :param reshape_func: Optional[Callable[[np.ndarray, Tuple[int, ...]], np.ndarray]]: The function to reshape
             the input states. Default: None. Default behavior is to not do any reshaping.
         """
         self.agent = agent
@@ -47,10 +47,10 @@ class Environments:
         """
         Method to train the agent in the specified environment.
 
-        @:param render (bool): Indicates if we wish to render the environment (in animation). Default: False
-        @:param load (bool): Indicates weather to load a previously saved model or train a new one. If set true,
+        :param render: bool: Indicates if we wish to render the environment (in animation). Default: False
+        :param load: bool: Indicates weather to load a previously saved model or train a new one. If set true,
             config must be `save_path` or set or environment variable SAVE_PATH must be set.
-        @:param plot (bool): Indicates if to plot the training progress. If set True, rewards and episodes are
+        :param plot: bool: Indicates if to plot the training progress. If set True, rewards and episodes are
             recorded and plot is saved in `save_path`.
 
         config must have set mode='train' to run evaluation.
@@ -185,7 +185,7 @@ class Environments:
     def is_eval(self) -> bool:
         """
         Check if environment is to be run in evaluation mode or not.
-        @:returns (bool): True if evaluation mode is set.
+        :returns: bool: True if evaluation mode is set.
         """
         possible_eval_names = ("eval", "evaluate", "evaluation")
         return self.config["mode"] in possible_eval_names
@@ -193,7 +193,7 @@ class Environments:
     def is_train(self) -> bool:
         """
         Check if environment is to be run in training mode or not.
-        @:returns (bool): True if training mode is set.
+        :returns: bool: True if training mode is set.
         """
         possible_train_names = ("train", "training")
         return self.config["mode"] in possible_train_names
@@ -206,9 +206,9 @@ class Environments:
         This is the default reshape function. If `new_shape` has been set in config, input states are reshaped
             to new shapes, else returns the input as it is. Default behavior is not perform any reshaping.
 
-        @:param x (np.ndarray): The input numpy array to reshape.
-        @:param shape (Optional[Tuple[int, ...]]): The new shape to which we want states to be reshaped. Default: None
-        @:return (np.ndarray): The reshaped (or unchanged) array.
+        :param x: np.ndarray: The input numpy array to reshape.
+        :param shape: Optional[Tuple[int, ...]]: The new shape to which we want states to be reshaped. Default: None
+        :return: np.ndarray: The reshaped (or unchanged) array.
         """
         if shape is not None:
             x = np.reshape(x, newshape=shape)
@@ -218,8 +218,8 @@ class Environments:
     def __list_mean(x: List[Union[float, int]]) -> Union[None, float]:
         """
         This function computes the mean of the input list.
-        @:param x (List[Union[float, int]]): The list for which mean is to be computed
-        @:return (Union[None, float]): The mean value.
+        :param x: List[Union[float, int]]: The list for which mean is to be computed
+        :return: Union[None, float]: The mean value.
         """
         if x:
             return sum(x) / len(x)

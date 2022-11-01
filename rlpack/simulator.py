@@ -21,7 +21,7 @@ class Simulator:
         config: Dict[str, Any]
     ):
         """
-        @:param config (Optional[Dict[str, Any]]): The configuration dictionary for setup. Default: None
+        :param config: Optional[Dict[str, Any]]: The configuration dictionary for setup. Default: None
         """
         self.register = Setup()
         # Perform sanity check before starting.
@@ -37,7 +37,7 @@ class Simulator:
     def setup_agent(self) -> Agent:
         """
         This method sets up agent by loading all the necessary arguments.
-        @:return (Agent): The loaded and initialized agent.
+        :return: Agent: The loaded and initialized agent.
         """
         models = self.setup_models()
         self.sanity_check.check_agent_init_sanity()
@@ -123,14 +123,13 @@ class Simulator:
         )
         with open(os.path.join(save_path, "config.yaml"), "w") as conf:
             yaml.dump(self.config, conf)
-
         return agent
 
     def setup_models(self) -> List[pytorch.nn.Module]:
         """
         The method sets up the models. Depending on the requirement of the agent, returns a list of
         models, all of which are loaded and initialized.
-        @:return (List[pytorch.nn.Module]): List of models.
+        :return: List[pytorch.nn.Module]: List of models.
         """
         self.sanity_check.check_model_init_sanity()
         activation = self.register.get_activation(
@@ -145,13 +144,12 @@ class Simulator:
             agent_name=self.config["agent_name"],
             **model_kwargs,
         )
-
         return models
 
     def run(self, **kwargs) -> None:
         """
         This method runs the simulator.
-        @:param kwargs: Additional keyword arguments for the training run.
+        :param kwargs: Additional keyword arguments for the training run.
         """
         if self.env.is_train():
             self.env.train_agent(

@@ -54,49 +54,49 @@ class DqnAgent(Agent):
         dim_for_norm: int = 0,
     ):
         """
-        @:param target_model (nn.Module): The target network for DQN model. This the network which has
+        :param target_model: nn.Module: The target network for DQN model. This the network which has
             its weights frozen
-        @:param policy_model (nn.Module): The policy network for DQN model. This is the network which is trained.
-        @:param optimizer (optim.Optimizer): The optimizer wrapped with policy model's parameters.
-        @:param lr_scheduler (LRScheduler): The PyTorch LR Scheduler with wrapped optimizer.
-        @:param loss_function (LossFunction): The loss function from PyTorch's nn module. Initialized
+        :param policy_model: nn.Module: The policy network for DQN model. This is the network which is trained.
+        :param optimizer: optim.Optimizer: The optimizer wrapped with policy model's parameters.
+        :param lr_scheduler: LRScheduler: The PyTorch LR Scheduler with wrapped optimizer.
+        :param loss_function: LossFunction: The loss function from PyTorch's nn module. Initialized
             instance must be passed.
-        @:param gamma (float): The gamma value for agent.
-        @:param epsilon (float): The initial epsilon for the agent.
-        @:param min_epsilon (float): The minimum epsilon for the agent. Once this value is reached,
+        :param gamma: float: The gamma value for agent.
+        :param epsilon: float: The initial epsilon for the agent.
+        :param min_epsilon: float: The minimum epsilon for the agent. Once this value is reached,
             it is maintained for all further episodes.
-        @:param epsilon_decay_rate (float): The decay multiplier to decay the epsilon.
-        @:param epsilon_decay_frequency (int): The number of timesteps after which the epsilon is decayed.
-        @:param memory_buffer_size (int): The buffer size of memory (or replay buffer) for DQN.
-        @:param target_model_update_rate (int): The timesteps after which target model's weights are updated with
-            policy model weights (weights are weighted as per `tau` (see below)).
-        @:param policy_model_update_rate (int): The timesteps after which policy model is trained. This involves
+        :param epsilon_decay_rate: float: The decay multiplier to decay the epsilon.
+        :param epsilon_decay_frequency: int: The number of timesteps after which the epsilon is decayed.
+        :param memory_buffer_size: int: The buffer size of memory: or replay buffer) for DQN.
+        :param target_model_update_rate: int: The timesteps after which target model's weights are updated with
+            policy model weights: weights are weighted as per `tau`: see below)).
+        :param policy_model_update_rate: int: The timesteps after which policy model is trained. This involves
             backpropagation through the policy network.
-        @:param model_backup_frequency (int): The timesteps after which models are backed up. This will also
-            save optimizer, lr_scheduler and agent_states (epsilon the time of saving and memory).
-        @:param lr_threshold (float): The threshold LR which once reached LR scheduler is not called further.
-        @:param batch_size (int): The batch size used for inference through target_model and train through policy model.
-        @:param num_actions (int): Number of actions for the environment.
-        @:param save_path (str): The save path for models (target_model and policy_model), optimizer,
+        :param model_backup_frequency: int: The timesteps after which models are backed up. This will also
+            save optimizer, lr_scheduler and agent_states: epsilon the time of saving and memory).
+        :param lr_threshold: float: The threshold LR which once reached LR scheduler is not called further.
+        :param batch_size: int: The batch size used for inference through target_model and train through policy model.
+        :param num_actions: int: Number of actions for the environment.
+        :param save_path: str: The save path for models: target_model and policy_model), optimizer,
             lr_scheduler and agent_states.
-        @:param device (str): The device on which models are run. Default: "cpu"
-        @:param prioritization_params (Optional[Dict[str, Any]]): The parameters for prioritization in prioritized
-            memory (or relay buffer). Default: None
-        @:param force_terminal_state_selection_prob (float): The probability for forcefully selecting a terminal state
+        :param device: str: The device on which models are run. Default: "cpu"
+        :param prioritization_params: Optional[Dict[str, Any]]: The parameters for prioritization in prioritized
+            memory: or relay buffer). Default: None
+        :param force_terminal_state_selection_prob: float: The probability for forcefully selecting a terminal state
             in a batch. Default: 0.0
-        @:param tau (float): The weighted update of weights from policy_model to target_model. This is done by formula
-            target_weight = tau * policy_weight + (1 - tau) * target_weight/. Default: -1
-        @:param apply_norm (int): The code to select the normalization procedure to be applied on selected quantities
-            (selected by `apply_norm_to` (see below)). Default: -1
-        @:param apply_norm_to (int): The code to select the quantity to which normalization is to be applied.
+        :param tau: float: The weighted update of weights from policy_model to target_model. This is done by formula
+            target_weight = tau * policy_weight +: 1 - tau) * target_weight/. Default: -1
+        :param apply_norm: int: The code to select the normalization procedure to be applied on selected quantities
+           : selected by `apply_norm_to`: see below)). Default: -1
+        :param apply_norm_to: int: The code to select the quantity to which normalization is to be applied.
             Default: -1
-        @:param eps_for_norm (int): Epsilon value for normalization (for numeric stability). For min-max normalization
+        :param eps_for_norm: int: Epsilon value for normalization: for numeric stability). For min-max normalization
             and standardized normalization. Default: 5e-12
-        @:param p_for_norm (int): The p value for p-normalization. Default: 2 (L2 Norm)
-        @:param dim_for_norm (int): The dimension across which normalization is to be performed. Default: 0.
+        :param p_for_norm: int: The p value for p-normalization. Default: 2: L2 Norm)
+        :param dim_for_norm: int: The dimension across which normalization is to be performed. Default: 0.
 
         NOTE:
-        For prioritization_params, when None (the default) is passed, prioritized memory is not used. To use
+        For prioritization_params, when None: the default) is passed, prioritized memory is not used. To use
             prioritized memory, pass a dictionary with keys `alpha` and `beta`. You can also pass `alpha_decay_rate`
             and `beta_decay_rate` additionally.
         The codes for `apply_norm` are given as follows: -
@@ -186,20 +186,20 @@ class DqnAgent(Agent):
         - For each transition (or experience) being passed, associated priority, probability and weight
             can be passed.
 
-        @:param state_current (Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]): The current
+        :param state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]: The current
             state in the environment.
-        @:param state_next (Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]): The next
+        :param state_next: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]: The next
             state returned by the environment.
-        @:param reward (Union[int, float]): Reward obtained by performing the action for the transition.
-        @:param action Union[int, float]: Action taken for the transition
-        @:param done Union[bool, int]: Indicates weather episode has terminated or not.
-         @:param priority (Optional[Union[pytorch.Tensor, np.ndarray, float]]): The priority of the
-            transition (for priority relay memory). Default: 1e3
-        @:param probability (Optional[Union[pytorch.Tensor, np.ndarray, float]]): The probability of the transition
-            (for priority relay memory). Default: 1.0
-        @:param weight (Optional[Union[pytorch.Tensor, np.ndarray, float]]): The important sampling weight
-            of the transition (for priority relay memory). Default: 1.0
-        @:return (int): The next action to be taken from `state_next`.
+        :param reward: Union[int, float]: Reward obtained by performing the action for the transition.
+        :param action: Union[int, float]: Action taken for the transition
+        :param done: Union[bool, int]: Indicates weather episode has terminated or not.
+        :param priority: Optional[Union[pytorch.Tensor, np.ndarray, float]]: The priority of the
+            transition: for priority relay memory). Default: 1e3
+        :param probability: Optional[Union[pytorch.Tensor, np.ndarray, float]]: The probability of the transition
+           : for priority relay memory). Default: 1.0
+        :param weight: Optional[Union[pytorch.Tensor, np.ndarray, float]]: The important sampling weight
+            of the transition: for priority relay memory). Default: 1.0
+        :return: int: The next action to be taken from `state_next`.
         """
         # Insert the sample into memory.
         self.memory.insert(
@@ -244,8 +244,8 @@ class DqnAgent(Agent):
         """
         The policy for the agent. This runs the inference on policy model with `state_current`
         and uses q-values to obtain the best action.
-        @:param state_current (Union[ndarray, pytorch.Tensor, List[float]]): The current state agent is in.
-        @:return (int): The action to be taken.
+        :param state_current: Union[ndarray, pytorch.Tensor, List[float]]: The current state agent is in.
+        :return: int: The action to be taken.
         """
         state_current = self._cast_to_tensor(state_current).to(self.device)
         state_current = pytorch.unsqueeze(state_current, 0)
@@ -269,7 +269,7 @@ class DqnAgent(Agent):
         This method saves the target_model, policy_model, optimizer, lr_scheduler and agent_states in the supplied
             `save_path` argument in the DQN Agent class' constructor (also called __init__).
         agent_states includes current memory and epsilon values in a dictionary.
-        @:param custom_name_suffix Optional[str]: If supplied, additional suffix is added to names of target_model,
+        :param custom_name_suffix: Optional[str]: If supplied, additional suffix is added to names of target_model,
             policy_model, optimizer and lr_scheduler. Useful to save best model by a custom suffix supplied
             during a train run. Default: None
         """
@@ -319,7 +319,7 @@ class DqnAgent(Agent):
         """
         This method loads the target_model, policy_model, optimizer, lr_scheduler and agent_states from
             the supplied `save_path` argument in the DQN Agent class' constructor (also called __init__).
-        @:param custom_name_suffix Optional[str]: If supplied, additional suffix is added to names of target_model,
+        :param custom_name_suffix: Optional[str]: If supplied, additional suffix is added to names of target_model,
             policy_model, optimizer and lr_scheduler. Useful to load the best model by a custom suffix supplied
             for evaluation. Default: None
         """
@@ -485,10 +485,10 @@ class DqnAgent(Agent):
         """
         This method computes the temporal difference for given transitions.
 
-        @:param rewards (pytorch.Tensor): The sampled batch of rewards.
-        @:param q_values (pytorch.Tensor): The q-values inferred from target_model.
-        @:param dones (pytorch.Tensor): The done values for each transition in the batch.
-        @:return (pytorch.Tensor): The TD value for each sample in the batch.
+        :param rewards: pytorch.Tensor: The sampled batch of rewards.
+        :param q_values: pytorch.Tensor: The q-values inferred from target_model.
+        :param dones: pytorch.Tensor: The done values for each transition in the batch.
+        :return: pytorch.Tensor: The TD value for each sample in the batch.
         """
         q_values_max_tuple = pytorch.max(q_values, dim=-1, keepdim=True)
         q_values_max = q_values_max_tuple.values
@@ -640,9 +640,9 @@ class DqnAgent(Agent):
         """
         Private method to process the prioritization parameters. This includes sanity check and loading of default
             values of mandatory parameters.
-        @:param prioritization_params (Dict[str, Any]): The prioritization parameters for when
+        :param prioritization_params: Dict[str, Any]: The prioritization parameters for when
             we use prioritized memory
-        @:return (Dict[str, Any]): The processed prioritization parameters with necessary parameters loaded.
+        :return: Dict[str, Any]: The processed prioritization parameters with necessary parameters loaded.
         """
         to_anneal_alpha = False
         to_anneal_beta = False
