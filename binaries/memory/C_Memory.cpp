@@ -286,6 +286,7 @@ std::map<std::string, torch::Tensor> C_Memory::sample(int32_t batchSize,
       auto loadedIndices = get_shuffled_vector(loadedIndices_, parallelismSizeThreshold);
       loadedIndicesSlice = std::vector<int64_t>(loadedIndices.begin(),
                                                 loadedIndices.begin() + batchSize);
+      break;
     }
     case 1: {
       // Proportional prioritization sampling.
@@ -296,10 +297,9 @@ std::map<std::string, torch::Tensor> C_Memory::sample(int32_t batchSize,
 //        Two sections are spawned for each associated function.
 //        Sections 0: Executes resetting and creation of tree.
 //        Sections 1: Executes computation of cumulative sum and generates priority seeds.
-
 #pragma omp parallel sections if(enableParallelism) default(none) \
-firstprivate(parallelismSizeThreshold) \
-shared(sumTreeSharedPtr_, prioritiesFloat_, seedValues)
+firstprivate(parallelismSizeThreshold, prioritiesFloat_) \
+shared(sumTreeSharedPtr_, seedValues)
         {
 #pragma omp section
           {
@@ -312,7 +312,7 @@ shared(sumTreeSharedPtr_, prioritiesFloat_, seedValues)
           {
             auto cumulativeSum = get_cumulative_sum_of_deque(prioritiesFloat_,
                                                              parallelismSizeThreshold);
-            seedValues.reserve((size_t) cumulativeSum);
+            seedValues.reserve((int64_t) cumulativeSum);
             seedValues = get_priority_seeds(cumulativeSum, parallelismSizeThreshold);
           }
         }
@@ -324,6 +324,7 @@ shared(sumTreeSharedPtr_, prioritiesFloat_, seedValues)
         loadedIndicesSlice.push_back(randomIndex);
       }
       loadedIndicesSlice = get_shuffled_vector(loadedIndicesSlice, parallelismSizeThreshold);
+      break;
     }
     case 2: {
       // Rank-Based prioritization sampling.
@@ -348,6 +349,7 @@ shared(sumTreeSharedPtr_, prioritiesFloat_, seedValues)
         previousQuantileIndex = segmentQuantileIndex;
       }
       loadedIndicesSlice = get_shuffled_vector(loadedIndicesSlice, parallelismSizeThreshold);
+      break;
     }
     default:break;
   }
@@ -377,12 +379,9 @@ shared(sumTreeSharedPtr_, prioritiesFloat_, seedValues)
   auto statesCurrentStacked = torch::stack(sampledStateCurrent, 0).to(device_);
   auto statesNextStacked = torch::stack(sampledStateNext, 0).to(device_);
   auto targetDataType = statesNextStacked.dtype();
-  auto rewardsStacked = torch::stack(sampledRewards, 0).to(
-      device_, targetDataType);
-  auto actionsStacked = torch::stack(sampledActions, 0).to(
-      device_, torch::kInt64);
-  auto donesStacked = torch::stack(sampledDones, 0).to(
-      device_, torch::kInt32);
+  auto rewardsStacked = torch::stack(sampledRewards, 0).to(device_, targetDataType);
+  auto actionsStacked = torch::stack(sampledActions, 0).to(device_, torch::kInt64);
+  auto donesStacked = torch::stack(sampledDones, 0).to(device_, torch::kInt64);
   auto prioritiesStacked = torch::stack(sampledPriorities, 0).to(device_);
   auto sampledIndicesStacked = torch::stack(sampledIndices, 0).to(device_);
   std::map<std::string, torch::Tensor> samples = {
