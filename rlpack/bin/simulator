@@ -31,11 +31,7 @@ if __name__ == "__main__":
             "Please pass either `config_file` path (--config_file=/path/to/config_file/)"
             " or both algorithm and environment"
         )
-    simulator = Simulator(
-        config=config_,
-        algorithm=simulator_args.algorithm,
-        environment=simulator_args.environment
-    )
+    simulator = Simulator(config=config_)
     simulator.run(
         render=simulator_args.render,
         load=simulator_args.load,
