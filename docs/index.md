@@ -75,7 +75,7 @@ simulator.run()
 ## Agents
 
 RLPack implements variety of agents to be easily used via config dict for training and evaluating. Learn more about 
-them [here](agents/index.md) 
+them [here](models/index.md) 
 
 
 ## Supported Models and Tools
