@@ -1,107 +1,21 @@
-from site import getsitepackages
-from typing import Any, Dict, List, TypeVar
-
-import yaml
+from typing import Any, Dict, List, Optional, TypeVar
 
 from rlpack import pytorch
-from rlpack.dqn.dqn_agent import DqnAgent
-from rlpack.models.mlp import Mlp
 from rlpack.utils.base.agent import Agent
+from rlpack.utils.base.register import Register
 
 LRScheduler = TypeVar("LRScheduler")
 LossFunction = TypeVar("LossFunction")
 Activation = TypeVar("Activation")
 
 
-class Register(object):
+class Setup(Register):
     """
     This class registers all the necessary objects that are required to run any configuration.
     """
 
     def __init__(self):
-        self.optimizer_map = {
-            "adam": pytorch.optim.Adam,
-            "adamw": pytorch.optim.AdamW,
-            "rms_prop": pytorch.optim.RMSprop,
-            "sgd": pytorch.optim.SGD,
-        }
-        self.loss_function_map = {
-            "huber_loss": pytorch.nn.HuberLoss,
-            "mse": pytorch.nn.MSELoss,
-        }
-        self.activation_map = {
-            "relu": pytorch.nn.ReLU,
-            "leaky_relu": pytorch.nn.LeakyReLU,
-            "tanh": pytorch.nn.Tanh,
-        }
-        self.lr_scheduler_map = {
-            "step_lr": pytorch.optim.lr_scheduler.StepLR,
-            "linear_lr": pytorch.optim.lr_scheduler.LinearLR,
-            "cyclic_lr": pytorch.optim.lr_scheduler.CyclicLR,
-        }
-        self.norm_mode_codes = {"none": -1, "min_max": 0, "standardize": 1, "p_norm": 2}
-        self.norm_to_mode_codes = {
-            ("none",): -1,
-            ("states",): 0,
-            ("rewards",): 1,
-            ("td",): 2,
-            ("states", "rewards"): 3,
-            ("states", "td"): 4,
-        }
-        self.models = {"mlp": Mlp}
-        self.agents = {"dqn": DqnAgent}
-        self.model_args = {
-            "mlp": (
-                "sequence_length",
-                "hidden_sizes",
-                "num_actions",
-                "activation",
-                "dropout",
-            )
-        }
-        self.agent_args = {
-            "dqn": (
-                "target_model",
-                "policy_model",
-                "optimizer",
-                "lr_scheduler",
-                "loss_function",
-                "gamma",
-                "epsilon",
-                "min_epsilon",
-                "epsilon_decay_rate",
-                "epsilon_decay_frequency",
-                "memory_buffer_size",
-                "target_model_update_rate",
-                "policy_model_update_rate",
-                "model_backup_frequency",
-                "lr_threshold",
-                "batch_size",
-                "num_actions",
-                "save_path",
-                "device",
-                "prioritization_params",
-                "force_terminal_state_selection_prob",
-                "tau",
-                "apply_norm",
-                "apply_norm_to",
-                "eps_for_norm",
-                "p_for_norm",
-                "dim_for_norm",
-            )
-        }
-        self.model_args_for_agents = {
-            "dqn": {"target_model": False, "policy_model": True},
-        }
-        self.default_configs = {
-            "dqn": f"{self.get_prefix_path()}/environments/configs/dlqn1d.yaml"
-        }
-        self.prioritization_strategy_codes = {
-            "uniform": 0,
-            "proportional": 1,
-            "rank-based": 2,
-        }
-        self.agents_with_prioritized_memory = ("dqn",)
+        super(Setup, self).__init__()
 
     def get_model_args(self, model_name: str) -> List[str]:
         """
@@ -150,66 +64,69 @@ class Register(object):
         return self.agents[agent_name](*args, **kwargs)
 
     def get_optimizer(
-        self, params: List[pytorch.Tensor], optimizer_args: Dict[str, Any]
+        self,
+        params: List[pytorch.Tensor],
+        optimizer_name: str,
+        optimizer_args: Dict[str, Any],
     ) -> pytorch.optim.Optimizer:
         """
         This method retrieves the optimizer given by the "optimizer" key in the argument optimizer_args.
 
-        @:param params List[pytorch.Tensor]: The model parameters to wrap the optimizer.
-        @:param optimizer_args Dict[str, Any]: The optimizer arguments with mandatory "optimizer" key in the
-            dictionary specifying the optimizer name.
+        @:param params (List[pytorch.Tensor]): The model parameters to wrap the optimizer.
+        @:param optimizer_name (str): The optimizer name to be used.
+        @:param optimizer_args (Dict[str, Any]): A dictionary with keyword arguments for to-be initialized
+            optimizer.
         :return (pytorch.optim.Optimizer): The initialized optimizer.
         """
-        name = optimizer_args["optimizer"]
-        optimizer_args.pop("optimizer")
-        optimizer = self.optimizer_map[name](params=params, **optimizer_args)
+        optimizer = self.optimizer_map[optimizer_name](params=params, **optimizer_args)
         return optimizer
 
-    def get_activation(self, activation_args: Dict[str, Any]) -> Activation:
+    def get_activation(
+        self, activation_name: str, activation_args: Dict[str, Any]
+    ) -> Activation:
         """
         This method retrieves the activation to be supplied for the models.
-
-        @:param activation_args: Dict[str, Any]: Activation arguments with mandatory "activation" key in the
-            dictionary to specify the activation name.
+        @:param activation_name: str: The activation name to be used.
+        @:param activation_args: Dict[str, Any]: A dictionary with keyword arguments for to-be initialized
+            activation function.
         @:return (Activation): The initialized activated function
         """
-        activation_args_ = activation_args.copy()
-        name = activation_args_["activation"]
-        activation_args_.pop("activation")
-        activation = self.activation_map[name](**activation_args_)
+        activation = self.activation_map[activation_name](**activation_args)
         return activation
 
     def get_lr_scheduler(
-        self, optimizer: pytorch.optim.Optimizer, lr_scheduler_args: Dict[str, Any]
+        self,
+        optimizer: pytorch.optim.Optimizer,
+        lr_scheduler_name: Optional[str],
+        lr_scheduler_args: Optional[Dict[str, Any]],
     ) -> LRScheduler:
         """
         This method retrieves the lr_scheduler to be supplied for the models.
         @:param optimizer (pytorch.optim.Optimizer): The optimizer to wrap the lr scheduler around.
-        @:param lr_scheduler_args: Dict[str, Any]: LR scheduler arguments with mandatory "lr_scheduler" key in the
-            dictionary to specify the lr_scheduler name.
+        @:param lr_scheduler_name (str): The LR Scheduler's name to be used.
+        @:param lr_scheduler_args: Dict[str, Any]: A dictionary with keyword arguments for to-be initialized
+            LR Scheduler.
         @:return (Activation): The initialized lr_scheduler.
         """
-        if lr_scheduler_args is None:
+        if lr_scheduler_name is None or lr_scheduler_args is None:
             return
 
-        name = lr_scheduler_args["scheduler"]
-        lr_scheduler_args.pop("scheduler")
-        lr_scheduler = self.lr_scheduler_map[name](
+        lr_scheduler = self.lr_scheduler_map[lr_scheduler_name](
             optimizer=optimizer, **lr_scheduler_args
         )
         return lr_scheduler
 
-    def get_loss_function(self, loss_function_args: Dict[str, Any]) -> LossFunction:
+    def get_loss_function(
+        self, loss_function_name: str, loss_function_args: Dict[str, Any]
+    ) -> LossFunction:
         """
         This method retrieves the Loss Function to be supplied for the models.
-
-        @:param loss_function_args (Dict[str, Any]): The loss function args with mandatory key "lr_scheduler"
-            specifying the name of the scheduler to be used.
+        @:param loss_function_name (str): The loss function's name to be used.
+        @:param loss_function_args (Dict[str, Any]): A dictionary with keyword arguments for to-be initialized
+            loss function.
         @:return (LossFunction): The initialized loss function.
         """
-        name = loss_function_args["loss_function"]
-        loss_function_args.pop("loss_function")
-        loss_function = self.loss_function_map[name](**loss_function_args)
+        loss_function = self.loss_function_map[loss_function_name](**loss_function_args)
         return loss_function
 
     def get_apply_norm_mode_code(self, apply_norm: str) -> int:
@@ -273,23 +190,3 @@ class Register(object):
             )
         code = self.prioritization_strategy_codes[prioritization_strategy]
         return code
-
-    def get_default_config(self, model_name: str) -> Dict[str, Any]:
-        """
-        Loads default config for the supplied model_name.
-
-        @:param model_name (str): The model name to retrieve default config for.
-        :return (Dict[str, Any]): Loaded configuration dictionary.
-        """
-        with open(self.default_configs[model_name], "rb") as f:
-            config = yaml.load(f, yaml.Loader)
-
-        return config
-
-    @staticmethod
-    def get_prefix_path():
-        """
-        Gets prefix path for rlpack package, from python installation.
-        :return (str): The prefix path to rlpack.
-        """
-        return f"{getsitepackages()[0]}/rlpack"

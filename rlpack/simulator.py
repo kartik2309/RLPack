@@ -6,7 +6,7 @@ import yaml
 from rlpack import pytorch
 from rlpack.environments.environments import Environments
 from rlpack.utils.base import Agent
-from rlpack.utils.register import Register
+from rlpack.utils.setup import Setup
 from rlpack.utils.sanity_check import SanityCheck
 
 
@@ -23,10 +23,12 @@ class Simulator:
         """
         @:param config (Optional[Dict[str, Any]]): The configuration dictionary for setup. Default: None
         """
-        self.register = Register()
+        self.register = Setup()
         # Perform sanity check before starting.
-        SanityCheck(config)
+        self.sanity_check = SanityCheck(config)
         self.config = config
+        # Check if mandatory arguments are received from config.
+        self.sanity_check.check_mandatory_params_sanity()
         # Setup agent and initialize environment.
         self.agent = self.setup_agent()
         self.env = Environments(agent=self.agent, config=self.config)
@@ -38,6 +40,9 @@ class Simulator:
         @:return (Agent): The loaded and initialized agent.
         """
         models = self.setup_models()
+        self.sanity_check.check_agent_init_sanity()
+        self.sanity_check.check_optimizer_init_sanity()
+        self.sanity_check.check_lr_scheduler_init_sanity()
         agent_args_for_models = [
             arg
             for arg in self.register.agent_args[self.config["agent_name"]]
@@ -57,6 +62,7 @@ class Simulator:
         optimizers = [
             self.register.get_optimizer(
                 params=model.parameters(),
+                optimizer_name=self.config["optimizer_name"],
                 optimizer_args=self.config["optimizer_args"],
             )
             for model in trainable_models
@@ -64,6 +70,7 @@ class Simulator:
         lr_schedulers = [
             self.register.get_lr_scheduler(
                 optimizer=optimizer,
+                lr_scheduler_name=self.config.get("lr_scheduler_name"),
                 lr_scheduler_args=self.config.get("lr_scheduler_args"),
             )
             for optimizer in optimizers
@@ -83,6 +90,7 @@ class Simulator:
             optimizer=optimizers[0] if len(optimizers) == 1 else optimizers,
             lr_scheduler=lr_schedulers[0] if len(lr_schedulers) == 1 else lr_schedulers,
             loss_function=self.register.get_loss_function(
+                loss_function_name=self.config["loss_function_name"],
                 loss_function_args=self.config["loss_function_args"]
             ),
             save_path=save_path,
@@ -124,8 +132,9 @@ class Simulator:
         models, all of which are loaded and initialized.
         @:return (List[pytorch.nn.Module]): List of models.
         """
+        self.sanity_check.check_model_init_sanity()
         activation = self.register.get_activation(
-            activation_args=self.config["activation_args"]
+            activation_name=self.config["activation_name"], activation_args=self.config["activation_args"]
         )
         model_kwargs = {
             k: self.config["model_args"][k] if k != "activation" else activation
