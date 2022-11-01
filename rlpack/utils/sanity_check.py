@@ -49,7 +49,8 @@ class SanityCheck(Register):
                 )
             if model_name not in self.models.keys():
                 raise NotImplementedError(
-                    f"The requested model in-built model " f"{model_name} is not supported."
+                    f"The requested model in-built model "
+                    f"{model_name} is not supported."
                 )
             model_args = [
                 agent_arg
@@ -91,7 +92,9 @@ class SanityCheck(Register):
                 f"Expected `agent_name` to be of type {str} but received type {type(agent_name)}"
             )
         if agent_name not in self.agents.keys():
-            raise NotImplementedError(f"The requested agent {agent_name} is not supported.")
+            raise NotImplementedError(
+                f"The requested agent {agent_name} is not supported."
+            )
         agent_args_from_input_config = list(self.input_config.get("agent_args", list()))
         agent_args = [
             agent_arg
@@ -110,12 +113,17 @@ class SanityCheck(Register):
 
     def check_activation_init_sanity(self) -> None:
         """
-        Checks the basic sanity of activation related arguments in config. Note that this will not check sanity of 
-        the given activation even if Activation is valid. 
+        Checks the basic sanity of activation related arguments in config. Note that this will not check sanity of
+        the given activation even if Activation is valid.
         If invalid arguments are passed, error will be raised by PyTorch.
         """
-        present_activation_init_args = [k in self.args for k in self.activation_init_args]
-        if not all(present_activation_init_args) and not present_activation_init_args[1]:
+        present_activation_init_args = [
+            k in self.args for k in self.activation_init_args
+        ]
+        if (
+            not all(present_activation_init_args)
+            and not present_activation_init_args[1]
+        ):
             raise ValueError(
                 f"Cannot Initialize requested Activation for the given Agent; "
                 f"{self.__error_message('agent_init_args', present_activation_init_args)}"
@@ -126,13 +134,15 @@ class SanityCheck(Register):
                 f"Expected `activation_name` to be of type {str} but received type {type(activation_name)}"
             )
         if activation_name not in self.activation_map.keys():
-            raise NotImplementedError(f"The requested activation {activation_name} is not supported.")
+            raise NotImplementedError(
+                f"The requested activation {activation_name} is not supported."
+            )
 
     def check_optimizer_init_sanity(self) -> None:
         """
-        Checks the basic sanity of optimizer related arguments in config. Note that this will not check sanity of 
-        the given optimizer args even if optimizer is valid. 
-        If invalid arguments are passed, error will be raised by PyTorch. 
+        Checks the basic sanity of optimizer related arguments in config. Note that this will not check sanity of
+        the given optimizer args even if optimizer is valid.
+        If invalid arguments are passed, error will be raised by PyTorch.
         """
         present_optimizer_init_args = [k in self.args for k in self.optimizer_init_args]
         if not all(present_optimizer_init_args):
@@ -146,16 +156,23 @@ class SanityCheck(Register):
                 f"Expected `optimizer_name` to be of type {str} but received type {type(optimizer_name)}"
             )
         if optimizer_name not in self.optimizer_map.keys():
-            raise NotImplementedError(f"The requested optimizer {optimizer_name} is not supported.")
+            raise NotImplementedError(
+                f"The requested optimizer {optimizer_name} is not supported."
+            )
 
     def check_lr_scheduler_init_sanity(self) -> None:
         """
-        Checks the basic sanity of lr_scheduler related arguments in config. Note that this will not check sanity of 
-        the given lr_scheduler's args even if LR Scheduler valid. 
-        If invalid arguments are passed, error will be raised by PyTorch. 
+        Checks the basic sanity of lr_scheduler related arguments in config. Note that this will not check sanity of
+        the given lr_scheduler's args even if LR Scheduler valid.
+        If invalid arguments are passed, error will be raised by PyTorch.
         """
-        present_lr_scheduler_init_args = [k in self.args for k in self.lr_scheduler_init_args]
-        if not all(present_lr_scheduler_init_args) and not present_lr_scheduler_init_args[1]:
+        present_lr_scheduler_init_args = [
+            k in self.args for k in self.lr_scheduler_init_args
+        ]
+        if (
+            not all(present_lr_scheduler_init_args)
+            and not present_lr_scheduler_init_args[1]
+        ):
             raise ValueError(
                 f"Cannot Initialize requested LR Scheduler for the given Agent; "
                 f"{self.__error_message('agent_init_args', present_lr_scheduler_init_args)}"
@@ -167,7 +184,9 @@ class SanityCheck(Register):
                     f"Expected `lr_scheduler_name` to be of type {str} but received type {type(lr_scheduler_name)}"
                 )
             if lr_scheduler_name not in self.lr_scheduler_map.keys():
-                raise NotImplementedError(f"The requested lr_scheduler {lr_scheduler_name} is not supported.")
+                raise NotImplementedError(
+                    f"The requested lr_scheduler {lr_scheduler_name} is not supported."
+                )
 
     def __error_message(self, param_of_arg: str, boolean_args: List[bool]) -> str:
         """

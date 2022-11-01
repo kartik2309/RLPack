@@ -6,8 +6,8 @@ import yaml
 from rlpack import pytorch
 from rlpack.environments.environments import Environments
 from rlpack.utils.base import Agent
-from rlpack.utils.setup import Setup
 from rlpack.utils.sanity_check import SanityCheck
+from rlpack.utils.setup import Setup
 
 
 class Simulator:
@@ -16,10 +16,7 @@ class Simulator:
     the models and agents for training and/or evaluation.
     """
 
-    def __init__(
-        self,
-        config: Dict[str, Any]
-    ):
+    def __init__(self, config: Dict[str, Any]):
         """
         :param config: Optional[Dict[str, Any]]: The configuration dictionary for setup. Default: None
         """
@@ -91,7 +88,7 @@ class Simulator:
             lr_scheduler=lr_schedulers[0] if len(lr_schedulers) == 1 else lr_schedulers,
             loss_function=self.register.get_loss_function(
                 loss_function_name=self.config["loss_function_name"],
-                loss_function_args=self.config["loss_function_args"]
+                loss_function_args=self.config["loss_function_args"],
             ),
             save_path=save_path,
             device=self.config["device"],
@@ -133,7 +130,8 @@ class Simulator:
         """
         self.sanity_check.check_model_init_sanity()
         activation = self.register.get_activation(
-            activation_name=self.config["activation_name"], activation_args=self.config["activation_args"]
+            activation_name=self.config["activation_name"],
+            activation_args=self.config["activation_args"],
         )
         model_kwargs = {
             k: self.config["model_args"][k] if k != "activation" else activation
