@@ -439,9 +439,7 @@ class DqnAgent(Agent):
             # Rank-Based prioritization.
             elif self.prioritization_strategy_code == 2:
                 _, sorted_td_indices = pytorch.sort(
-                    pytorch.abs(td_value.cpu()),
-                    dim=0,
-                    descending=True
+                    pytorch.abs(td_value.cpu()), dim=0, descending=True
                 )
                 new_priorities = 1 / (sorted_td_indices + 1)
             else:
@@ -665,63 +663,32 @@ class DqnAgent(Agent):
         beta_annealing_frequency = int(
             prioritization_params.get("beta_annealing_frequency", -1)
         )
-        alpha_annealing_fn = prioritization_params.get("alpha_annealing_fn")
-        beta_annealing_fn = prioritization_params.get("beta_annealing_fn")
-        if alpha_annealing_fn is None:
-            alpha_annealing_fn = self.__anneal_alpha_default_fn
-            # Set annealing parameters for alpha.
-            alpha_annealing_factor = float(
-                prioritization_params.get("alpha_annealing_factor", -1)
-            )
-            # Check if to anneal alpha based on input parameters.
-            if alpha_annealing_frequency != -1 and alpha_annealing_factor != -1:
-                to_anneal_alpha = True
-            elif alpha_annealing_frequency == -1 and alpha_annealing_factor != -1:
-                logging.warning(
-                    "alpha_annealing_factor was passed but alpha_annealing_frequency was not passed! "
-                    "This will prevent annealing of alpha."
-                )
-            elif alpha_annealing_frequency != -1 and alpha_annealing_factor == -1:
-                logging.warning(
-                    "alpha_annealing_frequency was passed but alpha_annealing_factor was not passed! "
-                    "This will prevent annealing of alpha."
-                )
-            alpha_annealing_fn_args = (alpha_annealing_factor,)
-            alpha_annealing_fn_kwargs = dict()
-        else:
-            alpha_annealing_fn = alpha_annealing_fn
-            alpha_annealing_fn_args = prioritization_params.get(
-                "alpha_annealing_fn_args"
-            )
-            alpha_annealing_fn_kwargs = prioritization_params.get(
-                "alpha_annealing_fn_kwargs"
-            )
-        if beta_annealing_fn is None:
-            beta_annealing_fn = self.__anneal_beta_default_fn
-            # Set annealing parameters for beta.
-            beta_annealing_factor = float(
-                prioritization_params.get("beta_annealing_factor", -1)
-            )
-            # Check if to anneal beta based on input parameters.
-            if beta_annealing_frequency != -1 and beta_annealing_factor != -1:
-                to_anneal_beta = True
-            elif beta_annealing_frequency == -1 and beta_annealing_factor != -1:
-                logging.warning(
-                    "beta_annealing_factor was passed but beta_annealing_frequency was not passed! "
-                    "This will prevent annealing of beta."
-                )
-            elif beta_annealing_frequency != -1 and beta_annealing_factor == -1:
-                logging.warning(
-                    "beta_annealing_frequency was passed but beta_annealing_factor was not passed! "
-                    "This will prevent annealing of beta."
-                )
-            beta_annealing_fn_args = (beta_annealing_factor,)
-            beta_annealing_fn_kwargs = dict()
-        else:
-            beta_annealing_fn_args = prioritization_params.get("beta_annealing_fn_args")
-            beta_annealing_fn_kwargs = prioritization_params.get(
-                "beta_annealing_fn_kwargs"
-            )
+        alpha_annealing_fn = prioritization_params.get(
+            "alpha_annealing_fn", self.__anneal_alpha_default_fn
+        )
+        beta_annealing_fn = prioritization_params.get(
+            "beta_annealing_fn", self.__anneal_beta_default_fn
+        )
+        # Check if to anneal alpha based on input parameters.
+        if alpha_annealing_frequency != -1:
+            to_anneal_alpha = True
+        # Get args and kwargs for to pass to alpha_annealing_fn.
+        alpha_annealing_fn_args = prioritization_params.get(
+            "alpha_annealing_fn_args", tuple()
+        )
+        alpha_annealing_fn_kwargs = prioritization_params.get(
+            "alpha_annealing_fn_kwargs", dict()
+        )
+        # Check if to anneal beta based on input parameters.
+        if beta_annealing_frequency != -1:
+            to_anneal_beta = True
+        # Get args and kwargs for to pass to beta_annealing_fn.
+        beta_annealing_fn_args = prioritization_params.get(
+            "beta_annealing_fn_args", tuple()
+        )
+        beta_annealing_fn_kwargs = prioritization_params.get(
+            "beta_annealing_fn_kwargs", dict()
+        )
         # Error for proportional based prioritized memory.
         error = float(prioritization_params.get("error", 5e-3))
         # Number of segments for rank-based prioritized memory.
