@@ -16,15 +16,17 @@ class Memory(object):
         buffer_size: Optional[int] = 32768,
         device: Optional[str] = "cpu",
         prioritization_strategy_code: int = 0,
+        batch_size: int = 32
     ):
         """
         :param buffer_size: Optional[int]: The buffer size of the memory. No more than specified buffer
             elements are stored in the memory. Default: 32768
-        :param device: str: The device on which models are currently running. Default: "cpu"
+        :param device: str: The cuda on which models are currently running. Default: "cpu"
         :param prioritization_strategy_code: int: Indicates code for prioritization strategy. Default: 0
+        :param batch_size: int: The batch size to be used for training cycle.
         """
         self.c_memory = C_Memory.C_Memory(
-            buffer_size, device, prioritization_strategy_code
+            buffer_size, device, prioritization_strategy_code, batch_size
         )
         self.buffer_size = buffer_size
         self.prioritization_strategy_code = prioritization_strategy_code
@@ -73,7 +75,6 @@ class Memory(object):
 
     def sample(
         self,
-        batch_size: int,
         force_terminal_state_probability: float = 0.0,
         parallelism_size_threshold: int = 4096,
         alpha: float = 0.0,
@@ -92,7 +93,6 @@ class Memory(object):
     ]:
         """
         Load random samples from memory for a given batch.
-        :param batch_size: int: The desired batch size of the samples.
         :param force_terminal_state_probability: float: The probability for forcefully selecting a terminal state
             in a batch. Default: 0.0
         :param parallelism_size_threshold: int: The minimum size of memory beyond which parallelism is used to shuffle
@@ -114,7 +114,6 @@ class Memory(object):
             probabilities, weights, random_indices).
         """
         samples = self.c_memory.sample(
-            batch_size,
             force_terminal_state_probability,
             parallelism_size_threshold,
             alpha,

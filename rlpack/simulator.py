@@ -124,7 +124,7 @@ class Simulator:
         config = self.config.copy()
         if self.is_custom_model and len(self.agent_model_args) > 0:
             for k in self.agent_model_args:
-                config['agent_args'].pop(k)
+                config["agent_args"].pop(k)
         with open(os.path.join(save_path, "config.yaml"), "w") as conf:
             yaml.dump(config, conf)
         return agent
@@ -151,8 +151,13 @@ class Simulator:
                 **model_kwargs,
             )
         else:
-            self.agent_model_args = self.register.get_agent_model_args(agent_name=self.config['agent_name'])
-            models = [self.config["agent_args"][agent_model_arg] for agent_model_arg in self.agent_model_args]
+            self.agent_model_args = self.register.get_agent_model_args(
+                agent_name=self.config["agent_name"]
+            )
+            models = [
+                self.config["agent_args"][agent_model_arg]
+                for agent_model_arg in self.agent_model_args
+            ]
         return models
 
     def run(self, **kwargs) -> None:

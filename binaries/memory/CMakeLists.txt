@@ -1,32 +1,46 @@
 cmake_minimum_required(VERSION 3.22)
-project(C_Memory)
+project(C_Memory CXX)
 # ----------------------------------- Includes for CMAKE ----------------------------------- #
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
 # ----------------------------- Set Global Variables for CMAKE ----------------------------- #
 set(CMAKE_CXX_STANDARD 17)
+if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 8.0)
+    message("${CMAKE_CXX_COMPILER_VERSION}")
+    message("-- Old Version of GCC was found. Will attempt to install GCC-9")
+    execute_process(
+            COMMAND sh "${CMAKE_SOURCE_DIR}/binaries/utils/c_requirements/install_gcc.sh"
+            WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/"
+            COMMAND_ECHO STDOUT
+    )
+endif ()
 set(Python_VIRTUALENV FIRST)
 if (NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
-    set(CMAKE_CUDA_ARCHITECTURES 61)
+    set(CMAKE_CUDA_ARCHITECTURES 52)
 endif ()
+
 # ----------------------------------- Package Dependencies ---------------------------------- #
+
 find_package(Python REQUIRED COMPONENTS Interpreter Development)
 find_package(pybind11 REQUIRED)
 find_package(OpenMP REQUIRED)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-
 find_package(CUDAToolkit QUIET)
-if (NOT CUDA_FOUND)
-    set(CUDA_SOURCE_DIR "")
+if (NOT CUDAToolkit_FOUND)
+    message("-- CUDA was not found.")
+    set_source_files_properties(C_Memory.cu PROPERTIES LANGUAGE CXX)
+    set_source_files_properties(Binding.cu PROPERTIES LANGUAGE CXX)
 else ()
-    set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} --ptxas-options=-v --generate-line-info
-    --use_fast_math --relocatable-device-code=true -Xcompiler")
+    message("-- CUDA was found.")
+    enable_language(CUDA)
+    set(OpenMP_CXX_FLAGS "${OpenMP_CXX_FLAGS} -Xcompiler")
+    add_compile_definitions(__CUDA_AVAILABLE__)
 endif ()
 if (NOT EXISTS "${Torch_PACKAGE_DIR}/kineto/")
     execute_process(
-            COMMAND sh "${CMAKE_SOURCE_DIR}/binaries/c_requirements/install_kineto.sh"
+            COMMAND sh "${CMAKE_SOURCE_DIR}/binaries/requirements/install_kineto.sh"
             "${Torch_PACKAGE_DIR}" "${CUDAToolkit_TARGET_DIR}"
             WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/"
             COMMAND_ECHO STDOUT
@@ -40,13 +54,22 @@ endif ()
 find_library(TORCH_PYTHON_LIBRARY torch_python PATHS "${TORCH_INSTALL_PREFIX}/lib")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 set(TORCH_USE_RTLD_GLOBAL YES)
+
 # ----------------------------------------- Linking ---------------------------------------- #
 
 pybind11_add_module(
         C_Memory
-        C_Memory.cpp
-        C_Memory.h
-        binding.cpp
+        sumtree_node/SumTreeNode.cpp
+        sumtree_node/SumTreeNode.h
+        sumtree/SumTree.cpp
+        sumtree/SumTree.h
+        ${CMAKE_SOURCE_DIR}/binaries/utils/ops/arg_mergesort.cuh
+        utils/CudaOffload.cuh
+        utils/HostOffload.tpp
+        utils/Utils.h
+        C_Memory.cu
+        C_Memory.cuh
+        Binding.cu
 )
 
 add_dependencies(C_Memory pybind11::headers)
@@ -54,6 +77,17 @@ target_link_libraries(C_Memory PRIVATE Python::Python)
 target_link_libraries(C_Memory PRIVATE OpenMP::OpenMP_CXX)
 target_link_libraries(C_Memory PRIVATE "${TORCH_LIBRARIES}")
 target_link_libraries(C_Memory PRIVATE "${TORCH_PYTHON_LIBRARY}")
+if (CUDAToolkit_FOUND)
+    target_include_directories(C_Memory PRIVATE ${CUDAToolkit_INCLUDE_DIRS})
+    target_link_directories(C_Memory PRIVATE ${CUDAToolkit_LIBRARY_DIR})
+    target_compile_options(C_Memory PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:
+            -Xptxas -O3,-v
+            --use_fast_math
+            >)
+else ()
+    set_target_properties(C_Memory PROPERTIES LINKER_LANGUAGE CXX)
+endif ()
+
 # --------------------------------------- Installation --------------------------------------- #
 install(
         TARGETS C_Memory

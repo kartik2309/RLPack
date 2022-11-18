@@ -78,7 +78,7 @@ class DqnAgent(Agent):
         :param num_actions: int: Number of actions for the environment.
         :param save_path: str: The save path for models: target_model and policy_model), optimizer,
             lr_scheduler and agent_states.
-        :param device: str: The device on which models are run. Default: "cpu"
+        :param device: str: The cuda on which models are run. Default: "cpu"
         :param prioritization_params: Optional[Dict[str, Any]]: The parameters for prioritization in prioritized
             memory: or relay buffer). Default: None
         :param force_terminal_state_selection_prob: float: The probability for forcefully selecting a terminal state
@@ -160,6 +160,7 @@ class DqnAgent(Agent):
             buffer_size=memory_buffer_size,
             device=device,
             prioritization_strategy_code=self.prioritization_strategy_code,
+            batch_size=self.batch_size
         )
         # Disable gradients for target network.
         for n, p in self.target_model.named_parameters():
@@ -174,7 +175,7 @@ class DqnAgent(Agent):
         reward: Union[int, float],
         action: Union[int, float],
         done: Union[bool, int],
-        priority: Optional[Union[pytorch.Tensor, np.ndarray, float]] = 1e3,
+        priority: Optional[Union[pytorch.Tensor, np.ndarray, float]] = 1.0,
         probability: Optional[Union[pytorch.Tensor, np.ndarray, float]] = 1.0,
         weight: Optional[Union[pytorch.Tensor, np.ndarray, float]] = 1.0,
     ) -> int:
@@ -193,7 +194,7 @@ class DqnAgent(Agent):
         :param action: Union[int, float]: Action taken for the transition
         :param done: Union[bool, int]: Indicates weather episode has terminated or not.
         :param priority: Optional[Union[pytorch.Tensor, np.ndarray, float]]: The priority of the
-            transition: for priority relay memory). Default: 1e3
+            transition: for priority relay memory). Default: 1.0
         :param probability: Optional[Union[pytorch.Tensor, np.ndarray, float]]: The probability of the transition
            : for priority relay memory). Default: 1.0
         :param weight: Optional[Union[pytorch.Tensor, np.ndarray, float]]: The important sampling weight
@@ -540,7 +541,6 @@ class DqnAgent(Agent):
 
         """
         samples = self.memory.sample(
-            self.batch_size,
             self.force_terminal_state_selection_prob,
             alpha=self.prioritization_params["alpha"],
             beta=self.prioritization_params["beta"],

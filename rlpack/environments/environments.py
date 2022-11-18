@@ -113,14 +113,14 @@ class Environments:
                     logging.info(f"Epsilon after {ep} episodes: {self.agent.epsilon}")
                 # Log current alpha and beta values - for prioritized relay
                 if hasattr(self.agent, "prioritization_params"):
+                    if hasattr(self.agent, "prioritization_params"):
+                        if "alpha" in self.agent.prioritization_params.keys():
+                            logging.info(
+                                f"Alpha after {ep} episodes: {self.agent.prioritization_params['alpha']}"
+                            )
                     if "beta" in self.agent.prioritization_params.keys():
                         logging.info(
                             f"Beta after {ep} episodes: {self.agent.prioritization_params['beta']}"
-                        )
-                if hasattr(self.agent, "prioritization_params"):
-                    if "alpha" in self.agent.prioritization_params.keys():
-                        logging.info(
-                            f"Beta after {ep} episodes: {self.agent.prioritization_params['alpha']}"
                         )
                 logging.info(f"{'~' * len(reward_log_message)}\n")
 

@@ -97,11 +97,14 @@ class SanityCheck(Register):
                 f"The requested agent {agent_name} is not supported."
             )
         if only_model_arg_check:
-            agent_args_from_input_config = list(self.input_config.get("agent_args", list()))
+            agent_args_from_input_config = list(
+                self.input_config.get("agent_args", list())
+            )
             agent_args = [
                 agent_arg
                 for agent_arg in self.agent_args[agent_name]
-                if agent_arg not in self.agent_args_default[agent_name] and re.match(r".*model$", agent_arg) is not None
+                if agent_arg not in self.agent_args_default[agent_name]
+                and re.match(r".*model$", agent_arg) is not None
             ]
             present_agent_init_args = [
                 k in agent_args_from_input_config for k in agent_args
