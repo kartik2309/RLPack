@@ -11,17 +11,14 @@ PyTorch's official documentation corresponding that optimizer.
 
 - `Adam`: The Adam Optimizer. Mandatory arguments can be looked up 
 [here](https://pytorch.org/docs/stable/generated/torch.optim.Adam.html). To further understand Adam Optimization 
-algorithm, you can refer [here](https://arxiv.org/abs/1412.6980). 
-    #### optimizer_name: "adam"
+algorithm, you can refer [here](https://arxiv.org/abs/1412.6980). **optimizer_name: "adam"**
 - `AdamW`: The AdamW Optimizer. Mandatory arguments can be looked up 
 [here](https://pytorch.org/docs/stable/generated/torch.optim.AdamW.html). To further understand Adam Optimization
-algorithm, you can refer [here](https://arxiv.org/abs/1711.05101). 
-    #### optimizer_name: "adamw"
+algorithm, you can refer [here](https://arxiv.org/abs/1711.05101). **optimizer_name: "adamw"**
 - `RMSProp`: The Root Mean Squared Propagation optimizer. Mandatory arguments can be looked up 
 [here](https://pytorch.org/docs/stable/generated/torch.optim.RMSprop.html). For further details, 
 [lecture notes](https://www.cs.toronto.edu/~tijmen/csc321/slides/lecture_slides_lec6.pdf) by G. Hinton can be referred. 
-    #### optimizer_name: "rmsprop"
+**optimizer_name: "rmsprop"**
 - `SGD`: The Stochastic Gradient Descend optimizer. The mandatory arguments for SGD Optimizer can be looked up 
 [here](https://pytorch.org/docs/stable/generated/torch.optim.SGD.html). For further understanding of SGD algorithm, 
-refer [here](https://www.cs.toronto.edu/%7Ehinton/absps/momentum.pdf).
-    #### optimizer_name: "sgd"
+refer [here](https://www.cs.toronto.edu/%7Ehinton/absps/momentum.pdf). **optimizer_name: "sgd"**

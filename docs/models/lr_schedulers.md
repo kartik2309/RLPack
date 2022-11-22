@@ -12,7 +12,10 @@ not called further.
 
 - `StepLR`: Step Learning Rate Scheduler. For mandatory arguments and further details, please refer 
 [here](https://pytorch.org/docs/stable/generated/torch.optim.lr_scheduler.StepLR.html). 
+**lr_scheduler_name="step_lr"**
 - `LinearLR`: Linear Learning Rate Scheduler. For mandatory arguments and further details, please refer
 [here](https://pytorch.org/docs/stable/generated/torch.optim.lr_scheduler.LinearLR.html). 
+**lr_scheduler_name="linear_lr"**
 - `CyclicLR`: Cyclic Learning Rate Scheduler. For mandatory arguments and further details, please refer 
-[here](https://pytorch.org/docs/stable/generated/torch.optim.lr_scheduler.CyclicLR.html).
+[here](https://pytorch.org/docs/stable/generated/torch.optim.lr_scheduler.CyclicLR.html). 
+**lr_scheduler_name="cyclic_lr"**

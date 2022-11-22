@@ -15,13 +15,10 @@ Further details for each activation provided in RLPack is given below.
 Currently, RLPack implements three activations that can be used out of the box. 
 - `ReLU`: The Rectified Linear-Unit Activation function. Since ReLU doesn't 
 require additional arguments as per PyTorch's implementation, we can pass `"activation_args"=None`, or not pass it 
-at all. 
-    #### activation_name: "relu" </b> </br>
+at all. **activation_name: "relu"**
 - `LeakyReLU`: The Leaky Rectified Linear-Unit Activation function. If you wish to pass additional parameters for 
 LeakyReLU as per PyTorch's arguments, you can pass `activation_args` with keyword arguments in the config dict. If 
 not passed, default values are loaded as per 
-[PyTorch's default](https://pytorch.org/docs/stable/generated/torch.nn.LeakyReLU.html). 
-    #### activation_name: "leaky_relu"
+[PyTorch's default](https://pytorch.org/docs/stable/generated/torch.nn.LeakyReLU.html). **activation_name: "leaky_relu"**
 - `TanH`: Hyperbolic Tangent Activation function. No arguments are required and hence we can pass 
-`"activation_args"=None`, or not pass it at all.
-    #### activation_name: "tanh"
+`"activation_args"=None`, or not pass it at all. **activation_name: "tanh"**

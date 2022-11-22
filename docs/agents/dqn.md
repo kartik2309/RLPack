@@ -3,7 +3,7 @@ DQN-Agent is implemented in `rlpack.dqn.dqn_agent.py` as `DqnAgent`. All variant
 to run and train the DQN agent. This class is defined in `rlpack.dqn.dqn_agent.py` as `DqnAgent`. It inherits from
 `Agent` class defined in `rlpack.utils.base.agent.py`. 
 
-<b> agent_name: "dqn" </b>
+#### agent_name: "dqn" 
 
 ## Implementations
 There are currently three supported implementations for DQN: 
