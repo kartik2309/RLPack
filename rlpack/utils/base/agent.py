@@ -23,18 +23,18 @@ class Agent(object):
     def train(self, *args, **kwargs) -> Any:
         """
         Training method for the agent. This class needs to be overriden for every agent that inherits it.
-        @:param args: Positional arguments for train method
-        @:param kwargs: Keyword arguments for train method.
-        @:return (Any): Action to be taken
+        :param args: Positional arguments for train method
+        :param kwargs: Keyword arguments for train method.
+        :return: Any: Action to be taken
         """
         pass
 
     def policy(self, *args, **kwargs) -> Any:
         """
         Policy method for the agent. This class needs to be overriden for every agent that inherits it.
-        @:param args: Positional arguments for policy method
-        @:param kwargs: Keyword arguments for policy method.
-        @:return (Any): Action to be taken
+        :param args: Positional arguments for policy method
+        :param kwargs: Keyword arguments for policy method.
+        :return: Any: Action to be taken
         """
         pass
 
@@ -43,8 +43,8 @@ class Agent(object):
         Save method for the agent. This class needs to be overriden for every agent that inherits it.
         All necessary agent states and attributes must be saved in the implementation such that training can
         be restarted.
-        @:param args: Positional arguments for save method
-        @:param kwargs: Keyword arguments for save method.
+        :param args: Positional arguments for save method
+        :param kwargs: Keyword arguments for save method.
         """
         pass
 
@@ -53,22 +53,22 @@ class Agent(object):
         Load method for the agent. This class needs to be overriden for every agent that inherits it.
         All necessary agent states and attributes must be loaded in the implementation such that training can
         be restarted.
-        @:param args: Positional arguments for load method
-        @:param kwargs: Keyword arguments for load method.
+        :param args: Positional arguments for load method
+        :param kwargs: Keyword arguments for load method.
         """
         pass
 
     def __getstate__(self) -> Dict[str, Any]:
         """
         To get the agent's current state (dict of attributes).
-        @:return (Dict[str, Any]): The agent's states in dictionary.
+        :return: Dict[str, Any]: The agent's states in dictionary.
         """
         return self.__dict__
 
     def __setstate__(self, state: Dict[str, Any]) -> None:
         """
         To load the agent's current state (dict of attributes).
-        @:param state (Dict[str, Any]): The agent's states in dictionary.
+        :param state: Dict[str, Any]: The agent's states in dictionary.
         """
         self.__dict__ = state
 
@@ -78,8 +78,8 @@ class Agent(object):
     ) -> pytorch.Tensor:
         """
         Helper function to cast data to tensor.
-        @:param data (Union[List, Tuple, np.ndarray, pytorch.Tensor]): The data to convert to tensor.
-        @:return (pytorch.Tensor): The tensor from the input data.
+        :param data: Union[List, Tuple, np.ndarray, pytorch.Tensor]: The data to convert to tensor.
+        :return: pytorch.Tensor: The tensor from the input data.
         """
         if isinstance(data, pytorch.Tensor):
             tensor = data
@@ -101,10 +101,9 @@ class Agent(object):
         """
         Helper function to adjust dimensions of tensor. This only works for tensors when they have a single axis
         along any dimension and doesn't change underlying data or change the storage.
-
-        @:param tensor (pytorch.Tensor): The tensor whose dimensions are required to be changed.
-        @:param target_dim (int): The target number of dimensions.
-        @:return (pytorch.Tensor): The tensor with adjusted dimensions.
+        :param tensor: pytorch.Tensor: The tensor whose dimensions are required to be changed.
+        :param target_dim: int: The target number of dimensions.
+        :return: pytorch.Tensor: The tensor with adjusted dimensions.
         """
         if target_dim is None:
             return tensor
@@ -115,5 +114,4 @@ class Agent(object):
         else:
             for _ in range(curr_dim - target_dim):
                 tensor = pytorch.squeeze(tensor, dim=-1)
-
         return tensor

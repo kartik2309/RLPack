@@ -10,9 +10,7 @@ pertaining arguments for each loss function can be referred to in PyTorch's offi
 
 - `Huber Loss`: An improvement over MSE loss, making it less sensitive to outliers. Additional arguments can be
 passed via `loss_function_args`. For exact arguments and further details on this loss function please refer 
-[here](https://pytorch.org/docs/stable/generated/torch.nn.HuberLoss.html). 
-    #### loss_function_name: "huber_loss" 
+[here](https://pytorch.org/docs/stable/generated/torch.nn.HuberLoss.html). **loss_function_name: "huber_loss"** 
 - `MSE`: Mean Squared Error is a simple loss function computing squared errors. Additional arguments can be
 passed via `loss_function_args`. For exact arguments and further details on this loss function please refer
-[here](https://pytorch.org/docs/stable/generated/torch.nn.MSELoss.html).
-    #### loss_function_name: "mse"
+[here](https://pytorch.org/docs/stable/generated/torch.nn.MSELoss.html). **loss_function_name: "mse"**

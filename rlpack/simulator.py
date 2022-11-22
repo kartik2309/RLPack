@@ -6,8 +6,8 @@ import yaml
 from rlpack import pytorch
 from rlpack.environments.environments import Environments
 from rlpack.utils.base import Agent
-from rlpack.utils.register import Register
 from rlpack.utils.sanity_check import SanityCheck
+from rlpack.utils.setup import Setup
 
 
 class Simulator:
@@ -16,28 +16,33 @@ class Simulator:
     the models and agents for training and/or evaluation.
     """
 
-    def __init__(
-        self,
-        config: Dict[str, Any]
-    ):
+    def __init__(self, config: Dict[str, Any]):
         """
-        @:param config (Optional[Dict[str, Any]]): The configuration dictionary for setup. Default: None
+        :param config: Optional[Dict[str, Any]]: The configuration dictionary for setup. Default: None
         """
-        self.register = Register()
+        self.register = Setup()
         # Perform sanity check before starting.
-        SanityCheck(config)
+        self.sanity_check = SanityCheck(config)
         self.config = config
+        # Check if mandatory arguments are received from config.
+        self.sanity_check.check_mandatory_params_sanity()
         # Setup agent and initialize environment.
         self.agent = self.setup_agent()
         self.env = Environments(agent=self.agent, config=self.config)
+        # Input
+        self.is_custom_model = False
+        self.agent_model_args = list()
         return
 
     def setup_agent(self) -> Agent:
         """
         This method sets up agent by loading all the necessary arguments.
-        @:return (Agent): The loaded and initialized agent.
+        :return: Agent: The loaded and initialized agent.
         """
         models = self.setup_models()
+        self.sanity_check.check_agent_init_sanity()
+        self.sanity_check.check_optimizer_init_sanity()
+        self.sanity_check.check_lr_scheduler_init_sanity()
         agent_args_for_models = [
             arg
             for arg in self.register.agent_args[self.config["agent_name"]]
@@ -57,6 +62,7 @@ class Simulator:
         optimizers = [
             self.register.get_optimizer(
                 params=model.parameters(),
+                optimizer_name=self.config["optimizer_name"],
                 optimizer_args=self.config["optimizer_args"],
             )
             for model in trainable_models
@@ -64,6 +70,7 @@ class Simulator:
         lr_schedulers = [
             self.register.get_lr_scheduler(
                 optimizer=optimizer,
+                lr_scheduler_name=self.config.get("lr_scheduler_name"),
                 lr_scheduler_args=self.config.get("lr_scheduler_args"),
             )
             for optimizer in optimizers
@@ -83,7 +90,8 @@ class Simulator:
             optimizer=optimizers[0] if len(optimizers) == 1 else optimizers,
             lr_scheduler=lr_schedulers[0] if len(lr_schedulers) == 1 else lr_schedulers,
             loss_function=self.register.get_loss_function(
-                loss_function_args=self.config["loss_function_args"]
+                loss_function_name=self.config["loss_function_name"],
+                loss_function_args=self.config["loss_function_args"],
             ),
             save_path=save_path,
             device=self.config["device"],
@@ -113,36 +121,49 @@ class Simulator:
         agent = self.register.get_agent(
             agent_name=self.config["agent_name"], **agent_kwargs
         )
+        config = self.config.copy()
+        if self.is_custom_model and len(self.agent_model_args) > 0:
+            for k in self.agent_model_args:
+                config["agent_args"].pop(k)
         with open(os.path.join(save_path, "config.yaml"), "w") as conf:
-            yaml.dump(self.config, conf)
-
+            yaml.dump(config, conf)
         return agent
 
     def setup_models(self) -> List[pytorch.nn.Module]:
         """
         The method sets up the models. Depending on the requirement of the agent, returns a list of
         models, all of which are loaded and initialized.
-        @:return (List[pytorch.nn.Module]): List of models.
+        :return: List[pytorch.nn.Module]: List of models.
         """
-        activation = self.register.get_activation(
-            activation_args=self.config["activation_args"]
-        )
-        model_kwargs = {
-            k: self.config["model_args"][k] if k != "activation" else activation
-            for k in self.register.get_model_args(self.config["model_name"])
-        }
-        models = self.register.get_models(
-            model_name=self.config["model_name"],
-            agent_name=self.config["agent_name"],
-            **model_kwargs,
-        )
-
+        self.is_custom_model = self.sanity_check.check_model_init_sanity()
+        if not self.is_custom_model:
+            activation = self.register.get_activation(
+                activation_name=self.config["activation_name"],
+                activation_args=self.config["activation_args"],
+            )
+            model_kwargs = {
+                k: self.config["model_args"][k] if k != "activation" else activation
+                for k in self.register.get_model_args(self.config["model_name"])
+            }
+            models = self.register.get_models(
+                model_name=self.config["model_name"],
+                agent_name=self.config["agent_name"],
+                **model_kwargs,
+            )
+        else:
+            self.agent_model_args = self.register.get_agent_model_args(
+                agent_name=self.config["agent_name"]
+            )
+            models = [
+                self.config["agent_args"][agent_model_arg]
+                for agent_model_arg in self.agent_model_args
+            ]
         return models
 
     def run(self, **kwargs) -> None:
         """
         This method runs the simulator.
-        @:param kwargs: Additional keyword arguments for the training run.
+        :param kwargs: Additional keyword arguments for the training run.
         """
         if self.env.is_train():
             self.env.train_agent(

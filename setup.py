@@ -4,12 +4,12 @@ import shutil
 import sys
 from pathlib import Path
 from site import getsitepackages
+from typing import Any
 
 from pybind11 import get_cmake_dir
 from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext
 from torch.utils import cmake_prefix_path
-from typing import Any
 
 __version__ = "0.0.1"
 
@@ -18,6 +18,7 @@ class CMakeExtension(Extension):
     """
     Helper class to build the CMake files for C++ Backend.
     """
+
     def __init__(self, shell_script: str) -> None:
         """
         @:param shell_script (str): The shell script to be passed to be run in the Extension.
@@ -29,6 +30,7 @@ class BuildExternal(build_ext):
     """
     Helper tool to build external files with custom commands.
     """
+
     def run(self) -> None:
         """
         Runs the provided method `build_cmake` to build the extension.

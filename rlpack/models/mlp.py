@@ -19,12 +19,12 @@ class Mlp(pytorch.nn.Module):
         dropout: float = 0.5,
     ):
         """
-        @:param sequence_length (int): The sequence length of the expected tensor.
-        @:param hidden_sizes (List[int]): The list of hidden sizes for each layer.
-        @:param num_actions (int): The number of actions for the environment.
-        @:param activation (Activation): The activation function class for the model. Must be an initialized
+        :param sequence_length: int: The sequence length of the expected tensor.
+        :param hidden_sizes: List[int]: The list of hidden sizes for each layer.
+        :param num_actions: int: The number of actions for the environment.
+        :param activation: Activation: The activation function class for the model. Must be an initialized
             activation object from PyTorch's nn (torch.nn) module.
-        @:param dropout (float): The dropout to be used in the final Linear (FC) layer.
+        :param dropout: float: The dropout to be used in the final Linear (FC) layer.
         """
         super(Mlp, self).__init__()
         self.sequence_length = sequence_length
@@ -55,8 +55,8 @@ class Mlp(pytorch.nn.Module):
         """
         The forwards method of the nn.Module.
 
-        @:param x (pytorch.Tensor): The model input.
-        @:return (pytorch.Tensor): The model output (logits).
+        :param x: pytorch.Tensor: The model input.
+        :return: pytorch.Tensor: The model output (logits).
         """
 
         for layer_idx, layer_info in enumerate(self.linear_module_dict.items()):
