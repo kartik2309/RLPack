@@ -8,16 +8,11 @@ include(CMakePackageConfigHelpers)
 set(CMAKE_CXX_STANDARD 17)
 if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 8.0)
     message("${CMAKE_CXX_COMPILER_VERSION}")
-    message("-- Old Version of GCC was found. Will attempt to install GCC-9")
-    execute_process(
-            COMMAND sh "${CMAKE_SOURCE_DIR}/binaries/utils/c_requirements/install_gcc.sh"
-            WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/"
-            COMMAND_ECHO STDOUT
-    )
+    message(FATAL_ERROR "Old Version of GCC was found. Please nstall GCC 9 or above")
 endif ()
 set(Python_VIRTUALENV FIRST)
 if (NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
-    set(CMAKE_CUDA_ARCHITECTURES 52)
+    set(CMAKE_CUDA_ARCHITECTURES 75)
 endif ()
 
 # ----------------------------------- Package Dependencies ---------------------------------- #
@@ -33,10 +28,10 @@ if (NOT CUDAToolkit_FOUND)
     set_source_files_properties(C_Memory.cu PROPERTIES LANGUAGE CXX)
     set_source_files_properties(Binding.cu PROPERTIES LANGUAGE CXX)
 else ()
+    add_compile_definitions(__CUDA_AVAILABLE__)
     message("-- CUDA was found.")
     enable_language(CUDA)
-    set(OpenMP_CXX_FLAGS "${OpenMP_CXX_FLAGS} -Xcompiler")
-    add_compile_definitions(__CUDA_AVAILABLE__)
+
 endif ()
 if (NOT EXISTS "${Torch_PACKAGE_DIR}/kineto/")
     execute_process(
@@ -78,10 +73,12 @@ target_link_libraries(C_Memory PRIVATE OpenMP::OpenMP_CXX)
 target_link_libraries(C_Memory PRIVATE "${TORCH_LIBRARIES}")
 target_link_libraries(C_Memory PRIVATE "${TORCH_PYTHON_LIBRARY}")
 if (CUDAToolkit_FOUND)
+    target_link_libraries(C_Memory PRIVATE ${CUDA_LIBRARIES})
+    target_link_libraries(C_Memory PRIVATE ${CMAKE_CUDA_RUNTIME_LIBRARY})
     target_include_directories(C_Memory PRIVATE ${CUDAToolkit_INCLUDE_DIRS})
     target_link_directories(C_Memory PRIVATE ${CUDAToolkit_LIBRARY_DIR})
     target_compile_options(C_Memory PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:
-            -Xptxas -O3,-v
+            -Xcompiler "${CMAKE_CXX_FLAGS} ${CMAKE_C_FLAGS}" -Xptxas -v,
             --use_fast_math
             >)
 else ()

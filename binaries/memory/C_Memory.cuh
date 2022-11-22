@@ -2,8 +2,8 @@
 // Created by Kartik Rajeshwaran on 2022-08-22.
 //
 
-#ifndef RLPACK_C_MEMORY_H
-#define RLPACK_C_MEMORY_H
+#ifndef RLPACK_BINARIES_MEMORY_C_MEMORY_CUH
+#define RLPACK_BINARIES_MEMORY_C_MEMORY_CUH
 
 #include <omp.h>
 #include <pybind11/pybind11.h>
@@ -124,6 +124,10 @@ private:
     Offload<int64_t> *offloadInt64_;
     std::vector<int64_t> loadedIndicesSlice_, loadedIndicesSliceToShuffle_, segmentQuantileIndices_;
     std::vector<float_t> seedValues_;
+    std::vector<torch::Tensor> sampledStateCurrent_, sampledStateNext_,
+            sampledRewards_, sampledActions_,
+            sampledDones_, sampledPriorities_,
+            sampledIndices_;
 
     static torch::Tensor compute_probabilities(torch::Tensor &priorities, float_t alpha);
     static torch::Tensor compute_important_sampling_weights(torch::Tensor &probabilities,
@@ -131,4 +135,4 @@ private:
                                                             float_t beta);
 };
 
-#endif//RLPACK_C_MEMORY_H
+#endif//RLPACK_BINARIES_MEMORY_C_MEMORY_CUH

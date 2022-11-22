@@ -9,7 +9,6 @@
 #include <omp.h>
 
 #include <cmath>
-#include <limits>
 #include <random>
 
 #include "../../utils/ops/arg_mergesort.cuh"
@@ -17,7 +16,7 @@
 template<typename DType>
 class Offload {
 public:
-    explicit Offload(int64_t bufferSize, int32_t batchSize);
+    explicit Offload(int64_t bufferSize);
     ~Offload();
 
     std::vector<DType> result;
@@ -36,6 +35,9 @@ public:
     void arg_quantile_segment_indices(int64_t numSegments,
                                       const Container &inputContainer,
                                       int64_t parallelismSizeThreshold);
+
+    void reset();
+
 private:
     float_t *errorArray_;
     uint64_t *indexArray_;
@@ -46,14 +48,14 @@ private:
 };
 
 template<typename DType>
-Offload<DType>::Offload(int64_t bufferSize, int32_t batchSize) {
+Offload<DType>::Offload(int64_t bufferSize) {
     errorArray_ = new float_t[bufferSize];
     indexArray_ = new uint64_t[bufferSize];
     inputContainerData_ = new DType[bufferSize];
     uniquePriorities_.reserve(bufferSize);
     priorityFrequencies_.reserve(bufferSize);
     result = std::vector<DType>(bufferSize);
-    toShuffleVector_ = std::vector<DType>(batchSize);
+    toShuffleVector_ = std::vector<DType>(bufferSize);
 }
 
 template<typename DType>
@@ -168,6 +170,16 @@ void Offload<DType>::arg_quantile_segment_indices(int64_t numSegments,
     }
     uniquePriorities_.clear();
     priorityFrequencies_.clear();
+}
+
+template<typename DType>
+void Offload<DType>::reset() {
+    {
+#pragma omp parallel for default(none) shared(result)
+        for (uint64_t index = 0; index < result.size(); index++) {
+            result[index] = 0;
+        }
+    }
 }
 
 #endif//__CUDA_AVAILABLE__

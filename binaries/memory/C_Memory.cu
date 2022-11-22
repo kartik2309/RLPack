@@ -115,10 +115,17 @@ C_Memory::C_Memory(const pybind11::int_ &bufferSize,
         default:
             break;
     }
-    offloadFloat_ = new Offload<float_t>(bufferSize_, batchSize_);
-    offloadInt64_ = new Offload<int64_t>(bufferSize_, batchSize_);
+    offloadFloat_ = new Offload<float_t>(bufferSize_);
+    offloadInt64_ = new Offload<int64_t>(bufferSize_);
     loadedIndicesSlice_ = std::vector<int64_t>(batchSize_);
     seedValues_ = std::vector<float_t>(bufferSize_);
+    sampledStateCurrent_ = std::vector<torch::Tensor>(batchSize_);
+    sampledStateNext_ = std::vector<torch::Tensor>(batchSize_);
+    sampledRewards_ = std::vector<torch::Tensor>(batchSize_);
+    sampledActions_ = std::vector<torch::Tensor>(batchSize_);
+    sampledDones_ = std::vector<torch::Tensor>(batchSize_);
+    sampledPriorities_ = std::vector<torch::Tensor>(batchSize_);
+    sampledIndices_ = std::vector<torch::Tensor>(batchSize_);
 }
 
 C_Memory::C_Memory() {
@@ -157,8 +164,8 @@ C_Memory::C_Memory() {
         default:
             break;
     }
-    offloadFloat_ = new Offload<float_t>(bufferSize_, batchSize_);
-    offloadInt64_ = new Offload<int64_t>(bufferSize_, batchSize_);
+    offloadFloat_ = new Offload<float_t>(bufferSize_);
+    offloadInt64_ = new Offload<int64_t>(bufferSize_);
     loadedIndicesSlice_ = std::vector<int64_t>(batchSize_);
     seedValues_ = std::vector<float_t>(bufferSize_);
 }
@@ -305,14 +312,12 @@ std::map<std::string, torch::Tensor> C_Memory::sample(float_t forceTerminalState
     std::uniform_real_distribution<float_t> distributionP(0, 1);
     std::uniform_int_distribution<int64_t> distributionOfTerminalIndex(0,
                                                                        (int64_t) terminalStateIndices_.size() - 1);
-    std::vector<torch::Tensor> sampledStateCurrent(batchSize_), sampledStateNext(batchSize_),
-            sampledRewards(batchSize_), sampledActions(batchSize_),
-            sampledDones(batchSize_), sampledPriorities(batchSize_),
-            sampledIndices(batchSize_);
+
     int64_t index = 0;
     bool forceTerminalState = false;
     switch (prioritizationStrategyCode_) {
         case 0: {
+            offloadInt64_->reset();
             offloadInt64_->shuffle(loadedIndices_, parallelismSizeThreshold);
             memcpy(&loadedIndicesSlice_[0], &offloadInt64_->result[0], sizeof(int64_t) * batchSize_);
             break;
@@ -337,11 +342,13 @@ std::map<std::string, torch::Tensor> C_Memory::sample(float_t forceTerminalState
                     }
 #pragma omp section
                     {
+                        offloadFloat_->reset();
                         auto cumulativeSum = offloadFloat_->cumulative_sum(prioritiesFloat_,
                                                                            parallelismSizeThreshold);
                         if (seedValues_.size() < static_cast<size_t>(cumulativeSum)) {
                             seedValues_.resize(static_cast<size_t>(cumulativeSum));
                         }
+                        offloadFloat_->reset();
                         offloadFloat_->generate_priority_seeds(cumulativeSum, parallelismSizeThreshold);
                         memcpy(&seedValues_[0], &offloadFloat_->result[0], sizeof(float_t) * batchSize_);
                     }
@@ -353,14 +360,16 @@ std::map<std::string, torch::Tensor> C_Memory::sample(float_t forceTerminalState
                                                              (int64_t) size());
                 loadedIndicesSliceToShuffle_[batchIndex] = randomIndex;
             }
-            offloadInt64_->shuffle(loadedIndicesSliceToShuffle_, parallelismSizeThreshold);
-            memcpy(&loadedIndicesSlice_[0], &offloadFloat_->result[0], sizeof(int64_t) * batchSize_);
+//            offloadInt64_->reset();
+//            offloadInt64_->shuffle(loadedIndicesSliceToShuffle_, parallelismSizeThreshold);
+            memcpy(&loadedIndicesSlice_[0], &offloadInt64_->result[0], sizeof(int64_t) * batchSize_);
             break;
         }
         case 2: {
             // Rank-Based prioritization sampling.
             int64_t previousQuantileIndex = 0, generatedRandomIndex = 0;
             std::uniform_int_distribution<int64_t> distributionOfSegment(-1, 1);
+            offloadFloat_->reset();
             offloadFloat_->arg_quantile_segment_indices(numSegments,
                                                         prioritiesFloat_,
                                                         parallelismSizeThreshold);
@@ -379,7 +388,9 @@ std::map<std::string, torch::Tensor> C_Memory::sample(float_t forceTerminalState
                 index++;
             }
             index = 0;
-            offloadInt64_->shuffle(loadedIndicesSlice_, parallelismSizeThreshold);
+//            offloadInt64_->reset();
+//            offloadInt64_->shuffle(loadedIndicesSliceToShuffle_, parallelismSizeThreshold);
+            memcpy(&loadedIndicesSlice_[0], &offloadInt64_->result[0], sizeof(int64_t) * batchSize_);
             break;
         }
         default:
@@ -399,24 +410,24 @@ std::map<std::string, torch::Tensor> C_Memory::sample(float_t forceTerminalState
         loadedIndicesSlice_[randomIndexToInsertTerminalState] = randomTerminalStateIndex;
     }
     for (auto &loadedIndex: loadedIndicesSlice_) {
-        sampledStateCurrent[index] = statesCurrent_[loadedIndex];
-        sampledStateNext[index] = statesNext_[loadedIndex];
-        sampledRewards[index] = rewards_[loadedIndex];
-        sampledActions[index] = actions_[loadedIndex];
-        sampledDones[index] = dones_[loadedIndex];
-        sampledPriorities[index] = priorities_[loadedIndex];
-        sampledIndices[index] = torch::full({}, loadedIndex);
+        sampledStateCurrent_[index] = statesCurrent_[loadedIndex];
+        sampledStateNext_[index] = statesNext_[loadedIndex];
+        sampledRewards_[index] = rewards_[loadedIndex];
+        sampledActions_[index] = actions_[loadedIndex];
+        sampledDones_[index] = dones_[loadedIndex];
+        sampledPriorities_[index] = priorities_[loadedIndex];
+        sampledIndices_[index] = torch::full({}, loadedIndex);
         index++;
     }
     auto floatTensorOptions = torch::TensorOptions().device(device_).dtype(torch::kFloat32);
     auto int64TensorOptions = torch::TensorOptions().device(device_).dtype(torch::kInt64);
-    auto statesCurrentStacked = torch::stack(sampledStateCurrent, 0).to(floatTensorOptions);
-    auto statesNextStacked = torch::stack(sampledStateNext, 0).to(floatTensorOptions);
-    auto rewardsStacked = torch::stack(sampledRewards, 0).to(floatTensorOptions);
-    auto actionsStacked = torch::stack(sampledActions, 0).to(int64TensorOptions);
-    auto donesStacked = torch::stack(sampledDones, 0).to(floatTensorOptions);
-    auto prioritiesStacked = torch::stack(sampledPriorities, 0).to(floatTensorOptions);
-    auto sampledIndicesStacked = torch::stack(sampledIndices, 0).to(int64TensorOptions);
+    auto statesCurrentStacked = torch::stack(sampledStateCurrent_, 0).to(floatTensorOptions);
+    auto statesNextStacked = torch::stack(sampledStateNext_, 0).to(floatTensorOptions);
+    auto rewardsStacked = torch::stack(sampledRewards_, 0).to(floatTensorOptions);
+    auto actionsStacked = torch::stack(sampledActions_, 0).to(int64TensorOptions);
+    auto donesStacked = torch::stack(sampledDones_, 0).to(floatTensorOptions);
+    auto prioritiesStacked = torch::stack(sampledPriorities_, 0).to(floatTensorOptions);
+    auto sampledIndicesStacked = torch::stack(sampledIndices_, 0).to(int64TensorOptions);
     std::map<std::string, torch::Tensor> samples = {
             {"states_current", statesCurrentStacked},
             {"states_next", statesNextStacked},
