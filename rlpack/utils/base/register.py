@@ -1,11 +1,17 @@
 from site import getsitepackages
 
 from rlpack import pytorch
+from rlpack.actor_critic.a2c import A2C
 from rlpack.dqn.dqn_agent import DqnAgent
+from rlpack.models.actor_critic_mlp_policy import ActorCriticMlpPolicy
 from rlpack.models.mlp import Mlp
 
 
 class Register:
+    """
+    This abstract class contains all the necessary information about agents and models for setting them up.
+    """
+
     def __init__(self):
         self.mandatory_keys = (
             "mode",
@@ -47,11 +53,16 @@ class Register:
             ("states",): 0,
             ("rewards",): 1,
             ("td",): 2,
+            ("advantage",): 2,
             ("states", "rewards"): 3,
             ("states", "td"): 4,
+            ("states", "advantage"): 4,
         }
-        self.models = {"mlp": Mlp}
-        self.agents = {"dqn": DqnAgent}
+        self.models = {"mlp": Mlp, "actor_critic_mlp_policy": ActorCriticMlpPolicy}
+        self.agents = {
+            "dqn": DqnAgent,
+            "a2c": A2C,
+        }
         self.model_args = {
             "mlp": (
                 "sequence_length",
@@ -59,9 +70,19 @@ class Register:
                 "num_actions",
                 "activation",
                 "dropout",
-            )
+            ),
+            "actor_critic_mlp_policy": (
+                "sequence_length",
+                "hidden_sizes",
+                "num_actions",
+                "activation",
+                "dropout",
+            ),
         }
-        self.model_args_default = {"mlp": ("activation", "dropout")}
+        self.model_args_default = {
+            "mlp": ("activation", "dropout"),
+            "actor_critic_mlp_policy": ("activation", "dropout"),
+        }
         self.agent_args = {
             "dqn": (
                 "target_model",
@@ -91,7 +112,27 @@ class Register:
                 "eps_for_norm",
                 "p_for_norm",
                 "dim_for_norm",
-            )
+            ),
+            "a2c": (
+                "policy_model",
+                "optimizer",
+                "lr_scheduler",
+                "loss_function",
+                "gamma",
+                "entropy_coefficient",
+                "state_value_coefficient",
+                "model_backup_frequency",
+                "lr_threshold",
+                "num_actions",
+                "save_path",
+                "bootstrap_rounds",
+                "device",
+                "apply_norm",
+                "apply_norm_to",
+                "eps_for_norm",
+                "p_for_norm",
+                "dim_for_norm",
+            ),
         }
         self.agent_args_default = {
             "dqn": (
@@ -104,10 +145,20 @@ class Register:
                 "eps_for_norm",
                 "p_for_norm",
                 "dim_for_norm",
-            )
+            ),
+            "a2c": (
+                "bootstrap_rounds",
+                "device",
+                "apply_norm",
+                "apply_norm_to",
+                "eps_for_norm",
+                "p_for_norm",
+                "dim_for_norm",
+            ),
         }
         self.model_args_for_agents = {
             "dqn": {"target_model": False, "policy_model": True},
+            "a2c": {"policy_model": True},
         }
 
         self.prioritization_strategy_codes = {

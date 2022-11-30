@@ -91,6 +91,7 @@ setup(
     packages=[
         "rlpack",
         "rlpack.dqn",
+        "rlpack.actor_critic",
         "rlpack.models",
         "rlpack.environments",
         "rlpack.utils",
@@ -105,6 +106,7 @@ setup(
     package_dir={
         "rlpack": "rlpack",
         "rlpack.dqn": "rlpack/dqn",
+        "rlpack.actor_critic": "rlpack/actor_critic",
         "rlpack.models": "rlpack/models",
         "rlpack.environments": "rlpack/environments",
         "rlpack.utils": "rlpack/utils",

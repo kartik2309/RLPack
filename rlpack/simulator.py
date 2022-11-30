@@ -101,7 +101,7 @@ class Simulator:
             apply_norm_to=self.register.get_apply_norm_to_mode_code(
                 self.config["agent_args"].get("apply_norm_to", ("none",))
             ),
-            eps_for_norm=self.config["agent_args"].get("eps_for_norm", 5e-8),
+            eps_for_norm=self.config["agent_args"].get("eps_for_norm", 5e-12),
             p_for_norm=self.config["agent_args"].get("p_for_norm", 2),
             dim_for_norm=self.config["agent_args"].get("dim_for_norm", 0),
         )
@@ -138,8 +138,8 @@ class Simulator:
         self.is_custom_model = self.sanity_check.check_model_init_sanity()
         if not self.is_custom_model:
             activation = self.register.get_activation(
-                activation_name=self.config["activation_name"],
-                activation_args=self.config["activation_args"],
+                activation_name=self.config.get("activation_name", pytorch.nn.ReLU()),
+                activation_args=self.config.get("activation_args", dict()),
             )
             model_kwargs = {
                 k: self.config["model_args"][k] if k != "activation" else activation

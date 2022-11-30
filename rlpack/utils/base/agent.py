@@ -17,12 +17,13 @@ class Agent(object):
         self.state_norm_codes = (0, 3, 4)
         self.reward_norm_codes = (1, 3)
         self.td_norm_codes = (2, 4)
+        self.advantage_norm_codes = (2, 4)
         self.loss = list()
         self.save_path = str()
 
     def train(self, *args, **kwargs) -> Any:
         """
-        Training method for the agent. This class needs to be overriden for every agent that inherits it.
+        Training method for the agent. This class needs to be overriden for every agent that inherits it
         :param args: Positional arguments for train method
         :param kwargs: Keyword arguments for train method.
         :return: Any: Action to be taken
@@ -31,7 +32,7 @@ class Agent(object):
 
     def policy(self, *args, **kwargs) -> Any:
         """
-        Policy method for the agent. This class needs to be overriden for every agent that inherits it.
+        Policy method for the agent. This class needs to be overriden for every agent that inherits it
         :param args: Positional arguments for policy method
         :param kwargs: Keyword arguments for policy method.
         :return: Any: Action to be taken
@@ -42,7 +43,7 @@ class Agent(object):
         """
         Save method for the agent. This class needs to be overriden for every agent that inherits it.
         All necessary agent states and attributes must be saved in the implementation such that training can
-        be restarted.
+        be restarted
         :param args: Positional arguments for save method
         :param kwargs: Keyword arguments for save method.
         """
@@ -52,7 +53,7 @@ class Agent(object):
         """
         Load method for the agent. This class needs to be overriden for every agent that inherits it.
         All necessary agent states and attributes must be loaded in the implementation such that training can
-        be restarted.
+        be restarted
         :param args: Positional arguments for load method
         :param kwargs: Keyword arguments for load method.
         """

@@ -6,9 +6,12 @@ from rlpack.utils.base.register import Register
 
 
 class SanityCheck(Register):
+    """
+    This class does the basic sanity check of input_config.
+    """
+
     def __init__(self, input_config: Dict[str, Any]):
         """
-        This class does the basic sanity check of input_config.
         :param input_config: (Dict[str, Any]): The input config that is to be used for training.
         """
         super(SanityCheck, self).__init__()
@@ -121,6 +124,9 @@ class SanityCheck(Register):
         the given activation even if Activation is valid.
         If invalid arguments are passed, error will be raised by PyTorch.
         """
+        # If only activation name is passed but not the activation_args, will default to an empty dictionary.
+        if self.activation_init_args[0] in self.args and self.activation_init_args[1] not in self.args:
+            self.args.append(self.activation_init_args[1])
         present_activation_init_args = [
             k in self.args for k in self.activation_init_args
         ]
@@ -130,7 +136,7 @@ class SanityCheck(Register):
         ):
             raise ValueError(
                 f"Cannot Initialize requested Activation for the given Agent; "
-                f"{self.__error_message('agent_init_args', present_activation_init_args)}"
+                f"{self.__error_message('activation_init_args', present_activation_init_args)}"
             )
         activation_name = self.input_config["activation_name"]
         if not isinstance(activation_name, str):
@@ -152,7 +158,7 @@ class SanityCheck(Register):
         if not all(present_optimizer_init_args):
             raise ValueError(
                 f"Cannot Initialize requested Optimizer for the given Agent; "
-                f"{self.__error_message('agent_init_args', present_optimizer_init_args)}"
+                f"{self.__error_message('optimizer_init_args', present_optimizer_init_args)}"
             )
         optimizer_name = self.input_config["optimizer_name"]
         if not isinstance(optimizer_name, str):
@@ -170,6 +176,9 @@ class SanityCheck(Register):
         the given lr_scheduler's args even if LR Scheduler valid.
         If invalid arguments are passed, error will be raised by PyTorch.
         """
+        # If not LR Scheduler is requested, no sanity check is to be done.
+        if self.lr_scheduler_init_args[0] not in self.args and self.lr_scheduler_init_args[1] not in self.args:
+            return
         present_lr_scheduler_init_args = [
             k in self.args for k in self.lr_scheduler_init_args
         ]
@@ -179,7 +188,7 @@ class SanityCheck(Register):
         ):
             raise ValueError(
                 f"Cannot Initialize requested LR Scheduler for the given Agent; "
-                f"{self.__error_message('agent_init_args', present_lr_scheduler_init_args)}"
+                f"{self.__error_message('lr_scheduler_init', present_lr_scheduler_init_args)}"
             )
         if all(present_lr_scheduler_init_args):
             lr_scheduler_name = self.input_config["lr_scheduler_name"]
