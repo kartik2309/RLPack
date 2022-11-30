@@ -1,6 +1,6 @@
 # Multi-Layered Perceptron
 
-RLPack implements the MLP model for model-based learning. MLP models are implemented in `rlpack.models.mlp.py` as `Mlp`.
+RLPack implements the MLP model for model-based learning. MLP model is implemented in `rlpack.models.mlp.py` as `Mlp`.
 
 #### model_name: "mlp" 
 

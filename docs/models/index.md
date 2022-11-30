@@ -2,7 +2,9 @@
 
 ## In-Built models
 
-- MLP: Details about in-built MLP model can be found [here](in_built/mlp.md).
+- Mlp: Details about in-built MLP model can be found [here](in_built/mlp.md).
+- ActorCriticMlpPolicy: Details about in-built Actor-Critic MLP Policy model can be found
+[here](in_built/actor_critic_mlp_policy.md).
 
 
 ### Activations
