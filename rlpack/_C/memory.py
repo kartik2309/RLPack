@@ -16,14 +16,14 @@ class Memory(object):
         buffer_size: Optional[int] = 32768,
         device: Optional[str] = "cpu",
         prioritization_strategy_code: int = 0,
-        batch_size: int = 32
+        batch_size: int = 32,
     ):
         """
         :param buffer_size: Optional[int]: The buffer size of the memory. No more than specified buffer
             elements are stored in the memory. Default: 32768
         :param device: str: The cuda on which models are currently running. Default: "cpu"
         :param prioritization_strategy_code: int: Indicates code for prioritization strategy. Default: 0
-        :param batch_size: int: The batch size to be used for training cycle.
+        :param batch_size: int: The batch size to be used for training cycle
         """
         self.c_memory = C_Memory.C_Memory(
             buffer_size, device, prioritization_strategy_code, batch_size

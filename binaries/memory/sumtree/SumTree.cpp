@@ -29,7 +29,8 @@ void SumTree::create_tree(std::deque<float_t> &priorities,
     if (prioritiesForTree.size() % 2 != 0 && prioritiesForTree.size() != 1) {
         prioritiesForTree.push_back(0);
         if (children.has_value()) {
-            children.value().push_back(nullptr);
+            auto child = *children;
+            child.push_back(nullptr);
         }
     }
     for (int64_t index = 0; index < prioritiesForTree.size(); index = index + 2) {
@@ -51,8 +52,9 @@ void SumTree::create_tree(std::deque<float_t> &priorities,
             leaves_.push_back(rightNode);
             childrenForRecursion.push_back(parent);
         } else {
-            auto leftChild = children.value()[index];
-            auto rightChild = children.value()[index + 1];
+            auto child = *children;
+            auto leftChild = child[index];
+            auto rightChild = child[index + 1];
             auto parent = new SumTreeNode(nullptr,
                                           sum,
                                           (int64_t) sumTree_.size(),

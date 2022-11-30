@@ -1,19 +1,16 @@
 import os
 import random
 from collections import OrderedDict
-from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 from numpy import ndarray
 
 from rlpack import pytorch
 from rlpack._C.memory import Memory
+from rlpack.utils import LossFunction, LRScheduler
 from rlpack.utils.base.agent import Agent
 from rlpack.utils.normalization import Normalization
-
-LRScheduler = TypeVar("LRScheduler")
-LossFunction = TypeVar("LossFunction")
-Activation = TypeVar("Activation")
 
 
 class DqnAgent(Agent):
@@ -27,7 +24,7 @@ class DqnAgent(Agent):
         target_model: pytorch.nn.Module,
         policy_model: pytorch.nn.Module,
         optimizer: pytorch.optim.Optimizer,
-        lr_scheduler: LRScheduler,
+        lr_scheduler: Union[LRScheduler, None],
         loss_function: LossFunction,
         gamma: float,
         epsilon: float,
@@ -55,41 +52,41 @@ class DqnAgent(Agent):
         """
         :param target_model: nn.Module: The target network for DQN model. This the network which has
             its weights frozen
-        :param policy_model: nn.Module: The policy network for DQN model. This is the network which is trained.
-        :param optimizer: optim.Optimizer: The optimizer wrapped with policy model's parameters.
-        :param lr_scheduler: LRScheduler: The PyTorch LR Scheduler with wrapped optimizer.
+        :param policy_model: nn.Module: The policy network for DQN model. This is the network which is trained
+        :param optimizer: optim.Optimizer: The optimizer wrapped with policy model's parameters
+        :param lr_scheduler: Union[LRScheduler, None]: The PyTorch LR Scheduler with wrapped optimizer
         :param loss_function: LossFunction: The loss function from PyTorch's nn module. Initialized
-            instance must be passed.
-        :param gamma: float: The gamma value for agent.
-        :param epsilon: float: The initial epsilon for the agent.
+            instance must be passed
+        :param gamma: float: The gamma value for agent
+        :param epsilon: float: The initial epsilon for the agent
         :param min_epsilon: float: The minimum epsilon for the agent. Once this value is reached,
-            it is maintained for all further episodes.
-        :param epsilon_decay_rate: float: The decay multiplier to decay the epsilon.
+            it is maintained for all further episodes
+        :param epsilon_decay_rate: float: The decay multiplier to decay the epsilon
         :param epsilon_decay_frequency: int: The number of timesteps after which the epsilon is decayed.
-        :param memory_buffer_size: int: The buffer size of memory: or replay buffer) for DQN.
+        :param memory_buffer_size: int: The buffer size of memory; or replay buffer for DQN
         :param target_model_update_rate: int: The timesteps after which target model's weights are updated with
-            policy model weights: weights are weighted as per `tau`: see below)).
+            policy model weights: weights are weighted as per `tau`: see below))
         :param policy_model_update_rate: int: The timesteps after which policy model is trained. This involves
-            backpropagation through the policy network.
+            backpropagation through the policy network
         :param model_backup_frequency: int: The timesteps after which models are backed up. This will also
-            save optimizer, lr_scheduler and agent_states: epsilon the time of saving and memory).
-        :param lr_threshold: float: The threshold LR which once reached LR scheduler is not called further.
-        :param batch_size: int: The batch size used for inference through target_model and train through policy model.
-        :param num_actions: int: Number of actions for the environment.
+            save optimizer, lr_scheduler and agent_states: epsilon the time of saving and memory
+        :param lr_threshold: float: The threshold LR which once reached LR scheduler is not called further
+        :param batch_size: int: The batch size used for inference through target_model and train through policy model
+        :param num_actions: int: Number of actions for the environment
         :param save_path: str: The save path for models: target_model and policy_model), optimizer,
-            lr_scheduler and agent_states.
-        :param device: str: The cuda on which models are run. Default: "cpu"
+            lr_scheduler and agent_states
+        :param device: str: The device on which models are run. Default: "cpu"
         :param prioritization_params: Optional[Dict[str, Any]]: The parameters for prioritization in prioritized
             memory: or relay buffer). Default: None
         :param force_terminal_state_selection_prob: float: The probability for forcefully selecting a terminal state
             in a batch. Default: 0.0
         :param tau: float: The weighted update of weights from policy_model to target_model. This is done by formula
             target_weight = tau * policy_weight +: 1 - tau) * target_weight/. Default: -1
-        :param apply_norm: int: The code to select the normalization procedure to be applied on selected quantities
-           : selected by `apply_norm_to`: see below)). Default: -1
+        :param apply_norm: int: The code to select the normalization procedure to be applied on selected quantities;
+            selected by `apply_norm_to`: see below)). Default: -1
         :param apply_norm_to: int: The code to select the quantity to which normalization is to be applied.
             Default: -1
-        :param eps_for_norm: int: Epsilon value for normalization: for numeric stability). For min-max normalization
+        :param eps_for_norm: float: Epsilon value for normalization: for numeric stability). For min-max normalization
             and standardized normalization. Default: 5e-12
         :param p_for_norm: int: The p value for p-normalization. Default: 2: L2 Norm)
         :param dim_for_norm: int: The dimension across which normalization is to be performed. Default: 0.
@@ -160,13 +157,15 @@ class DqnAgent(Agent):
             buffer_size=memory_buffer_size,
             device=device,
             prioritization_strategy_code=self.prioritization_strategy_code,
-            batch_size=self.batch_size
+            batch_size=self.batch_size,
         )
         # Disable gradients for target network.
         for n, p in self.target_model.named_parameters():
             p.requires_grad = False
         # Initialize Normalization tool.
-        self.normalization = Normalization(apply_norm=apply_norm)
+        self.normalization = Normalization(
+            apply_norm=apply_norm, eps=eps_for_norm, p=p_for_norm, dim=dim_for_norm
+        )
 
     def train(
         self,
@@ -256,9 +255,7 @@ class DqnAgent(Agent):
             if self.policy_model.training:
                 self.policy_model.eval()
             if self.apply_norm_to in self.state_norm_codes:
-                state_current = self.normalization.apply_normalization(
-                    state_current, self.eps_for_norm, self.p_for_norm, self.dim_for_norm
-                )
+                state_current = self.normalization.apply_normalization(state_current)
             q_values = self.policy_model(state_current)
             action_tensor = q_values.argmax(-1)
             action = action_tensor.item()
@@ -391,17 +388,11 @@ class DqnAgent(Agent):
         ) = random_experiences
         # Apply normalization if required to states.
         if self.apply_norm_to in self.state_norm_codes:
-            state_current = self.normalization.apply_normalization(
-                state_current, self.eps_for_norm, self.p_for_norm, self.dim_for_norm
-            )
-            state_next = self.normalization.apply_normalization(
-                state_next, self.eps_for_norm, self.p_for_norm, self.dim_for_norm
-            )
+            state_current = self.normalization.apply_normalization(state_current)
+            state_next = self.normalization.apply_normalization(state_next)
         # Apply normalization if required to rewards.
         if self.apply_norm_to in self.reward_norm_codes:
-            rewards = self.normalization.apply_normalization(
-                rewards, self.eps_for_norm, self.p_for_norm, self.dim_for_norm
-            )
+            rewards = self.normalization.apply_normalization(rewards)
         # Set policy model to training mode.
         if not self.policy_model.training:
             self.policy_model.train()
@@ -411,9 +402,7 @@ class DqnAgent(Agent):
             td_value = self.temporal_difference(rewards, q_values_target, dones)
         # Apply normalization if required to TD values.
         if self.apply_norm_to in self.td_norm_codes:
-            td_value = self.normalization.apply_normalization(
-                td_value, self.eps_for_norm, self.p_for_norm, self.dim_for_norm
-            )
+            td_value = self.normalization.apply_normalization(td_value)
         # Compute current q-values from policy model.
         q_values_policy = self.policy_model(state_current)
         actions = self._adjust_dims_for_tensor(
