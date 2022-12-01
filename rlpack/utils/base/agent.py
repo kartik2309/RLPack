@@ -1,3 +1,15 @@
+"""!
+@package utils.base
+@brief This package implements the base classes to be used across rlpack
+
+
+Currently following base classes have been implemented:
+    - Agent: Base class for all agents, implemented as rlpack.utils.base.agent.Agent.
+    - Register: Register of information of all in-built models and agents implemented as
+        rlpack.utils.base.register.Register.
+"""
+
+
 from typing import Any, Dict, List, Tuple, Union
 
 import numpy as np
@@ -23,10 +35,10 @@ class Agent(object):
 
     def train(self, *args, **kwargs) -> Any:
         """
-        Training method for the agent. This class needs to be overriden for every agent that inherits it
-        :param args: Positional arguments for train method
+        Training method for the agent. This class needs to be overriden for every agent that inherits it.
+        :param args: Positional arguments for train method.
         :param kwargs: Keyword arguments for train method.
-        :return: Any: Action to be taken
+        :return: Any: Action to be taken.
         """
         pass
 
@@ -35,7 +47,7 @@ class Agent(object):
         Policy method for the agent. This class needs to be overriden for every agent that inherits it
         :param args: Positional arguments for policy method
         :param kwargs: Keyword arguments for policy method.
-        :return: Any: Action to be taken
+        :return: Any: Action to be taken.
         """
         pass
 
@@ -43,8 +55,8 @@ class Agent(object):
         """
         Save method for the agent. This class needs to be overriden for every agent that inherits it.
         All necessary agent states and attributes must be saved in the implementation such that training can
-        be restarted
-        :param args: Positional arguments for save method
+        be restarted.
+        :param args: Positional arguments for save method.
         :param kwargs: Keyword arguments for save method.
         """
         pass
@@ -53,8 +65,8 @@ class Agent(object):
         """
         Load method for the agent. This class needs to be overriden for every agent that inherits it.
         All necessary agent states and attributes must be loaded in the implementation such that training can
-        be restarted
-        :param args: Positional arguments for load method
+        be restarted.
+        :param args: Positional arguments for load method.
         :param kwargs: Keyword arguments for load method.
         """
         pass
@@ -100,7 +112,7 @@ class Agent(object):
         tensor: pytorch.Tensor, target_dim: int
     ) -> pytorch.Tensor:
         """
-        Helper function to adjust dimensions of tensor. This only works for tensors when they have a single axis
+        Helper function to adjust dimensions of tensor. This only works for tensors when they have a single axis.
         along any dimension and doesn't change underlying data or change the storage.
         :param tensor: pytorch.Tensor: The tensor whose dimensions are required to be changed.
         :param target_dim: int: The target number of dimensions.

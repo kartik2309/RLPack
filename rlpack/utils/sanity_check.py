@@ -1,3 +1,22 @@
+"""!
+@package utils
+@brief This package implements the basic utilities to be used across rlpack.
+
+
+Currently following classes have been implemented:
+    - Normalization: Normalization tool implemented as rlpack.utils.normalization.Normalization with
+        support for regular normalization methods.
+    - SanityCheck: Sanity check for arguments when using Simulator from rlpack.simulator.Simulator. Class is
+        implemented as rlpack.utils.sanity_check.SanityCheck.
+    - Setup: Sets up the simulator to run the agent with environment. Implemented as rlpack.utils.setup.Setup.
+
+Following TypeVars have been defined:
+    - LRScheduler: The Typing variable for LR Schedulers.
+    - LossFunction: The Typing variable for Loss Functions.
+    - Activation: The Typing variable for Activations.
+"""
+
+
 import logging
 import re
 from typing import Any, Dict, List
@@ -125,7 +144,10 @@ class SanityCheck(Register):
         If invalid arguments are passed, error will be raised by PyTorch.
         """
         # If only activation name is passed but not the activation_args, will default to an empty dictionary.
-        if self.activation_init_args[0] in self.args and self.activation_init_args[1] not in self.args:
+        if (
+            self.activation_init_args[0] in self.args
+            and self.activation_init_args[1] not in self.args
+        ):
             self.args.append(self.activation_init_args[1])
         present_activation_init_args = [
             k in self.args for k in self.activation_init_args
@@ -177,7 +199,10 @@ class SanityCheck(Register):
         If invalid arguments are passed, error will be raised by PyTorch.
         """
         # If not LR Scheduler is requested, no sanity check is to be done.
-        if self.lr_scheduler_init_args[0] not in self.args and self.lr_scheduler_init_args[1] not in self.args:
+        if (
+            self.lr_scheduler_init_args[0] not in self.args
+            and self.lr_scheduler_init_args[1] not in self.args
+        ):
             return
         present_lr_scheduler_init_args = [
             k in self.args for k in self.lr_scheduler_init_args
@@ -206,7 +231,7 @@ class SanityCheck(Register):
         Private method to craft the error message indicating parameters that are missing.
         :param param_of_arg: str: The parameter for which argument is missing.
         :param boolean_args: Boolean list of indicating if the corresponding argument was received or not
-        :return:
+        :return: str: The error message.
         """
         message = (
             f"The following `{param_of_arg}` arguments were not received: "

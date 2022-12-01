@@ -1,5 +1,5 @@
 # Deep Q-Networks
-DQN-Agent is implemented in `rlpack.dqn.dqn_agent.py` as `DqnAgent`. All variants of DQN agents use the same class
+DQN-Agent is implemented as `rlpack.dqn.dqn_agent.DqnAgent`. All variants of DQN agents use the same class
 to run and train the DQN agent. This class is defined in `rlpack.dqn.dqn_agent.py` as `DqnAgent`. It inherits from
 `Agent` class defined in `rlpack.utils.base.agent.py`.
 

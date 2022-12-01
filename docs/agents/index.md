@@ -1,5 +1,5 @@
 # Agents
 
 RLPack has currently implemented the following agents: 
-- [Deep Q-Networks (DQN)](dqn.md)
-- [Synchronized Actor-Critic (A2C)](a2c.md)
+- [Deep Q-Networks (DQN)](@ref agents/dqn.md)
+- [Synchronized Actor-Critic (A2C)](@ref agents/a2c.md)

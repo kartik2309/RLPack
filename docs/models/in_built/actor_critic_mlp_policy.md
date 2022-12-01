@@ -1,7 +1,7 @@
 # Actor Critic Multi-Layered Perceptron Policy
 
 RLPack implements the Actor Critic MLP Policy model for model-based learning. This model is implemented 
-in `rlpack.models.actor_critic_mlp_policy.py` as `ActorCriticMlpPolicy`. In the implementation provided 
+as `rlpack.models.actor_critic_mlp_policy.ActorCriticMlpPolicy`. In the implementation provided 
 by RLPack, the model uses an MLP based feature extractor which is coupled with two Linear heads for action
 logits and state value (*V(s)*). The model returns a tuple of PyTorch tensors with first value being action 
 logits and second being the state value. 

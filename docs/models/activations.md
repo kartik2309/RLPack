@@ -2,7 +2,7 @@
 
 Since RLPack is built on top of PyTorch, it by default uses PyTorch implementations for activations functions. These 
 activation functions are applied to in-built networks. The application of activation varies network-to-network 
-depending on the implementations. More details on a specific model can be found in [in-built-models](index.md).
+depending on the implementations. More details on a specific model can be found in [in-built-models](@ref models/index.md).
 
 To select an activation to be used for an in-built function, we can pass activation name by keywords in config 
 dictionary. Keywords for each activation is given below. In config dictionary we can pass `"activation_name": <keyword>`. 

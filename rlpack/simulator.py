@@ -18,7 +18,7 @@ class Simulator:
 
     def __init__(self, config: Dict[str, Any]):
         """
-        :param config: Optional[Dict[str, Any]]: The configuration dictionary for setup. Default: None
+        :param: config: Optional[Dict[str, Any]]: The configuration dictionary for setup. Default: None
         """
         self.register = Setup()
         # Perform sanity check before starting.

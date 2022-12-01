@@ -1,3 +1,14 @@
+"""!
+@package _C
+@brief This package implements the classes to interface between C++ and Python.
+
+
+Currently following classes have been implemented:
+    - Memory: Implemented as rlpack._C.memory.Memory, this class is responsible for using Optimized C_Memory class
+        implemented in C++ and providing simple Python methods to access it.
+"""
+
+
 import logging
 from typing import Any, Dict, List, Optional, Tuple, Union
 
@@ -21,9 +32,9 @@ class Memory(object):
         """
         :param buffer_size: Optional[int]: The buffer size of the memory. No more than specified buffer
             elements are stored in the memory. Default: 32768
-        :param device: str: The cuda on which models are currently running. Default: "cpu"
-        :param prioritization_strategy_code: int: Indicates code for prioritization strategy. Default: 0
-        :param batch_size: int: The batch size to be used for training cycle
+        :param device: str: The cuda on which models are currently running. Default: "cpu".
+        :param prioritization_strategy_code: int: Indicates code for prioritization strategy. Default: 0.
+        :param batch_size: int: The batch size to be used for training cycle.
         """
         self.c_memory = C_Memory.C_Memory(
             buffer_size, device, prioritization_strategy_code, batch_size
@@ -39,7 +50,7 @@ class Memory(object):
         reward: Union[np.ndarray, float],
         action: Union[np.ndarray, float],
         done: Union[bool, int],
-        priority: Optional[Union[pytorch.Tensor, np.ndarray, float]] = 9e5,
+        priority: Optional[Union[pytorch.Tensor, np.ndarray, float]] = 1.0,
         probability: Optional[Union[pytorch.Tensor, np.ndarray, float]] = 1.0,
         weight: Optional[Union[pytorch.Tensor, np.ndarray, float]] = 1.0,
     ) -> None:
@@ -54,11 +65,11 @@ class Memory(object):
         :param done: Union[bool, int]: Indicates weather episodes ended or not, i.e.
             if state_next is a terminal state or not.
         :param priority: Optional[Union[pytorch.Tensor, np.ndarray, float]]: The priority of the
-            transition: for priority relay memory). Default: 9e5
+            transition: for priority relay memory). Default: 1.0.
         :param probability: Optional[Union[pytorch.Tensor, np.ndarray, float]]: The probability of the transition
-           : for priority relay memory). Default: 1.0
+           : for priority relay memory). Default: 1.0.
         :param weight: Optional[Union[pytorch.Tensor, np.ndarray, float]]: The important sampling weight
-            of the transition: for priority relay memory). Default: 1.0
+            of the transition: for priority relay memory). Default: 1.0.
         """
         self.c_memory.insert(
             *self.__prepare_inputs_c_memory_(
@@ -94,12 +105,12 @@ class Memory(object):
         """
         Load random samples from memory for a given batch.
         :param force_terminal_state_probability: float: The probability for forcefully selecting a terminal state
-            in a batch. Default: 0.0
+            in a batch. Default: 0.0.
         :param parallelism_size_threshold: int: The minimum size of memory beyond which parallelism is used to shuffle
             and retrieve the batch of sample. Default: 4096.
-        :param alpha: float: The alpha value for computation of probabilities. Default: 0.0
-        :param beta: float: The beta value for computation of important sampling weights. Default: 0.0
-        :param num_segments: int: The number of segments to use to uniformly sample for rank-based prioritization
+        :param alpha: float: The alpha value for computation of probabilities. Default: 0.0.
+        :param beta: float: The beta value for computation of important sampling weights. Default: 0.0.
+        :param num_segments: int: The number of segments to use to uniformly sample for rank-based prioritization.
         :return:Tuple[
                 pytorch.Tensor,
                 pytorch.Tensor,
@@ -145,7 +156,7 @@ class Memory(object):
         :param random_indices: pytorch.Tensor: The list of random indices which were sampled previously. These
             indices are used to update the corresponding values. Must be a 1-D PyTorch Tensor.
         :param new_priorities: pytorch.Tensor: The list of new priorities corresponding to `random_indices` passed.
-        :param new_probabilities: pytorch.Tensor: The list of new probabilities corresponding to
+        :param new_probabilities: pytorch.Tensor: The list of new probabilities corresponding to.
             `random_indices` passed.
         :param new_weights: pytorch.Tensor: The list of new weights corresponding to `random_indices` passed.
         """
@@ -170,14 +181,14 @@ class Memory(object):
     def initialize(self, memory_data: C_Memory.C_MemoryData) -> None:
         """
         This loads the memory from the provided C_MemoryData instance.
-        :param memory_data: C_Memory.C_MemoryData: The C_MemoryData instance to load the memory form
+        :param memory_data: C_Memory.C_MemoryData: The C_MemoryData instance to load the memory form.
         """
         self.c_memory.initialize(memory_data)
 
     def get_terminal_state_indices(self) -> List[int]:
         """
         This retrieves the terminal state indices accumulated so far.
-        :return: List[int]: The list of terminal state indices
+        :return: List[int]: The list of terminal state indices.
         """
         return [
             v
@@ -189,7 +200,7 @@ class Memory(object):
     def get_transitions(self) -> Dict[str, pytorch.Tensor]:
         """
         This retrieves all the transitions accumulated so far.
-        :return: Dict[str, pytorch.Tensor]: A dictionary with all transition information
+        :return: Dict[str, pytorch.Tensor]: A dictionary with all transition information.
         """
         return {k: v for k, v in self.c_memory.view().transition_information().items()}
 
@@ -239,8 +250,8 @@ class Memory(object):
 
     def num_terminal_states(self) -> int:
         """
-        Returns the number of terminal states
-        :return: int: Num of terminal states
+        Returns the number of terminal states.
+        :return: int: Num of terminal states.
         """
         return self.c_memory.num_terminal_states()
 
@@ -288,11 +299,11 @@ class Memory(object):
         :param done Union[bool, int]: Indicates weather episodes ended or not, i.e.
             if state_next is a terminal state or not.
         :param priority: Union[pytorch.Tensor, np.ndarray, float]): The priority of the
-            transition: for priority relay memory). Default: None
+            transition: for priority relay memory). Default: None.
         :param probability: Union[pytorch.Tensor, np.ndarray, float]): The probability of the transition
-           : for priority relay memory). Default: None
+           : for priority relay memory). Default: None.
         :param weight: Union[pytorch.Tensor, np.ndarray, float]): The important sampling weight
-            of the transition: for priority relay memory). Default: None
+            of the transition: for priority relay memory). Default: None.
         :return: Tuple[
                 pytorch.Tensor,
                 pytorch.Tensor,
@@ -450,7 +461,7 @@ class Memory(object):
     ) -> None:
         """
         Set item method for the memory.
-        :param index: int: index to insert
+        :param index: int: index to insert.
         :param transition: Tuple[
                 Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
                 Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
@@ -479,7 +490,7 @@ class Memory(object):
 
     def __delitem__(self, index: int) -> None:
         """
-        Deletion method for memory
+        Deletion method for memory.
         :param index: int: Index at which we want to delete an item.
         Note that this operation can be expensive depending on the size of memory; O(n).
         """
@@ -487,8 +498,8 @@ class Memory(object):
 
     def __len__(self) -> int:
         """
-        Length method for memory
-        :return: int: The size of the memory
+        Length method for memory.
+        :return: int: The size of the memory.
         """
         return self.c_memory.size()
 
@@ -501,7 +512,7 @@ class Memory(object):
 
     def __setstate__(self, state: Dict[str, Any]) -> None:
         """
-        Set state method for the memory
+        Set state method for the memory.
         :param state: Dict[str, Any]: This method loads the states back to memory instance. This helps unpickle
             the Memory.
         """
@@ -509,7 +520,7 @@ class Memory(object):
 
     def __setattr__(self, key: str, value: Any) -> None:
         """
-        Set attr method for memory
+        Set attr method for memory.
         :param key: str: The desired attribute name.
         :param value: Any: The value for corresponding key.
         """
@@ -518,7 +529,7 @@ class Memory(object):
     def __getattr__(self, item: str) -> Any:
         """
         Get attr method for memory
-        :param item: str: The attributes that has been set during runtime (through __setattr__)
+        :param item: str: The attributes that has been set during runtime (through __setattr__).
         :return: Any: The value for the item pass.
         """
         return self.__dict__[item]
@@ -526,7 +537,7 @@ class Memory(object):
     def __repr__(self) -> str:
         """
         Repr method for memory.
-        :return: str: String with object's memory location
+        :return: str: String with object's memory location.
         """
         return f"<Python object for {repr(self.c_memory)} at {hex(id(self))}>"
 

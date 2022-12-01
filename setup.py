@@ -21,7 +21,7 @@ class CMakeExtension(Extension):
 
     def __init__(self, shell_script: str) -> None:
         """
-        @:param shell_script (str): The shell script to be passed to be run in the Extension.
+        :param: shell_script: str: The shell script to be passed to be run in the Extension.
         """
         super().__init__(shell_script, sources=[])
 
@@ -41,8 +41,8 @@ class BuildExternal(build_ext):
 
     def build_cmake(self, ext: Any) -> None:
         """
-        Builds the binaries for RLPack backend with C++
-        @:param ext (Any): The external extensions to be used to build the cmake.
+        Builds the binaries for RLPack backend with C++.
+        :param ext: Any: The external extensions to be used to build the cmake.
         """
         cwd = Path().absolute()
 

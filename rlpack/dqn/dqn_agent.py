@@ -1,3 +1,14 @@
+"""!
+@package dqn
+@brief This package implements the DQN methods.
+
+
+Currently following classes have been implemented:
+    - DQNAgent: Implemented as rlpack.dqn.dqn_agent.DQNAgent this class implements variants of DQN agents. More
+        information can be found [here](@ref agents/dqn.md).
+"""
+
+
 import os
 import random
 from collections import OrderedDict
@@ -51,44 +62,44 @@ class DqnAgent(Agent):
     ):
         """
         :param target_model: nn.Module: The target network for DQN model. This the network which has
-            its weights frozen
-        :param policy_model: nn.Module: The policy network for DQN model. This is the network which is trained
-        :param optimizer: optim.Optimizer: The optimizer wrapped with policy model's parameters
-        :param lr_scheduler: Union[LRScheduler, None]: The PyTorch LR Scheduler with wrapped optimizer
+            its weights frozen.
+        :param policy_model: nn.Module: The policy network for DQN model. This is the network which is trained.
+        :param optimizer: optim.Optimizer: The optimizer wrapped with policy model's parameters.
+        :param lr_scheduler: Union[LRScheduler, None]: The PyTorch LR Scheduler with wrapped optimizer.
         :param loss_function: LossFunction: The loss function from PyTorch's nn module. Initialized
-            instance must be passed
-        :param gamma: float: The gamma value for agent
-        :param epsilon: float: The initial epsilon for the agent
+            instance must be passed.
+        :param gamma: float: The gamma value for agent.
+        :param epsilon: float: The initial epsilon for the agent.
         :param min_epsilon: float: The minimum epsilon for the agent. Once this value is reached,
-            it is maintained for all further episodes
-        :param epsilon_decay_rate: float: The decay multiplier to decay the epsilon
+            it is maintained for all further episodes.
+        :param epsilon_decay_rate: float: The decay multiplier to decay the epsilon.
         :param epsilon_decay_frequency: int: The number of timesteps after which the epsilon is decayed.
-        :param memory_buffer_size: int: The buffer size of memory; or replay buffer for DQN
+        :param memory_buffer_size: int: The buffer size of memory; or replay buffer for DQN.
         :param target_model_update_rate: int: The timesteps after which target model's weights are updated with
-            policy model weights: weights are weighted as per `tau`: see below))
+            policy model weights: weights are weighted as per `tau`: see below)).
         :param policy_model_update_rate: int: The timesteps after which policy model is trained. This involves
-            backpropagation through the policy network
+            backpropagation through the policy network.
         :param model_backup_frequency: int: The timesteps after which models are backed up. This will also
-            save optimizer, lr_scheduler and agent_states: epsilon the time of saving and memory
-        :param lr_threshold: float: The threshold LR which once reached LR scheduler is not called further
+            save optimizer, lr_scheduler and agent_states: epsilon the time of saving and memory.
+        :param lr_threshold: float: The threshold LR which once reached LR scheduler is not called further.
         :param batch_size: int: The batch size used for inference through target_model and train through policy model
-        :param num_actions: int: Number of actions for the environment
-        :param save_path: str: The save path for models: target_model and policy_model), optimizer,
-            lr_scheduler and agent_states
-        :param device: str: The device on which models are run. Default: "cpu"
+        :param num_actions: int: Number of actions for the environment.
+        :param save_path: str: The save path for models: target_model and policy_model, optimizer,
+            lr_scheduler and agent_states.
+        :param device: str: The device on which models are run. Default: "cpu".
         :param prioritization_params: Optional[Dict[str, Any]]: The parameters for prioritization in prioritized
-            memory: or relay buffer). Default: None
+            memory: or relay buffer). Default: None.
         :param force_terminal_state_selection_prob: float: The probability for forcefully selecting a terminal state
-            in a batch. Default: 0.0
+            in a batch. Default: 0.0.
         :param tau: float: The weighted update of weights from policy_model to target_model. This is done by formula
-            target_weight = tau * policy_weight +: 1 - tau) * target_weight/. Default: -1
+            target_weight = tau * policy_weight +: 1 - tau) * target_weight/. Default: -1.
         :param apply_norm: int: The code to select the normalization procedure to be applied on selected quantities;
-            selected by `apply_norm_to`: see below)). Default: -1
+            selected by `apply_norm_to`: see below)). Default: -1.
         :param apply_norm_to: int: The code to select the quantity to which normalization is to be applied.
-            Default: -1
-        :param eps_for_norm: float: Epsilon value for normalization: for numeric stability). For min-max normalization
-            and standardized normalization. Default: 5e-12
-        :param p_for_norm: int: The p value for p-normalization. Default: 2: L2 Norm)
+            Default: -1.
+        :param eps_for_norm: float: Epsilon value for normalization: for numeric stability. For min-max normalization
+            and standardized normalization. Default: 5e-12.
+        :param p_for_norm: int: The p value for p-normalization. Default: 2: L2 Norm.
         :param dim_for_norm: int: The dimension across which normalization is to be performed. Default: 0.
 
         NOTE:

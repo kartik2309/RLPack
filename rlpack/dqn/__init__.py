@@ -1,5 +1,12 @@
+"""!
+@package dqn
+@brief This package implements the DQN methods.
+
+
+Currently following classes have been implemented:
+    - DQNAgent: Implemented as rlpack.dqn.dqn_agent.DQNAgent this class implements variants of DQN agents. More
+        information can be found [here](@ref agents/dqn.md).
 """
-    This package contains the Implementation for DQN algorithm.
-"""
+
 
 from rlpack.dqn.dqn_agent import DqnAgent

@@ -1,3 +1,14 @@
+"""!
+@package environments
+@brief This package implements the gym environment to couple it with selected environment.
+
+
+This package implements Environments class as rlpack.environments.environments.Environments. This class couples the
+agent we selected with the environment we pass/select. It provides basic methods for training and evaluating an agent.
+This class also logs rewards and other metrics on the screen.
+"""
+
+
 import logging
 import os
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
@@ -46,13 +57,11 @@ class Environments:
     ) -> None:
         """
         Method to train the agent in the specified environment.
-
-        :param render: bool: Indicates if we wish to render the environment (in animation). Default: False
+        :param render: bool: Indicates if we wish to render the environment (in animation). Default: False.
         :param load: bool: Indicates weather to load a previously saved model or train a new one. If set true,
             config must be `save_path` or set or environment variable SAVE_PATH must be set.
         :param plot: bool: Indicates if to plot the training progress. If set True, rewards and episodes are
             recorded and plot is saved in `save_path`.
-
         config must have set mode='train' to run evaluation.
         Rewards are logged on console every `reward_logging_frequency` set in the console.
         """
@@ -205,9 +214,8 @@ class Environments:
         """
         This is the default reshape function. If `new_shape` has been set in config, input states are reshaped
             to new shapes, else returns the input as it is. Default behavior is not perform any reshaping.
-
         :param x: np.ndarray: The input numpy array to reshape.
-        :param shape: Optional[Tuple[int, ...]]: The new shape to which we want states to be reshaped. Default: None
+        :param shape: Optional[Tuple[int, ...]]: The new shape to which we want states to be reshaped. Default: None.
         :return: np.ndarray: The reshaped (or unchanged) array.
         """
         if shape is not None:

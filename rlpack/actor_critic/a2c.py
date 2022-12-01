@@ -1,3 +1,12 @@
+"""!
+@package actor_critic
+@brief This package implements the Actor-Critic methods.
+
+
+Currently following methods are implemented:
+    - A2C: Implemented in rlpack.actor_critic.a2c.A2C. More details can be found [here](@ref agents/a2c.md)
+"""
+
 from collections import OrderedDict
 from typing import List, Union
 
@@ -16,52 +25,52 @@ class A2C(Agent):
     """
 
     def __init__(
-        self,
-        policy_model: pytorch.nn.Module,
-        optimizer: pytorch.optim.Optimizer,
-        lr_scheduler: Union[LRScheduler, None],
-        loss_function: LossFunction,
-        gamma: float,
-        entropy_coefficient: float,
-        state_value_coefficient: float,
-        lr_threshold: float,
-        num_actions: int,
-        model_backup_frequency: int,
-        save_path: str,
-        bootstrap_rounds: int = 1,
-        device: str = "cpu",
-        apply_norm: int = -1,
-        apply_norm_to: int = -1,
-        eps_for_norm: float = 5e-12,
-        p_for_norm: int = 2,
-        dim_for_norm: int = 0,
+            self,
+            policy_model: pytorch.nn.Module,
+            optimizer: pytorch.optim.Optimizer,
+            lr_scheduler: Union[LRScheduler, None],
+            loss_function: LossFunction,
+            gamma: float,
+            entropy_coefficient: float,
+            state_value_coefficient: float,
+            lr_threshold: float,
+            num_actions: int,
+            model_backup_frequency: int,
+            save_path: str,
+            bootstrap_rounds: int = 1,
+            device: str = "cpu",
+            apply_norm: int = -1,
+            apply_norm_to: int = -1,
+            eps_for_norm: float = 5e-12,
+            p_for_norm: int = 2,
+            dim_for_norm: int = 0,
     ):
         """
         :param policy_model: pytorch.nn.Module: The policy model to be used. Policy model must return a tuple of
-            action logits and state values
+            action logits and state values.
         :param optimizer: pytorch.optim.Optimizer: The optimizer to be used for policy model. Optimizer must be
-            initialized and wrapped with policy model parameters
+            initialized and wrapped with policy model parameters.
         :param lr_scheduler: Union[LRScheduler, None]: The LR Scheduler to be used to decay the learning rate.
-            LR Scheduler must be initialized and wrapped with passed optimizer
-        :param loss_function: LossFunction: A PyTorch loss function
-        :param gamma: float: The discounting factor for rewards
-        :param entropy_coefficient: float: The coefficient to be used for entropy in policy loss computation
-        :param state_value_coefficient: float: The coefficient to be used for state value in final loss computation
-        :param lr_threshold: float: The threshold LR which once reached LR scheduler is not called further
-        :param num_actions: int: Number of actions for the environment
+            LR Scheduler must be initialized and wrapped with passed optimizer.
+        :param loss_function: LossFunction: A PyTorch loss function.
+        :param gamma: float: The discounting factor for rewards.
+        :param entropy_coefficient: float: The coefficient to be used for entropy in policy loss computation.
+        :param state_value_coefficient: float: The coefficient to be used for state value in final loss computation.
+        :param lr_threshold: float: The threshold LR which once reached LR scheduler is not called further.
+        :param num_actions: int: Number of actions for the environment.
         :param model_backup_frequency: int: The timesteps after which policy model, optimizer states and lr
-            scheduler states are backed up
-        :param save_path: str: The path where policy model, optimizer states and lr scheduler states are to be saved
+            scheduler states are backed up.
+        :param save_path: str: The path where policy model, optimizer states and lr scheduler states are to be saved.
         :param bootstrap_rounds: int: The number of rounds until which gradients are to be accumulated before
-            performing calling optimizer step. Gradients are mean reduced for bootstrap_rounds > 1. Default: 1
-        :param device: str: The device on which models are run. Default: "cpu"
+            performing calling optimizer step. Gradients are mean reduced for bootstrap_rounds > 1. Default: 1.
+        :param device: str: The device on which models are run. Default: "cpu".
         :param apply_norm: int: The code to select the normalization procedure to be applied on selected quantities;
-            selected by `apply_norm_to`: see below)). Default: -1
+            selected by `apply_norm_to`: see below)). Default: -1.
         :param apply_norm_to: int: The code to select the quantity to which normalization is to be applied.
-            Default: -1
+            Default: -1.
         :param eps_for_norm: float: Epsilon value for normalization; for numeric stability. For min-max normalization
-            and standardized normalization. Default: 5e-12
-        :param p_for_norm: int: The p value for p-normalization. Default: 2; L2 Norm
+            and standardized normalization. Default: 5e-12.
+        :param p_for_norm: int: The p value for p-normalization. Default: 2; L2 Norm.
         :param dim_for_norm: int: The dimension across which normalization is to be performed. Default: 0.
 
         The codes for `apply_norm` are given as follows: -
@@ -78,6 +87,7 @@ class A2C(Agent):
             On States and Advantage: 4
         """
         super(A2C, self).__init__()
+        ## Policy model
         self.policy_model = policy_model.to(device)
         self.optimizer = optimizer
         self.lr_scheduler = lr_scheduler
@@ -119,14 +129,14 @@ class A2C(Agent):
         ).keys()
 
     def train(
-        self,
-        state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
-        reward: Union[int, float],
-        done: Union[bool, int],
-        **kwargs,
+            self,
+            state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
+            reward: Union[int, float],
+            done: Union[bool, int],
+            **kwargs,
     ) -> int:
         """
-
+        The train method to train the agent and underlying policy model.
         :param state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]: The current state returned
         :param reward: Union[int, float]: The reward returned from previous action
         :param done: Union[bool, int]: Flag indicating if episode has terminated or not
@@ -147,11 +157,12 @@ class A2C(Agent):
 
     @pytorch.no_grad()
     def policy(
-        self,
-        state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
-        **kwargs,
+            self,
+            state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
+            **kwargs,
     ) -> int:
         """
+        The policy method to evaluate the agent. This runs in pure inference mode.
         :param state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]: The current state returned
             from gym environment
         :param kwargs: Other keyword arguments
@@ -182,8 +193,8 @@ class A2C(Agent):
                 f"Expected `done` argument to be of type {bool} or {int} but received {type(done)}!"
             )
         if (
-            self.episode_counter % (self.bootstrap_rounds + 1) == 0
-            and self.bootstrap_rounds > 1
+                self.episode_counter % (self.bootstrap_rounds + 1) == 0
+                and self.bootstrap_rounds > 1
         ):
             self.__train_models()
             self.episode_counter += 1
@@ -219,10 +230,12 @@ class A2C(Agent):
         entropy = self._adjust_dims_for_tensor(entropy, advantage.dim())
         # Compute Policy Losses
         policy_losses = (
-            -action_log_probabilities * advantage + self.entropy_coefficient * entropy
+                -action_log_probabilities * advantage + self.entropy_coefficient * entropy
         )
         # Compute Value Losses
-        value_loss = self.state_value_coefficient * self.loss_function(state_current_values, advantage)
+        value_loss = self.state_value_coefficient * self.loss_function(
+            state_current_values, advantage
+        )
         # Compute Mean for policy losses
         policy_loss = policy_losses.mean()
         # Compute final loss
@@ -268,8 +281,8 @@ class A2C(Agent):
         self.optimizer.step()
         # Take an LR Scheduler step if required.
         if (
-            self.lr_scheduler is not None
-            and min([*self.lr_scheduler.get_last_lr()]) > self.min_lr
+                self.lr_scheduler is not None
+                and min([*self.lr_scheduler.get_last_lr()]) > self.min_lr
         ):
             self.lr_scheduler.step()
         # Clear buffers for tracked operations.
@@ -278,7 +291,7 @@ class A2C(Agent):
         self.grad_accumulator.clear()
 
     def compute_advantage(
-        self, returns: pytorch.Tensor, state_current_values: pytorch.Tensor
+            self, returns: pytorch.Tensor, state_current_values: pytorch.Tensor
     ) -> pytorch.Tensor:
         """
         Computes the advantage from returns and state values
@@ -328,7 +341,7 @@ class A2C(Agent):
 
     @staticmethod
     def __create_action_distribution(
-        actions_logits: pytorch.Tensor,
+            actions_logits: pytorch.Tensor,
     ) -> Categorical:
         """
         Private static method to create distributions from action logits
