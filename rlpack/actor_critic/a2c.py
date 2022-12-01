@@ -87,7 +87,6 @@ class A2C(Agent):
             On States and Advantage: 4
         """
         super(A2C, self).__init__()
-        ## Policy model
         self.policy_model = policy_model.to(device)
         self.optimizer = optimizer
         self.lr_scheduler = lr_scheduler
@@ -95,7 +94,7 @@ class A2C(Agent):
         self.gamma = gamma
         self.entropy_coefficient = entropy_coefficient
         self.state_value_coefficient = state_value_coefficient
-        self.min_lr = float(lr_threshold)
+        self.lr_threshold = float(lr_threshold)
         self.num_actions = num_actions
         self.model_backup_frequency = model_backup_frequency
         self.save_path = save_path
@@ -282,7 +281,7 @@ class A2C(Agent):
         # Take an LR Scheduler step if required.
         if (
                 self.lr_scheduler is not None
-                and min([*self.lr_scheduler.get_last_lr()]) > self.min_lr
+                and min([*self.lr_scheduler.get_last_lr()]) > self.lr_threshold
         ):
             self.lr_scheduler.step()
         # Clear buffers for tracked operations.

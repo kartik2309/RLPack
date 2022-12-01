@@ -4,7 +4,7 @@
 
 
 Currently following classes have been implemented:
-    - DQNAgent: Implemented as rlpack.dqn.dqn_agent.DQNAgent this class implements variants of DQN agents. More
+    - DQNAgent: Implemented as rlpack.dqn.dqn_agent.DqnAgent this class implements variants of DQN agents. More
         information can be found [here](@ref agents/dqn.md).
 """
 
@@ -134,7 +134,7 @@ class DqnAgent(Agent):
         self.target_model_update_rate = target_model_update_rate
         self.policy_model_update_rate = policy_model_update_rate
         self.model_backup_frequency = model_backup_frequency
-        self.min_lr = float(lr_threshold)
+        self.lr_threshold = float(lr_threshold)
         self.batch_size = batch_size
         self.num_actions = num_actions
         self.save_path = save_path
@@ -455,7 +455,7 @@ class DqnAgent(Agent):
         self.optimizer.step()
         if (
             self.lr_scheduler is not None
-            and min(self.lr_scheduler.get_last_lr()) > self.min_lr
+            and min(self.lr_scheduler.get_last_lr()) > self.lr_threshold
         ):
             self.lr_scheduler.step()
 

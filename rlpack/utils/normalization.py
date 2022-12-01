@@ -10,6 +10,9 @@ Currently following classes have been implemented:
         implemented as rlpack.utils.sanity_check.SanityCheck.
     - Setup: Sets up the simulator to run the agent with environment. Implemented as rlpack.utils.setup.Setup.
 
+Following packages are part of utils:
+    - base: A package for base class, implemented as utils.base
+
 Following TypeVars have been defined:
     - LRScheduler: The Typing variable for LR Schedulers.
     - LossFunction: The Typing variable for Loss Functions.

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['policy_5fmodel_0',['policy_model',['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a186663b4b9a13fdff2d3a6c068573a4b',1,'rlpack::actor_critic::a2c::A2C']]]
+  ['apply_5fnorm_0',['apply_norm',['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a57416c3545397ddaaa31ee69142e67da',1,'rlpack::actor_critic::a2c::A2C']]],
+  ['apply_5fnorm_5fto_1',['apply_norm_to',['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aeef17e7ec0e0b81e2b47b0c4663bad2c',1,'rlpack::actor_critic::a2c::A2C']]]
 ];
