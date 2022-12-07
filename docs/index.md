@@ -8,11 +8,11 @@ for training.
 
 [TOC]
 
-## Table of Contents 
+## Table of Contents
 
 | Segment                        |                    Description                     |   
 |:-------------------------------|:--------------------------------------------------:|
-| [Models](@ref models/index.md) | Information on available in-built models and more. |                               |                                                    |
+| [Models](@ref models/index.md) | Information on available in-built models and more. |                                                                               
 | [Agents](@ref agents/index.md) |          Information on available agents           | 
 
 ## General structure
