@@ -1,0 +1,5 @@
+<map id="rlpack.actor_critic.a2c.A2C" name="rlpack.actor_critic.a2c.A2C">
+<area shape="rect" id="node1" title="The A2C class implements the synchronous Actor&#45;Critic method." alt="" coords="5,167,185,192"/>
+<area shape="rect" id="node2" href="$classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html" title="The base class for all agents." alt="" coords="17,79,174,119"/>
+<area shape="rect" id="node3" title=" " alt="" coords="67,5,124,31"/>
+</map>

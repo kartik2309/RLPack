@@ -1,0 +1,4 @@
+<map id="rlpack.utils.setup.Setup" name="rlpack.utils.setup.Setup">
+<area shape="rect" id="node1" title="This class sets up all the necessary objects that are required to run any configuration." alt="" coords="9,93,168,119"/>
+<area shape="rect" id="node2" href="$classrlpack_1_1utils_1_1base_1_1register_1_1_register.html" title="This abstract class contains all the necessary information about agents and models for setting them u..." alt="" coords="5,5,172,45"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="rlpack.models.mlp.Mlp" name="rlpack.models.mlp.Mlp">
+<area shape="rect" id="node1" title="This class is a PyTorch Model implementing the MLP model for 1&#45;D or 2&#45;D state values." alt="" coords="5,79,159,104"/>
+<area shape="rect" id="node2" title=" " alt="" coords="17,5,147,31"/>
+</map>
