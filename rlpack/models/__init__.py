@@ -1,5 +1,5 @@
 """!
-@package models
+@package rlpack.models
 @brief This package implements the [in-built](@ref models/index.md) models.
 
 

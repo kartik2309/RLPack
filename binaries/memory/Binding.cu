@@ -1,23 +1,31 @@
-//
-// Created by Kartik Rajeshwaran on 2022-08-22.
-//
 
 #include <pybind11/stl.h>
 #include <pybind11/stl_bind.h>
 
 #include "C_Memory.cuh"
 
+/*!
+ * @addtogroup binaries_group binaries
+ * @brief Binaries Module consists of C++ backend exposed via pybind11 to rlpack via rlpack._C. These modules are
+ * optimized to perform heavier workloads.
+ * @{
+ * @addtogroup memory_group memory
+ * @brief Memory module is the C++ backend for rlpack._C.memory.Memory class. Heavier workloads have been optimized
+ * with multithreading with OpenMP and CUDA (if CUDA compatible device is found).
+ * @{
+ */
 PYBIND11_MAKE_OPAQUE(std::map<std::string, torch::Tensor>)
 PYBIND11_MAKE_OPAQUE(std::map<std::string, std::deque<int64_t>>)
 PYBIND11_MAKE_OPAQUE(std::map<std::string, std::deque<torch::Tensor>>)
 PYBIND11_MODULE(C_Memory, m) {
-    m.doc() = "Module to provide Python binding for C_Memory class";
-    /*
+    /*!
      * Python bindings for C_Memory, C_MemoryData and all the opaque objects. All bindings are pickleable.
-     *
-     * ~~~~~~~~~~~~~~~~~~~~~~~~
      * Python binding for C_Memory class. Only relevant methods are exposed to Python
+     *
+     * @param C_Memory : C_Memory class
+     * @param m : Local Python scope
      */
+    m.doc() = "Module to provide Python binding for C_Memory class";
     pybind11::class_<C_Memory>(m, "C_Memory")
             .def(pybind11::init<pybind11::int_ &, pybind11::str &, pybind11::int_ &, pybind11::int_ &>(),
                  "Class constructor for C_Memory",
@@ -66,9 +74,7 @@ PYBIND11_MODULE(C_Memory, m) {
             .def("update_priorities", &C_Memory::update_priorities,
                  "Method to update priorities and associated prioritization values",
                  pybind11::arg("random_indices"),
-                 pybind11::arg("new_priorities"),
-                 pybind11::arg("new_probabilities"),
-                 pybind11::arg("new_weights"))
+                 pybind11::arg("new_priorities"))
             .def("initialize", &C_Memory::initialize,
                  "Initialize the Memory with input vector of values.",
                  pybind11::arg("c_memory_data"))
@@ -279,4 +285,8 @@ PYBIND11_MODULE(C_Memory, m) {
               mapOfDequeOfInt64[pair.first.cast<std::string>()] = pair.second.cast<std::deque<int64_t>>();
             }
             return mapOfDequeOfInt64; }), pybind11::return_value_policy::reference);
-}
+};
+/*!
+ * @} @I{ // End group Memory }
+ * @} @I{ // End group Binaries }
+ */

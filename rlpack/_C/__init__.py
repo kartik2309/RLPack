@@ -1,5 +1,5 @@
 """!
-@package _C
+@package rlpack._C
 @brief This package implements the classes to interface between C++ and Python.
 
 

@@ -1,5 +1,5 @@
 """!
-@package utils
+@package rlpack.utils
 @brief This package implements the basic utilities to be used across rlpack.
 
 
@@ -22,6 +22,9 @@ Following TypeVars have been defined:
 
 from typing import TypeVar
 
+## The Typing variable for LR Schedulers. @I{# noqa: E266}
 LRScheduler = TypeVar("LRScheduler")
+## The Typing variable for Loss Functions. @I{# noqa: E266}
 LossFunction = TypeVar("LossFunction")
+## The Typing variable for Activations. @I{# noqa: E266}
 Activation = TypeVar("Activation")

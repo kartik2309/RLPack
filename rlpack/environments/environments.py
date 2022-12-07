@@ -1,5 +1,5 @@
 """!
-@package environments
+@package rlpack.environments
 @brief This package implements the gym environment to couple it with selected environment.
 
 
@@ -34,22 +34,34 @@ class Environments:
         ] = None,
     ):
         """
-        :param agent: Agent: The agent to be trained and/or evaluated in the environment specified in `config`.
-        :param config: Dict[str, Any]: The configuration setting for experiment.
-        :param reshape_func: Optional[Callable[[np.ndarray, Tuple[int, ...]], np.ndarray]]: The function to reshape
+        @param agent: Agent: The agent to be trained and/or evaluated in the environment specified in `config`.
+        @param config: Dict[str, Any]: The configuration setting for experiment.
+        @param reshape_func: Optional[Callable[[np.ndarray, Tuple[int, ...]], np.ndarray]]: The function to reshape
             the input states. Default: None. Default behavior is to not do any reshaping.
         """
+        ## The input RLPack agent to be run. @I{# noqa: E266}
         self.agent = agent
+        ## The input config for setup. @I{# noqa: E266}
         self.config = config
+        ## The input reshape function for states. @I{# noqa: E266}
         if reshape_func is None:
             self.reshape_func = self.__reshape_func_default
         else:
             self.reshape_func = reshape_func
+        ## The new shape requested in config to be used with @ref reshape_func. @I{# noqa: E266}
         self.new_shape = tuple(self.config.get("new_shape"))
         render_mode = None
         if self.is_eval() and config["render"]:
             render_mode = "human"
-        self.env = gym.make(self.config["env_name"], render_mode=render_mode)
+        ## The gym environment on which the agent will run. @I{# noqa: E266}
+        if self.config.get("env") is None:
+            assert self.config.get("env_name") is not None, (
+                "Either `env` (for gym environment) or `env_name` (for env name registered with gym)"
+                " must be passed in config"
+            )
+            self.env = gym.make(self.config["env_name"], render_mode=render_mode)
+        else:
+            self.env = config["env"]
         self.env.spec.max_episode_steps = self.config["max_timesteps"]
 
     def train_agent(
@@ -57,10 +69,10 @@ class Environments:
     ) -> None:
         """
         Method to train the agent in the specified environment.
-        :param render: bool: Indicates if we wish to render the environment (in animation). Default: False.
-        :param load: bool: Indicates weather to load a previously saved model or train a new one. If set true,
+        @param render: bool: Indicates if we wish to render the environment (in animation). Default: False.
+        @param load: bool: Indicates weather to load a previously saved model or train a new one. If set true,
             config must be `save_path` or set or environment variable SAVE_PATH must be set.
-        :param plot: bool: Indicates if to plot the training progress. If set True, rewards and episodes are
+        @param plot: bool: Indicates if to plot the training progress. If set True, rewards and episodes are
             recorded and plot is saved in `save_path`.
         config must have set mode='train' to run evaluation.
         Rewards are logged on console every `reward_logging_frequency` set in the console.
@@ -214,9 +226,9 @@ class Environments:
         """
         This is the default reshape function. If `new_shape` has been set in config, input states are reshaped
             to new shapes, else returns the input as it is. Default behavior is not perform any reshaping.
-        :param x: np.ndarray: The input numpy array to reshape.
-        :param shape: Optional[Tuple[int, ...]]: The new shape to which we want states to be reshaped. Default: None.
-        :return: np.ndarray: The reshaped (or unchanged) array.
+        @param x: np.ndarray: The input numpy array to reshape.
+        @param shape: Optional[Tuple[int, ...]]: The new shape to which we want states to be reshaped. Default: None.
+        @return np.ndarray: The reshaped (or unchanged) array.
         """
         if shape is not None:
             x = np.reshape(x, newshape=shape)
@@ -226,8 +238,8 @@ class Environments:
     def __list_mean(x: List[Union[float, int]]) -> Union[None, float]:
         """
         This function computes the mean of the input list.
-        :param x: List[Union[float, int]]: The list for which mean is to be computed
-        :return: Union[None, float]: The mean value.
+        @param x: List[Union[float, int]]: The list for which mean is to be computed
+        @return Union[None, float]: The mean value.
         """
         if x:
             return sum(x) / len(x)

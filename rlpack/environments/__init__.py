@@ -1,5 +1,5 @@
 """!
-@package environments
+@package rlpack.environments
 @brief This package implements the gym environment to couple it with selected environment.
 
 
@@ -10,5 +10,7 @@ This class also logs rewards and other metrics on the screen.
 
 import logging
 
+## The logger to set log level to INFO. @I{# noqa: E266}
+## The rlpack.environments uses INFO level logging to display various metrics related to training. @I{# noqa: E266}
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)

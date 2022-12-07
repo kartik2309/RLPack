@@ -1,5 +1,5 @@
 """!
-@package actor_critic
+@package rlpack.actor_critic
 @brief This package implements the Actor-Critic methods.
 
 

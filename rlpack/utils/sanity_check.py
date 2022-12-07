@@ -1,5 +1,5 @@
 """!
-@package utils
+@package rlpack.utils
 @brief This package implements the basic utilities to be used across rlpack.
 
 
@@ -34,10 +34,12 @@ class SanityCheck(Register):
 
     def __init__(self, input_config: Dict[str, Any]):
         """
-        :param input_config: (Dict[str, Any]): The input config that is to be used for training.
+        @param input_config: (Dict[str, Any]): The input config that is to be used for training/evaluation.
         """
         super(SanityCheck, self).__init__()
+        ## The arguments received from the input `input_config` keyword arguments. @I{# noqa: E266}
         self.args = list(input_config.keys())
+        ## The argument `input_config`; indicating keyword arguments to be used to training/evaluation. @I{# noqa: E266}
         self.input_config = input_config
 
     def check_mandatory_params_sanity(self) -> None:
@@ -56,7 +58,7 @@ class SanityCheck(Register):
         `model_name` and `model_args` must be passed. If both are not passed, it will try to check if there is a
         custom model that is passed. Custom models' names must correspond to their target agent's keyword argument
         name.
-        :return: A flag indicating if we use a custom model or an in-built model.
+        @return A flag indicating if we use a custom model or an in-built model.
         """
         present_model_init_args = [k in self.args for k in self.model_init_args]
         custom_model = False
@@ -103,7 +105,7 @@ class SanityCheck(Register):
         """
         Check the sanity of agent input. This function will check the arguments received for agents to verify if
         all necessary arguments are received.
-        :param only_model_arg_check: bool: Indicating weather to check only the model related arguments or all of the
+        @param only_model_arg_check: bool: Indicating weather to check only the model related arguments or all of the
             mandatory arguments.
         """
         present_agent_init_args = [k in self.args for k in self.agent_init_args]
@@ -232,9 +234,9 @@ class SanityCheck(Register):
     def __error_message(self, param_of_arg: str, boolean_args: List[bool]) -> str:
         """
         Private method to craft the error message indicating parameters that are missing.
-        :param param_of_arg: str: The parameter for which argument is missing.
-        :param boolean_args: Boolean list of indicating if the corresponding argument was received or not
-        :return: str: The error message.
+        @param param_of_arg: str: The parameter for which argument is missing.
+        @param boolean_args: Boolean list of indicating if the corresponding argument was received or not
+        @return str: The error message.
         """
         message = (
             f"The following `{param_of_arg}` arguments were not received: "

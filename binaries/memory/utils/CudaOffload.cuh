@@ -1,6 +1,3 @@
-//
-// Created by Kartik Rajeshwaran on 2022-11-15.
-//
 
 #ifndef RLPACK_BINARIES_MEMORY_UTILS_CUDAOFFLOAD_CUH_
 #define RLPACK_BINARIES_MEMORY_UTILS_CUDAOFFLOAD_CUH_
@@ -25,13 +22,39 @@ struct is_vector<std::vector<T, A>> : std::true_type {
 template<typename C>
 inline constexpr bool match_vector_type = is_vector<C>::value;
 
+
+/*!
+ * @addtogroup binaries_group binaries
+ * @brief Binaries Module consists of C++ backend exposed via pybind11 to rlpack via rlpack._C. These modules are
+ * optimized to perform heavier workloads.
+ * @{
+ * @addtogroup memory_group memory
+ * @brief Memory module is the C++ backend for rlpack._C.memory.Memory class. Heavier workloads have been optimized
+ * with multithreading with OpenMP and CUDA (if CUDA compatible device is found).
+ * @{
+ * @addtogroup offload_group offload
+ * @brief Template class to offload some heavier computation to specialised hardware. Functions will be executed in CUDA
+ * if CUDA device is available else OpenMP routines will be used to execute the functions on CPU.
+ * @{
+ * @defgroup cuda_group cuda
+ * @brief CUDA optimized implementation for Offload
+ * @{
+ */
+
+//! Maximum number of CUDA blocks that can be launched.
 #define MAX_NUM_BLOCKS 256
+//! Maximum number of CUDA blocks that can be launched for reduction.
 #define MAX_REDUCTION_BLOCKS 2
+//! Maximum number of threads per CUDA Blocks.
 #define NUM_THREADS 1024
+//! Maximum number of rounds for shuffling. This is used in Offload::shuffle when all input elements cannot fit in GPU.
 #define MAX_SHUFFLE_ROUNDS 1024
+//! Maximum shared memory blocks (as per 16KB limitation)
 #define MAX_SHARED_MEMORY_BLOCKS 8
+//! Factor by which buffer size is multiplied to allocate the memory in GPU and CPU.
 #define BUFFERSIZE_FACTOR 7
 
+//! Global shared memory for CUDA for data sharing between blocks.
 __shared__ float_t G_sharedData[MAX_SHARED_MEMORY_BLOCKS][NUM_THREADS];
 
 template<typename DType>
@@ -66,14 +89,17 @@ __global__ void array_index_fill_kernel(DType *fillArray,
                                         uint64_t start,
                                         size_t size);
 
-
+/*!
+ * @brief Template Offload class for GPU with CUDA optimized kernels with OpenMP optimized routines for host
+ * operations. This class uses pinned CUDA memory based implementations.
+ */
 template<typename DType>
 class Offload {
 public:
+    //! The vector to store final results.
     std::vector<DType> result;
 
     explicit Offload(int64_t bufferSize);
-
     ~Offload();
 
     template<class Container>
@@ -94,14 +120,33 @@ public:
     void reset();
 
 private:
-    float_t *errorArrayHost_, *errorArrayDevice_;
-    uint64_t *indexArrayHost_, *indexArrayDevice_;
-    DType *inputContainerDataHost_, *inputContainerDataDevice_,
-            *sumsHost_, *sumsDevice_;
-    curandState *statesHost_, *statesDevice_;
+    //! Float pointer to an array to store random errors in Host.
+    float_t *errorArrayHost_;
+    //! Float pointer to an array to store random errors in GPU.
+    float_t *errorArrayDevice_;
+    //! Int64 pointer to an array to store indices in Host.
+    uint64_t *indexArrayHost_;
+    //! Int64 pointer to an array to store indices in GPU.
+    uint64_t *indexArrayDevice_;
+    //! DType pointer to an array to store input container's data to be processed in Host.
+    DType *inputContainerDataHost_;
+    //! DType pointer to an array to store input container's data to be processed in GPU.
+    DType *inputContainerDataDevice_;
+    //! DType pointer to an array to store intermediate sums in Host.
+    DType *sumsHost_;
+    //! DType pointer to an array to store intermediate sums in GPU.
+    DType *sumsDevice_;
+    //! curandState pointer to an array to store random states for CUDA kernel random generator in Host.
+    curandState *statesHost_;
+    //! curandState pointer to an array to store random states for CUDA kernel random generator in GPU.
+    curandState *statesDevice_;
+    //! The Vector to store unique priorities. This is used in Offload::arg_quantile_segment_indices method.
     std::vector<DType> uniquePriorities_;
-    std::vector<int64_t> priorityFrequencies_;
+    //! The Vector to store intermediate values to be shuffled.
     std::vector<DType> toShuffleVector_;
+    //! The Vector to store frequencies of each priority. This is used in Offload::arg_quantile_segment_indices method.
+    std::vector<int64_t> priorityFrequencies_;
+    //! Indicating the total capacity to be allocated in Host and CUDA.
     uint64_t allocatedCapacity_;
 
     void shuffle_(size_t numElements, int64_t parallelismSizeThreshold);
@@ -115,9 +160,18 @@ private:
 
     void cudaKernelError();
 };
+/*!
+ * @} @I{ // End group cpu_group }
+ * @} @I{ // End group offload_group }
+ * @} @I{ // End group memory_group }
+ * @} @I{ // End group binaries_group }
+ */
 
 template<typename DType>
 Offload<DType>::Offload(int64_t bufferSize) {
+    /*!
+     * Constructor for Offload. Dynamically allocates required memory in Host and GPU and initialises necessary variables.
+     */
     cudaHostAlloc(&errorArrayHost_, BUFFERSIZE_FACTOR * sizeof(float_t) * bufferSize, cudaHostAllocMapped);
     cudaHostGetDevicePointer(&errorArrayDevice_, errorArrayHost_, 0);
     cudaHostAlloc(&indexArrayHost_, BUFFERSIZE_FACTOR * sizeof(uint64_t) * bufferSize, cudaHostAllocMapped);
@@ -136,6 +190,9 @@ Offload<DType>::Offload(int64_t bufferSize) {
 
 template<typename DType>
 Offload<DType>::~Offload() {
+    /*!
+     * Destructor for Offload. De-allocated all dynamically allocated memory in Host and GPU
+     */
     cudaFreeHost(errorArrayHost_);
     cudaFree(errorArrayDevice_);
     cudaFreeHost(indexArrayHost_);
@@ -151,14 +208,18 @@ Offload<DType>::~Offload() {
 template<typename DType>
 template<class Container>
 DType Offload<DType>::cumulative_sum(const Container &inputContainer, const int64_t parallelismSizeThreshold) {
-    /*
-   * Performs sum reduction on CUDA to compute cumulative sum of given inputContainer.
-   * Uses CUDA only when parallelismSizeThreshold < inputContainer.size(). Else uses CPU and finds sum iteratively.
-   *
-   * Template Arguments
-   * - Container: Must be an STL Container, hence must have implemented `size` method.
-   * - DType: The datatype used for STL Container.
-   */
+    /*!
+     * Performs sum reduction on CUDA to compute cumulative sum of given inputContainer.
+     * Uses CUDA only when parallelismSizeThreshold < inputContainer.size(). Else uses CPU and finds sum iteratively.
+     *
+     * Template Arguments
+     * - Container: Must be an STL Container initialised with DType, hence must have implemented `size` method.
+     *
+     * @param inputContainer : The input container for which sum has to be computed.
+     * @param parallelismSizeThreshold : The threshold size of inputContainer beyond with
+     * CUDA Kernels are to be used.
+     * @return The cumulative sum.
+     */
     auto numElements = inputContainer.size();
     DType sumResultHost = 0;
     // If number of elements is less that `parallelismSizeThreshold`, find the sum on CPU.
@@ -214,12 +275,17 @@ DType Offload<DType>::cumulative_sum(const Container &inputContainer, const int6
 template<typename DType>
 template<class Container>
 void Offload<DType>::shuffle(const Container &inputContainer, const int64_t parallelismSizeThreshold) {
-    /*
-   * Shuffles the inputContainer in CUDA.
-   *
-   * Template Arguments
-   * - Container: Must be an STL Container, hence must have implemented `size` method.
-   */
+    /*!
+     * This template method shuffles the given input container. Results are flushed into Offload::shuffle.
+     *
+     *
+     * Template Arguments
+     * - Container: Must be an STL Container initialised with DType, hence must have implemented `size` method.
+     *
+     * @param inputContainer : The input container which has to be shuffled.
+     * @param parallelismSizeThreshold : The threshold size of inputContainer beyond which OpenMP routines are to be used
+     * with CUDA kernels.
+     */
     auto numElements = fill_input_data(inputContainer, parallelismSizeThreshold);
     shuffle_(numElements, parallelismSizeThreshold);
 }
@@ -228,16 +294,20 @@ template<typename DType>
 void Offload<DType>::generate_priority_seeds(DType cumulativeSum,
                                              int64_t parallelismSizeThreshold,
                                              uint64_t startPoint) {
-    /*
-   * Generates seeds with addition of random uniform error on CUDA.
-   *
-   * - Container: Must be an STL Container, hence must have implemented `size` method.
-   * - DType: The datatype used for STL Container.
-   */
+    /*!
+     * This method generates the priority seeds. This is used by C_Memory::sample when using
+     * proportional prioritization strategy. This method generates seeds between arguments
+     * startPoint and cumulativeSum. Results are flushed into Offload::result.
+     *
+     * @param cumulativeSum : The cumulative sum upto which the seeds are to be generated.
+     * @param parallelismSizeThreshold : The threshold size of inputContainer beyond which OpenMP routines are to be used
+     * with CUDA kernels.
+     * @param startPoint : The start point, i.e. the smallest value of the generated seeds.
+     */
     std::random_device rd;
     std::mt19937 generator(rd());
     size_t numElements = ceil(static_cast<float_t>(cumulativeSum));
-    if (numElements > allocatedCapacity_){
+    if (numElements > allocatedCapacity_) {
         numElements = allocatedCapacity_;
     }
     bool enableParallelism = parallelismSizeThreshold < numElements;
@@ -281,7 +351,19 @@ template<typename DType>
 template<class Container>
 void Offload<DType>::arg_quantile_segment_indices(int64_t numSegments, const Container &inputContainer,
                                                   int64_t parallelismSizeThreshold) {
-
+    /*!
+     * The template method generates the quantile segments for given input container and the resulting
+     * indices of inputContainer from this operation is flushed into Offload::result.
+     *
+     *
+     * Template Arguments
+     * - Container: Must be an STL Container initialised with DType, hence must have implemented `size` method.
+     *
+     * @param numSegments : The number of segments to be divided inputContainer into.
+     * @param inputContainer : The input container which is to be divided into `numSegments` segments.
+     * @param parallelismSizeThreshold : The threshold size of inputContainer beyond which OpenMP routines are to be used
+     * with CUDA kernels.
+     */
     auto numElements = fill_input_data(inputContainer, parallelismSizeThreshold);
     // Compute number of CUDA Blocks.
     auto numBlocksFloat = static_cast<float_t>(numElements) / NUM_THREADS;
@@ -330,6 +412,9 @@ void Offload<DType>::arg_quantile_segment_indices(int64_t numSegments, const Con
 
 template<typename DType>
 void Offload<DType>::reset() {
+    /*!
+     * Reset method for Offload. This will clear the Offload::result vector and fills it with 0.
+     */
     {
 #pragma omp parallel for default(none) shared(result)
         for (uint64_t index = 0; index < result.size(); index++) {
@@ -341,6 +426,15 @@ void Offload<DType>::reset() {
 template<typename DType>
 void Offload<DType>::shuffle_(size_t numElements,
                               int64_t parallelismSizeThreshold) {
+    /*!
+     * Helper method for Offload::shuffle in CUDA. This method invokes necessary methods to execute CUDA Kernels
+     * required to obtain the results. This fetches the data from Offload::result.
+     *
+     * @param numElements : Number of elements in the to be shuffled based on number of elements loaded
+     * in Offload::result.
+     * @param parallelismSizeThreshold : The threshold size of Offload::result beyond which OpenMP routines are
+     * to be used with CUDA kernels.
+     */
     // Setup random device and generator.
     std::random_device rd;
     std::mt19937 generator(rd());
@@ -374,7 +468,21 @@ void Offload<DType>::shuffle_(size_t numElements,
 }
 
 template<typename DType>
-void Offload<DType>::execute_random_setup_kernel(size_t numElements, uint64_t startPoint, int64_t parallelismSizeThreshold) {
+void Offload<DType>::execute_random_setup_kernel(size_t numElements,
+                                                 uint64_t startPoint,
+                                                 int64_t parallelismSizeThreshold) {
+    /*!
+     * Helper method for Offload::shuffle_ in CUDA. This method executes the CUDA Kernels required to
+     * set up the random states and errors to help shuffle the container.
+     *
+     * @param numElements : Number of elements in the to be shuffled based on number of elements loaded
+     * in Offload::result.
+     * @param startPoint : The start point from which CUDA kernel is supposed to full the error and index arrays
+     * (Offload::errorArrayDevice_, Offload::indexArraydevice_). This is used for recursion when we have limited
+     * number of blocks.
+     * @param parallelismSizeThreshold : The threshold size of Offload::result beyond which OpenMP routines are
+     * to be used with CUDA kernels.
+     */
     auto numBlocksFloat = (float_t) numElements / NUM_THREADS;
     int32_t numBlocks = ceil(numBlocksFloat);
     if (numBlocks > MAX_NUM_BLOCKS) {
@@ -409,7 +517,21 @@ void Offload<DType>::execute_random_setup_kernel(size_t numElements, uint64_t st
 }
 
 template<typename DType>
-void Offload<DType>::execute_shuffle_kernel(size_t numElements, uint64_t startPoint, int64_t parallelismSizeThreshold) {
+void Offload<DType>::execute_shuffle_kernel(size_t numElements,
+                                            uint64_t startPoint,
+                                            int64_t parallelismSizeThreshold) {
+    /*!
+     * Helper method for Offload::shuffle_ in CUDA. This method executes the CUDA Kernels required to
+     * set up the perform final shuffle
+     *
+     * @param numElements : Number of elements in the to be shuffled based on number of elements loaded
+     * in Offload::result.
+     * @param startPoint : The start point from which CUDA kernel is supposed to full the error and index arrays
+     * (Offload::errorArrayDevice_, Offload::indexArraydevice_). This is used for recursion when we have limited
+     * number of blocks.
+     * @param parallelismSizeThreshold : The threshold size of Offload::result beyond which OpenMP routines are
+     * to be used with CUDA kernels.
+     */
     auto numBlocksFloat = (float_t) numElements / NUM_THREADS;
     int32_t numBlocks = ceil(numBlocksFloat);
     if (numBlocks > MAX_NUM_BLOCKS) {
@@ -435,6 +557,21 @@ void Offload<DType>::execute_shuffle_kernel(size_t numElements, uint64_t startPo
 template<typename DType>
 template<class Container>
 size_t Offload<DType>::fill_input_data(Container &inputContainer, int64_t parallelismSizeThreshold) {
+    /*!
+     * Helper method for all methods in Offload with CUDA. This class moves the data from STL container to the raw
+     * pointer array. It is moved to Offload::inputContainerDataHost_.
+     * If `inputContainer` is a vector, memory block is copied and is efficient. In other cases (non-contingous
+     * storage STLs), iterative copy is done with OpenMP routine.
+     *
+     *
+     * Template Arguments
+     * - Container: Must be an STL Container initialised with DType, hence must have implemented `size` method.
+     *
+     * @param inputContainer : The input container for which sum has to be computed.
+     * @param parallelismSizeThreshold : The threshold size of inputContainer beyond which OpenMP
+     * parallelized routines are to be used.
+     * @return The size of input (`inputContainer`).
+     */
     size_t numElements = inputContainer.size();
     if (match_vector_type<Container>) {
         cudaMemcpy(&inputContainerDataHost_[0], &inputContainer[0], sizeof(DType) * numElements, cudaMemcpyHostToHost);
@@ -456,6 +593,9 @@ size_t Offload<DType>::fill_input_data(Container &inputContainer, int64_t parall
 
 template<typename DType>
 void Offload<DType>::cudaKernelError() {
+    /*
+     * CUDA method to raise errors for silent errors occurred during CUDA operations.
+     */
     auto status = cudaGetLastError();
     if (status != cudaSuccess) {
         std::string cudaErrorMessage = cudaGetErrorString(status);
@@ -465,6 +605,12 @@ void Offload<DType>::cudaKernelError() {
 
 template<typename DType>
 __device__ void cumulative_sum_device_fn(DType *sum, const DType *vector) {
+    /*!
+     * CUDA Device to find cumulative sum.
+     *
+     * @param sum : Pointer to array in which result is to be accumulated.
+     * @param vector : Pointer to array for which sum has to be calculated.
+     */
     __shared__ DType sharedData[NUM_THREADS];
     auto tid = threadIdx.x;
     sharedData[tid] = vector[tid];
@@ -484,6 +630,14 @@ __global__ void cumulative_sum_kernel(DType *sums,
                                       const DType *data,
                                       const size_t size,
                                       const int64_t numBlocks) {
+    /*!
+     * CUDA Kernel to find cumulative sum.
+     *
+     * @param sums : Pointer to array in which result is to be accumulated.
+     * @param data : Pointer to array for which sum has to be calculated.
+     * @param size : The size of the data up to which sum is to be computed.
+     * @param numBlocks : Number of blocks that have been launched for this kernel.
+     */
     unsigned int forwardIndex = (numBlocks * blockIdx.x) + threadIdx.x;
     if (forwardIndex < size) {
         G_sharedData[blockIdx.x][threadIdx.x] = data[forwardIndex];
@@ -501,6 +655,16 @@ __global__ void random_setup_kernel(uint64_t *sortedIndices,
                                     curandState *cuRandStates,
                                     uint64_t startPoint,
                                     size_t size) {
+    /*!
+     * CUDA Kernel to setup random error and their indices. Random errors are generated as per uniform distribution.
+     *
+     * @param sortedIndices : Pointer to array to which is to be accumulated with indices for random values.
+     * @param sortedRandomValues : Pointer to array which is to be accumulated with random values.
+     * @param seed : The seed value to initialize curand.
+     * @param cuRandStates : Pointer to array of cuRandStates objects.
+     * @param startPoint : Start point, only beyond which `sortedIndices` is filled.
+     * @param size : The size of the `sortedIndices` and `sortedRandomValues` beyond which array is not filled.
+     */
     auto tid = blockIdx.x * blockDim.x + threadIdx.x;
     if (tid < size) {
         curand_init(seed, tid, 0, &cuRandStates[tid]);
@@ -511,6 +675,14 @@ __global__ void random_setup_kernel(uint64_t *sortedIndices,
 
 template<typename DType>
 __global__ void shuffle_kernel(DType *shuffle, const uint64_t *shuffledIndices, size_t size, uint64_t startPoint) {
+    /*!
+     * CUDA Kernel to shuffle the input array.
+     *
+     * @param shuffle : Pointer to array which is to be shuffled.
+     * @param shuffledIndices : Pointer to array of indices for `shuffle` to be shuffled simultaneously.
+     * @param size : The size of the `sortedIndices` and `sortedRandomValues` beyond which array is not filled.
+     * @param startPoint : Start point, only beyond which `sortedIndices` is filled.
+     */
     auto tid = blockIdx.x * blockDim.x + threadIdx.x;
     if (tid < size) {
         tid += startPoint;
@@ -527,6 +699,15 @@ __global__ void array_index_fill_with_random_uniform_error_kernel(DType *fillArr
                                                                   uint64_t seed,
                                                                   curandState *cuRandStates,
                                                                   size_t size) {
+    /*!
+     * CUDA Kernel to fill an array with random uniform errors.
+     *
+     * @param fillArray : Pointer to array which is to be shuffled.
+     * @param start : Start point, only beyond which `fillArray` is filled.
+     * @param seed : The seed value to initialize curand.
+     * @param cuRandStates : Pointer to array of cuRandStates objects.
+     * @param size : The size of the `fillArray` beyond which array is not filled.
+     */
     auto tid = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (tid < size) {
@@ -541,6 +722,13 @@ template<typename DType>
 __global__ void array_index_fill_kernel(DType *fillArray,
                                         uint64_t start,
                                         size_t size) {
+    /*!
+     * CUDA Kernel to fill an array with indicies (incremental values).
+     *
+     * @param fillArray : Pointer to array which is to be filled.
+     * @param start : Start point, only beyond which `fillArray` is filled.
+     * @param size : The size of the `fillArray` beyond which array is not filled.
+     */
     auto tid = blockIdx.x * blockDim.x + threadIdx.x;
     if (tid < size) {
         fillArray[tid] = start + tid;

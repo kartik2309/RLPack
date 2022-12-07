@@ -1,5 +1,5 @@
 """!
-@package models
+@package rlpack.models
 @brief This package implements the [in-built](@ref models/index.md) models.
 
 
@@ -36,24 +36,28 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
     ):
         """
         Initialize ActorCriticMlpPolicy model.
-        :param sequence_length: int: The sequence length of the expected tensor.
-        :param hidden_sizes: List[int]: The list of hidden sizes for each layer.
-        :param num_actions: int: The number of actions for the environment.
-        :param activation: Activation: The activation function class for the model. Must be an initialized
+        @param sequence_length: int: The sequence length of the expected tensor.
+        @param hidden_sizes: List[int]: The list of hidden sizes for each layer.
+        @param num_actions: int: The number of actions for the environment.
+        @param activation: Activation: The activation function class for the model. Must be an initialized
             activation object from PyTorch's nn (torch.nn) module.
-        :param dropout: float: The dropout to be used in the final Linear (FC) layer.
+        @param dropout: float: The dropout to be used in the final Linear (FC) layer.
         """
         super(ActorCriticMlpPolicy, self).__init__()
+        ## The feature extractor instance of rlpack.models._mlp_feature_extractor._MlpFeatureExtractor. @I{# noqa: E266}
         self.mlp_feature_extractor = _MlpFeatureExtractor(
             sequence_length=sequence_length,
             hidden_sizes=hidden_sizes,
             activation=activation,
             dropout=dropout,
         )
+        ## The object to flatten the output fo feature extractor. @I{# noqa: E266}
         self.flatten = pytorch.nn.Flatten(start_dim=1, end_dim=-1)
+        ## The final head for actor; creates logits for actions @I{# noqa: E266}
         self.actor_head = pytorch.nn.Linear(
             in_features=hidden_sizes[-1], out_features=num_actions
         )
+        ## The final head for critic; creates the state value. @I{# noqa: E266}
         self.critic_head = pytorch.nn.Linear(
             in_features=hidden_sizes[-1], out_features=1
         )
@@ -61,8 +65,8 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
     def forward(self, x):
         """
         The forwards method of the nn.Module.
-        :param x: pytorch.Tensor: The model input.
-        :return: pytorch.Tensor: The model output (logits).
+        @param x: pytorch.Tensor: The model input.
+        @return pytorch.Tensor: The model output (logits).
         """
         x = self.mlp_feature_extractor(x)
         x = self.flatten(x)

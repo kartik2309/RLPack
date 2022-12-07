@@ -6,6 +6,15 @@ the agents' models. Heavier computational requirements outside the scope of PyTo
 implemented and optimized with C++ backend. OpenAI's `gym` is used to simulate the environment 
 for training.
 
+[TOC]
+
+## Table of Contents 
+
+| Segment                        |                    Description                     |   
+|:-------------------------------|:--------------------------------------------------:|
+| [Models](@ref models/index.md) | Information on available in-built models and more. |                               |                                                    |
+| [Agents](@ref agents/index.md) |          Information on available agents           | 
+
 ## General structure
 
 RLPack runs `Simulator` defined in `rlpack.simulator`. This class provides an easy-to-use 

@@ -1,11 +1,9 @@
-//
-// Created by Kartik Rajeshwaran on 2022-11-15.
-//
 
 #ifndef RLPACK_BINARIES_MEMORY_UTILS_HOSTOFFLOAD_TPP_
 #define RLPACK_BINARIES_MEMORY_UTILS_HOSTOFFLOAD_TPP_
 
 #ifndef __CUDA_AVAILABLE__
+
 #include <omp.h>
 
 #include <cmath>
@@ -13,13 +11,36 @@
 
 #include "../../utils/ops/arg_mergesort.cuh"
 
+/*!
+ * @addtogroup binaries_group binaries
+ * @brief Binaries Module consists of C++ backend exposed via pybind11 to rlpack via rlpack._C. These modules are
+ * optimized to perform heavier workloads.
+ * @{
+ * @addtogroup memory_group memory
+ * @brief Memory module is the C++ backend for rlpack._C.memory.Memory class. Heavier workloads have been optimized
+ * with multithreading with OpenMP and CUDA (if CUDA compatible device is found).
+ * @{
+ * @addtogroup offload_group offload
+ * @brief Template class to offload some heavier computation to specialised hardware. Functions will be executed in CUDA
+ * if CUDA device is available else OpenMP routines will be used to execute the functions on CPU.
+ * @{
+ * @defgroup cpu_group cpu
+ * @brief CPU optimized implementation for Offload
+ * @{
+ */
+/*!
+ * @class Offload
+ * @brief Template Offload class for CPU with CPU optimized OpenMP routines
+ */
 template<typename DType>
 class Offload {
+
 public:
+    //! The vector to store final results.
+    std::vector<DType> result;
+
     explicit Offload(int64_t bufferSize);
     ~Offload();
-
-    std::vector<DType> result;
 
     template<class Container>
     DType cumulative_sum(const Container &inputContainer, int64_t parallelismSizeThreshold);
@@ -39,16 +60,32 @@ public:
     void reset();
 
 private:
+    //! Float pointer to an array to store random errors.
     float_t *errorArray_;
+    //! Int64 pointer to an array to store indices.
     uint64_t *indexArray_;
+    //! DType pointer to an array to store input container's data to be processed.
     DType *inputContainerData_;
+    //! The Vector to store unique priorities. This is used in Offload::arg_quantile_segment_indices method.
     std::vector<DType> uniquePriorities_;
-    std::vector<int64_t> priorityFrequencies_;
+    //! The Vector to store intermediate values to be shuffled.
     std::vector<DType> toShuffleVector_;
+    //! The Vector to store frequencies of each priority. This is used in Offload::arg_quantile_segment_indices method.
+    std::vector<int64_t> priorityFrequencies_;
 };
+/*!
+ * @} @I{ // End group cpu_group }
+ * @} @I{ // End group offload_group }
+ * @} @I{ // End group memory_group }
+ * @} @I{ // End group binaries_group }
+ */
+
 
 template<typename DType>
 Offload<DType>::Offload(int64_t bufferSize) {
+    /*!
+     * Constructor for Offload. Dynamically allocates required memory and initialises necessary variables.
+     */
     errorArray_ = new float_t[bufferSize];
     indexArray_ = new uint64_t[bufferSize];
     inputContainerData_ = new DType[bufferSize];
@@ -60,6 +97,9 @@ Offload<DType>::Offload(int64_t bufferSize) {
 
 template<typename DType>
 Offload<DType>::~Offload() {
+    /*!
+     * Destructor for Offload. De-allocated all dynamically allocated memory.
+     */
     delete[] errorArray_;
     delete[] indexArray_;
     delete[] inputContainerData_;
@@ -68,6 +108,18 @@ Offload<DType>::~Offload() {
 template<typename DType>
 template<class Container>
 DType Offload<DType>::cumulative_sum(const Container &inputContainer, int64_t parallelismSizeThreshold) {
+    /*!
+     * This template method computes the cumulative sum of a given input container.
+     *
+     *
+     * Template Arguments
+     * - Container: Must be an STL Container initialised with DType, hence must have implemented `size` method.
+     *
+     * @param inputContainer : The input container for which sum has to be computed.
+     * @param parallelismSizeThreshold : The threshold size of inputContainer beyond which OpenMP
+     * parallelized routines are to be used.
+     * @return The cumulative sum.
+     */
     DType cumulativeSum = 0;
     size_t numElements = inputContainer.size();
     bool enableParallelism = parallelismSizeThreshold < inputContainer.size();
@@ -89,6 +141,17 @@ DType Offload<DType>::cumulative_sum(const Container &inputContainer, int64_t pa
 template<typename DType>
 template<class Container>
 void Offload<DType>::shuffle(const Container &inputContainer, int64_t parallelismSizeThreshold) {
+    /*!
+     * This template method shuffles the given input container. Results are flushed into Offload::shuffle
+     *
+     *
+     * Template Arguments
+     * - Container: Must be an STL Container initialised with DType, hence must have implemented `size` method.
+     *
+     * @param inputContainer : The input container which has to be shuffled.
+     * @param parallelismSizeThreshold : The threshold size of inputContainer beyond which OpenMP parallelized
+     * routines are to be used.
+     */
     std::random_device rd;
     std::mt19937 generator(rd());
     int64_t numElements = inputContainer.size();
@@ -116,6 +179,16 @@ void Offload<DType>::shuffle(const Container &inputContainer, int64_t parallelis
 
 template<typename DType>
 void Offload<DType>::generate_priority_seeds(DType cumulativeSum, int64_t parallelismSizeThreshold, uint64_t startPoint) {
+    /*!
+     * This method generates the priority seeds. This is used by C_Memory::sample when using
+     * proportional prioritization strategy. This method generates seeds between arguments
+     * startPoint and cumulativeSum. Results are flushed into Offload::result.
+     *
+     * @param cumulativeSum : The cumulative sum upto which the seeds are to be generated.
+     * @param parallelismSizeThreshold : The threshold size of inputContainer beyond which OpenMP parallelized
+     * routines are to be used.
+     * @param startPoint : The start point, i.e. the smallest value of the generated seeds.
+     */
     std::random_device rd;
     std::mt19937 generator(rd());
     auto numElements = static_cast<size_t>(cumulativeSum);
@@ -139,6 +212,19 @@ template<class Container>
 void Offload<DType>::arg_quantile_segment_indices(int64_t numSegments,
                                                   const Container &inputContainer,
                                                   int64_t parallelismSizeThreshold) {
+    /*!
+     * The template method generates the quantile segments for given input container and the resulting
+     * indices of inputContainer from this operation is flushed into Offload::result.
+     *
+     *
+     * Template Arguments
+     * - Container: Must be an STL Container initialised with DType, hence must have implemented `size` method.
+     *
+     * @param numSegments : The number of segments to be divided inputContainer into.
+     * @param inputContainer : The input container which is to be divided into `numSegments` segments.
+     * @param parallelismSizeThreshold : The threshold size of inputContainer beyond which OpenMP parallelized
+     * routines are to be used.
+     */
     size_t numElements = inputContainer.size();
     bool enableParallelism = parallelismSizeThreshold < numElements;
     {
@@ -174,6 +260,9 @@ void Offload<DType>::arg_quantile_segment_indices(int64_t numSegments,
 
 template<typename DType>
 void Offload<DType>::reset() {
+    /*!
+     * Reset method for Offload. This will clear the Offload::result vector and fills it with 0.
+     */
     {
 #pragma omp parallel for default(none) shared(result)
         for (uint64_t index = 0; index < result.size(); index++) {

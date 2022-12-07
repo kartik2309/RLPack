@@ -1,5 +1,5 @@
 """!
-@package utils
+@package rlpack.utils
 @brief This package implements the basic utilities to be used across rlpack.
 
 
@@ -40,26 +40,32 @@ class Normalization:
     ):
         """
         Initialize Normalization class.
-        :param apply_norm: int: apply_norm code for normalization. (Refer rlpack.utils.setup.Setup
+        @param apply_norm: int: apply_norm code for normalization. (Refer rlpack.utils.setup.Setup
             for more information).
-        :param custom_min_max: Optional[Tuple[int, int]]: Tuple of custom min and max value
+        @param custom_min_max: Optional[Tuple[int, int]]: Tuple of custom min and max value
             for min-max normalization. Default: None.
-        :param eps: float: The epsilon value for normalization (small value for numerical stability). Default: 5e-12.
-        :param p: int: The p-value for p-normalization. Default: 2.
-        :param dim: int: The dimension along which normalization is to be applied. Default: 0.
+        @param eps: float: The epsilon value for normalization (small value for numerical stability). Default: 5e-12.
+        @param p: int: The p-value for p-normalization. Default: 2.
+        @param dim: int: The dimension along which normalization is to be applied. Default: 0.
         """
+        ## The input `apply_norm` argument; indicating the normalisation to be used. @I{# noqa: E266}
         self.apply_norm = apply_norm
+        ## The input `custom_min_max` argument.  @I{# noqa: E266}
+        ## Indicating the custom min-max values for min-max normalisation to be used. @I{# noqa: E266}
         self.custom_min_max = custom_min_max
+        ## The input `eps` argument; indicating epsilon to be used for normalisation. @I{# noqa: E266}
         self.eps = eps
+        ## The input `p` argument; indicating p-value for p-normalisation. @I{# noqa: E266}
         self.p = p
+        ## The input `dim` argument; indicating dimension along which we wish to normalise. @I{# noqa: E266}
         self.dim = dim
         return
 
     def apply_normalization(self, tensor: pytorch.Tensor) -> pytorch.Tensor:
         """
         All encompassing function to perform normalization depending on the instance's apply_norm code.
-        :param tensor: pytorch.Tensor: The tensor to apply normalization on.
-        :return: pytorch.Tensor: The normalized tensor.
+        @param tensor: pytorch.Tensor: The tensor to apply normalization on.
+        @return pytorch.Tensor: The normalized tensor.
         """
         if self.apply_norm == -1:
             return tensor
@@ -75,8 +81,8 @@ class Normalization:
     def min_max_normalization(self, tensor: pytorch.Tensor) -> pytorch.Tensor:
         """
         Method to apply min-max normalization.
-        :param tensor: pytorch.Tensor: The input tensor to be min-max normalized.
-        :return (pytorch.Tensor): The normalized tensor.
+        @param tensor: pytorch.Tensor: The input tensor to be min-max normalized.
+        @return (pytorch.Tensor): The normalized tensor.
         """
         if self.custom_min_max is not None:
             min_ = self.custom_min_max[0]
@@ -90,8 +96,8 @@ class Normalization:
     def standardization(self, tensor: pytorch.Tensor) -> pytorch.Tensor:
         """
         Method to standardize the input tensor.
-        :param tensor: pytorch.Tensor: he input tensor to be standardized.
-        :return: pytorch.Tensor: The standardized tensor.
+        @param tensor: pytorch.Tensor: he input tensor to be standardized.
+        @return pytorch.Tensor: The standardized tensor.
         """
         mean_ = pytorch.mean(tensor, dim=self.dim)
         std_ = pytorch.std(tensor, dim=self.dim)
@@ -101,8 +107,8 @@ class Normalization:
     def p_normalization(self, tensor: pytorch.Tensor) -> pytorch.Tensor:
         """
         The p-normalization method
-        :param tensor: pytorch.Tensor: The input tensor to be standardized.
-        :return: pytorch.Tensor: The p-normalized tensor.
+        @param tensor: pytorch.Tensor: The input tensor to be standardized.
+        @return pytorch.Tensor: The p-normalized tensor.
         """
         tensor = pytorch.linalg.norm(tensor, dim=self.dim, ord=self.p)
         return tensor
