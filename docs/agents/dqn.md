@@ -11,24 +11,26 @@ There are currently three supported implementations for DQN:
 
 -  **Uniform-Sampling based DQN**
 
-    In this DQN variant, we populate the memory (also called transition buffer) with transitions and sample them 
-as per uniform distribution. This essentially means that each transition we store in the bufer has equal probability
-of being sampled for next batch.
-To use this variant, set `prioritization_params=None` in `agent_args`.
+    This variant is implemented as rlpack.dqn.dqn.DqnAgent. In this DQN variant, we populate the memory
+(also called transition buffer) with transitions and sample them as per uniform distribution. This 
+essentially means that each transition we store in the bufer has equal probability of being sampled for next 
+batch. To use this variant, set `prioritization_params=None` in `agent_args`. 
 
 - **Proportional based DQN**
 
-    In this DQN variant, we populate the memory (also called transition buffer) with transitions with each sample 
-having a fixed priority (generally same of all samples initially) and sample them as per this priority. 
-Probabilities and weights are computed from directly using TD Errors and updates are made accordingly. 
-This was proposed by [Tom Schaul et al. (ICLR 2016)](https://arxiv.org/pdf/1511.05952.pdf). To use this variant, 
+  This variant is implemented as rlpack.dqn.dqn.DqnProportionalPrioritizationAgent. In this DQN variant,
+we populate the memory (also called transition buffer) with transitions with each sample having a fixed priority 
+(generally same of all samples initially) and sample them as per this priority. Probabilities and weights 
+are computed from directly using TD Errors and updates are made accordingly. This was proposed 
+by [Tom Schaul et al. (ICLR 2016)](https://arxiv.org/pdf/1511.05952.pdf). To use this variant, 
 set `prioritization_params={..., "prioritization_strategy": "proportional"}` 
 
 - **Rank-based DQN**
 
-  In this DQN variant, we populate the memory (also called transition buffer) with transitions with each sample
-having a fixed priority (generally same of all samples initially) and sample them as per this priority.
-Probabilities and weights are computed by sorting TD Errors to find each transition's ranks; updates are then made 
+  This variant is implemented as rlpack.dqn.dqn.DqnRankBasedPrioritizationAgent. In this DQN variant, 
+we populate the memory (also called transition buffer) with transitions with each sample having a fixed 
+priority (generally same of all samples initially) and sample them as per this priority. Probabilities 
+and weights are computed by sorting TD Errors to find each transition's ranks; updates are then made 
 accordingly. This was proposed by [Tom Schaul et al. (ICLR 2016)](https://arxiv.org/pdf/1511.05952.pdf). To use this 
 set `prioritization_params={..., "prioritization_strategy": "rank-based"}`.
 
