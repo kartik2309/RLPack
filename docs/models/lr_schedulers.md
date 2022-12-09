@@ -8,7 +8,6 @@ pass `lr_scheduler_args` as a dictionary containing keyword arguments to the con
 influence of LR Scheduler by setting `lr_threshold` in `agent_args`. Once this value is reached, the LR Scheduler is 
 not called further. 
 
-
 | LR Scheduler | Description                                                                                                                                                                         | Keyword       |
 |--------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
 | `StepLR`     | Step Learning Rate Scheduler. For mandatory arguments and further details, please refer [here](https://pytorch.org/docs/stable/generated/torch.optim.lr_scheduler.StepLR.html).     | `"step_lr"`   |
