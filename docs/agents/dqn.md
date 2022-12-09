@@ -1,5 +1,5 @@
 # Deep Q-Networks {#dqn}
-DQN-Agent is interfaced via `rlpack.dqn.dqn.Dqn`. This class provides access to required DQN variant based on 
+`DQN` is interfaced via `rlpack.dqn.dqn.Dqn`. This class provides access to required DQN variant based on 
 input configuration. DQN implementation in RLPack is based on Dual Q-Networks with a trainable policy network and a 
 frozen target network.  
 

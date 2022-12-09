@@ -1,8 +1,9 @@
 var NAVTREEINDEX0 =
 {
-"a2c.html":[0,2,1],
+"a2c.html":[0,2,1,0],
 "a2c_mlp.html":[0,1,0,1],
 "activations.html":[0,1,1],
+"actor_critic.html":[0,2,1],
 "agents.html":[0,2],
 "class_c___memory.html":[1,0,0,1],
 "class_c___memory.html#a0134ee862439a158222baaaf426c2a8b":[1,0,0,1,18],
@@ -248,6 +249,5 @@ var NAVTREEINDEX0 =
 "classrlpack_1_1dqn_1_1dqn__rank__based__prioritization__agent_1_1_dqn_rank_based_prioritization_agent.html#a1c41f4fdefb39958aefe7e5cb9c52978":[2,0,0,2,3,0,0],
 "classrlpack_1_1dqn_1_1dqn__rank__based__prioritization__agent_1_1_dqn_rank_based_prioritization_agent.html#a8512779b6d35b0aed1a3b73bf3ece71d":[2,0,0,2,3,0,2],
 "classrlpack_1_1dqn_1_1dqn__rank__based__prioritization__agent_1_1_dqn_rank_based_prioritization_agent.html#ae99a56fc11b548d9e72d2e8ff2a35da4":[2,0,0,2,3,0,1],
-"classrlpack_1_1environments_1_1environments_1_1_environments.html":[2,0,0,3,0,0],
-"classrlpack_1_1environments_1_1environments_1_1_environments.html#a4275964b96a81ab4a7be0782c41b9660":[2,0,0,3,0,0,9]
+"classrlpack_1_1environments_1_1environments_1_1_environments.html":[2,0,0,3,0,0]
 };

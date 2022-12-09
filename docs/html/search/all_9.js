@@ -1,7 +1,7 @@
 var searchData=
 [
   ['in_2dbuilt_20models_0',['In-Built Models',['../in_build_models.html',1,'']]],
-  ['index_2emd_1',['index.md',['../agents_2index_8md.html',1,'(Global Namespace)'],['../index_8md.html',1,'(Global Namespace)'],['../models_2in__built_2index_8md.html',1,'(Global Namespace)'],['../models_2index_8md.html',1,'(Global Namespace)']]],
+  ['index_2emd_1',['index.md',['../agents_2actor__critic_2index_8md.html',1,'(Global Namespace)'],['../agents_2index_8md.html',1,'(Global Namespace)'],['../index_8md.html',1,'(Global Namespace)'],['../models_2in__built_2index_8md.html',1,'(Global Namespace)'],['../models_2index_8md.html',1,'(Global Namespace)']]],
   ['index_5f_2',['index_',['../class_sum_tree_node.html#af550902575001cac1ea811ff34afceb4',1,'SumTreeNode']]],
   ['indexarray_5f_3',['indexArray_',['../class_offload.html#a273d5876da15227d27caece25af1280d',1,'Offload']]],
   ['initialize_4',['initialize',['../classrlpack_1_1___c_1_1memory_1_1_memory.html#a05868f1c95b791df02e6a801e689659f',1,'rlpack._C.memory.Memory.initialize()'],['../class_c___memory.html#a94ebf72f884215d7bb75b94f7904655f',1,'C_Memory::initialize()']]],

@@ -99,7 +99,7 @@ $(document).ready(function(){initNavTree('a2c.html',''); initResizable(); });
   <div class="headertitle"><div class="title">Synchronized Actor-Critic (A2C) </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p ><a class="anchor" id="md_agents_a2c"></a> A2C is implemented as <code><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html" title="The A2C class implements the synchronous Actor-Critic method.">rlpack.actor_critic.a2c.A2C</a></code>. It inherits from <code>Agent</code> class defined in <code>rlpack.utils.base.agent.py</code>.</p>
+<div class="textblock"><p ><a class="anchor" id="md_agents_actor_critic_a2c"></a> <code>A2C</code> is implemented as <code><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html" title="The A2C class implements the synchronous Actor-Critic method.">rlpack.actor_critic.a2c.A2C</a></code>. It inherits from <code>Agent</code> class defined as <code><a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html" title="The base class for all agents.">rlpack.utils.base.agent.Agent</a></code>.</p>
 <p >A2C implements the synchronous Actor-Critic agent which supports gradient accumulation and mean reduction of gradients for training the model. Unlike A3C, only a single agent interacts with environment and mean reduced gradients are synchronously used to train the policy model.</p>
 <h4>Keyword: <code> Keyword: <code>agent_name: "a2c"</code> </code> </h4>
 </div></div><!-- contents -->
