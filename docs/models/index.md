@@ -1,24 +1,15 @@
-# Models
+# Models {#models}
 
-## In-Built models
+RLPack provides a set of model training tools that can be used on the fly to train your agent. These 
+tools leverage PyTorch implementations and provide an easy-to-use interface via RLPack. You can further
+read about them below: 
 
-- Mlp: Details about in-built MLP model can be found [here](@ref models/in_built/mlp.md).
-- ActorCriticMlpPolicy: Details about in-built Actor-Critic MLP Policy model can be found
-[here](@ref models/in_built/actor_critic_mlp_policy.md).
+### Table of Contents
+- [In-Built Models](@ref models/in_built/index.md)
+  - [Mlp](@ref models/in_built/mlp.md)
+  - [ActorCriticMlpPolicy](@ref models/in_built/actor_critic_mlp_policy.md).
 
-
-### Activations
-
-Details about activations can be found [here](@ref models/activations.md).
-
-### Optimizers
-
-Details about optimizers can be found [here](@ref models/optimizers.md)
-
-### Loss Functions. 
-
-Details about Loss Functions can be found [here](@ref models/loss_functions.md)
-
-### Learning Rate Schedulers
-
-Details about Learning Rate (LR) Schedulers can be found [here](@ref models/lr_schedulers.md).
+- [Activations](@ref models/activations.md).
+- [Optimizers](@ref models/optimizers.md)
+- [Loss Functions](@ref models/loss_functions.md)
+- [LR Schedulers](@ref models/lr_schedulers.md).

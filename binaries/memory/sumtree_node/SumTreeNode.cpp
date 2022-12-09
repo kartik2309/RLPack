@@ -16,6 +16,7 @@ SumTreeNode::SumTreeNode(SumTreeNode *parent,
      * @param *parent : The pointer to the parent node. Can be set to nullptr if parent hasn't been allocated yet.
      * @param value : The value of the node. Value of each node is the sum of its children's value.
      * @param treeIndex : The tree index of a node representing the index in of the node in container buffer.
+     * @param index : The index of the leaf node. It should be set to -1 if the node is not a leaf node.
      * @param treeLevel : The tree level of current node representing the height of the node in the current tree.
      * @param *leftNode : The pointer to left child node.
      * @param *rightNode : The pointer to right child node.
@@ -93,7 +94,7 @@ void SumTreeNode::set_parent_node(SumTreeNode *parent) {
     /*!
      * Sets the parent of the given node.
      *
-     * @param *node : The pointer to the parent node to be linked.
+     * @param *parent : The pointer to the parent node to be linked.
      */
     parent_ = parent;
 }
@@ -102,7 +103,7 @@ void SumTreeNode::set_leaf_status(bool isLeaf) {
     /*!
      * Sets the leaf status of the given node.
      *
-     * @param *node : Boolean flag to be used to update.
+     * @param *isLeaf : Boolean flag to be used to update.
      */
     isLeaf_ = isLeaf;
 }

@@ -105,7 +105,7 @@ void C_Memory::C_MemoryData::set_terminal_state_indices_reference(
     /*!
      * Function to set the references to C_Memory::C_MemoryData::transitionInformationReference_.
      *
-     * @param *transitionInformationReference_: The reference to C_Memory::terminalStateIndices_.
+     * @param *terminalStateIndicesReference: The reference to C_Memory::terminalStateIndices_.
      */
     terminalIndicesReference_ = terminalStateIndicesReference;
 }

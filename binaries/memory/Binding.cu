@@ -21,9 +21,6 @@ PYBIND11_MODULE(C_Memory, m) {
     /*!
      * Python bindings for C_Memory, C_MemoryData and all the opaque objects. All bindings are pickleable.
      * Python binding for C_Memory class. Only relevant methods are exposed to Python
-     *
-     * @param C_Memory : C_Memory class
-     * @param m : Local Python scope
      */
     m.doc() = "Module to provide Python binding for C_Memory class";
     pybind11::class_<C_Memory>(m, "C_Memory")

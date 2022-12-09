@@ -49,5 +49,6 @@ var searchData=
   ['sumtreenode_46',['SumTreeNode',['../class_sum_tree_node.html',1,'SumTreeNode'],['../class_sum_tree_node.html#a6375b590bb4d12c91d06d3a992b45a6a',1,'SumTreeNode::SumTreeNode()']]],
   ['sumtreenode_2ecpp_47',['SumTreeNode.cpp',['../_sum_tree_node_8cpp.html',1,'']]],
   ['sumtreenode_2eh_48',['SumTreeNode.h',['../_sum_tree_node_8h.html',1,'']]],
-  ['sumtreesharedptr_5f_49',['sumTreeSharedPtr_',['../class_c___memory.html#a6723072d72e59879282b7792a89a2e8a',1,'C_Memory']]]
+  ['sumtreesharedptr_5f_49',['sumTreeSharedPtr_',['../class_c___memory.html#a6723072d72e59879282b7792a89a2e8a',1,'C_Memory']]],
+  ['synchronized_20actor_2dcritic_20_28a2c_29_50',['Synchronized Actor-Critic (A2C)',['../a2c.html',1,'']]]
 ];

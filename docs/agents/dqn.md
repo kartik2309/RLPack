@@ -1,12 +1,10 @@
-# Deep Q-Networks
-DQN-Agent is implemented as `rlpack.dqn.dqn_agent.DqnAgent`. All variants of DQN agents use the same class
-to run and train the DQN agent. This class is defined in `rlpack.dqn.dqn_agent.py` as `DqnAgent`. It inherits from
-`Agent` class defined in `rlpack.utils.base.agent.py`.
+# Deep Q-Networks {#dqn}
+DQN-Agent is interfaced via `rlpack.dqn.dqn.Dqn`. This class provides access to required DQN variant based on 
+input configuration. DQN implementation in RLPack is based on Dual Q-Networks with a trainable policy network and a 
+frozen target network.  
 
+<h4> Keyword: <kbd> agent_name: "dqn" </kbd> </h4>
 
-DQN implementation in RLPack is based on Dual Q-Networks with a trainable policy network and a frozen target network. 
-
-#### agent_name: "dqn" 
 
 ## Implementations
 There are currently three supported implementations for DQN: 

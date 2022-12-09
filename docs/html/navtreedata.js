@@ -25,22 +25,34 @@
 var NAVTREE =
 [
   [ "RLPack", "index.html", [
-    [ "RLPack Documentation", "index.html", null ],
+    [ "Documentation", "intro.html", [
+      [ "Overview", "overview.html", null ],
+      [ "Models", "models.html", [
+        [ "In-Built Models", "in_build_models.html", [
+          [ "MLP", "mlp.html", null ],
+          [ "A2C MLP", "a2c_mlp.html", null ]
+        ] ],
+        [ "Activations", "activations.html", null ],
+        [ "Loss Functions", "loss_functions.html", null ],
+        [ "Optimizers", "optimizers.html", null ],
+        [ "LR Schedulers", "lr_schedulers.html", null ]
+      ] ],
+      [ "Agents", "agents.html", [
+        [ "DQN", "dqn.html", null ],
+        [ "A2C", "a2c.html", null ]
+      ] ]
+    ] ],
     [ "Modules", "modules.html", "modules" ],
     [ "Packages", "namespaces.html", [
-      [ "Package List", "namespaces.html", "namespaces_dup" ],
-      [ "Package Members", "namespacemembers.html", [
-        [ "All", "namespacemembers.html", null ],
-        [ "Variables", "namespacemembers_vars.html", null ]
-      ] ]
+      [ "Package List", "namespaces.html", "namespaces_dup" ]
     ] ]
   ] ]
 ];
 
 var NAVTREEINDEX =
 [
-"class_c___memory.html",
-"classrlpack_1_1environments_1_1environments_1_1_environments.html#a742fc1ce7c0abba5bcc40e897227f230"
+"a2c.html",
+"classrlpack_1_1environments_1_1environments_1_1_environments.html#a45c51e766cc7da0cde054988358a0798"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

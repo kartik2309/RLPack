@@ -25,7 +25,7 @@ class Simulator:
 
     def __init__(self, config: Dict[str, Any]):
         """
-        @param: config: Optional[Dict[str, Any]]: The configuration dictionary for setup. Default: None
+        @param config: Optional[Dict[str, Any]]: The configuration dictionary for setup. Default: None
         """
         ## The object of rlpack.utils.setup.Setup to set-up models. @I{# noqa: E266}
         self.setup = Setup()

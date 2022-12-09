@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['deep_20q_2dnetworks_0',['Deep Q-Networks',['../md_agents_dqn.html',1,'']]],
+  ['deep_20q_2dnetworks_0',['Deep Q-Networks',['../dqn.html',1,'']]],
   ['delete_5fitem_1',['delete_item',['../class_c___memory.html#a1ab987ad09d8c0338760aff72b8a05b3',1,'C_Memory']]],
   ['dereference_5fpriorities_2',['dereference_priorities',['../struct_c___memory_1_1_c___memory_data.html#a6cfd748171b0bfd20829c58e71cac5ed',1,'C_Memory::C_MemoryData']]],
   ['dereference_5fterminal_5fstate_5findices_3',['dereference_terminal_state_indices',['../struct_c___memory_1_1_c___memory_data.html#a405b18d1aa00b12a7893ac6907b4e6d5',1,'C_Memory::C_MemoryData']]],

@@ -3,11 +3,28 @@
   <!-- Navigation index tabs for HTML output -->
   <navindex>
     <tab type="mainpage" visible="yes" title=""/>
+    <tab type="usergroup" visible="yes" url="@ref intro" title="Documentation">
+        <tab type="user" url="@ref overview" title="Overview"/>
+        <tab type="usergroup" url="@ref models" title="Models">
+            <tab type="usergroup" url="@ref in_build_models" title="In-Built Models">
+                <tab type="user" url="@ref mlp" title="MLP"/>
+                <tab type="user" url="@ref a2c_mlp" title="A2C MLP"/>
+            </tab>
+            <tab type="user" url="@ref activations" title="Activations"/>
+            <tab type="user" url="@ref loss_functions" title="Loss Functions"/>
+            <tab type="user" url="@ref optimizers" title="Optimizers"/>
+            <tab type="user" url="@ref lr_schedulers" title="LR Schedulers"/>
+        </tab>
+        <tab type="usergroup" visible="yes" url="@ref agents" title="Agents">
+            <tab type="user" url="@ref dqn" title="DQN"/>
+            <tab type="user" url="@ref a2c" title="A2C"/>
+        </tab>
+    </tab>
     <tab type="pages" visible="no" title="" intro=""/>
     <tab type="modules" visible="yes" title="" intro=""/>
     <tab type="namespaces" visible="yes" title="">
       <tab type="namespacelist" visible="yes" title="" intro=""/>
-      <tab type="namespacemembers" visible="yes" title="" intro=""/>
+      <tab type="namespacemembers" visible="no" title="" intro=""/>
     </tab>
     <tab type="concepts" visible="yes" title="">
     </tab>

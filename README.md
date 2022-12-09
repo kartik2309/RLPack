@@ -1,11 +1,13 @@
 # RLPack
 
+# Introduction
+
 Implementation of RL Algorithms built on top of PyTorch. Heavy workloads have
 been optimized with C++ backend.
 
 # Installation
 
-To install RLPack, simply follow the following steps: <br>
+To build and install RLPack from source, simply follow the following steps: <br>
 
 * Clone and install
     ```zsh
@@ -42,4 +44,4 @@ To install RLPack, simply follow the following steps: <br>
 Please raise an issue on GitHub to report a bug. Pull Requests can be raised after discussion on the raised issue.
 
 # License
-RLPack is released under [MIT LICENSE](LICENSE.md).  
+RLPack is released under [MIT LICENSE](https://github.com/kartik2309/RLPack/blob/master/LICENSE.md).  

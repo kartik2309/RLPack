@@ -1,4 +1,4 @@
-# Agents
+# Agents {#agents}
 
 RLPack has currently implemented the following agents: 
 - [Deep Q-Networks (DQN)](@ref agents/dqn.md)

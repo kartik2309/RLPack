@@ -1,4 +1,4 @@
-# Actor Critic Multi-Layered Perceptron Policy
+# Actor Critic Multi-Layered Perceptron Policy {#a2c_mlp}
 
 RLPack implements the Actor Critic MLP Policy model for model-based learning. This model is implemented 
 as `rlpack.models.actor_critic_mlp_policy.ActorCriticMlpPolicy`. In the implementation provided 
@@ -6,18 +6,24 @@ by RLPack, the model uses an MLP based feature extractor which is coupled with t
 logits and state value (*V(s)*). The model returns a tuple of PyTorch tensors with first value being action 
 logits and second being the state value. 
 
-#### model_name: "actor_critic_mlp_policy" 
+<h4> Keyword: <kbd> model_name: "actor_critic_mlp_policy" </kbd> </h4>
+
 
 With RLPack's implementation, it is possible to easily tweak the network architecture on the fly without any
 intervention in code. `model_name: "actor_critic_mlp_policy"` is set, we have to pass to relevant `model_args` 
 to the config dict.
 An example of `model_args` is:
 ```python
-model_args = {
-  "num_actions": 4,
-  "sequence_length": 1,
-  "hidden_sizes": [ 8, 64, 128, 256, 512 ],
-  "dropout": 0.1
+{
+  ...
+  model_name: "actor_critic_mlp_policy",
+  model_args = {
+    "num_actions": 4,
+    "sequence_length": 1,
+    "hidden_sizes": [ 8, 64, 128, 256, 512 ],
+    "dropout": 0.1
+  }
+  ... 
 }
 ```
 here

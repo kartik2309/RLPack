@@ -16,6 +16,11 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+  $(document).ready(function() { init_search(); });
+/* @license-end */
+</script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -29,6 +34,18 @@
    <div id="projectname">RLPack
    </div>
   </td>
+    <td>        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect"                onmouseover="return searchBox.OnSearchSelectShow()"                onmouseout="return searchBox.OnSearchSelectHide()">&#160;</span>
+          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.svg" alt=""/></a>
+          </span>
+        </div>
+</td>
  </tr>
  </tbody>
 </table>
@@ -40,17 +57,6 @@
 var searchBox = new SearchBox("searchBox", "search/",'.html');
 /* @license-end */
 </script>
-<script type="text/javascript" src="menudata.js"></script>
-<script type="text/javascript" src="menu.js"></script>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function() {
-  initMenu('',true,false,'search.php','Search');
-  $(document).ready(function() { init_search(); });
-});
-/* @license-end */
-</script>
-<div id="main-nav"></div>
 </div><!-- top -->
 <div id="side-nav" class="ui-resizable side-nav-resizable">
   <div id="nav-tree">
@@ -64,7 +70,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('md_models_in_built_actor_critic_mlp_policy.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('a2c_mlp.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -93,14 +99,18 @@ $(document).ready(function(){initNavTree('md_models_in_built_actor_critic_mlp_po
   <div class="headertitle"><div class="title">Actor Critic Multi-Layered Perceptron Policy </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p >RLPack implements the Actor Critic MLP Policy model for model-based learning. This model is implemented as <code><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html" title="This class is a PyTorch Model implementing the MLP based Actor-Critic Policy.">rlpack.models.actor_critic_mlp_policy.ActorCriticMlpPolicy</a></code>. In the implementation provided by RLPack, the model uses an MLP based feature extractor which is coupled with two Linear heads for action logits and state value (<em>V(s)</em>). The model returns a tuple of PyTorch tensors with first value being action logits and second being the state value.</p>
-<h3><a class="anchor" id="autotoc_md15"></a>
-model_name: "actor_critic_mlp_policy"</h3>
-<p >With RLPack's implementation, it is possible to easily tweak the network architecture on the fly without any intervention in code. <code>model_name: "actor_critic_mlp_policy"</code> is set, we have to pass to relevant <code>model_args</code> to the config dict. An example of <code>model_args</code> is: </p><div class="fragment"><div class="line">model_args = {</div>
-<div class="line">  <span class="stringliteral">&quot;num_actions&quot;</span>: 4,</div>
-<div class="line">  <span class="stringliteral">&quot;sequence_length&quot;</span>: 1,</div>
-<div class="line">  <span class="stringliteral">&quot;hidden_sizes&quot;</span>: [ 8, 64, 128, 256, 512 ],</div>
-<div class="line">  <span class="stringliteral">&quot;dropout&quot;</span>: 0.1</div>
+<div class="textblock"><p ><a class="anchor" id="md_models_in_built_actor_critic_mlp_policy"></a> RLPack implements the Actor Critic MLP Policy model for model-based learning. This model is implemented as <code><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html" title="This class is a PyTorch Model implementing the MLP based Actor-Critic Policy.">rlpack.models.actor_critic_mlp_policy.ActorCriticMlpPolicy</a></code>. In the implementation provided by RLPack, the model uses an MLP based feature extractor which is coupled with two Linear heads for action logits and state value (<em>V(s)</em>). The model returns a tuple of PyTorch tensors with first value being action logits and second being the state value.</p>
+<h4>Keyword: <code> model_name: "actor_critic_mlp_policy" </code> </h4>
+<p >With RLPack's implementation, it is possible to easily tweak the network architecture on the fly without any intervention in code. <code>model_name: "actor_critic_mlp_policy"</code> is set, we have to pass to relevant <code>model_args</code> to the config dict. An example of <code>model_args</code> is: </p><div class="fragment"><div class="line">{</div>
+<div class="line">  ...</div>
+<div class="line">  model_name: <span class="stringliteral">&quot;actor_critic_mlp_policy&quot;</span>,</div>
+<div class="line">  model_args = {</div>
+<div class="line">    <span class="stringliteral">&quot;num_actions&quot;</span>: 4,</div>
+<div class="line">    <span class="stringliteral">&quot;sequence_length&quot;</span>: 1,</div>
+<div class="line">    <span class="stringliteral">&quot;hidden_sizes&quot;</span>: [ 8, 64, 128, 256, 512 ],</div>
+<div class="line">    <span class="stringliteral">&quot;dropout&quot;</span>: 0.1</div>
+<div class="line">  }</div>
+<div class="line">  ... </div>
 <div class="line">}</div>
 </div><!-- fragment --><p> here</p><ul>
 <li><code>num_actions</code> is the number of actions of the agent (for discrete action space).</li>
