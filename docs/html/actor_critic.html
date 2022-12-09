@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>RLPack: RLPack Documentation</title>
+<title>RLPack: Actor Critic Methods</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,7 +70,7 @@ var searchBox = new SearchBox("searchBox", "search/",'.html');
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('into.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('actor_critic.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -96,10 +96,16 @@ $(document).ready(function(){initNavTree('into.html',''); initResizable(); });
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">RLPack Documentation </div></div>
+  <div class="headertitle"><div class="title">Actor Critic Methods </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p ><a class="anchor" id="md_index"></a> RLPack provides an easy-to-use interface for Deep RL Algorithms. RLPack is built on top <code>PyTorch</code> and leverages accelerators available on your machine to train the agents' models. Heavier computational requirements outside the scope of PyTorch have been implemented and optimized with C++ backend. OpenAI's <code>gym</code> is used to simulate the environment for training. </p>
+<div class="textblock"><p ><a class="anchor" id="md_agents_actor_critic_index"></a> Actor-Critic methods are provided in RLPack via <a class="el" href="namespacerlpack_1_1actor__critic.html" title="This package implements the Actor-Critic methods.">rlpack.actor_critic</a> package. In-Built can be used with Actor Critic agents to train an agent on the fly. Currently following variants have been implemented:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Method   </th><th class="markdownTableHeadNone">Description   </th><th class="markdownTableHeadNone">Keyword    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="a2c.html#md_agents_actor_critic_a2c">A2C</a>   </td><td class="markdownTableBodyNone">Synchronous Actor Critic Method   </td><td class="markdownTableBodyNone"><code>"a2c"</code>   </td></tr>
+</table>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
