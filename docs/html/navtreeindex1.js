@@ -1,5 +1,9 @@
 var NAVTREEINDEX1 =
 {
+"classrlpack_1_1dqn_1_1dqn__rank__based__prioritization__agent_1_1_dqn_rank_based_prioritization_agent.html#a8512779b6d35b0aed1a3b73bf3ece71d":[2,0,0,2,3,0,2],
+"classrlpack_1_1dqn_1_1dqn__rank__based__prioritization__agent_1_1_dqn_rank_based_prioritization_agent.html#ae99a56fc11b548d9e72d2e8ff2a35da4":[2,0,0,2,3,0,1],
+"classrlpack_1_1environments_1_1environments_1_1_environments.html":[2,0,0,3,0,0],
+"classrlpack_1_1environments_1_1environments_1_1_environments.html#a4275964b96a81ab4a7be0782c41b9660":[2,0,0,3,0,0,9],
 "classrlpack_1_1environments_1_1environments_1_1_environments.html#a45c51e766cc7da0cde054988358a0798":[2,0,0,3,0,0,4],
 "classrlpack_1_1environments_1_1environments_1_1_environments.html#a48bb4a33dedd6e16dd4276068d6e078b":[2,0,0,3,0,0,10],
 "classrlpack_1_1environments_1_1environments_1_1_environments.html#a4f3c98aefd7d29d8ffa4de4d19ed9830":[2,0,0,3,0,0,5],

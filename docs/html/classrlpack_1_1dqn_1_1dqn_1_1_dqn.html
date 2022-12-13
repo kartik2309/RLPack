@@ -108,8 +108,8 @@ $(document).ready(function(){initNavTree('classrlpack_1_1dqn_1_1dqn_1_1_dqn.html
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a0e0ac594d5ab2e494f91d210758c0a21"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1dqn_1_1dqn_1_1_dqn.html#a0e0ac594d5ab2e494f91d210758c0a21">__new__</a> (cls, pytorch.nn.Module target_model, pytorch.nn.Module policy_model, pytorch.optim.Optimizer optimizer, Union[LRScheduler, None] lr_scheduler, LossFunction loss_function, float gamma, float epsilon, float min_epsilon, float epsilon_decay_rate, int epsilon_decay_frequency, int memory_buffer_size, int target_model_update_rate, int policy_model_update_rate, int backup_frequency, float lr_threshold, int batch_size, int num_actions, str save_path, str device=&quot;cpu&quot;, Optional[Dict[str, Any]] prioritization_params=None, float force_terminal_state_selection_prob=0.0, float tau=1.0, int apply_norm=-1, int apply_norm_to=-1, float eps_for_norm=5e-12, int p_for_norm=2, int dim_for_norm=0, Optional[float] max_grad_norm=None, float grad_norm_p=2.0)</td></tr>
-<tr class="separator:a0e0ac594d5ab2e494f91d210758c0a21"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f6af8d5c52eece10c6b950c37932c35"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1dqn_1_1dqn_1_1_dqn.html#a3f6af8d5c52eece10c6b950c37932c35">__new__</a> (cls, pytorch.nn.Module target_model, pytorch.nn.Module policy_model, pytorch.optim.Optimizer optimizer, Union[LRScheduler, None] lr_scheduler, LossFunction loss_function, float gamma, float epsilon, float min_epsilon, float epsilon_decay_rate, int epsilon_decay_frequency, int memory_buffer_size, int target_model_update_rate, int policy_model_update_rate, int backup_frequency, float lr_threshold, int batch_size, int num_actions, str save_path, int bootstrap_rounds=1, str device=&quot;cpu&quot;, Optional[Dict[str, Any]] prioritization_params=None, float force_terminal_state_selection_prob=0.0, float tau=1.0, int apply_norm=-1, int apply_norm_to=-1, float eps_for_norm=5e-12, int p_for_norm=2, int dim_for_norm=0, Optional[float] max_grad_norm=None, float grad_norm_p=2.0)</td></tr>
+<tr class="separator:a3f6af8d5c52eece10c6b950c37932c35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-methods" name="pri-static-methods"></a>
 Static Private Member Functions</h2></td></tr>
@@ -222,8 +222,8 @@ Static Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a0e0ac594d5ab2e494f91d210758c0a21" name="a0e0ac594d5ab2e494f91d210758c0a21"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0e0ac594d5ab2e494f91d210758c0a21">&#9670;&#160;</a></span>__new__()</h2>
+<a id="a3f6af8d5c52eece10c6b950c37932c35" name="a3f6af8d5c52eece10c6b950c37932c35"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f6af8d5c52eece10c6b950c37932c35">&#9670;&#160;</a></span>__new__()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -345,6 +345,12 @@ Static Private Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">int &#160;</td>
+          <td class="paramname"><em>bootstrap_rounds</em> = <code>1</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">str &#160;</td>
           <td class="paramname"><em>device</em> = <code>&quot;cpu&quot;</code>, </td>
         </tr>
@@ -435,6 +441,7 @@ Static Private Member Functions</h2></td></tr>
     <tr><td class="paramname">batch_size</td><td>int: The batch size used for inference through target_model and train through policy model </td></tr>
     <tr><td class="paramname">num_actions</td><td>int: Number of actions for the environment. </td></tr>
     <tr><td class="paramname">save_path</td><td>str: The save path for models: target_model and policy_model, optimizer, lr_scheduler and agent_states. </td></tr>
+    <tr><td class="paramname">bootstrap_rounds</td><td>int: The number of rounds until which gradients are to be accumulated before performing calling optimizer step. Gradients are mean reduced for bootstrap_rounds &gt; 1. Default: 1. </td></tr>
     <tr><td class="paramname">device</td><td>str: The device on which models are run. Default: "cpu". </td></tr>
     <tr><td class="paramname">prioritization_params</td><td>Optional[Dict[str, Any]]: The parameters for prioritization in prioritized memory: or relay buffer). Default: None. </td></tr>
     <tr><td class="paramname">force_terminal_state_selection_prob</td><td>float: The probability for forcefully selecting a terminal state in a batch. Default: 0.0. </td></tr>
