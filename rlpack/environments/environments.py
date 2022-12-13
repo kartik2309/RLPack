@@ -48,8 +48,11 @@ class Environments:
             self.reshape_func = self.__reshape_func_default
         else:
             self.reshape_func = reshape_func
+        new_shape = self.config.get("new_shape")
+        if not isinstance(new_shape, list):
+            raise TypeError("`new_shape` must be a list of new shape")
         ## The new shape requested in config to be used with @ref reshape_func. @I{# noqa: E266}
-        self.new_shape = tuple(self.config.get("new_shape"))
+        self.new_shape = tuple(new_shape) if new_shape is not None else None
         render_mode = None
         if self.is_eval() and config["render"]:
             render_mode = "human"
@@ -65,7 +68,7 @@ class Environments:
         self.env.spec.max_episode_steps = self.config["max_timesteps"]
 
     def train_agent(
-        self, render: bool = False, load: bool = False, plot: bool = False
+        self, render: bool = False, load: bool = False, plot: bool = False, verbose: int = -1
     ) -> None:
         """
         Method to train the agent in the specified environment.
@@ -74,14 +77,27 @@ class Environments:
             config must be `save_path` or set or environment variable SAVE_PATH must be set.
         @param plot: bool: Indicates if to plot the training progress. If set True, rewards and episodes are
             recorded and plot is saved in `save_path`.
+        @param verbose: bool: Indicates the verbose level. Refer notes for more details. This also refers to values
+            logged on screen. If you want to disable the logging on screen, set logging level to WARNING. Default: -1
         config must have set mode='train' to run evaluation.
         Rewards are logged on console every `reward_logging_frequency` set in the console.
+
+        **Notes**
+
+
+        Verbose levels:
+            - -1: Log everything.
+            - 0: Log episode wise rewards.
+            - 1: Log model level losses.
+            - 2: Log Agent specific values.
         """
+        assert -1 <= verbose <= 2, "Argument `verbose` must be in range [-1, 2]."
         if not self.is_train():
             logging.info("Currently operating in Evaluation Mode")
             return
         if load:
             self.agent.load(self.config.get("custom_suffix", "_best"))
+        log = list()
         highest_mv_avg_reward, timestep = 0.0, 0
         rewards_collector = {k: list() for k in range(self.config["num_episodes"])}
         rewards = list()
@@ -114,37 +130,53 @@ class Environments:
                 )
             rewards.append(scores)
             if ep % self.config["reward_logging_frequency"] == 0:
+                reward_log_message = "~" * 60
                 # Log Mean Reward in the episode cycle
-                mean_reward = self.__list_mean(rewards)
-                reward_log_message = (
-                    f"Average Reward after {ep} episodes: {mean_reward}"
-                )
-                logging.info(reward_log_message)
-                if highest_mv_avg_reward < mean_reward:
-                    self.agent.save(
-                        custom_name_suffix=self.config.get("suffix", "_best")
+                if verbose >= -1:
+                    mean_reward = self.__list_mean(rewards)
+                    reward_log_message = (
+                        f"Average Reward after {ep} episodes: {mean_reward}"
                     )
-                    highest_mv_avg_reward = mean_reward
-                # Log Mean Loss in the episode cycle
-                mean_loss = self.__list_mean(self.agent.loss)
-                if len(self.agent.loss) > 0:
-                    logging.info(f"Average Loss after {ep} episodes: {mean_loss}")
-                # Log current epsilon value
-                if hasattr(self.agent, "epsilon"):
-                    logging.info(f"Epsilon after {ep} episodes: {self.agent.epsilon}")
-                # Log current alpha and beta values - for prioritized relay
-                if hasattr(self.agent, "prioritization_params"):
-                    if hasattr(self.agent, "prioritization_params"):
-                        if "alpha" in self.agent.prioritization_params.keys():
-                            logging.info(
-                                f"Alpha after {ep} episodes: {self.agent.prioritization_params['alpha']}"
-                            )
-                    if "beta" in self.agent.prioritization_params.keys():
-                        logging.info(
-                            f"Beta after {ep} episodes: {self.agent.prioritization_params['beta']}"
+                    logging.info(reward_log_message)
+                    log.append(f"{reward_log_message}\n")
+                    if highest_mv_avg_reward < mean_reward:
+                        self.agent.save(
+                            custom_name_suffix=self.config.get("suffix", "_best")
                         )
-                logging.info(f"{'~' * len(reward_log_message)}\n")
-
+                        highest_mv_avg_reward = mean_reward
+                if verbose == 0 or verbose == -1:
+                    # Log Mean Loss in the episode cycle
+                    mean_loss = self.__list_mean(self.agent.loss)
+                    if len(self.agent.loss) > 0:
+                        logging.info(f"Average Loss after {ep} episodes: {mean_loss}")
+                        log.append(f"Average Loss after {ep} episodes: {mean_loss}\n")
+                if verbose == 1 or verbose == -1:
+                    # Log current epsilon value
+                    if hasattr(self.agent, "epsilon"):
+                        logging.info(f"Epsilon after {ep} episodes: {self.agent.epsilon}")
+                        log.append(f"Epsilon after {ep} episodes: {self.agent.epsilon}\n")
+                    # Log current alpha and beta values - for prioritized relay (DQN)
+                    if hasattr(self.agent, "prioritization_params"):
+                        if hasattr(self.agent, "prioritization_params"):
+                            if "alpha" in self.agent.prioritization_params.keys():
+                                logging.info(
+                                    f"Alpha after {ep} episodes: {self.agent.prioritization_params['alpha']}"
+                                )
+                                log.append(
+                                    f"Alpha after {ep} episodes: {self.agent.prioritization_params['alpha']}\n"
+                                )
+                            if "beta" in self.agent.prioritization_params.keys():
+                                logging.info(
+                                    f"Beta after {ep} episodes: {self.agent.prioritization_params['beta']}"
+                                )
+                                log.append(
+                                    f"Alpha after {ep} episodes: {self.agent.prioritization_params['alpha']}\n"
+                                )
+                    logging.info(f"{'~' * len(reward_log_message)}\n")
+                    log.append(f"{'~' * len(reward_log_message)}\n\n")
+                    with open(os.path.join(self.config["agent_args"]["save_path"], "log.txt"), "a+") as f:
+                        for line in log:
+                            f.write(line)
                 rewards.clear()
         self.env.close()
         self.agent.save()
@@ -206,7 +238,7 @@ class Environments:
     def is_eval(self) -> bool:
         """
         Check if environment is to be run in evaluation mode or not.
-        :returns: bool: True if evaluation mode is set.
+        @return bool: True if evaluation mode is set.
         """
         possible_eval_names = ("eval", "evaluate", "evaluation")
         return self.config["mode"] in possible_eval_names
@@ -214,7 +246,7 @@ class Environments:
     def is_train(self) -> bool:
         """
         Check if environment is to be run in training mode or not.
-        :returns: bool: True if training mode is set.
+        @return bool: True if training mode is set.
         """
         possible_train_names = ("train", "training")
         return self.config["mode"] in possible_train_names

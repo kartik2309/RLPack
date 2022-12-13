@@ -36,6 +36,20 @@ class Simulator:
         self.config = config
         # Check if mandatory arguments are received from config.
         self.sanity_check.check_mandatory_params_sanity()
+        # Get save path from environment variable or config.
+        save_path = (
+            self.config["agent_args"].get("save_path")
+            if self.config["agent_args"].get("save_path") is not None
+            else os.getenv("SAVE_PATH")
+        )
+        # Check validity of passed save_path
+        if save_path is None:
+            raise ValueError(
+                "The argument `save_path` was not set. "
+                "Either pass it in config dictionary or set the environment variable `SAVE_PATH`"
+            )
+        # Set save path in config.
+        self.config["agent_args"]["save_path"] = save_path
         # Setup agent and initialize environment.
         ## The agent object requested via config. @I{# noqa: E266}
         self.agent = self.setup_agent()
@@ -87,16 +101,6 @@ class Simulator:
             )
             for optimizer in optimizers
         ]
-        save_path = (
-            self.config["agent_args"].get("save_path")
-            if self.config["agent_args"].get("save_path") is not None
-            else os.getenv("SAVE_PATH")
-        )
-        if save_path is None:
-            raise ValueError(
-                "The argument `save_path` was not set. "
-                "Either pass it in config dictionary or set the environment variable `SAVE_PATH`"
-            )
         default_model_args = {
             arg: self.config["agent_args"].get(arg)
             for arg in self.setup.agent_args_default[self.config["agent_name"]]
@@ -110,7 +114,7 @@ class Simulator:
                 loss_function_name=self.config["loss_function_name"],
                 loss_function_args=self.config["loss_function_args"],
             ),
-            save_path=save_path,
+            save_path=self.config["agent_args"]["save_path"],
         )
         agent_args_from_config = {
             k: v
@@ -130,7 +134,7 @@ class Simulator:
         if self.is_custom_model and len(self.agent_model_args) > 0:
             for k in self.agent_model_args:
                 config["agent_args"].pop(k)
-        with open(os.path.join(save_path, "config.yaml"), "w") as conf:
+        with open(os.path.join(self.config["agent_args"]["save_path"], "config.yaml"), "w") as conf:
             yaml.dump(config, conf)
         return agent
 

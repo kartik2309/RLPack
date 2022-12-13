@@ -9,7 +9,7 @@ var searchData=
   ['terminalstateindices_5f_6',['terminalStateIndices_',['../class_c___memory.html#a80e8a7f049e8717e3f82511ee5d13bd7',1,'C_Memory']]],
   ['toshufflevector_5f_7',['toShuffleVector_',['../class_offload.html#a87daa92d02380464014f3b690b96531b',1,'Offload']]],
   ['train_8',['train',['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ae2c4c474849c70cdedf6b98aea2f63c4',1,'rlpack.actor_critic.a2c.A2C.train()'],['../classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a5f91cd9fcd61a59fd87bd6dde3cf5c8b',1,'rlpack.dqn.dqn_agent.DqnAgent.train()'],['../classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a38c313422ef6c713efd5ef9301b35111',1,'rlpack.utils.base.agent.Agent.train()']]],
-  ['train_5fagent_9',['train_agent',['../classrlpack_1_1environments_1_1environments_1_1_environments.html#aac44b56556cfadbe3daf2b6afbb1343d',1,'rlpack::environments::environments::Environments']]],
+  ['train_5fagent_9',['train_agent',['../classrlpack_1_1environments_1_1environments_1_1_environments.html#a637cb5ebb885426925867ebd994f56f8',1,'rlpack::environments::environments::Environments']]],
   ['transitioninformationreference_5f_10',['transitionInformationReference_',['../struct_c___memory_1_1_c___memory_data.html#ae53ff5844a1b4adf2fb581688e38f2af',1,'C_Memory::C_MemoryData']]],
   ['traverse_11',['traverse',['../class_sum_tree.html#a1ee25c1093009cadbbb80b129cc9fe12',1,'SumTree']]],
   ['tree_5fheight_12',['tree_height',['../classrlpack_1_1___c_1_1memory_1_1_memory.html#a195e5f54ce28d0c2d7b6ea0ddf5f15ff',1,'rlpack._C.memory.Memory.tree_height()'],['../class_c___memory.html#aa1133000c1062a6b25fa450e717aafd0',1,'C_Memory::tree_height()']]],
