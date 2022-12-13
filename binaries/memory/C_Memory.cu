@@ -661,7 +661,9 @@ void C_Memory::clear() {
     priorities_.clear();
     probabilities_.clear();
     weights_.clear();
-    sumTreeSharedPtr_->reset();
+    if(sumTreeSharedPtr_ != nullptr){
+        sumTreeSharedPtr_->reset();
+    }
 }
 
 size_t C_Memory::size() {
