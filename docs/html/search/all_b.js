@@ -15,9 +15,8 @@ var searchData=
   ['model_5fargs_12',['model_args',['../classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#af0373ce8b9f66d188926d09e1726c2bf',1,'rlpack::utils::base::register::Register']]],
   ['model_5fargs_5fdefault_13',['model_args_default',['../classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#a7c448aaa9706f47f3eab905bc30ade0c',1,'rlpack::utils::base::register::Register']]],
   ['model_5fargs_5fto_5foptimize_14',['model_args_to_optimize',['../classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#a79d597016e9cdd4150e152454716e990',1,'rlpack::utils::base::register::Register']]],
-  ['model_5fbackup_5ffrequency_15',['model_backup_frequency',['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a4da7982764d8eb23165b179a8872d45a',1,'rlpack.actor_critic.a2c.A2C.model_backup_frequency()'],['../classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a529efa431f3721f5595929a9b69c7fb1',1,'rlpack.dqn.dqn_agent.DqnAgent.model_backup_frequency()']]],
-  ['model_5finit_5fargs_16',['model_init_args',['../classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#a1cf851316a70d27cfd1fd0e23adf261c',1,'rlpack::utils::base::register::Register']]],
-  ['models_17',['models',['../classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#a72ec62f1aa8afe898ae3b3b344336eb8',1,'rlpack::utils::base::register::Register']]],
-  ['models_18',['Models',['../models.html',1,'']]],
-  ['multi_2dlayered_20perceptron_19',['Multi-Layered Perceptron',['../mlp.html',1,'']]]
+  ['model_5finit_5fargs_15',['model_init_args',['../classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#a1cf851316a70d27cfd1fd0e23adf261c',1,'rlpack::utils::base::register::Register']]],
+  ['models_16',['models',['../classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#a72ec62f1aa8afe898ae3b3b344336eb8',1,'rlpack::utils::base::register::Register']]],
+  ['models_17',['Models',['../models.html',1,'']]],
+  ['multi_2dlayered_20perceptron_18',['Multi-Layered Perceptron',['../mlp.html',1,'']]]
 ];

@@ -1,6 +1,6 @@
 var classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c =
 [
-    [ "__init__", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ae1a8266f03a97c486f13ad138e4f7c90", null ],
+    [ "__init__", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a85826dab437582b48e1d1919e78e325f", null ],
     [ "__accumulate_gradients", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#acd82c3f9cd2ad2d4e0b91d7e3fb5bb5f", null ],
     [ "__call_train_policy_model", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#afe13948ea80cf5b000ec053af95e2c37", null ],
     [ "__clear", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a7d0e4e113f005db362a2193915d3523d", null ],
@@ -17,6 +17,7 @@ var classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c =
     [ "action_log_probabilities", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a989698a1260432ca0fcbd1668fe9c7ac", null ],
     [ "apply_norm", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a57416c3545397ddaaa31ee69142e67da", null ],
     [ "apply_norm_to", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aeef17e7ec0e0b81e2b47b0c4663bad2c", null ],
+    [ "backup_frequency", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a26e70f7a784551fa58fa81b1f2dcc894", null ],
     [ "bootstrap_rounds", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a67a8def97a97cef04686199250556bd0", null ],
     [ "device", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a3f3c23d256a14d2b124fb866732051b6", null ],
     [ "dim_for_norm", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ac3f70110b14a2bc1354fadaa02f3bdff", null ],
@@ -31,7 +32,6 @@ var classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c =
     [ "lr_scheduler", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a67fd595af5ce5ef1a935083e8383f6af", null ],
     [ "lr_threshold", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#abca9e9f63b00391c576378683d000d8a", null ],
     [ "max_grad_norm", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af326d53cbea6b99ed2792a0b88f73539", null ],
-    [ "model_backup_frequency", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a4da7982764d8eb23165b179a8872d45a", null ],
     [ "num_actions", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a6b420f1579a75aae43c82105a98c311e", null ],
     [ "optimizer", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a531fa341471a4ad1f97d36c00f221981", null ],
     [ "p_for_norm", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af4f2a8721367dc7865955f308cc6149b", null ],

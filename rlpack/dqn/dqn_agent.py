@@ -54,7 +54,7 @@ class DqnAgent(Agent):
         memory_buffer_size: int,
         target_model_update_rate: int,
         policy_model_update_rate: int,
-        model_backup_frequency: int,
+        backup_frequency: int,
         lr_threshold: float,
         batch_size: int,
         num_actions: int,
@@ -90,7 +90,7 @@ class DqnAgent(Agent):
             policy model weights: weights are weighted as per `tau`: see below)).
         @param policy_model_update_rate: int: The timesteps after which policy model is trained. This involves
             backpropagation through the policy network.
-        @param model_backup_frequency: int: The timesteps after which models are backed up. This will also
+        @param backup_frequency: int: The timesteps after which models are backed up. This will also
             save optimizer, lr_scheduler and agent_states: epsilon the time of saving and memory.
         @param lr_threshold: float: The threshold LR which once reached LR scheduler is not called further.
         @param batch_size: int: The batch size used for inference through target_model and train through policy model
@@ -145,7 +145,7 @@ class DqnAgent(Agent):
         ## Optimizer is called every `policy_model_update_rate`. @I{# noqa: E266}
         self.policy_model_update_rate = policy_model_update_rate
         ## The input model backup frequency in terms of timesteps. @I{# noqa: E266}
-        self.model_backup_frequency = model_backup_frequency
+        self.backup_frequency = backup_frequency
         ## The input LR Threshold. @I{# noqa: E266}
         self.lr_threshold = float(lr_threshold)
         ## The batch size to be used when training policy model. @I{# noqa: E266}
@@ -265,8 +265,8 @@ class DqnAgent(Agent):
         # Decay epsilon every `epsilon_decay_frequency` steps.
         if self.step_counter % self.epsilon_decay_frequency == 0:
             self.__decay_epsilon()
-        # Backup model every `model_backup_frequency` steps.
-        if self.step_counter % self.model_backup_frequency == 0:
+        # Backup model every `backup_frequency` steps.
+        if self.step_counter % self.backup_frequency == 0:
             self.save()
         # Restart `step_counter` if `it has reached the buffer size.
         if self.step_counter == self.memory_buffer_size:

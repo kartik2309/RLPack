@@ -51,7 +51,7 @@ class Dqn:
         memory_buffer_size: int,
         target_model_update_rate: int,
         policy_model_update_rate: int,
-        model_backup_frequency: int,
+        backup_frequency: int,
         lr_threshold: float,
         batch_size: int,
         num_actions: int,
@@ -87,7 +87,7 @@ class Dqn:
             policy model weights: weights are weighted as per `tau`: see below)).
         @param policy_model_update_rate: int: The timesteps after which policy model is trained. This involves
             backpropagation through the policy network.
-        @param model_backup_frequency: int: The timesteps after which models are backed up. This will also
+        @param backup_frequency: int: The timesteps after which models are backed up. This will also
             save optimizer, lr_scheduler and agent_states: epsilon the time of saving and memory.
         @param lr_threshold: float: The threshold LR which once reached LR scheduler is not called further.
         @param batch_size: int: The batch size used for inference through target_model and train through policy model
@@ -166,7 +166,7 @@ class Dqn:
             memory_buffer_size,
             target_model_update_rate,
             policy_model_update_rate,
-            model_backup_frequency,
+            backup_frequency,
             lr_threshold,
             batch_size,
             num_actions,

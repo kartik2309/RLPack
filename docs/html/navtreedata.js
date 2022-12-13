@@ -27,6 +27,7 @@ var NAVTREE =
   [ "RLPack", "index.html", [
     [ "Documentation", "intro.html", [
       [ "Overview", "overview.html", null ],
+      [ "Get Started", "get_started.html", null ],
       [ "Models", "models.html", [
         [ "In-Built Models", "in_build_models.html", [
           [ "MLP", "mlp.html", null ],

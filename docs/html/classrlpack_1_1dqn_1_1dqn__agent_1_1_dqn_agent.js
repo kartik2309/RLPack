@@ -1,6 +1,6 @@
 var classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent =
 [
-    [ "__init__", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#ae72327628d37b37601c7539cca147ff7", null ],
+    [ "__init__", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a61bb427a5a6db6ea47dc64ab818b5bd9", null ],
     [ "__anneal_alpha", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a1d6e4cd8aee12060b401eee2c14f338b", null ],
     [ "__anneal_beta", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a6cf0a7a1b3f7eb23870d59f8567c4d62", null ],
     [ "__apply_prioritization_strategy", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a3abe1d171a4d9b54e42801f1333a4112", null ],
@@ -17,6 +17,7 @@ var classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent =
     [ "__prioritization_strategy_code", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a9ed207f175d082efc510ccd9ada18fc5", null ],
     [ "apply_norm", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#add872066ef9a8e4f43bbcb765fb66103", null ],
     [ "apply_norm_to", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a65bbfa35c0a6c51cc2d7500a118aff5e", null ],
+    [ "backup_frequency", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#aeb63fe78cd7970482dd191f9186a54b4", null ],
     [ "batch_size", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a0dcef173b93afb6eeb2c2f2bbed8fe7d", null ],
     [ "device", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#aa24c4cde1b3c86793aa0c163975f7e46", null ],
     [ "dim_for_norm", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#ab587b11f42305490ece52cb5683cee6d", null ],
@@ -34,7 +35,6 @@ var classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent =
     [ "memory", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a9855b6ae475270ab00627e7f9669adc2", null ],
     [ "memory_buffer_size", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#ac4dd2c4a11614357b3215c406c97b90f", null ],
     [ "min_epsilon", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a8983773caff8991f5a1429d44fbdd974", null ],
-    [ "model_backup_frequency", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a529efa431f3721f5595929a9b69c7fb1", null ],
     [ "num_actions", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a5a6cabaa890c0f28fbedbce96869a500", null ],
     [ "optimizer", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a5bc53e8b41e11abbadb20139877910c7", null ],
     [ "p_for_norm", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a9e82951d76c6c5db30d23c13d5286981", null ],

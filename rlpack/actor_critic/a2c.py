@@ -36,7 +36,7 @@ class A2C(Agent):
         state_value_coefficient: float,
         lr_threshold: float,
         num_actions: int,
-        model_backup_frequency: int,
+        backup_frequency: int,
         save_path: str,
         bootstrap_rounds: int = 1,
         device: str = "cpu",
@@ -61,7 +61,7 @@ class A2C(Agent):
         @param state_value_coefficient: float: The coefficient to be used for state value in final loss computation.
         @param lr_threshold: float: The threshold LR which once reached LR scheduler is not called further.
         @param num_actions: int: Number of actions for the environment.
-        @param model_backup_frequency: int: The timesteps after which policy model, optimizer states and lr
+        @param backup_frequency: int: The timesteps after which policy model, optimizer states and lr
             scheduler states are backed up.
         @param save_path: str: The path where policy model, optimizer states and lr scheduler states are to be saved.
         @param bootstrap_rounds: int: The number of rounds until which gradients are to be accumulated before
@@ -111,7 +111,7 @@ class A2C(Agent):
         ## The input number of actions. @I{# noqa: E266}
         self.num_actions = num_actions
         ## The input model backup frequency in terms of timesteps. @I{# noqa: E266}
-        self.model_backup_frequency = model_backup_frequency
+        self.backup_frequency = backup_frequency
         ## The input save path for backing up agent models. @I{# noqa: E266}
         self.save_path = save_path
         ## The input boostrap rounds. @I{# noqa: E266}
