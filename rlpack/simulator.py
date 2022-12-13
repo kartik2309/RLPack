@@ -97,6 +97,11 @@ class Simulator:
                 "The argument `save_path` was not set. "
                 "Either pass it in config dictionary or set the environment variable `SAVE_PATH`"
             )
+        default_model_args = {
+            arg: self.config["agent_args"].get(arg)
+            for arg in self.setup.agent_args_default[self.config["agent_name"]]
+            if self.config["agent_args"].get(arg) is not None
+        }
         processed_agent_args = dict(
             **agent_model_kwargs,
             optimizer=optimizers[0] if len(optimizers) == 1 else optimizers,
@@ -106,30 +111,18 @@ class Simulator:
                 loss_function_args=self.config["loss_function_args"],
             ),
             save_path=save_path,
-            device=self.config["device"],
-            apply_norm=self.setup.get_apply_norm_mode_code(
-                self.config["agent_args"].get("apply_norm", "none")
-            ),
-            apply_norm_to=self.setup.get_apply_norm_to_mode_code(
-                self.config["agent_args"].get("apply_norm_to", ("none",))
-            ),
-            eps_for_norm=self.config["agent_args"].get("eps_for_norm", 5e-12),
-            p_for_norm=self.config["agent_args"].get("p_for_norm", 2),
-            dim_for_norm=self.config["agent_args"].get("dim_for_norm", 0),
         )
         agent_args_from_config = {
             k: v
             for k, v in self.config["agent_args"].items()
-            if k not in processed_agent_args.keys()
-        }
-        processed_agent_args = {
-            **processed_agent_args,
-            **agent_args_from_config,
+            if k not in processed_agent_args.keys() and k in self.setup.agent_args[self.config["agent_name"]]
         }
         agent_kwargs = {
-            k: processed_agent_args[k]
-            for k in self.setup.agent_args[self.config["agent_name"]]
+            **processed_agent_args,
+            **agent_args_from_config,
+            **default_model_args
         }
+
         agent = self.setup.get_agent(
             agent_name=self.config["agent_name"], **agent_kwargs
         )
