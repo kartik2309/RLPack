@@ -55,8 +55,10 @@ void SumTree::create_tree(std::deque<float_t> &priorities,
         if (!children.has_value()) {
             auto parent = new SumTreeNode(nullptr, sum, (int64_t) sumTree_.size() + 2);
             auto leftNode = new SumTreeNode(parent, leftPriority, (int64_t) sumTree_.size(), index);
-            auto rightNode = new SumTreeNode(parent, rightPriority,
-                                             (int64_t) sumTree_.size() + 1, index + 1);
+            auto rightNode = new SumTreeNode(parent,
+                                             rightPriority,
+                                             (int64_t) sumTree_.size() + 1,
+                                             index + 1);
             parent->set_left_node(leftNode);
             parent->set_right_node(rightNode);
             sumTree_.push_back(leftNode);
@@ -191,7 +193,7 @@ SumTreeNode *SumTree::traverse(SumTreeNode *node, float_t value) {
     if (!node->is_leaf()) {
         auto leftNode = node->get_left_node();
         auto rightNode = node->get_right_node();
-        if (leftNode->get_value() >= value || rightNode == nullptr) {
+        if (leftNode->get_value() >= value or rightNode == nullptr) {
             node = leftNode;
         } else {
             value = value - leftNode->get_value();

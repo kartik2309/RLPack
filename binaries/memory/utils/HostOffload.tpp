@@ -4,6 +4,9 @@
 
 #ifndef __CUDA_AVAILABLE__
 
+//! Factor by which buffer size is multiplied to allocate the memory in GPU and CPU.
+#define BUFFERSIZE_FACTOR 7
+
 #include <omp.h>
 
 #include <cmath>
@@ -46,7 +49,7 @@ public:
     DType cumulative_sum(const Container &inputContainer, int64_t parallelismSizeThreshold);
 
     template<class Container>
-    void shuffle(const Container &inputContainer, int64_t parallelismSizeThreshold);
+    void shuffle(const Container &inputContainer, int64_t parallelismSizeThreshold, size_t numElements = -1);
 
     void generate_priority_seeds(DType cumulativeSum,
                                  int64_t parallelismSizeThreshold,
@@ -86,13 +89,13 @@ Offload<DType>::Offload(int64_t bufferSize) {
     /*!
      * Constructor for Offload. Dynamically allocates required memory and initialises necessary variables.
      */
-    errorArray_ = new float_t[bufferSize];
-    indexArray_ = new uint64_t[bufferSize];
-    inputContainerData_ = new DType[bufferSize];
-    uniquePriorities_.reserve(bufferSize);
-    priorityFrequencies_.reserve(bufferSize);
-    result = std::vector<DType>(bufferSize);
-    toShuffleVector_ = std::vector<DType>(bufferSize);
+    errorArray_ = new float_t[bufferSize * BUFFERSIZE_FACTOR];
+    indexArray_ = new uint64_t[bufferSize * BUFFERSIZE_FACTOR];
+    inputContainerData_ = new DType[bufferSize * BUFFERSIZE_FACTOR];
+    uniquePriorities_.reserve(bufferSize * BUFFERSIZE_FACTOR);
+    priorityFrequencies_.reserve(bufferSize * BUFFERSIZE_FACTOR);
+    result = std::vector<DType>(bufferSize * BUFFERSIZE_FACTOR);
+    toShuffleVector_ = std::vector<DType>(bufferSize * BUFFERSIZE_FACTOR);
 }
 
 template<typename DType>
@@ -140,7 +143,7 @@ DType Offload<DType>::cumulative_sum(const Container &inputContainer, int64_t pa
 
 template<typename DType>
 template<class Container>
-void Offload<DType>::shuffle(const Container &inputContainer, int64_t parallelismSizeThreshold) {
+void Offload<DType>::shuffle(const Container &inputContainer, int64_t parallelismSizeThreshold, size_t numElements) {
     /*!
      * This template method shuffles the given input container. Results are flushed into Offload::shuffle
      *
@@ -151,10 +154,14 @@ void Offload<DType>::shuffle(const Container &inputContainer, int64_t parallelis
      * @param inputContainer : The input container which has to be shuffled.
      * @param parallelismSizeThreshold : The threshold size of inputContainer beyond which OpenMP parallelized
      * routines are to be used.
+     * @param numElements : The number of elements in the `inputContainer` from the beginning to be shuffled. Default: -1,
+     * which will include all the elements of `inputContainer`.
      */
     std::random_device rd;
     std::mt19937 generator(rd());
-    int64_t numElements = inputContainer.size();
+    if (numElements == -1) {
+        numElements = inputContainer.size();
+    }
     std::uniform_real_distribution<float_t> randomErrorDistribution(0, static_cast<float_t>(numElements) - 1);
     bool enableParallelism = parallelismSizeThreshold < numElements;
     {
@@ -166,7 +173,11 @@ void Offload<DType>::shuffle(const Container &inputContainer, int64_t parallelis
             indexArray_[index] = index;
         }
     }
-    arg_mergesort(errorArray_, indexArray_, 0, numElements - 1, parallelismSizeThreshold);
+    arg_mergesort(errorArray_,
+                  indexArray_,
+                  0,
+                  static_cast<int64_t>(numElements) - 1,
+                  parallelismSizeThreshold);
     {
 #pragma omp parallel for if (enableParallelism) default(none)  \
         firstprivate(inputContainer, numElements, indexArray_) \
@@ -192,7 +203,7 @@ void Offload<DType>::generate_priority_seeds(DType cumulativeSum, int64_t parall
     std::random_device rd;
     std::mt19937 generator(rd());
     auto numElements = static_cast<size_t>(cumulativeSum);
-    std::uniform_real_distribution<float_t> randomErrorDistribution(0, static_cast<float_t>(numElements) - 1);
+    std::uniform_real_distribution<float_t> randomErrorDistribution(0, 1);
     bool enableParallelism = parallelismSizeThreshold < numElements;
 
     {
@@ -204,7 +215,7 @@ void Offload<DType>::generate_priority_seeds(DType cumulativeSum, int64_t parall
                     static_cast<float_t>(startPoint) + static_cast<float_t>(index) + randomErrorDistribution(generator);
         }
     }
-    shuffle(toShuffleVector_, parallelismSizeThreshold);
+    shuffle(toShuffleVector_, parallelismSizeThreshold, numElements);
 }
 
 template<typename DType>
