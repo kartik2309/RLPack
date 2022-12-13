@@ -30,7 +30,7 @@ var searchData=
   ['setup_2epy_27',['setup.py',['../setup_8py.html',1,'']]],
   ['setup_5fagent_28',['setup_agent',['../classrlpack_1_1simulator_1_1_simulator.html#ac43b3463ffb17c3513850ae47bcb3697',1,'rlpack::simulator::Simulator']]],
   ['setup_5fmodels_29',['setup_models',['../classrlpack_1_1simulator_1_1_simulator.html#ac150766d6cf866400dd54bcd1b1f35dd',1,'rlpack::simulator::Simulator']]],
-  ['shuffle_30',['shuffle',['../class_offload.html#a748b05a87495e6a3e7382b447c581416',1,'Offload']]],
+  ['shuffle_30',['shuffle',['../class_offload.html#ad53d1d4ff220de676ed53d9b9e9a2193',1,'Offload']]],
   ['simulator_31',['Simulator',['../classrlpack_1_1simulator_1_1_simulator.html',1,'rlpack::simulator']]],
   ['simulator_2epy_32',['simulator.py',['../simulator_8py.html',1,'']]],
   ['size_33',['size',['../class_c___memory.html#aa717a53127902e7eda84158b5770d96b',1,'C_Memory']]],

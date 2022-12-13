@@ -17,8 +17,6 @@ var classrlpack_1_1utils_1_1base_1_1register_1_1_register =
     [ "model_args_to_optimize", "classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#a79d597016e9cdd4150e152454716e990", null ],
     [ "model_init_args", "classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#a1cf851316a70d27cfd1fd0e23adf261c", null ],
     [ "models", "classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#a72ec62f1aa8afe898ae3b3b344336eb8", null ],
-    [ "norm_mode_codes", "classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#a42f36bf2da7600bf8a5983e9935c7dfd", null ],
-    [ "norm_to_mode_codes", "classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#a76b19ad53748a88369b7c314828e5186", null ],
     [ "optimizer_init_args", "classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#a1ea1d98cdd892d288ae61817633f1513", null ],
     [ "optimizer_map", "classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#aa6b897ece655871a666266b2270a3b55", null ]
 ];

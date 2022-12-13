@@ -13,7 +13,7 @@ var searchData=
   ['set_5fvalue_10',['set_value',['../class_sum_tree_node.html#af70916171df33bcfd7326389cd9a9ee6',1,'SumTreeNode']]],
   ['setup_5fagent_11',['setup_agent',['../classrlpack_1_1simulator_1_1_simulator.html#ac43b3463ffb17c3513850ae47bcb3697',1,'rlpack::simulator::Simulator']]],
   ['setup_5fmodels_12',['setup_models',['../classrlpack_1_1simulator_1_1_simulator.html#ac150766d6cf866400dd54bcd1b1f35dd',1,'rlpack::simulator::Simulator']]],
-  ['shuffle_13',['shuffle',['../class_offload.html#a748b05a87495e6a3e7382b447c581416',1,'Offload']]],
+  ['shuffle_13',['shuffle',['../class_offload.html#ad53d1d4ff220de676ed53d9b9e9a2193',1,'Offload']]],
   ['size_14',['size',['../class_c___memory.html#aa717a53127902e7eda84158b5770d96b',1,'C_Memory']]],
   ['standardization_15',['standardization',['../classrlpack_1_1utils_1_1normalization_1_1_normalization.html#a85727ae96856128f5266bb0ed2607fe6',1,'rlpack::utils::normalization::Normalization']]],
   ['sumtree_16',['SumTree',['../class_sum_tree.html#ab82aca8168e803c8b16c9437aa48bf2f',1,'SumTree::SumTree(int32_t bufferSize)'],['../class_sum_tree.html#aabf380616b5397f6d741449e3680cfc9',1,'SumTree::SumTree()']]],

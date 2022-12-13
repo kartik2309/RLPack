@@ -7,5 +7,6 @@ var searchData=
   ['binding_2ecu_4',['Binding.cu',['../_binding_8cu.html',1,'']]],
   ['bootstrap_5frounds_5',['bootstrap_rounds',['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a67a8def97a97cef04686199250556bd0',1,'rlpack::actor_critic::a2c::A2C']]],
   ['buffer_5fsize_6',['buffer_size',['../classrlpack_1_1___c_1_1memory_1_1_memory.html#a22d35108cb7dd3c186fe79ddc369aad9',1,'rlpack::_C::memory::Memory']]],
-  ['buffersize_5f_7',['bufferSize_',['../class_c___memory.html#aa8de90836fb1fbc2c198cc5463d1aa94',1,'C_Memory::bufferSize_()'],['../class_sum_tree.html#aad74b46a0913721d1fbe1f02304a6298',1,'SumTree::bufferSize_()']]]
+  ['buffersize_5f_7',['bufferSize_',['../class_c___memory.html#aa8de90836fb1fbc2c198cc5463d1aa94',1,'C_Memory::bufferSize_()'],['../class_sum_tree.html#aad74b46a0913721d1fbe1f02304a6298',1,'SumTree::bufferSize_()']]],
+  ['buffersize_5ffactor_8',['BUFFERSIZE_FACTOR',['../_host_offload_8tpp.html#a69d288a8f80c58ab08d1781463d26f34',1,'HostOffload.tpp']]]
 ];

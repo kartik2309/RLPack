@@ -28,6 +28,7 @@ from rlpack.dqn.dqn_rank_based_prioritization_agent import (
     DqnRankBasedPrioritizationAgent,
 )
 from rlpack.utils import LossFunction, LRScheduler
+from rlpack.utils.internal_code_setup import InternalCodeSetup
 
 
 class Dqn:
@@ -101,10 +102,12 @@ class Dqn:
             in a batch. Default: 0.0.
         @param tau: float: The weighted update of weights from policy_model to target_model. This is done by formula
             target_weight = tau * policy_weight +: 1 - tau) * target_weight/. Default: -1.
-        @param apply_norm: int: The code to select the normalization procedure to be applied on selected quantities;
-            selected by `apply_norm_to`: see below)). Default: -1.
-        @param apply_norm_to: int: The code to select the quantity to which normalization is to be applied.
-            Default: -1.
+         @param apply_norm: Union[int, str]: The code to select the normalization procedure to be applied on
+            selected quantities; selected by `apply_norm_to`: see below)). Direct string can also be
+            passed as per accepted keys. Refer below in Notes to see the accepted values. Default: -1
+        @param apply_norm_to: Union[int, List[str]]: The code to select the quantity to which normalization is
+            to be applied. Direct list of quantities can also be passed as per accepted keys. Refer
+            below in Notes to see the accepted values. Default: -1.
         @param eps_for_norm: float: Epsilon value for normalization: for numeric stability. For min-max normalization
             and standardized normalization. Default: 5e-12.
         @param p_for_norm: int: The p value for p-normalization. Default: 2: L2 Norm.
@@ -112,27 +115,37 @@ class Dqn:
         @param max_grad_norm: Optional[float]: The max norm for gradients for gradient clipping. Default: None
         @param grad_norm_p: Optional[float]: The p-value for p-normalization of gradients. Default: 2.0
 
-        NOTE:
+
+
+        **Notes**
+
+
         For prioritization_params, when None: the default is passed, prioritized memory is not used. To use
             prioritized memory, pass a dictionary with keys `alpha` and `beta`. You can also pass `alpha_decay_rate`
             and `beta_decay_rate` additionally.
-        The codes for `apply_norm` are given as follows: -
-            - No Normalization: -1
-            - Min-Max Normalization: 0
-            - Standardization: 1
-            - P-Normalization: 2
-        The codes for `apply_norm_to` are given as follows:
-            - No Normalization: -1
-            - On States only: 0
-            - On Rewards only: 1
-            - On TD value only: 2
-            - On States and Rewards: 3
-            - On States and TD: 4
+
 
         The code for prioritization strategies are:
-            - Uniform: 0
-            - Proportional: 1
-            - Rank-Based: 2
+            - Uniform: 0; `uniform`
+            - Proportional: 1; `proportional`
+            - Rank-Based: 2; `rank-based`
+
+
+        The codes for `apply_norm` are given as follows: -
+            - No Normalization: -1; (`"none"`)
+            - Min-Max Normalization: 0; (`"min_max"`)
+            - Standardization: 1; (`"standardize"`)
+            - P-Normalization: 2; (`"p_norm"`)
+
+
+        The codes for `apply_norm_to` are given as follows:
+            - No Normalization: -1; (`["none"]`)
+            - On States only: 0; (`["states"]`)
+            - On Rewards only: 1; (`["rewards"]`)
+            - On TD value only: 2; (`["td"]`)
+            - On States and Rewards: 3; (`["states", "rewards"]`)
+            - On States and TD: 4; (`["states", "td"]`)
+
 
         If a valid `max_norm_grad` is passed, then gradient clipping takes place else gradient clipping step is
         skipped. If `max_norm_grad` value was invalid, error will be raised from PyTorch.
@@ -142,7 +155,8 @@ class Dqn:
         prioritization_strategy = prioritization_params.get(
             "prioritization_strategy", "uniform"
         )
-        prioritization_strategy_code = cls.get_prioritization_code(
+        setup = InternalCodeSetup()
+        prioritization_strategy_code = setup.get_prioritization_code(
             prioritization_strategy=prioritization_strategy
         )
         prioritization_params = cls.__process_prioritization_params(
@@ -183,8 +197,7 @@ class Dqn:
             max_grad_norm,
             grad_norm_p,
         )
-        ## The batch size to be used when training policy model. @I{# noqa: E266}
-        ## Corresponding number of samples are drawn from @ref memory as per the prioritization strategy @I{# noqa: E266}
+        # Select the appropriate DQN variant.
         if prioritization_strategy_code == 0:
             dqn = DqnAgent(*args_)
         elif prioritization_strategy_code == 1:
@@ -238,11 +251,11 @@ class Dqn:
 
     @staticmethod
     def __process_prioritization_params(
-        prioritization_params: Dict[str, Any],
-        prioritization_strategy_code: int,
-        anneal_alpha_default_fn: Callable[[float, float], float],
-        anneal_beta_default_fn: Callable[[float, float], float],
-        batch_size: int,
+            prioritization_params: Dict[str, Any],
+            prioritization_strategy_code: int,
+            anneal_alpha_default_fn: Callable[[float, float], float],
+            anneal_beta_default_fn: Callable[[float, float], float],
+            batch_size: int,
     ) -> Dict[str, Any]:
         """
         Private method to process the prioritization parameters. This includes sanity check and loading of default
@@ -261,10 +274,10 @@ class Dqn:
         to_anneal_beta = False
         if prioritization_params is not None and prioritization_strategy_code > 0:
             assert (
-                "alpha" in prioritization_params.keys()
+                    "alpha" in prioritization_params.keys()
             ), "`alpha` must be passed when passing prioritization_params"
             assert (
-                "beta" in prioritization_params.keys()
+                    "beta" in prioritization_params.keys()
             ), "`beta` must be passed when passing prioritization_params"
         else:
             prioritization_params = dict()
@@ -329,32 +342,3 @@ class Dqn:
             "num_segments": num_segments,
         }
         return prioritization_params_processed
-
-    @staticmethod
-    def get_prioritization_code(prioritization_strategy: str) -> int:
-        """
-        This method retrieves the prioritization code for corresponding strategy passed as string
-            in prioritized parameters.
-        @param prioritization_strategy: str: A dictionary containing memory prioritization parameters for
-            agents that may use it
-            *See the notes below to see the accepted values.
-        @return int: The prioritization code for corresponding string value.
-
-        *NOTE:
-        The accepted values for `prioritization_strategy` are as follows:
-            - "uniform": No prioritization is done, i.e., uniform sampling takes place; Code: 0.
-            - "proportional": Proportional prioritization takes place when sampling transition; Code: 1.
-            - "rank-based": Rank based prioritization takes place when sampling transitions; Code: 2.
-        """
-        ## The mapping between keyword and priority strategy code. @I{# noqa: E266}
-        prioritization_strategy_codes = {
-            "uniform": 0,
-            "proportional": 1,
-            "rank-based": 2,
-        }
-        if prioritization_strategy not in prioritization_strategy_codes.keys():
-            raise NotImplementedError(
-                f"The provided prioritization strategy {prioritization_strategy} is not supported or is invalid!"
-            )
-        code = prioritization_strategy_codes[prioritization_strategy]
-        return code

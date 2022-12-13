@@ -1,6 +1,6 @@
 var classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent =
 [
-    [ "__init__", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a61bb427a5a6db6ea47dc64ab818b5bd9", null ],
+    [ "__init__", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#abb3ce18788160a3c539999cb704b2104", null ],
     [ "__anneal_alpha", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a1d6e4cd8aee12060b401eee2c14f338b", null ],
     [ "__anneal_beta", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a6cf0a7a1b3f7eb23870d59f8567c4d62", null ],
     [ "__apply_prioritization_strategy", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a3abe1d171a4d9b54e42801f1333a4112", null ],

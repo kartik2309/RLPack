@@ -468,8 +468,8 @@ Private Attributes</h2></td></tr>
     <tr><td class="paramname">save_path</td><td>str: The path where policy model, optimizer states and lr scheduler states are to be saved. </td></tr>
     <tr><td class="paramname">bootstrap_rounds</td><td>int: The number of rounds until which gradients are to be accumulated before performing calling optimizer step. Gradients are mean reduced for bootstrap_rounds &gt; 1. Default: 1. </td></tr>
     <tr><td class="paramname">device</td><td>str: The device on which models are run. Default: "cpu". </td></tr>
-    <tr><td class="paramname">apply_norm</td><td>int: The code to select the normalization procedure to be applied on selected quantities; selected by <code>apply_norm_to</code>: see below)). Default: -1. </td></tr>
-    <tr><td class="paramname">apply_norm_to</td><td>int: The code to select the quantity to which normalization is to be applied. Default: -1. </td></tr>
+    <tr><td class="paramname">apply_norm</td><td>Union[int, str]: The code to select the normalization procedure to be applied on selected quantities; selected by <code>apply_norm_to</code>: see below)). Direct string can also be passed as per accepted keys. Refer below in Notes to see the accepted values. Default: -1 </td></tr>
+    <tr><td class="paramname">apply_norm_to</td><td>Union[int, List[str]]: The code to select the quantity to which normalization is to be applied. Direct list of quantities can also be passed as per accepted keys. Refer below in Notes to see the accepted values. Default: -1. </td></tr>
     <tr><td class="paramname">eps_for_norm</td><td>float: Epsilon value for normalization; for numeric stability. For min-max normalization and standardized normalization. Default: 5e-12. </td></tr>
     <tr><td class="paramname">p_for_norm</td><td>int: The p value for p-normalization. Default: 2; L2 Norm. </td></tr>
     <tr><td class="paramname">dim_for_norm</td><td>int: The dimension across which normalization is to be performed. Default: 0. </td></tr>
@@ -478,18 +478,22 @@ Private Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>The codes for <code>apply_norm</code> are given as follows: -</p><ul>
-<li>No Normalization: -1</li>
-<li>Min-Max Normalization: 0</li>
-<li>Standardization: 1</li>
-<li>P-Normalization: 2 The codes for <code>apply_norm_to</code> are given as follows:</li>
-<li>No Normalization: -1</li>
-<li>On States only: 0</li>
-<li>On Rewards only: 1</li>
-<li>On Advantage value only: 2</li>
-<li>On States and Rewards: 3</li>
-<li>On States and Advantage: 4 </li>
+<p><b>Notes</b></p>
+<p >The codes for <code>apply_norm</code> are given as follows: -</p><ul>
+<li>No Normalization: -1; (<code>"none"</code>)</li>
+<li>Min-Max Normalization: 0; (<code>"min_max"</code>)</li>
+<li>Standardization: 1; (<code>"standardize"</code>)</li>
+<li>P-Normalization: 2; (<code>"p_norm"</code>)</li>
 </ul>
+<p >The codes for <code>apply_norm_to</code> are given as follows:</p><ul>
+<li>No Normalization: -1; (<code>["none"]</code>)</li>
+<li>On States only: 0; (<code>["states"]</code>)</li>
+<li>On Rewards only: 1; (<code>["rewards"]</code>)</li>
+<li>On TD value only: 2; (<code>["td"]</code>)</li>
+<li>On States and Rewards: 3; (<code>["states", "rewards"]</code>)</li>
+<li>On States and TD: 4; (<code>["states", "td"]</code>)</li>
+</ul>
+<p >If a valid <code>max_norm_grad</code> is passed, then gradient clipping takes place else gradient clipping step is skipped. If <code>max_norm_grad</code> value was invalid, error will be raised from PyTorch. </p>
 
 <p>Reimplemented from <a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a364aa41c59de32a363b2e4c241dfef3f">rlpack.utils.base.agent.Agent</a>.</p>
 

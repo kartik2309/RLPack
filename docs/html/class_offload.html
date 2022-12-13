@@ -121,9 +121,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ad62265be7267af8c7f842758a4f89bda"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aef50f7451201849f42e5f9eadcd978cf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_offload.html#aef50f7451201849f42e5f9eadcd978cf">reset</a> ()</td></tr>
 <tr class="separator:aef50f7451201849f42e5f9eadcd978cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a748b05a87495e6a3e7382b447c581416"><td class="memTemplParams" colspan="2">template&lt;class Container &gt; </td></tr>
-<tr class="memitem:a748b05a87495e6a3e7382b447c581416"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_offload.html#a748b05a87495e6a3e7382b447c581416">shuffle</a> (const Container &amp;inputContainer, int64_t parallelismSizeThreshold)</td></tr>
-<tr class="separator:a748b05a87495e6a3e7382b447c581416"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad53d1d4ff220de676ed53d9b9e9a2193"><td class="memTemplParams" colspan="2">template&lt;class Container &gt; </td></tr>
+<tr class="memitem:ad53d1d4ff220de676ed53d9b9e9a2193"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_offload.html#ad53d1d4ff220de676ed53d9b9e9a2193">shuffle</a> (const Container &amp;inputContainer, int64_t parallelismSizeThreshold, size_t numElements=-1)</td></tr>
+<tr class="separator:ad53d1d4ff220de676ed53d9b9e9a2193"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a504e7c1d19b62afd08d09625339d2a06"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_offload.html#a504e7c1d19b62afd08d09625339d2a06">~Offload</a> ()</td></tr>
 <tr class="separator:a504e7c1d19b62afd08d09625339d2a06"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -361,8 +361,8 @@ template&lt;typename DType &gt; </div>
 
 </div>
 </div>
-<a id="a748b05a87495e6a3e7382b447c581416" name="a748b05a87495e6a3e7382b447c581416"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a748b05a87495e6a3e7382b447c581416">&#9670;&#160;</a></span>shuffle()</h2>
+<a id="ad53d1d4ff220de676ed53d9b9e9a2193" name="ad53d1d4ff220de676ed53d9b9e9a2193"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad53d1d4ff220de676ed53d9b9e9a2193">&#9670;&#160;</a></span>shuffle()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -381,7 +381,13 @@ template&lt;class Container &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int64_t&#160;</td>
-          <td class="paramname"><em>parallelismSizeThreshold</em>&#160;</td>
+          <td class="paramname"><em>parallelismSizeThreshold</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>numElements</em> = <code>-1</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -390,14 +396,15 @@ template&lt;class Container &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >This template method shuffles the given input container. Results are flushed into <a class="el" href="class_offload.html#a748b05a87495e6a3e7382b447c581416">Offload::shuffle</a></p>
+<p >This template method shuffles the given input container. Results are flushed into <a class="el" href="class_offload.html#ad53d1d4ff220de676ed53d9b9e9a2193">Offload::shuffle</a></p>
 <p >Template Arguments</p><ul>
 <li>Container: Must be an STL Container initialised with DType, hence must have implemented <code>size</code> method.</li>
 </ul>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">inputContainer</td><td>: The input container which has to be shuffled. </td></tr>
-    <tr><td class="paramname">parallelismSizeThreshold</td><td>: The threshold size of inputContainer beyond which OpenMP parallelized routines are to be used.</td></tr>
+    <tr><td class="paramname">parallelismSizeThreshold</td><td>: The threshold size of inputContainer beyond which OpenMP parallelized routines are to be used. </td></tr>
+    <tr><td class="paramname">numElements</td><td>: The number of elements in the <code>inputContainer</code> from the beginning to be shuffled. Default: -1, which will include all the elements of <code>inputContainer</code>.</td></tr>
   </table>
   </dd>
 </dl>

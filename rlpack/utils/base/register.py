@@ -69,19 +69,7 @@ class Register:
             "linear_lr": pytorch.optim.lr_scheduler.LinearLR,
             "cyclic_lr": pytorch.optim.lr_scheduler.CyclicLR,
         }
-        ## The mapping between given keyword and normalisation method codes. @I{# noqa: E266}
-        self.norm_mode_codes = {"none": -1, "min_max": 0, "standardize": 1, "p_norm": 2}
-        ## The mapping between given keyword and normalisation quantity (`apply_norm_to`) codes. @I{# noqa: E266}
-        self.norm_to_mode_codes = {
-            ("none",): -1,
-            ("states",): 0,
-            ("rewards",): 1,
-            ("td",): 2,
-            ("advantage",): 2,
-            ("states", "rewards"): 3,
-            ("states", "td"): 4,
-            ("states", "advantage"): 4,
-        }
+
         ## The mapping between given keyword and [in-built](@ref models/index.md) models. @I{# noqa: E266}
         self.models = {"mlp": Mlp, "actor_critic_mlp_policy": ActorCriticMlpPolicy}
         ## The mapping between given keyword and [agents](@ref agents/index.md) models. @I{# noqa: E266}
@@ -174,7 +162,6 @@ class Register:
                 *self.agent_args_default["a2c"],
             ),
         }
-
         ## The mapping between keyword and agents' model arguments to wrap optimizer with. @I{# noqa: E266}
         self.model_args_to_optimize = {
             "dqn": {"target_model": False, "policy_model": True},

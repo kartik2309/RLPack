@@ -30,6 +30,7 @@ from rlpack._C.memory import Memory
 from rlpack.utils import LossFunction, LRScheduler
 from rlpack.utils.base.agent import Agent
 from rlpack.utils.normalization import Normalization
+from rlpack.utils.internal_code_setup import InternalCodeSetup
 
 
 class DqnAgent(Agent):
@@ -63,8 +64,8 @@ class DqnAgent(Agent):
         prioritization_params: Optional[Dict[str, Any]] = None,
         force_terminal_state_selection_prob: float = 0.0,
         tau: float = 1.0,
-        apply_norm: int = -1,
-        apply_norm_to: int = -1,
+        apply_norm: Union[int, str] = -1,
+        apply_norm_to: Union[int, List[str]] = -1,
         eps_for_norm: float = 5e-12,
         p_for_norm: int = 2,
         dim_for_norm: int = 0,
@@ -104,18 +105,45 @@ class DqnAgent(Agent):
             in a batch. Default: 0.0.
         @param tau: float: The weighted update of weights from policy_model to target_model. This is done by formula
             target_weight = tau * policy_weight +: 1 - tau) * target_weight/. Default: -1.
-        @param apply_norm: int: The code to select the normalization procedure to be applied on selected quantities;
-            selected by `apply_norm_to`: see below)). Default: -1.
-        @param apply_norm_to: int: The code to select the quantity to which normalization is to be applied.
-            Default: -1.
+        @param apply_norm: Union[int, str]: The code to select the normalization procedure to be applied on
+            selected quantities; selected by `apply_norm_to`: see below)). Direct string can also be
+            passed as per accepted keys. Refer below in Notes to see the accepted values. Default: -1
+        @param apply_norm_to: Union[int, List[str]]: The code to select the quantity to which normalization is
+            to be applied. Direct list of quantities can also be passed as per accepted keys. Refer
+            below in Notes to see the accepted values. Default: -1.
         @param eps_for_norm: float: Epsilon value for normalization: for numeric stability. For min-max normalization
             and standardized normalization. Default: 5e-12.
         @param p_for_norm: int: The p value for p-normalization. Default: 2: L2 Norm.
         @param dim_for_norm: int: The dimension across which normalization is to be performed. Default: 0.
         @param max_grad_norm: Optional[float]: The max norm for gradients for gradient clipping. Default: None
-        @param grad_norm_p: Optional[float]: The p-value for p-normalization of gradients. Default: 2.0
+        @param grad_norm_p: Optional[float]: The p-value for p-normalization of gradients. Default: 2.0.
+
+
+
+        **Notes**
+
+
+        The codes for `apply_norm` are given as follows: -
+            - No Normalization: -1; (`"none"`)
+            - Min-Max Normalization: 0; (`"min_max"`)
+            - Standardization: 1; (`"standardize"`)
+            - P-Normalization: 2; (`"p_norm"`)
+
+
+        The codes for `apply_norm_to` are given as follows:
+            - No Normalization: -1; (`["none"]`)
+            - On States only: 0; (`["states"]`)
+            - On Rewards only: 1; (`["rewards"]`)
+            - On TD value only: 2; (`["td"]`)
+            - On States and Rewards: 3; (`["states", "rewards"]`)
+            - On States and TD: 4; (`["states", "td"]`)
+
+
+        If a valid `max_norm_grad` is passed, then gradient clipping takes place else gradient clipping step is
+        skipped. If `max_norm_grad` value was invalid, error will be raised from PyTorch.
         """
         super(DqnAgent, self).__init__()
+        setup = InternalCodeSetup()
         ## The input target model. This model's parameters are frozen. @I{# noqa: E266}
         self.target_model = target_model.to(device)
         ## The input policy model. @I{# noqa: E266}
@@ -176,8 +204,12 @@ class DqnAgent(Agent):
             )
         ## The input `tau`; indicating the soft update used to update @ref target_model parameters. @I{# noqa: E266}
         self.tau = float(tau)
+        if isinstance(apply_norm, str):
+            apply_norm = setup.get_apply_norm_mode_code(apply_norm)
         ## The input `apply_norm` argument; indicating the normalisation to be used. @I{# noqa: E266}
         self.apply_norm = apply_norm
+        if isinstance(apply_norm_to, (str, list)):
+            apply_norm_to = setup.get_apply_norm_to_mode_code(apply_norm_to)
         ## The input `apply_norm_to` argument; indicating the quantity to normalise. @I{# noqa: E266}
         self.apply_norm_to = apply_norm_to
         ## The input `eps_for_norm` argument; indicating epsilon to be used for normalisation. @I{# noqa: E266}
@@ -465,7 +497,7 @@ class DqnAgent(Agent):
                 norm_type=self.grad_norm_p,
             )
         self.__apply_prioritization_strategy(
-            td_value, random_indices, probabilities, weights
+            td_value, random_indices
         )
         self.optimizer.step()
         if (
@@ -577,14 +609,14 @@ class DqnAgent(Agent):
 
     def __anneal_alpha(self):
         if (
-            self.prioritization_params["to_anneal_alpha"]
-            and (
+                self.prioritization_params["to_anneal_alpha"]
+                and (
                 self.step_counter
                 % self.prioritization_params["alpha_annealing_frequency"]
                 == 0
-            )
-            and self.prioritization_params["alpha"]
-            > self.prioritization_params["min_alpha"]
+        )
+                and self.prioritization_params["alpha"]
+                > self.prioritization_params["min_alpha"]
         ):
             self.prioritization_params["alpha"] = self.prioritization_params[
                 "alpha_annealing_fn"
@@ -594,8 +626,8 @@ class DqnAgent(Agent):
                 **self.prioritization_params["alpha_annealing_fn_kwargs"],
             )
             if (
-                self.prioritization_params["alpha"]
-                < self.prioritization_params["min_alpha"]
+                    self.prioritization_params["alpha"]
+                    < self.prioritization_params["min_alpha"]
             ):
                 self.prioritization_params["alpha"] = self.prioritization_params[
                     "min_alpha"
@@ -603,14 +635,14 @@ class DqnAgent(Agent):
 
     def __anneal_beta(self):
         if (
-            self.prioritization_params["to_anneal_beta"]
-            and (
+                self.prioritization_params["to_anneal_beta"]
+                and (
                 self.step_counter
                 % self.prioritization_params["beta_annealing_frequency"]
                 == 0
-            )
-            and self.prioritization_params["beta"]
-            < self.prioritization_params["max_beta"]
+        )
+                and self.prioritization_params["beta"]
+                < self.prioritization_params["max_beta"]
         ):
             self.prioritization_params["beta"] = self.prioritization_params[
                 "beta_annealing_fn"
@@ -620,8 +652,8 @@ class DqnAgent(Agent):
                 **self.prioritization_params["beta_annealing_fn_kwargs"],
             )
             if (
-                self.prioritization_params["beta"]
-                > self.prioritization_params["max_beta"]
+                    self.prioritization_params["beta"]
+                    > self.prioritization_params["max_beta"]
             ):
                 self.prioritization_params["beta"] = self.prioritization_params[
                     "max_beta"

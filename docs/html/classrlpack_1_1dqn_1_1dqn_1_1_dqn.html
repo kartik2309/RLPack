@@ -98,7 +98,6 @@ $(document).ready(function(){initNavTree('classrlpack_1_1dqn_1_1dqn_1_1_dqn.html
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pri-static-methods">Static Private Member Functions</a>  </div>
   <div class="headertitle"><div class="title">rlpack.dqn.dqn.Dqn Class Reference</div></div>
 </div><!--header-->
@@ -111,12 +110,6 @@ $(document).ready(function(){initNavTree('classrlpack_1_1dqn_1_1dqn_1_1_dqn.html
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a0e0ac594d5ab2e494f91d210758c0a21"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1dqn_1_1dqn_1_1_dqn.html#a0e0ac594d5ab2e494f91d210758c0a21">__new__</a> (cls, pytorch.nn.Module target_model, pytorch.nn.Module policy_model, pytorch.optim.Optimizer optimizer, Union[LRScheduler, None] lr_scheduler, LossFunction loss_function, float gamma, float epsilon, float min_epsilon, float epsilon_decay_rate, int epsilon_decay_frequency, int memory_buffer_size, int target_model_update_rate, int policy_model_update_rate, int backup_frequency, float lr_threshold, int batch_size, int num_actions, str save_path, str device=&quot;cpu&quot;, Optional[Dict[str, Any]] prioritization_params=None, float force_terminal_state_selection_prob=0.0, float tau=1.0, int apply_norm=-1, int apply_norm_to=-1, float eps_for_norm=5e-12, int p_for_norm=2, int dim_for_norm=0, Optional[float] max_grad_norm=None, float grad_norm_p=2.0)</td></tr>
 <tr class="separator:a0e0ac594d5ab2e494f91d210758c0a21"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
-Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a2dcfafcfd1d0f829c38d88778f472cc6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1dqn_1_1dqn_1_1_dqn.html#a2dcfafcfd1d0f829c38d88778f472cc6">get_prioritization_code</a> (str prioritization_strategy)</td></tr>
-<tr class="memdesc:a2dcfafcfd1d0f829c38d88778f472cc6"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method retrieves the prioritization code for corresponding strategy passed as string in prioritized parameters.  <a href="classrlpack_1_1dqn_1_1dqn_1_1_dqn.html#a2dcfafcfd1d0f829c38d88778f472cc6">More...</a><br /></td></tr>
-<tr class="separator:a2dcfafcfd1d0f829c38d88778f472cc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-methods" name="pri-static-methods"></a>
 Static Private Member Functions</h2></td></tr>
@@ -446,8 +439,8 @@ Static Private Member Functions</h2></td></tr>
     <tr><td class="paramname">prioritization_params</td><td>Optional[Dict[str, Any]]: The parameters for prioritization in prioritized memory: or relay buffer). Default: None. </td></tr>
     <tr><td class="paramname">force_terminal_state_selection_prob</td><td>float: The probability for forcefully selecting a terminal state in a batch. Default: 0.0. </td></tr>
     <tr><td class="paramname">tau</td><td>float: The weighted update of weights from policy_model to target_model. This is done by formula target_weight = tau * policy_weight +: 1 - tau) * target_weight/. Default: -1. </td></tr>
-    <tr><td class="paramname">apply_norm</td><td>int: The code to select the normalization procedure to be applied on selected quantities; selected by <code>apply_norm_to</code>: see below)). Default: -1. </td></tr>
-    <tr><td class="paramname">apply_norm_to</td><td>int: The code to select the quantity to which normalization is to be applied. Default: -1. </td></tr>
+    <tr><td class="paramname">apply_norm</td><td>Union[int, str]: The code to select the normalization procedure to be applied on selected quantities; selected by <code>apply_norm_to</code>: see below)). Direct string can also be passed as per accepted keys. Refer below in Notes to see the accepted values. Default: -1 </td></tr>
+    <tr><td class="paramname">apply_norm_to</td><td>Union[int, List[str]]: The code to select the quantity to which normalization is to be applied. Direct list of quantities can also be passed as per accepted keys. Refer below in Notes to see the accepted values. Default: -1. </td></tr>
     <tr><td class="paramname">eps_for_norm</td><td>float: Epsilon value for normalization: for numeric stability. For min-max normalization and standardized normalization. Default: 5e-12. </td></tr>
     <tr><td class="paramname">p_for_norm</td><td>int: The p value for p-normalization. Default: 2: L2 Norm. </td></tr>
     <tr><td class="paramname">dim_for_norm</td><td>int: The dimension across which normalization is to be performed. Default: 0. </td></tr>
@@ -456,22 +449,26 @@ Static Private Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>NOTE: For prioritization_params, when None: the default is passed, prioritized memory is not used. To use prioritized memory, pass a dictionary with keys <code>alpha</code> and <code>beta</code>. You can also pass <code>alpha_decay_rate</code> and <code>beta_decay_rate</code> additionally. The codes for <code>apply_norm</code> are given as follows: -</p><ul>
-<li>No Normalization: -1</li>
-<li>Min-Max Normalization: 0</li>
-<li>Standardization: 1</li>
-<li>P-Normalization: 2 The codes for <code>apply_norm_to</code> are given as follows:</li>
-<li>No Normalization: -1</li>
-<li>On States only: 0</li>
-<li>On Rewards only: 1</li>
-<li>On TD value only: 2</li>
-<li>On States and Rewards: 3</li>
-<li>On States and TD: 4</li>
-</ul>
+<p><b>Notes</b></p>
+<p >For prioritization_params, when None: the default is passed, prioritized memory is not used. To use prioritized memory, pass a dictionary with keys <code>alpha</code> and <code>beta</code>. You can also pass <code>alpha_decay_rate</code> and <code>beta_decay_rate</code> additionally.</p>
 <p >The code for prioritization strategies are:</p><ul>
-<li>Uniform: 0</li>
-<li>Proportional: 1</li>
-<li>Rank-Based: 2</li>
+<li>Uniform: 0; <code>uniform</code></li>
+<li>Proportional: 1; <code>proportional</code></li>
+<li>Rank-Based: 2; <code>rank-based</code></li>
+</ul>
+<p >The codes for <code>apply_norm</code> are given as follows: -</p><ul>
+<li>No Normalization: -1; (<code>"none"</code>)</li>
+<li>Min-Max Normalization: 0; (<code>"min_max"</code>)</li>
+<li>Standardization: 1; (<code>"standardize"</code>)</li>
+<li>P-Normalization: 2; (<code>"p_norm"</code>)</li>
+</ul>
+<p >The codes for <code>apply_norm_to</code> are given as follows:</p><ul>
+<li>No Normalization: -1; (<code>["none"]</code>)</li>
+<li>On States only: 0; (<code>["states"]</code>)</li>
+<li>On Rewards only: 1; (<code>["rewards"]</code>)</li>
+<li>On TD value only: 2; (<code>["td"]</code>)</li>
+<li>On States and Rewards: 3; (<code>["states", "rewards"]</code>)</li>
+<li>On States and TD: 4; (<code>["states", "td"]</code>)</li>
 </ul>
 <p >If a valid <code>max_norm_grad</code> is passed, then gradient clipping takes place else gradient clipping step is skipped. If <code>max_norm_grad</code> value was invalid, error will be raised from PyTorch. </p>
 
@@ -541,46 +538,6 @@ Static Private Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Dict[str, Any]: The processed prioritization parameters with necessary parameters loaded. </dd></dl>
-
-</div>
-</div>
-<a id="a2dcfafcfd1d0f829c38d88778f472cc6" name="a2dcfafcfd1d0f829c38d88778f472cc6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2dcfafcfd1d0f829c38d88778f472cc6">&#9670;&#160;</a></span>get_prioritization_code()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"> int rlpack.dqn.dqn.Dqn.get_prioritization_code </td>
-          <td>(</td>
-          <td class="paramtype">str&#160;</td>
-          <td class="paramname"><em>prioritization_strategy</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>This method retrieves the prioritization code for corresponding strategy passed as string in prioritized parameters. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">prioritization_strategy</td><td>str: A dictionary containing memory prioritization parameters for agents that may use it *See the notes below to see the accepted values. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>int: The prioritization code for corresponding string value.</dd></dl>
-<p>*NOTE: The accepted values for <code>prioritization_strategy</code> are as follows:</p><ul>
-<li>"uniform": No prioritization is done, i.e., uniform sampling takes place; Code: 0.</li>
-<li>"proportional": Proportional prioritization takes place when sampling transition; Code: 1.</li>
-<li>"rank-based": Rank based prioritization takes place when sampling transitions; Code: 2. </li>
-</ul>
 
 </div>
 </div>

@@ -126,7 +126,7 @@ class Memory(object):
                 pytorch.Tensor,
                 pytorch.Tensor,
                 pytorch.Tensor,
-            ]: The tuple of tensors as:states_current, states_next, rewards, actions, dones, priorities,
+            ]: The tuple of tensors as: (states_current, states_next, rewards, actions, dones, priorities,
             probabilities, weights, random_indices).
         """
         samples = self.c_memory.sample(
@@ -160,9 +160,7 @@ class Memory(object):
             indices are used to update the corresponding values. Must be a 1-D PyTorch Tensor.
         @param new_priorities: pytorch.Tensor: The list of new priorities corresponding to `random_indices` passed.
         """
-        self.c_memory.update_priorities(
-            random_indices, new_priorities
-        )
+        self.c_memory.update_priorities(random_indices, new_priorities)
 
     def clear(self) -> None:
         """

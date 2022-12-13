@@ -17,6 +17,7 @@ from torch.distributions import Categorical
 from rlpack import pytorch
 from rlpack.utils import LossFunction, LRScheduler
 from rlpack.utils.base.agent import Agent
+from rlpack.utils.internal_code_setup import InternalCodeSetup
 from rlpack.utils.normalization import Normalization
 
 
@@ -67,10 +68,12 @@ class A2C(Agent):
         @param bootstrap_rounds: int: The number of rounds until which gradients are to be accumulated before
             performing calling optimizer step. Gradients are mean reduced for bootstrap_rounds > 1. Default: 1.
         @param device: str: The device on which models are run. Default: "cpu".
-        @param apply_norm: int: The code to select the normalization procedure to be applied on selected quantities;
-            selected by `apply_norm_to`: see below)). Default: -1.
-        @param apply_norm_to: int: The code to select the quantity to which normalization is to be applied.
-            Default: -1.
+        @param apply_norm: Union[int, str]: The code to select the normalization procedure to be applied on
+            selected quantities; selected by `apply_norm_to`: see below)). Direct string can also be
+            passed as per accepted keys. Refer below in Notes to see the accepted values. Default: -1
+        @param apply_norm_to: Union[int, List[str]]: The code to select the quantity to which normalization is
+            to be applied. Direct list of quantities can also be passed as per accepted keys. Refer
+            below in Notes to see the accepted values. Default: -1.
         @param eps_for_norm: float: Epsilon value for normalization; for numeric stability. For min-max normalization
             and standardized normalization. Default: 5e-12.
         @param p_for_norm: int: The p value for p-normalization. Default: 2; L2 Norm.
@@ -78,20 +81,32 @@ class A2C(Agent):
         @param max_grad_norm: Optional[float]: The max norm for gradients for gradient clipping. Default: None
         @param grad_norm_p: Optional[float]: The p-value for p-normalization of gradients. Default: 2.0
 
+
+
+        **Notes**
+
+
         The codes for `apply_norm` are given as follows: -
-            - No Normalization: -1
-            - Min-Max Normalization: 0
-            - Standardization: 1
-            - P-Normalization: 2
+            - No Normalization: -1; (`"none"`)
+            - Min-Max Normalization: 0; (`"min_max"`)
+            - Standardization: 1; (`"standardize"`)
+            - P-Normalization: 2; (`"p_norm"`)
+
+
         The codes for `apply_norm_to` are given as follows:
-            - No Normalization: -1
-            - On States only: 0
-            - On Rewards only: 1
-            - On Advantage value only: 2
-            - On States and Rewards: 3
-            - On States and Advantage: 4
+            - No Normalization: -1; (`["none"]`)
+            - On States only: 0; (`["states"]`)
+            - On Rewards only: 1; (`["rewards"]`)
+            - On TD value only: 2; (`["td"]`)
+            - On States and Rewards: 3; (`["states", "rewards"]`)
+            - On States and TD: 4; (`["states", "td"]`)
+
+
+        If a valid `max_norm_grad` is passed, then gradient clipping takes place else gradient clipping step is
+        skipped. If `max_norm_grad` value was invalid, error will be raised from PyTorch.
         """
         super(A2C, self).__init__()
+        setup = InternalCodeSetup()
         ## The input policy model moved to desired device. @I{# noqa: E266}
         self.policy_model = policy_model.to(device)
         ## The input optimizer wrapped with policy_model parameters. @I{# noqa: E266}
@@ -118,8 +133,12 @@ class A2C(Agent):
         self.bootstrap_rounds = bootstrap_rounds
         ## The input `device` argument; indicating the device name. @I{# noqa: E266}
         self.device = device
+        if isinstance(apply_norm, str):
+            apply_norm = setup.get_apply_norm_mode_code(apply_norm)
         ## The input `apply_norm` argument; indicating the normalisation to be used. @I{# noqa: E266}
         self.apply_norm = apply_norm
+        if isinstance(apply_norm_to, (str, list)):
+            apply_norm_to = setup.get_apply_norm_to_mode_code(apply_norm_to)
         ## The input `apply_norm_to` argument; indicating the quantity to normalise. @I{# noqa: E266}
         self.apply_norm_to = apply_norm_to
         ## The input `eps_for_norm` argument; indicating epsilon to be used for normalisation. @I{# noqa: E266}

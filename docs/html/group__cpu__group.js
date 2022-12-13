@@ -7,7 +7,7 @@ var group__cpu__group =
       [ "cumulative_sum", "class_offload.html#a24140ba1a808376bf6f2fba97f923545", null ],
       [ "generate_priority_seeds", "class_offload.html#a7196d56dfe220d0591c400353a0c9de2", null ],
       [ "reset", "class_offload.html#aef50f7451201849f42e5f9eadcd978cf", null ],
-      [ "shuffle", "class_offload.html#a748b05a87495e6a3e7382b447c581416", null ],
+      [ "shuffle", "class_offload.html#ad53d1d4ff220de676ed53d9b9e9a2193", null ],
       [ "errorArray_", "class_offload.html#a095ccbe83b1d39081de1bdc602c616c2", null ],
       [ "indexArray_", "class_offload.html#a273d5876da15227d27caece25af1280d", null ],
       [ "inputContainerData_", "class_offload.html#ad8c6a8ae732aa46f9fdc362ce5bd0fc7", null ],
