@@ -132,7 +132,7 @@ class Environments:
             if ep % self.config["reward_logging_frequency"] == 0:
                 reward_log_message = "~" * 60
                 # Log Mean Reward in the episode cycle
-                if verbose >= -1:
+                if verbose <= 0:
                     mean_reward = self.__list_mean(rewards)
                     reward_log_message = (
                         f"Average Reward after {ep} episodes: {mean_reward}"
@@ -144,13 +144,13 @@ class Environments:
                             custom_name_suffix=self.config.get("suffix", "_best")
                         )
                         highest_mv_avg_reward = mean_reward
-                if verbose == 0 or verbose == -1:
+                if verbose <= 1:
                     # Log Mean Loss in the episode cycle
                     mean_loss = self.__list_mean(self.agent.loss)
                     if len(self.agent.loss) > 0:
                         logging.info(f"Average Loss after {ep} episodes: {mean_loss}")
                         log.append(f"Average Loss after {ep} episodes: {mean_loss}\n")
-                if verbose == 1 or verbose == -1:
+                if verbose <= 2:
                     # Log current epsilon value
                     if hasattr(self.agent, "epsilon"):
                         logging.info(f"Epsilon after {ep} episodes: {self.agent.epsilon}")
