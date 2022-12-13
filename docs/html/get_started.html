@@ -103,67 +103,68 @@ $(document).ready(function(){initNavTree('get_started.html',''); initResizable()
 <h2><a class="anchor" id="autotoc_md2"></a>
 Setup the config file</h2>
 <p >It is not mandatory, however we recommend using a config file (using yaml) to keep track of arguments. It also makes it easy to run experiments. For our experiment setup, we can use the following config:</p>
-<div class="fragment"><div class="line">mode: &#39;train&#39;</div>
-<div class="line">env_name: &#39;LunarLander-v2&#39;</div>
-<div class="line">model_name: &#39;mlp&#39;</div>
-<div class="line">activation_name: &#39;relu&#39;</div>
-<div class="line">agent_name: &#39;dqn&#39;</div>
-<div class="line">optimizer_name: &#39;adam&#39;</div>
-<div class="line">lr_scheduler_name: &#39;step_lr&#39;</div>
-<div class="line">loss_function_name: &#39;huber_loss&#39;</div>
-<div class="line">num_episodes: 5000</div>
-<div class="line">max_timesteps: 1000</div>
-<div class="line">reward_logging_frequency: 100</div>
-<div class="line">new_shape: [ 1, 8 ]</div>
-<div class="line">custom_suffix: &quot;_best&quot;</div>
-<div class="line">render: false</div>
+<div class="fragment"><div class="line">{</div>
+<div class="line">    <span class="stringliteral">&quot;mode&quot;</span>: <span class="stringliteral">&#39;train&#39;</span></div>
+<div class="line">    <span class="stringliteral">&quot;env_name&quot;</span>: <span class="stringliteral">&#39;LunarLander-v2&#39;</span></div>
+<div class="line">    <span class="stringliteral">&quot;model_name&quot;</span>: <span class="stringliteral">&#39;mlp&#39;</span></div>
+<div class="line">    <span class="stringliteral">&quot;activation_name&quot;</span>: <span class="stringliteral">&#39;relu&#39;</span></div>
+<div class="line">    <span class="stringliteral">&quot;agent_name&quot;</span>: <span class="stringliteral">&#39;dqn&#39;</span></div>
+<div class="line">    <span class="stringliteral">&quot;optimizer_name&quot;</span>: <span class="stringliteral">&#39;adam&#39;</span></div>
+<div class="line">    <span class="stringliteral">&quot;lr_scheduler_name&quot;</span>: <span class="stringliteral">&#39;step_lr&#39;</span></div>
+<div class="line">    <span class="stringliteral">&quot;loss_function_name&quot;</span>: <span class="stringliteral">&#39;huber_loss&#39;</span></div>
+<div class="line">    <span class="stringliteral">&quot;num_episodes&quot;</span>: 5000</div>
+<div class="line">    <span class="stringliteral">&quot;max_timesteps&quot;</span>: 1000</div>
+<div class="line">    <span class="stringliteral">&quot;reward_logging_frequency&quot;</span>: 100</div>
+<div class="line">    <span class="stringliteral">&quot;new_shape&quot;</span>: [1, 8]</div>
+<div class="line">    <span class="stringliteral">&quot;custom_suffix&quot;</span>: <span class="stringliteral">&quot;_best&quot;</span></div>
+<div class="line">    <span class="stringliteral">&quot;render&quot;</span>: false</div>
 <div class="line"> </div>
-<div class="line">model_args: {</div>
-<div class="line">  num_actions: 4,</div>
-<div class="line">  sequence_length: 1,</div>
-<div class="line">  hidden_sizes: [ 8, 64, 128, 256, 512],</div>
-<div class="line">  dropout: 0.1</div>
+<div class="line">    <span class="stringliteral">&quot;model_args&quot;</span>: {</div>
+<div class="line">        <span class="stringliteral">&quot;num_actions&quot;</span>: 4,</div>
+<div class="line">        <span class="stringliteral">&quot;sequence_length&quot;</span>: 1,</div>
+<div class="line">        <span class="stringliteral">&quot;hidden_sizes&quot;</span>: [8, 64, 128, 256, 512],</div>
+<div class="line">        <span class="stringliteral">&quot;dropout&quot;</span>: 0.1</div>
+<div class="line">    }</div>
+<div class="line"> </div>
+<div class="line">    <span class="stringliteral">&quot;activation_args&quot;</span>: {</div>
+<div class="line"> </div>
+<div class="line">    }</div>
+<div class="line"> </div>
+<div class="line">    <span class="stringliteral">&quot;agent_args&quot;</span>: {</div>
+<div class="line">        <span class="stringliteral">&quot;gamma&quot;</span>: 0.99,</div>
+<div class="line">        <span class="stringliteral">&quot;epsilon&quot;</span>: 1,</div>
+<div class="line">        <span class="stringliteral">&quot;min_epsilon&quot;</span>: 0.01,</div>
+<div class="line">        <span class="stringliteral">&quot;num_actions&quot;</span>: 4,</div>
+<div class="line">        <span class="stringliteral">&quot;memory_buffer_size&quot;</span>: 16384,</div>
+<div class="line">        <span class="stringliteral">&quot;target_model_update_rate&quot;</span>: 64,</div>
+<div class="line">        <span class="stringliteral">&quot;policy_model_update_rate&quot;</span>: 4,</div>
+<div class="line">        <span class="stringliteral">&quot;lr_threshold&quot;</span>: 1e-5,</div>
+<div class="line">        <span class="stringliteral">&quot;backup_frequency&quot;</span>: 10000,</div>
+<div class="line">        <span class="stringliteral">&quot;batch_size&quot;</span>: 64,</div>
+<div class="line">        <span class="stringliteral">&quot;epsilon_decay_rate&quot;</span>: 0.995,</div>
+<div class="line">        <span class="stringliteral">&quot;epsilon_decay_frequency&quot;</span>: 1024,</div>
+<div class="line">        <span class="stringliteral">&quot;prioritization_params&quot;</span>: null,</div>
+<div class="line">        <span class="stringliteral">&quot;apply_norm&quot;</span>: <span class="stringliteral">&quot;none&quot;</span>,</div>
+<div class="line">        <span class="stringliteral">&quot;apply_norm_to&quot;</span>: [<span class="stringliteral">&quot;none&quot;</span>],</div>
+<div class="line">        <span class="stringliteral">&quot;tau&quot;</span>: 0.83,</div>
+<div class="line">        <span class="stringliteral">&quot;force_terminal_state_selection_prob&quot;</span>: 0.7,</div>
+<div class="line">        <span class="stringliteral">&quot;save_path&quot;</span>: <span class="stringliteral">&quot;/path/to/directory/to/save&quot;</span>,</div>
+<div class="line">        <span class="stringliteral">&quot;device&quot;</span>: <span class="stringliteral">&#39;cuda&#39;</span></div>
+<div class="line">    }</div>
+<div class="line"> </div>
+<div class="line">    <span class="stringliteral">&quot;optimizer_args&quot;</span>: {</div>
+<div class="line">        <span class="stringliteral">&quot;lr&quot;</span>: 0.001,</div>
+<div class="line">        <span class="stringliteral">&quot;weight_decay&quot;</span>: 0.01,</div>
+<div class="line">    }</div>
+<div class="line"> </div>
+<div class="line">    <span class="stringliteral">&quot;lr_scheduler_args&quot;</span>: {</div>
+<div class="line">        <span class="stringliteral">&quot;step_size&quot;</span>: 64,</div>
+<div class="line">        <span class="stringliteral">&quot;gamma&quot;</span>: 0.9999,</div>
+<div class="line">    }</div>
+<div class="line"> </div>
+<div class="line">    <span class="stringliteral">&quot;loss_function_args&quot;</span>: {</div>
+<div class="line">    }</div>
 <div class="line">}</div>
-<div class="line"> </div>
-<div class="line">activation_args: {</div>
-<div class="line"> </div>
-<div class="line">}</div>
-<div class="line"> </div>
-<div class="line">agent_args: {</div>
-<div class="line">  gamma: 0.99,</div>
-<div class="line">  epsilon: 1,</div>
-<div class="line">  min_epsilon: 0.01,</div>
-<div class="line">  num_actions: 4,</div>
-<div class="line">  memory_buffer_size: 16384,</div>
-<div class="line">  target_model_update_rate: 64,</div>
-<div class="line">  policy_model_update_rate: 4,</div>
-<div class="line">  lr_threshold: 1e-5,</div>
-<div class="line">  backup_frequency: 10000,</div>
-<div class="line">  batch_size: 64,</div>
-<div class="line">  epsilon_decay_rate: 0.995,</div>
-<div class="line">  epsilon_decay_frequency: 1024,</div>
-<div class="line">  prioritization_params: null,</div>
-<div class="line">  apply_norm: &quot;none&quot;,</div>
-<div class="line">  apply_norm_to: [ &quot;none&quot; ],</div>
-<div class="line">  tau: 0.83,</div>
-<div class="line">  force_terminal_state_selection_prob: 0.7,</div>
-<div class="line">  save_path: &quot;/path/to/directory/to/save&quot;</div>
-<div class="line">}</div>
-<div class="line"> </div>
-<div class="line">optimizer_args: {</div>
-<div class="line">  lr: 0.001,</div>
-<div class="line">  weight_decay: 0.01,</div>
-<div class="line">}</div>
-<div class="line"> </div>
-<div class="line">lr_scheduler_args: {</div>
-<div class="line">  &quot;step_size&quot;: 64,</div>
-<div class="line">  &quot;gamma&quot;: 0.9999,</div>
-<div class="line">}</div>
-<div class="line"> </div>
-<div class="line">loss_function_args: {</div>
-<div class="line">}</div>
-<div class="line"> </div>
-<div class="line">device: &#39;cuda&#39;</div>
 </div><!-- fragment --><p >You can also set the environment variable <code>SAVE_PATH</code> and not explicitly set the path in yaml file inside <code>agent_args</code>. You can find a detailed explanation of the keys in yaml presented above in the <a class="el" href="overview.html#md_overview">overview</a>. You can find detailed explanation for <code>agent_args</code> <a class="el" href="dqn.html#md_agents_dqn">here</a> and for <code>model_args</code> <a class="el" href="mlp.html#md_models_in_built_mlp">here</a>.</p>
 <h1><a class="anchor" id="autotoc_md3"></a>
 Setup RLPack Simulator.</h1>
@@ -186,68 +187,72 @@ Setup RLPack Simulator.</h1>
 </div><!-- fragment --><p >That's it! You will have the experiment up and running for the specified environment.</p>
 <h2><a class="anchor" id="autotoc_md4"></a>
 Using custom models.</h2>
-<p >With RLPack, it is easy for you to pass your custom model. You just have to disable model related arguments in config file. An updated config file would look like (shown as an update from previously shown config file): </p><div class="fragment"><div class="line">mode: &#39;train&#39;</div>
-<div class="line">env_name: &#39;LunarLander-v2&#39;</div>
-<div class="line">#model_name: &#39;mlp&#39;</div>
-<div class="line">#activation_name: &#39;relu&#39;</div>
-<div class="line">agent_name: &#39;dqn&#39;</div>
-<div class="line">optimizer_name: &#39;adam&#39;</div>
-<div class="line">lr_scheduler_name: &#39;step_lr&#39;</div>
-<div class="line">loss_function_name: &#39;huber_loss&#39;</div>
-<div class="line">num_episodes: 5000</div>
-<div class="line">max_timesteps: 1000</div>
-<div class="line">reward_logging_frequency: 100</div>
-<div class="line">new_shape: [ 1, 8 ]</div>
-<div class="line">custom_suffix: &quot;_best&quot;</div>
-<div class="line">render: false</div>
+<p >With RLPack, it is easy for you to pass your custom model. You just have to disable model related arguments in config file. An updated config file would look like (shown as an update from previously shown config file):</p>
+<div class="fragment"><div class="line">{</div>
+<div class="line">  <span class="stringliteral">&quot;mode&quot;</span>: <span class="stringliteral">&#39;train&#39;</span></div>
+<div class="line">    <span class="stringliteral">&quot;env_name&quot;</span>: <span class="stringliteral">&#39;LunarLander-v2&#39;</span></div>
+<div class="line">    <span class="comment"># &quot;model_name&quot;: &#39;mlp&#39;</span></div>
+<div class="line">    <span class="comment"># &quot;activation_name&quot;: &#39;relu&#39;</span></div>
+<div class="line">    <span class="stringliteral">&quot;agent_name&quot;</span>: <span class="stringliteral">&#39;dqn&#39;</span></div>
+<div class="line">    <span class="stringliteral">&quot;optimizer_name&quot;</span>: <span class="stringliteral">&#39;adam&#39;</span></div>
+<div class="line">    <span class="stringliteral">&quot;lr_scheduler_name&quot;</span>: <span class="stringliteral">&#39;step_lr&#39;</span></div>
+<div class="line">    <span class="stringliteral">&quot;loss_function_name&quot;</span>: <span class="stringliteral">&#39;huber_loss&#39;</span></div>
+<div class="line">    <span class="stringliteral">&quot;num_episodes&quot;</span>: 5000</div>
+<div class="line">    <span class="stringliteral">&quot;max_timesteps&quot;</span>: 1000</div>
+<div class="line">    <span class="stringliteral">&quot;reward_logging_frequency&quot;</span>: 100</div>
+<div class="line">    <span class="stringliteral">&quot;new_shape&quot;</span>: [1, 8]</div>
+<div class="line">    <span class="stringliteral">&quot;custom_suffix&quot;</span>: <span class="stringliteral">&quot;_best&quot;</span></div>
+<div class="line">    <span class="stringliteral">&quot;render&quot;</span>: false</div>
 <div class="line"> </div>
-<div class="line">#model_args: {</div>
-<div class="line">#  num_actions: 4,</div>
-<div class="line">#  sequence_length: 1,</div>
-<div class="line">#  hidden_sizes: [ 8, 64, 128, 256, 512],</div>
-<div class="line">#  dropout: 0.1</div>
-<div class="line">#}</div>
+<div class="line">    <span class="comment"># &quot;model_args&quot;: {</span></div>
+<div class="line">    <span class="comment">#   &quot;num_actions&quot;: 4,</span></div>
+<div class="line">    <span class="comment">#   &quot;sequence_length&quot;: 1,</span></div>
+<div class="line">    <span class="comment">#   &quot;hidden_sizes&quot;: [8, 64, 128, 256, 512],</span></div>
+<div class="line">    <span class="comment">#   &quot;dropout&quot;: 0.1</span></div>
+<div class="line">    <span class="comment"># }</span></div>
 <div class="line"> </div>
-<div class="line">#activation_args: {</div>
-<div class="line">#</div>
-<div class="line">#}</div>
+<div class="line">    <span class="comment"># &quot;activation_args&quot;: {</span></div>
+<div class="line">    <span class="comment"># </span></div>
+<div class="line">    <span class="comment"># }</span></div>
 <div class="line"> </div>
-<div class="line">agent_args: {</div>
-<div class="line">  gamma: 0.99,</div>
-<div class="line">  epsilon: 1,</div>
-<div class="line">  min_epsilon: 0.01,</div>
-<div class="line">  num_actions: 4,</div>
-<div class="line">  memory_buffer_size: 16384,</div>
-<div class="line">  target_model_update_rate: 64,</div>
-<div class="line">  policy_model_update_rate: 4,</div>
-<div class="line">  lr_threshold: 1e-5,</div>
-<div class="line">  backup_frequency: 10000,</div>
-<div class="line">  batch_size: 64,</div>
-<div class="line">  epsilon_decay_rate: 0.995,</div>
-<div class="line">  epsilon_decay_frequency: 1024,</div>
-<div class="line">  prioritization_params: null,</div>
-<div class="line">  apply_norm: &quot;none&quot;,</div>
-<div class="line">  apply_norm_to: [ &quot;none&quot; ],</div>
-<div class="line">  tau: 0.83,</div>
-<div class="line">  force_terminal_state_selection_prob: 0.7,</div>
-<div class="line">  save_path: &quot;/path/to/directory/to/save&quot;</div>
+<div class="line">    <span class="stringliteral">&quot;agent_args&quot;</span>: {</div>
+<div class="line">      <span class="stringliteral">&quot;gamma&quot;</span>: 0.99,</div>
+<div class="line">      <span class="stringliteral">&quot;epsilon&quot;</span>: 1,</div>
+<div class="line">      <span class="stringliteral">&quot;min_epsilon&quot;</span>: 0.01,</div>
+<div class="line">      <span class="stringliteral">&quot;num_actions&quot;</span>: 4,</div>
+<div class="line">      <span class="stringliteral">&quot;memory_buffer_size&quot;</span>: 16384,</div>
+<div class="line">      <span class="stringliteral">&quot;target_model_update_rate&quot;</span>: 64,</div>
+<div class="line">      <span class="stringliteral">&quot;policy_model_update_rate&quot;</span>: 4,</div>
+<div class="line">      <span class="stringliteral">&quot;lr_threshold&quot;</span>: 1e-5,</div>
+<div class="line">      <span class="stringliteral">&quot;backup_frequency&quot;</span>: 10000,</div>
+<div class="line">      <span class="stringliteral">&quot;batch_size&quot;</span>: 64,</div>
+<div class="line">      <span class="stringliteral">&quot;epsilon_decay_rate&quot;</span>: 0.995,</div>
+<div class="line">      <span class="stringliteral">&quot;epsilon_decay_frequency&quot;</span>: 1024,</div>
+<div class="line">      <span class="stringliteral">&quot;prioritization_params&quot;</span>: null,</div>
+<div class="line">      <span class="stringliteral">&quot;apply_norm&quot;</span>: <span class="stringliteral">&quot;none&quot;</span>,</div>
+<div class="line">      <span class="stringliteral">&quot;apply_norm_to&quot;</span>: [<span class="stringliteral">&quot;none&quot;</span>],</div>
+<div class="line">      <span class="stringliteral">&quot;tau&quot;</span>: 0.83,</div>
+<div class="line">      <span class="stringliteral">&quot;force_terminal_state_selection_prob&quot;</span>: 0.7,</div>
+<div class="line">      <span class="stringliteral">&quot;save_path&quot;</span>: <span class="stringliteral">&quot;/path/to/directory/to/save&quot;</span>,</div>
+<div class="line">      <span class="stringliteral">&quot;device&quot;</span>: <span class="stringliteral">&#39;cuda&#39;</span></div>
+<div class="line">    }</div>
+<div class="line"> </div>
+<div class="line">    <span class="stringliteral">&quot;optimizer_args&quot;</span>: {</div>
+<div class="line">      <span class="stringliteral">&quot;lr&quot;</span>: 0.001,</div>
+<div class="line">      <span class="stringliteral">&quot;weight_decay&quot;</span>: 0.01,</div>
+<div class="line">    }</div>
+<div class="line"> </div>
+<div class="line">    <span class="stringliteral">&quot;lr_scheduler_args&quot;</span>: {</div>
+<div class="line">      <span class="stringliteral">&quot;step_size&quot;</span>: 64,</div>
+<div class="line">      <span class="stringliteral">&quot;gamma&quot;</span>: 0.9999,</div>
+<div class="line">    }</div>
+<div class="line"> </div>
+<div class="line">    <span class="stringliteral">&quot;loss_function_args&quot;</span>: {</div>
+<div class="line">    }</div>
 <div class="line">}</div>
+</div><!-- fragment --><p >Now you can define your own custom PyTorch model. As an example:</p>
+<div class="fragment"><div class="line"><span class="keyword">from</span> rlpack <span class="keyword">import</span> pytorch</div>
 <div class="line"> </div>
-<div class="line">optimizer_args: {</div>
-<div class="line">  lr: 0.001,</div>
-<div class="line">  weight_decay: 0.01,</div>
-<div class="line">}</div>
-<div class="line"> </div>
-<div class="line">lr_scheduler_args: {</div>
-<div class="line">  &quot;step_size&quot;: 64,</div>
-<div class="line">  &quot;gamma&quot;: 0.9999,</div>
-<div class="line">}</div>
-<div class="line"> </div>
-<div class="line">loss_function_args: {</div>
-<div class="line">}</div>
-<div class="line"> </div>
-<div class="line">device: &#39;cuda&#39;</div>
-</div><!-- fragment --><p >Now you can define your own custom PyTorch model. As an example: </p><div class="fragment"><div class="line"><span class="keyword">from</span> rlpack <span class="keyword">import</span> pytorch</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">class </span>Base(pytorch.nn.Module):</div>
 <div class="line"> </div>
@@ -271,7 +276,8 @@ Using custom models.</h2>
 <div class="line"> </div>
 <div class="line">        <span class="keywordflow">return</span> x</div>
 </div><!-- fragment --><p >Make sure that the output of the model corresponds to the number of actions on for your environment. In our example, we have four actions.</p>
-<p >Now we run the simulator as follows: </p><div class="fragment"><div class="line"><span class="keyword">import</span> os</div>
+<p >Now we run the simulator as follows:</p>
+<div class="fragment"><div class="line"><span class="keyword">import</span> os</div>
 <div class="line"><span class="keyword">import</span> yaml</div>
 <div class="line"><span class="keyword">from</span> <a class="code hl_namespace" href="namespacerlpack_1_1simulator.html">rlpack.simulator</a> <span class="keyword">import</span> Simulator</div>
 <div class="line"> </div>

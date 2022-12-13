@@ -1,85 +1,85 @@
 # Get started {#get_started}
 
 Starting out with RLPack is very straight forward! In this tutorial we will see a basic example of
-[DQN](@ref agents/dqn.md) algorithm applied to 
-[LunarLander-v2](https://www.gymlibrary.dev/environments/box2d/lunar_lander/) environment provided by gym. 
+[DQN](@ref agents/dqn.md) algorithm applied to
+[LunarLander-v2](https://www.gymlibrary.dev/environments/box2d/lunar_lander/) environment provided by gym.
 
-### Setup the config file 
+### Setup the config file
 
-It is not mandatory, however we recommend using a config file (using yaml) to keep track of arguments. It 
-also makes it easy to run experiments. For our experiment setup, we can use the following config: 
+It is not mandatory, however we recommend using a config file (using yaml) to keep track of arguments. It
+also makes it easy to run experiments. For our experiment setup, we can use the following config:
 
-```yaml
-mode: 'train'
-env_name: 'LunarLander-v2'
-model_name: 'mlp'
-activation_name: 'relu'
-agent_name: 'dqn'
-optimizer_name: 'adam'
-lr_scheduler_name: 'step_lr'
-loss_function_name: 'huber_loss'
-num_episodes: 5000
-max_timesteps: 1000
-reward_logging_frequency: 100
-new_shape: [ 1, 8 ]
-custom_suffix: "_best"
-render: false
+```python
+{
+    "mode": 'train'
+    "env_name": 'LunarLander-v2'
+    "model_name": 'mlp'
+    "activation_name": 'relu'
+    "agent_name": 'dqn'
+    "optimizer_name": 'adam'
+    "lr_scheduler_name": 'step_lr'
+    "loss_function_name": 'huber_loss'
+    "num_episodes": 5000
+    "max_timesteps": 1000
+    "reward_logging_frequency": 100
+    "new_shape": [1, 8]
+    "custom_suffix": "_best"
+    "render": false
 
-model_args: {
-  num_actions: 4,
-  sequence_length: 1,
-  hidden_sizes: [ 8, 64, 128, 256, 512],
-  dropout: 0.1
+    "model_args": {
+        "num_actions": 4,
+        "sequence_length": 1,
+        "hidden_sizes": [8, 64, 128, 256, 512],
+        "dropout": 0.1
+    }
+
+    "activation_args": {
+
+    }
+
+    "agent_args": {
+        "gamma": 0.99,
+        "epsilon": 1,
+        "min_epsilon": 0.01,
+        "num_actions": 4,
+        "memory_buffer_size": 16384,
+        "target_model_update_rate": 64,
+        "policy_model_update_rate": 4,
+        "lr_threshold": 1e-5,
+        "backup_frequency": 10000,
+        "batch_size": 64,
+        "epsilon_decay_rate": 0.995,
+        "epsilon_decay_frequency": 1024,
+        "prioritization_params": null,
+        "apply_norm": "none",
+        "apply_norm_to": ["none"],
+        "tau": 0.83,
+        "force_terminal_state_selection_prob": 0.7,
+        "save_path": "/path/to/directory/to/save",
+        "device": 'cuda'
+    }
+
+    "optimizer_args": {
+        "lr": 0.001,
+        "weight_decay": 0.01,
+    }
+
+    "lr_scheduler_args": {
+        "step_size": 64,
+        "gamma": 0.9999,
+    }
+
+    "loss_function_args": {
+    }
 }
-
-activation_args: {
-
-}
-
-agent_args: {
-  gamma: 0.99,
-  epsilon: 1,
-  min_epsilon: 0.01,
-  num_actions: 4,
-  memory_buffer_size: 16384,
-  target_model_update_rate: 64,
-  policy_model_update_rate: 4,
-  lr_threshold: 1e-5,
-  backup_frequency: 10000,
-  batch_size: 64,
-  epsilon_decay_rate: 0.995,
-  epsilon_decay_frequency: 1024,
-  prioritization_params: null,
-  apply_norm: "none",
-  apply_norm_to: [ "none" ],
-  tau: 0.83,
-  force_terminal_state_selection_prob: 0.7,
-  save_path: "/path/to/directory/to/save"
-}
-
-optimizer_args: {
-  lr: 0.001,
-  weight_decay: 0.01,
-}
-
-lr_scheduler_args: {
-  "step_size": 64,
-  "gamma": 0.9999,
-}
-
-loss_function_args: {
-}
-
-device: 'cuda'
 ```
 
-You can also set the environment variable `SAVE_PATH` and not explicitly set the path in yaml file inside 
-`agent_args`. You can find a detailed explanation of the keys in yaml presented above 
+You can also set the environment variable `SAVE_PATH` and not explicitly set the path in yaml file inside
+`agent_args`. You can find a detailed explanation of the keys in yaml presented above
 in the [overview](@ref overview.md). You can find detailed explanation for `agent_args` [here](@ref agents/dqn.md) and
 for `model_args` [here](@ref models/in_built/mlp.md).
 
-## Setup RLPack Simulator. 
-
+## Setup RLPack Simulator.
 
 ```python
 import os
@@ -99,80 +99,83 @@ simulator = Simulator(config=config)
 simulator.run()
 ```
 
-That's it! You will have the experiment up and running for the specified environment. 
+That's it! You will have the experiment up and running for the specified environment.
 
-### Using custom models. 
+### Using custom models.
 
+With RLPack, it is easy for you to pass your custom model. You just have to disable model related arguments in
+config file. An updated config file would look like (shown as an update from previously shown config file):
 
-With RLPack, it is easy for you to pass your custom model. You just have to disable model related arguments in 
-config file. An updated config file would look like (shown as an update from previously shown config file): 
-```yaml
-mode: 'train'
-env_name: 'LunarLander-v2'
-#model_name: 'mlp'
-#activation_name: 'relu'
-agent_name: 'dqn'
-optimizer_name: 'adam'
-lr_scheduler_name: 'step_lr'
-loss_function_name: 'huber_loss'
-num_episodes: 5000
-max_timesteps: 1000
-reward_logging_frequency: 100
-new_shape: [ 1, 8 ]
-custom_suffix: "_best"
-render: false
+```python
+{
+  "mode": 'train'
+    "env_name": 'LunarLander-v2'
+    # "model_name": 'mlp'
+    # "activation_name": 'relu'
+    "agent_name": 'dqn'
+    "optimizer_name": 'adam'
+    "lr_scheduler_name": 'step_lr'
+    "loss_function_name": 'huber_loss'
+    "num_episodes": 5000
+    "max_timesteps": 1000
+    "reward_logging_frequency": 100
+    "new_shape": [1, 8]
+    "custom_suffix": "_best"
+    "render": false
 
-#model_args: {
-#  num_actions: 4,
-#  sequence_length: 1,
-#  hidden_sizes: [ 8, 64, 128, 256, 512],
-#  dropout: 0.1
-#}
+    # "model_args": {
+    #   "num_actions": 4,
+    #   "sequence_length": 1,
+    #   "hidden_sizes": [8, 64, 128, 256, 512],
+    #   "dropout": 0.1
+    # }
 
-#activation_args: {
-#
-#}
+    # "activation_args": {
+    # 
+    # }
 
-agent_args: {
-  gamma: 0.99,
-  epsilon: 1,
-  min_epsilon: 0.01,
-  num_actions: 4,
-  memory_buffer_size: 16384,
-  target_model_update_rate: 64,
-  policy_model_update_rate: 4,
-  lr_threshold: 1e-5,
-  backup_frequency: 10000,
-  batch_size: 64,
-  epsilon_decay_rate: 0.995,
-  epsilon_decay_frequency: 1024,
-  prioritization_params: null,
-  apply_norm: "none",
-  apply_norm_to: [ "none" ],
-  tau: 0.83,
-  force_terminal_state_selection_prob: 0.7,
-  save_path: "/path/to/directory/to/save"
+    "agent_args": {
+      "gamma": 0.99,
+      "epsilon": 1,
+      "min_epsilon": 0.01,
+      "num_actions": 4,
+      "memory_buffer_size": 16384,
+      "target_model_update_rate": 64,
+      "policy_model_update_rate": 4,
+      "lr_threshold": 1e-5,
+      "backup_frequency": 10000,
+      "batch_size": 64,
+      "epsilon_decay_rate": 0.995,
+      "epsilon_decay_frequency": 1024,
+      "prioritization_params": null,
+      "apply_norm": "none",
+      "apply_norm_to": ["none"],
+      "tau": 0.83,
+      "force_terminal_state_selection_prob": 0.7,
+      "save_path": "/path/to/directory/to/save",
+      "device": 'cuda'
+    }
+
+    "optimizer_args": {
+      "lr": 0.001,
+      "weight_decay": 0.01,
+    }
+
+    "lr_scheduler_args": {
+      "step_size": 64,
+      "gamma": 0.9999,
+    }
+
+    "loss_function_args": {
+    }
 }
-
-optimizer_args: {
-  lr: 0.001,
-  weight_decay: 0.01,
-}
-
-lr_scheduler_args: {
-  "step_size": 64,
-  "gamma": 0.9999,
-}
-
-loss_function_args: {
-}
-
-device: 'cuda'
 ```
 
-Now you can define your own custom PyTorch model. As an example: 
+Now you can define your own custom PyTorch model. As an example:
+
 ```python
 from rlpack import pytorch
+
 
 class Base(pytorch.nn.Module):
 
@@ -197,11 +200,11 @@ class Base(pytorch.nn.Module):
         return x
 ```
 
-Make sure that the output of the model corresponds to the number of actions on for your environment. In our example, 
-we have four actions. 
+Make sure that the output of the model corresponds to the number of actions on for your environment. In our example,
+we have four actions.
 
+Now we run the simulator as follows:
 
-Now we run the simulator as follows: 
 ```python
 import os
 import yaml
@@ -228,14 +231,12 @@ simulator.run()
 ```
 
 For model arguments of each agent, you can refer to [agents](@ref agents/index.md). Since [DQN](@ref agents/dqn.md)
-expects `target_model` and `policy_model` as an argument, we modify the config accordingly. Once done, the 
+expects `target_model` and `policy_model` as an argument, we modify the config accordingly. Once done, the
 experiment will run as usual!
-
 
 ### Using custom gym environments
 
-
-Using custom gym is again as easy as using your custom model. All you have to do is to pass your initialized 
+Using custom gym is again as easy as using your custom model. All you have to do is to pass your initialized
 environment with the key `env` in the config.
 
 ```python
