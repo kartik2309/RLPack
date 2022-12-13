@@ -193,15 +193,23 @@ class A2C(Agent):
         @return int: The action to be taken
         """
         self.policy_model.eval()
+        # Increment `step_counter` and use policy model to get next action.
+        self.step_counter += 1
+        # Cast `state_current` to tensor.
         state_current = self._cast_to_tensor(state_current).to(self.device)
         actions_logits, state_current_value = self.policy_model(state_current)
         distribution = self.__create_action_distribution(actions_logits)
         action = distribution.sample()
+        # Accumulate quantities.
         self.action_log_probabilities.append(distribution.log_prob(action))
         self.states_current_values.append(state_current_value)
         self.rewards.append(reward)
         self.entropies.append(distribution.entropy().mean())
+        # Call train policy method.
         self.__call_train_policy_model(done)
+        # Backup model every `backup_frequency` steps.
+        if self.step_counter % self.backup_frequency == 0:
+            self.save()
         return action.item()
 
     @pytorch.no_grad()
