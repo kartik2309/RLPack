@@ -97,6 +97,9 @@ class Environments:
             return
         if load:
             self.agent.load(self.config.get("custom_suffix", "_best"))
+        else:
+            if os.path.isfile(os.path.join(self.config["agent_args"]["save_path"], "log.txt")):
+                os.remove(os.path.join(self.config["agent_args"]["save_path"], "log.txt"))
         log = list()
         highest_mv_avg_reward, timestep = 0.0, 0
         rewards_collector = {k: list() for k in range(self.config["num_episodes"])}
