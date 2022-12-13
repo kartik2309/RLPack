@@ -29,8 +29,8 @@ from rlpack import pytorch
 from rlpack._C.memory import Memory
 from rlpack.utils import LossFunction, LRScheduler
 from rlpack.utils.base.agent import Agent
-from rlpack.utils.normalization import Normalization
 from rlpack.utils.internal_code_setup import InternalCodeSetup
+from rlpack.utils.normalization import Normalization
 
 
 class DqnAgent(Agent):
@@ -60,6 +60,7 @@ class DqnAgent(Agent):
         batch_size: int,
         num_actions: int,
         save_path: str,
+        bootstrap_rounds: int = 1,
         device: str = "cpu",
         prioritization_params: Optional[Dict[str, Any]] = None,
         force_terminal_state_selection_prob: float = 0.0,
@@ -98,6 +99,8 @@ class DqnAgent(Agent):
         @param num_actions: int: Number of actions for the environment.
         @param save_path: str: The save path for models: target_model and policy_model, optimizer,
             lr_scheduler and agent_states.
+        @param bootstrap_rounds: int: The number of rounds until which gradients are to be accumulated before
+            performing calling optimizer step. Gradients are mean reduced for bootstrap_rounds > 1. Default: 1.
         @param device: str: The device on which models are run. Default: "cpu".
         @param prioritization_params: Optional[Dict[str, Any]]: The parameters for prioritization in prioritized
             memory: or relay buffer). Default: None.
@@ -183,6 +186,8 @@ class DqnAgent(Agent):
         self.num_actions = num_actions
         ## The input save path for backing up agent models. @I{# noqa: E266}
         self.save_path = save_path
+        ## The input boostrap rounds. @I{# noqa: E266}
+        self.bootstrap_rounds = bootstrap_rounds
         ## The input `device` argument; indicating the device name. @I{# noqa: E266}
         self.device = device
         # Set necessary prioritization parameters. Depending on `prioritization_params`, appropriate values are set.
@@ -232,6 +237,8 @@ class DqnAgent(Agent):
             prioritization_strategy_code=self.__prioritization_strategy_code,
             batch_size=self.batch_size,
         )
+        ## This is only used when boostrap_rounds > 1 and is cleared after each boostrap round. @I{# noqa: E266}
+        self.grad_accumulator = list()
         # Disable gradients for target network.
         for n, p in self.target_model.named_parameters():
             p.requires_grad = False
@@ -240,6 +247,10 @@ class DqnAgent(Agent):
         self.__normalization = Normalization(
             apply_norm=apply_norm, eps=eps_for_norm, p=p_for_norm, dim=dim_for_norm
         )
+        ## The policy model parameters names. @I{# noqa: E266}
+        self.__policy_model_parameter_keys = OrderedDict(
+            self.policy_model.named_parameters()
+        ).keys()
 
     def train(
         self,
@@ -489,6 +500,8 @@ class DqnAgent(Agent):
         loss = self.loss_function(q_values_gathered, td_value)
         loss.backward()
         self.loss.append(loss.item())
+        # Apply the requested prioritization strategy.
+        self.__apply_prioritization_strategy(td_value, random_indices)
         # Clip gradients if requested.
         if self.max_grad_norm is not None:
             pytorch.nn.utils.clip_grad_norm_(
@@ -496,9 +509,21 @@ class DqnAgent(Agent):
                 max_norm=self.max_grad_norm,
                 norm_type=self.grad_norm_p,
             )
-        self.__apply_prioritization_strategy(
-            td_value, random_indices
-        )
+        if self.bootstrap_rounds > 1:
+            # When `bootstrap_rounds` is greater than 1; accumulate gradients if no. of rounds
+            # specified by `bootstrap_rounds` have not been completed and return.
+            # If no. of rounds have been completed, perform mean reduction and proceed with optimizer step.
+            if len(self.grad_accumulator) < self.bootstrap_rounds:
+                self.grad_accumulator.append(
+                    {
+                        k: param.grad.detach().clone()
+                        for k, param in self.policy_model.named_parameters()
+                    },
+                )
+                return
+            else:
+                self.__grad_mean_reduction()
+        # Call the optimizer step and LR Scheduler step.
         self.optimizer.step()
         if (
             self.lr_scheduler is not None
@@ -609,14 +634,14 @@ class DqnAgent(Agent):
 
     def __anneal_alpha(self):
         if (
-                self.prioritization_params["to_anneal_alpha"]
-                and (
+            self.prioritization_params["to_anneal_alpha"]
+            and (
                 self.step_counter
                 % self.prioritization_params["alpha_annealing_frequency"]
                 == 0
-        )
-                and self.prioritization_params["alpha"]
-                > self.prioritization_params["min_alpha"]
+            )
+            and self.prioritization_params["alpha"]
+            > self.prioritization_params["min_alpha"]
         ):
             self.prioritization_params["alpha"] = self.prioritization_params[
                 "alpha_annealing_fn"
@@ -626,8 +651,8 @@ class DqnAgent(Agent):
                 **self.prioritization_params["alpha_annealing_fn_kwargs"],
             )
             if (
-                    self.prioritization_params["alpha"]
-                    < self.prioritization_params["min_alpha"]
+                self.prioritization_params["alpha"]
+                < self.prioritization_params["min_alpha"]
             ):
                 self.prioritization_params["alpha"] = self.prioritization_params[
                     "min_alpha"
@@ -635,14 +660,14 @@ class DqnAgent(Agent):
 
     def __anneal_beta(self):
         if (
-                self.prioritization_params["to_anneal_beta"]
-                and (
+            self.prioritization_params["to_anneal_beta"]
+            and (
                 self.step_counter
                 % self.prioritization_params["beta_annealing_frequency"]
                 == 0
-        )
-                and self.prioritization_params["beta"]
-                < self.prioritization_params["max_beta"]
+            )
+            and self.prioritization_params["beta"]
+            < self.prioritization_params["max_beta"]
         ):
             self.prioritization_params["beta"] = self.prioritization_params[
                 "beta_annealing_fn"
@@ -652,9 +677,26 @@ class DqnAgent(Agent):
                 **self.prioritization_params["beta_annealing_fn_kwargs"],
             )
             if (
-                    self.prioritization_params["beta"]
-                    > self.prioritization_params["max_beta"]
+                self.prioritization_params["beta"]
+                > self.prioritization_params["max_beta"]
             ):
                 self.prioritization_params["beta"] = self.prioritization_params[
                     "max_beta"
                 ]
+
+    def __grad_mean_reduction(self):
+        policy_model_grads = self.grad_accumulator
+        # OrderedDict to store reduced average value.
+        policy_model_grads_reduced = OrderedDict()
+        # No Grad mode to disable PyTorch Operation tracking.
+        with pytorch.no_grad():
+            # Perform parameter wise summation.
+            for key in self.__policy_model_parameter_keys:
+                for policy_model_grad in policy_model_grads:
+                    if key not in policy_model_grads_reduced.keys():
+                        policy_model_grads_reduced[key] = policy_model_grad[key]
+                        continue
+                    policy_model_grads_reduced[key] += policy_model_grad[key]
+            # Assign average parameters to model.
+            for key, param in self.policy_model.named_parameters():
+                param.grad = policy_model_grads_reduced[key] / self.bootstrap_rounds

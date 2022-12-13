@@ -49,6 +49,7 @@ class DqnRankBasedPrioritizationAgent(DqnAgent):
         batch_size: int,
         num_actions: int,
         save_path: str,
+        bootstrap_rounds: int = 1,
         device: str = "cpu",
         prioritization_params: Optional[Dict[str, Any]] = None,
         force_terminal_state_selection_prob: float = 0.0,
@@ -87,6 +88,8 @@ class DqnRankBasedPrioritizationAgent(DqnAgent):
         @param num_actions: int: Number of actions for the environment.
         @param save_path: str: The save path for models: target_model and policy_model, optimizer,
             lr_scheduler and agent_states.
+        @param bootstrap_rounds: int: The number of rounds until which gradients are to be accumulated before
+            performing calling optimizer step. Gradients are mean reduced for bootstrap_rounds > 1. Default: 1.
         @param device: str: The device on which models are run. Default: "cpu".
         @param prioritization_params: Optional[Dict[str, Any]]: The parameters for prioritization in prioritized
             memory: or relay buffer). Default: None.
@@ -150,6 +153,7 @@ class DqnRankBasedPrioritizationAgent(DqnAgent):
             batch_size,
             num_actions,
             save_path,
+            bootstrap_rounds,
             device,
             prioritization_params,
             force_terminal_state_selection_prob,
@@ -164,9 +168,7 @@ class DqnRankBasedPrioritizationAgent(DqnAgent):
         )
 
     def __apply_prioritization_strategy(
-        self,
-        td_value: pytorch.Tensor,
-        random_indices: pytorch.Tensor
+        self, td_value: pytorch.Tensor, random_indices: pytorch.Tensor
     ) -> None:
         """
         Void private method that applies the relevant prioritization strategy for the DQN.

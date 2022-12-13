@@ -57,6 +57,7 @@ class Dqn:
         batch_size: int,
         num_actions: int,
         save_path: str,
+        bootstrap_rounds: int = 1,
         device: str = "cpu",
         prioritization_params: Optional[Dict[str, Any]] = None,
         force_terminal_state_selection_prob: float = 0.0,
@@ -95,6 +96,8 @@ class Dqn:
         @param num_actions: int: Number of actions for the environment.
         @param save_path: str: The save path for models: target_model and policy_model, optimizer,
             lr_scheduler and agent_states.
+        @param bootstrap_rounds: int: The number of rounds until which gradients are to be accumulated before
+            performing calling optimizer step. Gradients are mean reduced for bootstrap_rounds > 1. Default: 1.
         @param device: str: The device on which models are run. Default: "cpu".
         @param prioritization_params: Optional[Dict[str, Any]]: The parameters for prioritization in prioritized
             memory: or relay buffer). Default: None.
@@ -185,6 +188,7 @@ class Dqn:
             batch_size,
             num_actions,
             save_path,
+            bootstrap_rounds,
             device,
             prioritization_params,
             force_terminal_state_selection_prob,
@@ -251,11 +255,11 @@ class Dqn:
 
     @staticmethod
     def __process_prioritization_params(
-            prioritization_params: Dict[str, Any],
-            prioritization_strategy_code: int,
-            anneal_alpha_default_fn: Callable[[float, float], float],
-            anneal_beta_default_fn: Callable[[float, float], float],
-            batch_size: int,
+        prioritization_params: Dict[str, Any],
+        prioritization_strategy_code: int,
+        anneal_alpha_default_fn: Callable[[float, float], float],
+        anneal_beta_default_fn: Callable[[float, float], float],
+        batch_size: int,
     ) -> Dict[str, Any]:
         """
         Private method to process the prioritization parameters. This includes sanity check and loading of default
@@ -274,10 +278,10 @@ class Dqn:
         to_anneal_beta = False
         if prioritization_params is not None and prioritization_strategy_code > 0:
             assert (
-                    "alpha" in prioritization_params.keys()
+                "alpha" in prioritization_params.keys()
             ), "`alpha` must be passed when passing prioritization_params"
             assert (
-                    "beta" in prioritization_params.keys()
+                "beta" in prioritization_params.keys()
             ), "`beta` must be passed when passing prioritization_params"
         else:
             prioritization_params = dict()
