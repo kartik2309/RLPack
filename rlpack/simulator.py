@@ -119,12 +119,13 @@ class Simulator:
         agent_args_from_config = {
             k: v
             for k, v in self.config["agent_args"].items()
-            if k not in processed_agent_args.keys() and k in self.setup.agent_args[self.config["agent_name"]]
+            if k not in processed_agent_args.keys()
+            and k in self.setup.agent_args[self.config["agent_name"]]
         }
         agent_kwargs = {
             **processed_agent_args,
             **agent_args_from_config,
-            **default_model_args
+            **default_model_args,
         }
 
         agent = self.setup.get_agent(
@@ -134,7 +135,9 @@ class Simulator:
         if self.is_custom_model and len(self.agent_model_args) > 0:
             for k in self.agent_model_args:
                 config["agent_args"].pop(k)
-        with open(os.path.join(self.config["agent_args"]["save_path"], "config.yaml"), "w") as conf:
+        with open(
+            os.path.join(self.config["agent_args"]["save_path"], "config.yaml"), "w"
+        ) as conf:
             yaml.dump(config, conf)
         return agent
 

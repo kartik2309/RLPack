@@ -100,6 +100,7 @@ class Register:
         ## The mapping between given keyword and [agent](@ref agents/index.md) agent's default arguments. @I{# noqa: E266}
         self.agent_args_default = {
             "dqn": (
+                "bootstrap_rounds",
                 "device",
                 "prioritization_params",
                 "force_terminal_state_selection_prob",

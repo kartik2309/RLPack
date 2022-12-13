@@ -1,4 +1,3 @@
-
 class InternalCodeRegister:
     def __init__(self):
         ## The mapping between given keyword and normalisation method codes. @I{# noqa: E266}

@@ -68,7 +68,11 @@ class Environments:
         self.env.spec.max_episode_steps = self.config["max_timesteps"]
 
     def train_agent(
-        self, render: bool = False, load: bool = False, plot: bool = False, verbose: int = -1
+        self,
+        render: bool = False,
+        load: bool = False,
+        plot: bool = False,
+        verbose: int = -1,
     ) -> None:
         """
         Method to train the agent in the specified environment.
@@ -98,8 +102,12 @@ class Environments:
         if load:
             self.agent.load(self.config.get("custom_suffix", "_best"))
         else:
-            if os.path.isfile(os.path.join(self.config["agent_args"]["save_path"], "log.txt")):
-                os.remove(os.path.join(self.config["agent_args"]["save_path"], "log.txt"))
+            if os.path.isfile(
+                os.path.join(self.config["agent_args"]["save_path"], "log.txt")
+            ):
+                os.remove(
+                    os.path.join(self.config["agent_args"]["save_path"], "log.txt")
+                )
         log = list()
         highest_mv_avg_reward, timestep = 0.0, 0
         rewards_collector = {k: list() for k in range(self.config["num_episodes"])}
@@ -156,8 +164,12 @@ class Environments:
                 if verbose <= 2:
                     # Log current epsilon value
                     if hasattr(self.agent, "epsilon"):
-                        logging.info(f"Epsilon after {ep} episodes: {self.agent.epsilon}")
-                        log.append(f"Epsilon after {ep} episodes: {self.agent.epsilon}\n")
+                        logging.info(
+                            f"Epsilon after {ep} episodes: {self.agent.epsilon}"
+                        )
+                        log.append(
+                            f"Epsilon after {ep} episodes: {self.agent.epsilon}\n"
+                        )
                     # Log current alpha and beta values - for prioritized relay (DQN)
                     if hasattr(self.agent, "prioritization_params"):
                         if hasattr(self.agent, "prioritization_params"):
@@ -177,7 +189,10 @@ class Environments:
                                 )
                     logging.info(f"{'~' * len(reward_log_message)}\n")
                     log.append(f"{'~' * len(reward_log_message)}\n\n")
-                    with open(os.path.join(self.config["agent_args"]["save_path"], "log.txt"), "a+") as f:
+                    with open(
+                        os.path.join(self.config["agent_args"]["save_path"], "log.txt"),
+                        "a+",
+                    ) as f:
                         for line in log:
                             f.write(line)
                 rewards.clear()

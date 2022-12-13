@@ -26,8 +26,8 @@ from typing import Any, Dict, List, Optional
 from rlpack import pytorch
 from rlpack.utils import Activation, LossFunction, LRScheduler
 from rlpack.utils.base.agent import Agent
-from rlpack.utils.base.register import Register
 from rlpack.utils.base.internal_code_register import InternalCodeRegister
+from rlpack.utils.base.register import Register
 
 
 class Setup(Register, InternalCodeRegister):
