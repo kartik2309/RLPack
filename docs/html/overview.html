@@ -127,6 +127,7 @@ $(document).ready(function(){initNavTree('overview.html',''); initResizable(); }
 <div class="ttc" id="anamespacerlpack_1_1simulator_html"><div class="ttname"><a href="namespacerlpack_1_1simulator.html">rlpack.simulator</a></div><div class="ttdef"><b>Definition:</b> simulator.py:1</div></div>
 </div><!-- fragment --><p >Once initialized, <code>Simulator</code> prepares the agents, models, optimizers, lr_schedulers and initializes the environment. Once done, we can call <code>run</code> method, which can run the agent as we desired with config. </p><div class="fragment"><div class="line">simulator.run()</div>
 </div><!-- fragment --><p> <code>run</code> method can provide callbacks which can enable us to pass custom models to be used inside the agent.</p>
+<p >Note that corresponding class for distributed setting is also provided with RLPack defined as rlpack.simulator.SimulatorDistributed.</p>
 <h2><a class="anchor" id="autotoc_md7"></a>
 Agents</h2>
 <p >RLPack implements variety of agents to be easily used via config dict for training and evaluating. Learn more about them <a class="el" href="models.html#md_models_index">here</a></p>

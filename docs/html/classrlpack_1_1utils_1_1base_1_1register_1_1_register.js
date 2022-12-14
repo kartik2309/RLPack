@@ -11,6 +11,7 @@ var classrlpack_1_1utils_1_1base_1_1register_1_1_register =
     [ "loss_function_map", "classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#ad95e7eed976cd6bbc7fa01e9d8f26acb", null ],
     [ "lr_scheduler_init_args", "classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#a5a62710624a8076c6162a89eefc231bc", null ],
     [ "lr_scheduler_map", "classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#afd0005ebd89f779294a4be9d16212a85", null ],
+    [ "mandatory_distributed_agents", "classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#a70f63d7d0e69eee705e47489a4f98770", null ],
     [ "mandatory_keys", "classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#ad2bbe33d59c9a706b708abfbe69bacac", null ],
     [ "model_args", "classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#af0373ce8b9f66d188926d09e1726c2bf", null ],
     [ "model_args_default", "classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#a7c448aaa9706f47f3eab905bc30ade0c", null ],
