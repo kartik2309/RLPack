@@ -14,14 +14,13 @@ var searchData=
   ['check_5foptimizer_5finit_5fsanity_11',['check_optimizer_init_sanity',['../classrlpack_1_1utils_1_1sanity__check_1_1_sanity_check.html#a220530e7f87f684521c16e9511822b11',1,'rlpack::utils::sanity_check::SanityCheck']]],
   ['clear_12',['clear',['../classrlpack_1_1___c_1_1memory_1_1_memory.html#abaf783f61b1be01a149bf9dc3d7ac90f',1,'rlpack._C.memory.Memory.clear()'],['../class_c___memory.html#a78aa519d41cec4c6a1c0a9c476976160',1,'C_Memory::clear()']]],
   ['cmemorydata_13',['cMemoryData',['../class_c___memory.html#a3da3a7be4bef682e9813392b1486b556',1,'C_Memory']]],
-  ['compute_5fadvantage_14',['compute_advantage',['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aae67c23042778a7f6c3e515939b6b4f4',1,'rlpack::actor_critic::a2c::A2C']]],
-  ['compute_5fimportant_5fsampling_5fweights_15',['compute_important_sampling_weights',['../class_c___memory.html#a7fe7f0858461b4961598f005d91dac10',1,'C_Memory']]],
-  ['compute_5fprobabilities_16',['compute_probabilities',['../class_c___memory.html#aa2f05d80edd827d39d6fad1e030dd432',1,'C_Memory']]],
-  ['config_17',['config',['../classrlpack_1_1environments_1_1environments_1_1_environments.html#a742fc1ce7c0abba5bcc40e897227f230',1,'rlpack.environments.environments.Environments.config()'],['../classrlpack_1_1simulator_1_1_simulator.html#abbf70c408771986dc48057032837700a',1,'rlpack.simulator.Simulator.config()']]],
-  ['cpu_18',['cpu',['../group__cpu__group.html',1,'']]],
-  ['create_5ftree_19',['create_tree',['../class_sum_tree.html#a3b590b778343705f65554c133cd51453',1,'SumTree']]],
-  ['critic_5fhead_20',['critic_head',['../classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a20b1b9443191489e94af5b586d6fae8f',1,'rlpack::models::actor_critic_mlp_policy::ActorCriticMlpPolicy']]],
-  ['cudaoffload_2ecuh_21',['CudaOffload.cuh',['../_cuda_offload_8cuh.html',1,'']]],
-  ['cumulative_5fsum_22',['cumulative_sum',['../class_offload.html#a24140ba1a808376bf6f2fba97f923545',1,'Offload']]],
-  ['custom_5fmin_5fmax_23',['custom_min_max',['../classrlpack_1_1utils_1_1normalization_1_1_normalization.html#aa8a4fbdb92f9ef40b19eff1f81e16466',1,'rlpack::utils::normalization::Normalization']]]
+  ['compute_5fimportant_5fsampling_5fweights_14',['compute_important_sampling_weights',['../class_c___memory.html#a7fe7f0858461b4961598f005d91dac10',1,'C_Memory']]],
+  ['compute_5fprobabilities_15',['compute_probabilities',['../class_c___memory.html#aa2f05d80edd827d39d6fad1e030dd432',1,'C_Memory']]],
+  ['config_16',['config',['../classrlpack_1_1environments_1_1environments_1_1_environments.html#a742fc1ce7c0abba5bcc40e897227f230',1,'rlpack.environments.environments.Environments.config()'],['../classrlpack_1_1simulator_1_1_simulator.html#abbf70c408771986dc48057032837700a',1,'rlpack.simulator.Simulator.config()'],['../classrlpack_1_1simulator__distributed_1_1_simulator_distributed.html#a3b35c4029588c87e3184013dc2d0f619',1,'rlpack.simulator_distributed.SimulatorDistributed.config()']]],
+  ['cpu_17',['cpu',['../group__cpu__group.html',1,'']]],
+  ['create_5ftree_18',['create_tree',['../class_sum_tree.html#a3b590b778343705f65554c133cd51453',1,'SumTree']]],
+  ['critic_5fhead_19',['critic_head',['../classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a20b1b9443191489e94af5b586d6fae8f',1,'rlpack::models::actor_critic_mlp_policy::ActorCriticMlpPolicy']]],
+  ['cudaoffload_2ecuh_20',['CudaOffload.cuh',['../_cuda_offload_8cuh.html',1,'']]],
+  ['cumulative_5fsum_21',['cumulative_sum',['../class_offload.html#a24140ba1a808376bf6f2fba97f923545',1,'Offload']]],
+  ['custom_5fmin_5fmax_22',['custom_min_max',['../classrlpack_1_1utils_1_1normalization_1_1_normalization.html#aa8a4fbdb92f9ef40b19eff1f81e16466',1,'rlpack::utils::normalization::Normalization']]]
 ];

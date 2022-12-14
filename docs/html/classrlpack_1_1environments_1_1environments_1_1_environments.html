@@ -99,6 +99,7 @@ $(document).ready(function(){initNavTree('classrlpack_1_1environments_1_1environ
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Data Fields</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-static-methods">Static Private Member Functions</a>  </div>
   <div class="headertitle"><div class="title">rlpack.environments.environments.Environments Class Reference</div></div>
 </div><!--header-->
@@ -120,9 +121,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4f3c98aefd7d29d8ffa4de4d19ed9830"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1environments_1_1environments_1_1_environments.html#a4f3c98aefd7d29d8ffa4de4d19ed9830">is_train</a> (self)</td></tr>
 <tr class="memdesc:a4f3c98aefd7d29d8ffa4de4d19ed9830"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if environment is to be run in training mode or not.  <a href="classrlpack_1_1environments_1_1environments_1_1_environments.html#a4f3c98aefd7d29d8ffa4de4d19ed9830">More...</a><br /></td></tr>
 <tr class="separator:a4f3c98aefd7d29d8ffa4de4d19ed9830"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a637cb5ebb885426925867ebd994f56f8"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1environments_1_1environments_1_1_environments.html#a637cb5ebb885426925867ebd994f56f8">train_agent</a> (self, bool render=False, bool load=False, bool plot=False, int verbose=-1)</td></tr>
-<tr class="memdesc:a637cb5ebb885426925867ebd994f56f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to train the agent in the specified environment.  <a href="classrlpack_1_1environments_1_1environments_1_1_environments.html#a637cb5ebb885426925867ebd994f56f8">More...</a><br /></td></tr>
-<tr class="separator:a637cb5ebb885426925867ebd994f56f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05908c3b1269558b074ef0f9f4f6f18a"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1environments_1_1environments_1_1_environments.html#a05908c3b1269558b074ef0f9f4f6f18a">train_agent</a> (self, bool render=False, bool load=False, bool plot=False, int verbose=-1, bool distributed_mode=False)</td></tr>
+<tr class="memdesc:a05908c3b1269558b074ef0f9f4f6f18a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to train the agent in the specified environment.  <a href="classrlpack_1_1environments_1_1environments_1_1_environments.html#a05908c3b1269558b074ef0f9f4f6f18a">More...</a><br /></td></tr>
+<tr class="separator:a05908c3b1269558b074ef0f9f4f6f18a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
@@ -142,14 +143,26 @@ Data Fields</h2></td></tr>
 <tr class="memdesc:a70844d4ffd0a91ac5cd8bc36432fc762"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input reshape function for states.  <a href="classrlpack_1_1environments_1_1environments_1_1_environments.html#a70844d4ffd0a91ac5cd8bc36432fc762">More...</a><br /></td></tr>
 <tr class="separator:a70844d4ffd0a91ac5cd8bc36432fc762"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a9e146a1012a89e3f5139b84681a76567"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1environments_1_1environments_1_1_environments.html#a9e146a1012a89e3f5139b84681a76567">_generate_plot</a> (self, Dict[int, List[float]] rewards_collector)</td></tr>
+<tr class="memdesc:a9e146a1012a89e3f5139b84681a76567"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates plot with <code>matplotlib</code> for Episodes vs.  <a href="classrlpack_1_1environments_1_1environments_1_1_environments.html#a9e146a1012a89e3f5139b84681a76567">More...</a><br /></td></tr>
+<tr class="separator:a9e146a1012a89e3f5139b84681a76567"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1987b6a7cafb63a58e236f5126661ff0"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1environments_1_1environments_1_1_environments.html#a1987b6a7cafb63a58e236f5126661ff0">_remove_log_file</a> (self)</td></tr>
+<tr class="memdesc:a1987b6a7cafb63a58e236f5126661ff0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes the <code>log.txt</code> file if it is present in the set <code>save_path</code>.  <a href="classrlpack_1_1environments_1_1environments_1_1_environments.html#a1987b6a7cafb63a58e236f5126661ff0">More...</a><br /></td></tr>
+<tr class="separator:a1987b6a7cafb63a58e236f5126661ff0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91bf94aa46b2b2bdbfb00d531e12f63c"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1environments_1_1environments_1_1_environments.html#a91bf94aa46b2b2bdbfb00d531e12f63c">_write_log_file</a> (self, List[str] log)</td></tr>
+<tr class="memdesc:a91bf94aa46b2b2bdbfb00d531e12f63c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes the logging messages from input to and saves it to set <code>save_path</code> as log.txt.  <a href="classrlpack_1_1environments_1_1environments_1_1_environments.html#a91bf94aa46b2b2bdbfb00d531e12f63c">More...</a><br /></td></tr>
+<tr class="separator:a91bf94aa46b2b2bdbfb00d531e12f63c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-methods" name="pri-static-methods"></a>
 Static Private Member Functions</h2></td></tr>
-<tr class="memitem:ae795a997caffc8b71d3dbfd743672aae"><td class="memItemLeft" align="right" valign="top">Union[None, float]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1environments_1_1environments_1_1_environments.html#ae795a997caffc8b71d3dbfd743672aae">__list_mean</a> (List[Union[float, int]] x)</td></tr>
-<tr class="memdesc:ae795a997caffc8b71d3dbfd743672aae"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function computes the mean of the input list.  <a href="classrlpack_1_1environments_1_1environments_1_1_environments.html#ae795a997caffc8b71d3dbfd743672aae">More...</a><br /></td></tr>
-<tr class="separator:ae795a997caffc8b71d3dbfd743672aae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acdd4a34ff2bfa1c6fb2f1f62a135d803"><td class="memItemLeft" align="right" valign="top">np.ndarray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1environments_1_1environments_1_1_environments.html#acdd4a34ff2bfa1c6fb2f1f62a135d803">__reshape_func_default</a> (np.ndarray x, Optional[Tuple[int,...]] shape=None)</td></tr>
-<tr class="memdesc:acdd4a34ff2bfa1c6fb2f1f62a135d803"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is the default reshape function.  <a href="classrlpack_1_1environments_1_1environments_1_1_environments.html#acdd4a34ff2bfa1c6fb2f1f62a135d803">More...</a><br /></td></tr>
-<tr class="separator:acdd4a34ff2bfa1c6fb2f1f62a135d803"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62caa4981e33980aaad8dc3ced01292d"><td class="memItemLeft" align="right" valign="top">Union[None, float]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1environments_1_1environments_1_1_environments.html#a62caa4981e33980aaad8dc3ced01292d">_list_mean</a> (List[Union[float, int]] x)</td></tr>
+<tr class="memdesc:a62caa4981e33980aaad8dc3ced01292d"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function computes the mean of the input list.  <a href="classrlpack_1_1environments_1_1environments_1_1_environments.html#a62caa4981e33980aaad8dc3ced01292d">More...</a><br /></td></tr>
+<tr class="separator:a62caa4981e33980aaad8dc3ced01292d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1a1e1918036e0db96b016b8b01726ba"><td class="memItemLeft" align="right" valign="top">np.ndarray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1environments_1_1environments_1_1_environments.html#ab1a1e1918036e0db96b016b8b01726ba">_reshape_func_default</a> (np.ndarray x, Optional[Tuple[int,...]] shape=None)</td></tr>
+<tr class="memdesc:ab1a1e1918036e0db96b016b8b01726ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is the default reshape function.  <a href="classrlpack_1_1environments_1_1environments_1_1_environments.html#ab1a1e1918036e0db96b016b8b01726ba">More...</a><br /></td></tr>
+<tr class="separator:ab1a1e1918036e0db96b016b8b01726ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >This class is a generic class to train any agent in any environment. </p>
@@ -205,8 +218,8 @@ Static Private Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ae795a997caffc8b71d3dbfd743672aae" name="ae795a997caffc8b71d3dbfd743672aae"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae795a997caffc8b71d3dbfd743672aae">&#9670;&#160;</a></span>__list_mean()</h2>
+<a id="a9e146a1012a89e3f5139b84681a76567" name="a9e146a1012a89e3f5139b84681a76567"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e146a1012a89e3f5139b84681a76567">&#9670;&#160;</a></span>_generate_plot()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -215,7 +228,51 @@ Static Private Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"> Union[None, float] rlpack.environments.environments.Environments.__list_mean </td>
+          <td class="memname"> None rlpack.environments.environments.Environments._generate_plot </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[int, List[float]]&#160;</td>
+          <td class="paramname"><em>rewards_collector</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Generates plot with <code>matplotlib</code> for Episodes vs. </p>
+<p >rewards. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">rewards_collector</td><td>Dict[int, List[float]]: Dict of lists of rewards collected in each episode. Each episode is present as a key. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a62caa4981e33980aaad8dc3ced01292d" name="a62caa4981e33980aaad8dc3ced01292d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62caa4981e33980aaad8dc3ced01292d">&#9670;&#160;</a></span>_list_mean()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Union[None, float] rlpack.environments.environments.Environments._list_mean </td>
           <td>(</td>
           <td class="paramtype">List[Union[float, int]]&#160;</td>
           <td class="paramname"><em>x</em></td><td>)</td>
@@ -240,8 +297,8 @@ Static Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="acdd4a34ff2bfa1c6fb2f1f62a135d803" name="acdd4a34ff2bfa1c6fb2f1f62a135d803"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acdd4a34ff2bfa1c6fb2f1f62a135d803">&#9670;&#160;</a></span>__reshape_func_default()</h2>
+<a id="a1987b6a7cafb63a58e236f5126661ff0" name="a1987b6a7cafb63a58e236f5126661ff0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1987b6a7cafb63a58e236f5126661ff0">&#9670;&#160;</a></span>_remove_log_file()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -250,7 +307,35 @@ Static Private Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"> np.ndarray rlpack.environments.environments.Environments.__reshape_func_default </td>
+          <td class="memname"> None rlpack.environments.environments.Environments._remove_log_file </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Removes the <code>log.txt</code> file if it is present in the set <code>save_path</code>. </p>
+
+</div>
+</div>
+<a id="ab1a1e1918036e0db96b016b8b01726ba" name="ab1a1e1918036e0db96b016b8b01726ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab1a1e1918036e0db96b016b8b01726ba">&#9670;&#160;</a></span>_reshape_func_default()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> np.ndarray rlpack.environments.environments.Environments._reshape_func_default </td>
           <td>(</td>
           <td class="paramtype">np.ndarray&#160;</td>
           <td class="paramname"><em>x</em>, </td>
@@ -283,6 +368,50 @@ Static Private Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>np.ndarray: The reshaped (or unchanged) array. </dd></dl>
+
+</div>
+</div>
+<a id="a91bf94aa46b2b2bdbfb00d531e12f63c" name="a91bf94aa46b2b2bdbfb00d531e12f63c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a91bf94aa46b2b2bdbfb00d531e12f63c">&#9670;&#160;</a></span>_write_log_file()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> None rlpack.environments.environments.Environments._write_log_file </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">List[str]&#160;</td>
+          <td class="paramname"><em>log</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Writes the logging messages from input to and saves it to set <code>save_path</code> as log.txt. </p>
+<p >This method open files in append mode. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">log</td><td>List[str]: The logging messages to write </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -349,8 +478,8 @@ Static Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a637cb5ebb885426925867ebd994f56f8" name="a637cb5ebb885426925867ebd994f56f8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a637cb5ebb885426925867ebd994f56f8">&#9670;&#160;</a></span>train_agent()</h2>
+<a id="a05908c3b1269558b074ef0f9f4f6f18a" name="a05908c3b1269558b074ef0f9f4f6f18a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a05908c3b1269558b074ef0f9f4f6f18a">&#9670;&#160;</a></span>train_agent()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -383,7 +512,13 @@ Static Private Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int &#160;</td>
-          <td class="paramname"><em>verbose</em> = <code>-1</code>&#160;</td>
+          <td class="paramname"><em>verbose</em> = <code>-1</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &#160;</td>
+          <td class="paramname"><em>distributed_mode</em> = <code>False</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -399,7 +534,8 @@ Static Private Member Functions</h2></td></tr>
     <tr><td class="paramname">render</td><td>bool: Indicates if we wish to render the environment (in animation). Default: False. </td></tr>
     <tr><td class="paramname">load</td><td>bool: Indicates weather to load a previously saved model or train a new one. If set true, config must be <code>save_path</code> or set or environment variable SAVE_PATH must be set. </td></tr>
     <tr><td class="paramname">plot</td><td>bool: Indicates if to plot the training progress. If set True, rewards and episodes are recorded and plot is saved in <code>save_path</code>. </td></tr>
-    <tr><td class="paramname">verbose</td><td>bool: Indicates the verbose level. Refer notes for more details. This also refers to values logged on screen. If you want to disable the logging on screen, set logging level to WARNING. Default: -1 config must have set mode='train' to run evaluation. Rewards are logged on console every <code>reward_logging_frequency</code> set in the console.</td></tr>
+    <tr><td class="paramname">verbose</td><td>bool: Indicates the verbose level. Refer notes for more details. This also refers to values logged on screen. If you want to disable the logging on screen, set logging level to WARNING. Default: -1 config must have set mode='train' to run evaluation. </td></tr>
+    <tr><td class="paramname">distributed_mode</td><td>Indicates if the environment is being run in distributed mode. Rewards are logged on console every <code>reward_logging_frequency</code> set in the console.</td></tr>
   </table>
   </dd>
 </dl>

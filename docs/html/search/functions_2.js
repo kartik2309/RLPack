@@ -9,9 +9,8 @@ var searchData=
   ['check_5fmodel_5finit_5fsanity_6',['check_model_init_sanity',['../classrlpack_1_1utils_1_1sanity__check_1_1_sanity_check.html#a3a5311b7afb568421b1d910d519dddc5',1,'rlpack::utils::sanity_check::SanityCheck']]],
   ['check_5foptimizer_5finit_5fsanity_7',['check_optimizer_init_sanity',['../classrlpack_1_1utils_1_1sanity__check_1_1_sanity_check.html#a220530e7f87f684521c16e9511822b11',1,'rlpack::utils::sanity_check::SanityCheck']]],
   ['clear_8',['clear',['../classrlpack_1_1___c_1_1memory_1_1_memory.html#abaf783f61b1be01a149bf9dc3d7ac90f',1,'rlpack._C.memory.Memory.clear()'],['../class_c___memory.html#a78aa519d41cec4c6a1c0a9c476976160',1,'C_Memory::clear()']]],
-  ['compute_5fadvantage_9',['compute_advantage',['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aae67c23042778a7f6c3e515939b6b4f4',1,'rlpack::actor_critic::a2c::A2C']]],
-  ['compute_5fimportant_5fsampling_5fweights_10',['compute_important_sampling_weights',['../class_c___memory.html#a7fe7f0858461b4961598f005d91dac10',1,'C_Memory']]],
-  ['compute_5fprobabilities_11',['compute_probabilities',['../class_c___memory.html#aa2f05d80edd827d39d6fad1e030dd432',1,'C_Memory']]],
-  ['create_5ftree_12',['create_tree',['../class_sum_tree.html#a3b590b778343705f65554c133cd51453',1,'SumTree']]],
-  ['cumulative_5fsum_13',['cumulative_sum',['../class_offload.html#a24140ba1a808376bf6f2fba97f923545',1,'Offload']]]
+  ['compute_5fimportant_5fsampling_5fweights_9',['compute_important_sampling_weights',['../class_c___memory.html#a7fe7f0858461b4961598f005d91dac10',1,'C_Memory']]],
+  ['compute_5fprobabilities_10',['compute_probabilities',['../class_c___memory.html#aa2f05d80edd827d39d6fad1e030dd432',1,'C_Memory']]],
+  ['create_5ftree_11',['create_tree',['../class_sum_tree.html#a3b590b778343705f65554c133cd51453',1,'SumTree']]],
+  ['cumulative_5fsum_12',['cumulative_sum',['../class_offload.html#a24140ba1a808376bf6f2fba97f923545',1,'Offload']]]
 ];

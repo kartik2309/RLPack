@@ -46,7 +46,7 @@ class Environments:
         self.config = config
         ## The input reshape function for states. @I{# noqa: E266}
         if reshape_func is None:
-            self.reshape_func = self.__reshape_func_default
+            self.reshape_func = self._reshape_func_default
         else:
             self.reshape_func = reshape_func
         new_shape = self.config.get("new_shape")
@@ -86,6 +86,7 @@ class Environments:
         @param verbose: bool: Indicates the verbose level. Refer notes for more details. This also refers to values
             logged on screen. If you want to disable the logging on screen, set logging level to WARNING. Default: -1
         config must have set mode='train' to run evaluation.
+        @param distributed_mode: Indicates if the environment is being run in distributed mode.
         Rewards are logged on console every `reward_logging_frequency` set in the console.
 
         **Notes**
@@ -106,9 +107,9 @@ class Environments:
         else:
             if distributed_mode:
                 if dist.get_rank() == 0:
-                    self.__remove_log_file()
+                    self._remove_log_file()
             else:
-                self.__remove_log_file()
+                self._remove_log_file()
         log = list()
         highest_mv_avg_reward, timestep = 0.0, 0
         rewards_collector = {k: list() for k in range(self.config["num_episodes"])}
@@ -145,7 +146,7 @@ class Environments:
                 reward_log_message = "~" * 60
                 # Log Mean Reward in the episode cycle
                 if verbose <= 0:
-                    mean_reward = self.__list_mean(rewards)
+                    mean_reward = self._list_mean(rewards)
                     reward_log_message = (
                         f"Average Reward after {ep} episodes: {mean_reward}"
                     )
@@ -162,7 +163,7 @@ class Environments:
                         highest_mv_avg_reward = mean_reward
                 if verbose <= 1:
                     # Log Mean Loss in the episode cycle
-                    mean_loss = self.__list_mean(self.agent.loss)
+                    mean_loss = self._list_mean(self.agent.loss)
                     if len(self.agent.loss) > 0:
                         log_mean_message = (
                             f"Average Loss after {ep} episodes: {mean_loss}"
@@ -210,10 +211,10 @@ class Environments:
                     logging.info(closing_message)
                     log.append(f"{closing_message}\n")
                     if not distributed_mode:
-                        self.__write_log_file(log)
+                        self._write_log_file(log)
                     else:
                         if dist.get_rank() == 0:
-                            self.__write_log_file(log)
+                            self._write_log_file(log)
                 rewards.clear()
         self.env.close()
         if not distributed_mode:
@@ -223,10 +224,10 @@ class Environments:
                 self.agent.save()
         if plot:
             if not distributed_mode:
-                self.__generate_plot(rewards_collector)
+                self._generate_plot(rewards_collector)
             else:
                 if dist.get_rank() == 0:
-                    self.__generate_plot(rewards_collector)
+                    self._generate_plot(rewards_collector)
 
     def evaluate_agent(self) -> None:
         """
@@ -266,7 +267,7 @@ class Environments:
         else:
             # When more than one episode was performed and evaluated.
             logging.info(
-                f'Average Rewards after {self.config["num_episodes"]} episodes: {self.__list_mean(rewards)}'
+                f'Average Rewards after {self.config["num_episodes"]} episodes: {self._list_mean(rewards)}'
             )
         # Restore epsilon value of the agent.
         self.agent.epsilon = epsilon
@@ -288,13 +289,21 @@ class Environments:
         possible_train_names = ("train", "training")
         return self.config["mode"] in possible_train_names
 
-    def __remove_log_file(self):
+    def _remove_log_file(self) -> None:
+        """
+        Removes the `log.txt` file if it is present in the set `save_path`.
+        """
         if os.path.isfile(
             os.path.join(self.config["agent_args"]["save_path"], "log.txt")
         ):
             os.remove(os.path.join(self.config["agent_args"]["save_path"], "log.txt"))
 
-    def __write_log_file(self, log):
+    def _write_log_file(self, log: List[str]) -> None:
+        """
+        Writes the logging messages from input to and saves it to set `save_path` as log.txt. This method
+        open files in append mode.
+        @param log: List[str]: The logging messages to write
+        """
         with open(
             os.path.join(self.config["agent_args"]["save_path"], "log.txt"),
             "a+",
@@ -302,7 +311,12 @@ class Environments:
             for line in log:
                 f.write(line)
 
-    def __generate_plot(self, rewards_collector):
+    def _generate_plot(self, rewards_collector: Dict[int, List[float]]) -> None:
+        """
+        Generates plot with `matplotlib` for Episodes vs. rewards.
+        @param rewards_collector: Dict[int, List[float]]: Dict of lists of rewards collected in each episode. Each
+            episode is present as a key.
+        """
         rewards_to_plot = [
             sum(rewards_collector[k]) / len(rewards_collector[k])
             for k in range(self.config["num_episodes"])
@@ -314,7 +328,7 @@ class Environments:
         plt.savefig(os.path.join(self.agent.save_path, "EpisodeVsReward.jpeg"))
 
     @staticmethod
-    def __reshape_func_default(
+    def _reshape_func_default(
         x: np.ndarray, shape: Optional[Tuple[int, ...]] = None
     ) -> np.ndarray:
         """
@@ -329,7 +343,7 @@ class Environments:
         return x
 
     @staticmethod
-    def __list_mean(x: List[Union[float, int]]) -> Union[None, float]:
+    def _list_mean(x: List[Union[float, int]]) -> Union[None, float]:
         """
         This function computes the mean of the input list.
         @param x: List[Union[float, int]]: The list for which mean is to be computed

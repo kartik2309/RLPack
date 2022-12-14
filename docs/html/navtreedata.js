@@ -41,7 +41,8 @@ var NAVTREE =
       [ "Agents", "agents.html", [
         [ "DQN", "dqn.html", null ],
         [ "Actor-Critic", "actor_critic.html", [
-          [ "A2C", "a2c.html", null ]
+          [ "A2C", "a2c.html", null ],
+          [ "A3C", "a3c.html", null ]
         ] ]
       ] ]
     ] ],
@@ -55,7 +56,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "a2c.html",
-"classrlpack_1_1dqn_1_1dqn__rank__based__prioritization__agent_1_1_dqn_rank_based_prioritization_agent.html#a8512779b6d35b0aed1a3b73bf3ece71d"
+"classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#aeb63fe78cd7970482dd191f9186a54b4"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

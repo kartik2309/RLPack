@@ -1,8 +1,9 @@
 <map id="rlpack.utils.base.agent.Agent" name="rlpack.utils.base.agent.Agent">
-<area shape="rect" id="node1" title="The base class for all agents." alt="" coords="111,27,268,67"/>
-<area shape="rect" id="node3" href="$classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html" title="The A2C class implements the synchronous Actor&#45;Critic method." alt="" coords="316,5,496,31"/>
-<area shape="rect" id="node4" href="$classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html" title="This class implements the basic DQN methodology, i.e." alt="" coords="319,55,493,95"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,35,63,60"/>
-<area shape="rect" id="node5" href="$classrlpack_1_1dqn_1_1dqn__proportional__prioritization__agent_1_1_dqn_proportional_prioritization_agent.html" title="This class implements the DQN with Proportional prioritization strategy." alt="" coords="558,8,793,63"/>
-<area shape="rect" id="node6" href="$classrlpack_1_1dqn_1_1dqn__rank__based__prioritization__agent_1_1_dqn_rank_based_prioritization_agent.html" title="This class implements the DQN with Rank&#45;Based prioritization strategy." alt="" coords="544,87,807,141"/>
+<area shape="rect" id="node1" title="The base class for all agents." alt="" coords="111,34,268,74"/>
+<area shape="rect" id="node3" href="$classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html" title="The A2C class implements the synchronous Actor&#45;Critic method." alt="" coords="316,9,496,35"/>
+<area shape="rect" id="node5" href="$classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html" title="This class implements the basic DQN methodology, i.e." alt="" coords="319,62,493,102"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,41,63,67"/>
+<area shape="rect" id="node4" href="$classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html" title="The A2C class implements the synchronous Actor&#45;Critic method." alt="" coords="585,5,765,31"/>
+<area shape="rect" id="node6" href="$classrlpack_1_1dqn_1_1dqn__proportional__prioritization__agent_1_1_dqn_proportional_prioritization_agent.html" title="This class implements the DQN with Proportional prioritization strategy." alt="" coords="558,55,793,109"/>
+<area shape="rect" id="node7" href="$classrlpack_1_1dqn_1_1dqn__rank__based__prioritization__agent_1_1_dqn_rank_based_prioritization_agent.html" title="This class implements the DQN with Rank&#45;Based prioritization strategy." alt="" coords="544,133,807,188"/>
 </map>
