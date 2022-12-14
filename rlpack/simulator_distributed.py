@@ -1,6 +1,6 @@
 import logging
 import os
-from typing import Callable, Any, Dict
+from typing import Any, Callable, Dict
 
 from rlpack import dist, mp
 from rlpack.simulator import Simulator
@@ -39,9 +39,9 @@ class SimulatorDistributed:
         Initialized the distributed environment to run the given func.
         @param process_rank: int: The process rank of the initialized process.
         @param world_size: int: Total number of processes launched or to be launched.
-        @param func: Callable[[int, int, Dict[str, Any], ...], None]: A function with given signature to be launched 
+        @param func: Callable[[int, int, Dict[str, Any], ...], None]: A function with given signature to be launched
             in distributed setting on processes.
-        @param config: Dict[str, Any]: The configuration to be used. 
+        @param config: Dict[str, Any]: The configuration to be used.
         @param backend: str: The PyTorch multiprocessing backend to be used.
         @param kwargs: Other keyword arguments for `func`.
         """
@@ -49,7 +49,9 @@ class SimulatorDistributed:
         func(process_rank, world_size, config, **kwargs)
 
     @staticmethod
-    def run_(process_rank: int, world_size: int, config: Dict[str, Any], **kwargs) -> None:
+    def run_(
+        process_rank: int, world_size: int, config: Dict[str, Any], **kwargs
+    ) -> None:
         """
         Launches the rlpack.simulator.Simulator in distributed setting.
         @param process_rank: int: The process rank of the initialized process.

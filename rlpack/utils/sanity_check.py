@@ -234,12 +234,16 @@ class SanityCheck(Register):
     def check_if_valid_agent_for_simulator(self):
         agent_name = self.input_config["agent_name"]
         if agent_name in self.mandatory_distributed_agents:
-            raise ValueError("Provided `agent_name` must be used with rlpack.simulator.SimulatorDistributed")
+            raise ValueError(
+                "Provided `agent_name` must be used with rlpack.simulator.SimulatorDistributed"
+            )
 
     def check_if_valid_agent_for_simulator_distributed(self):
         agent_name = self.input_config["agent_name"]
         if agent_name not in self.mandatory_distributed_agents:
-            raise ValueError("Provided `agent_name` must be used with rlpack.simulator.Simulator")
+            raise ValueError(
+                "Provided `agent_name` must be used with rlpack.simulator.Simulator"
+            )
 
     def _error_message(self, param_of_arg: str, boolean_args: List[bool]) -> str:
         """
