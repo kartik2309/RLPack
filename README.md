@@ -17,28 +17,8 @@ To build and install RLPack from source, simply follow the following steps: <br>
     ```
   This will install the package in your python environment.
 
-# Getting started 
-
-* To get started, you can run the following snippet:
-  ```python 
-  import os
-  import yaml
-  from rlpack.simulator import Simulator
-
-  # Optional, to set SAVE_PATH environment variable. 
-  os.environ["SAVE_PATH"] = 'models/'
-  os.makedirs(f"{os.getenv('SAVE_PATH')}, exist_ok=True")
-  
-  # Read from a yaml file with all the arguments for easy use.
-  with open("config.yaml", "rb) as f:
-    yaml.load(f, yaml.Loader)
-  
-  # Pass the config dictionary to Simulator.
-  simulator = Simulator(config=config)
-  simulator.run()
-  ```
-  
-  `Simulator` accepts a config dictionary which must contain all mandatory arguments.
+# Documentation
+Refer to RLPack documentation [here](https://kartik2309.github.io/RLPack/html/index.html)
   
 # Issues and bugs
 Please raise an issue on GitHub to report a bug. Pull Requests can be raised after discussion on the raised issue.
