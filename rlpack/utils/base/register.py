@@ -14,6 +14,7 @@ from site import getsitepackages
 
 from rlpack import pytorch
 from rlpack.actor_critic.a2c import A2C
+from rlpack.actor_critic.a3c import A3C
 from rlpack.dqn import Dqn
 from rlpack.models.actor_critic_mlp_policy import ActorCriticMlpPolicy
 from rlpack.models.mlp import Mlp
@@ -73,10 +74,7 @@ class Register:
         ## The mapping between given keyword and [in-built](@ref models/index.md) models. @I{# noqa: E266}
         self.models = {"mlp": Mlp, "actor_critic_mlp_policy": ActorCriticMlpPolicy}
         ## The mapping between given keyword and [agents](@ref agents/index.md) models. @I{# noqa: E266}
-        self.agents = {
-            "dqn": Dqn,
-            "a2c": A2C,
-        }
+        self.agents = {"dqn": Dqn, "a2c": A2C, "a3c": A3C}
         ## The mapping between given keyword and [in-built](@ref models/index.md) model's default arguments. @I{# noqa: E266}
         self.model_args_default = {
             "mlp": ("activation", "dropout"),
@@ -114,6 +112,17 @@ class Register:
                 "grad_norm_p",
             ),
             "a2c": (
+                "bootstrap_rounds",
+                "device",
+                "apply_norm",
+                "apply_norm_to",
+                "eps_for_norm",
+                "p_for_norm",
+                "dim_for_norm",
+                "max_grad_norm",
+                "grad_norm_p",
+            ),
+            "a3c": (
                 "bootstrap_rounds",
                 "device",
                 "apply_norm",
@@ -162,11 +171,26 @@ class Register:
                 "save_path",
                 *self.agent_args_default["a2c"],
             ),
+            "a3c": (
+                "policy_model",
+                "optimizer",
+                "lr_scheduler",
+                "loss_function",
+                "gamma",
+                "entropy_coefficient",
+                "state_value_coefficient",
+                "backup_frequency",
+                "lr_threshold",
+                "num_actions",
+                "save_path",
+                *self.agent_args_default["a3c"],
+            ),
         }
         ## The mapping between keyword and agents' model arguments to wrap optimizer with. @I{# noqa: E266}
         self.model_args_to_optimize = {
             "dqn": {"target_model": False, "policy_model": True},
             "a2c": {"policy_model": True},
+            "a3c": {"policy_model": True},
         }
 
     @staticmethod
