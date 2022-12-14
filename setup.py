@@ -11,7 +11,7 @@ from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext
 from torch.utils import cmake_prefix_path
 
-__version__ = "0.0.1"
+__version__ = "1.0.0"
 
 
 class CMakeExtension(Extension):
@@ -21,7 +21,7 @@ class CMakeExtension(Extension):
 
     def __init__(self, shell_script: str) -> None:
         """
-        @:param shell_script (str): The shell script to be passed to be run in the Extension.
+        :param: shell_script: str: The shell script to be passed to be run in the Extension.
         """
         super().__init__(shell_script, sources=[])
 
@@ -41,8 +41,8 @@ class BuildExternal(build_ext):
 
     def build_cmake(self, ext: Any) -> None:
         """
-        Builds the binaries for RLPack backend with C++
-        @:param ext (Any): The external extensions to be used to build the cmake.
+        Builds the binaries for RLPack backend with C++.
+        :param ext: Any: The external extensions to be used to build the cmake.
         """
         cwd = Path().absolute()
 
@@ -91,6 +91,7 @@ setup(
     packages=[
         "rlpack",
         "rlpack.dqn",
+        "rlpack.actor_critic",
         "rlpack.models",
         "rlpack.environments",
         "rlpack.utils",
@@ -105,6 +106,7 @@ setup(
     package_dir={
         "rlpack": "rlpack",
         "rlpack.dqn": "rlpack/dqn",
+        "rlpack.actor_critic": "rlpack/actor_critic",
         "rlpack.models": "rlpack/models",
         "rlpack.environments": "rlpack/environments",
         "rlpack.utils": "rlpack/utils",

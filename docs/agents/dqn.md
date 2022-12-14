@@ -1,33 +1,36 @@
-# Deep Q-Networks
-DQN-Agent is implemented in `rlpack.dqn.dqn_agent.py` as `DqnAgent`. All variants of DQN agents use the same class
-to run and train the DQN agent. This class is defined in `rlpack.dqn.dqn_agent.py` as `DqnAgent`. It inherits from
-`Agent` class defined in `rlpack.utils.base.agent.py`. 
+# Deep Q-Networks {#dqn}
+`DQN` is interfaced via `rlpack.dqn.dqn.Dqn`. This class provides access to required DQN variant based on 
+input configuration. DQN implementation in RLPack is based on Dual Q-Networks with a trainable policy network and a 
+frozen target network.  
 
-#### agent_name: "dqn" 
+<h4> Keyword: <kbd> agent_name: "dqn" </kbd> </h4>
+
 
 ## Implementations
 There are currently three supported implementations for DQN: 
 
-- <b> Uniform-Sampling based DQN </b>
+-  **Uniform-Sampling based DQN**
 
-    In this DQN variant, we populate the memory (also called transition buffer) with transitions and sample them 
-as per uniform distribution. This essentially means that each transition we store in the bufer has equal probability
-of being sampled for next batch.
-To use this variant, set `prioritization_params=None` in `agent_args`.
+    This variant is implemented as rlpack.dqn.dqn_agent.DqnAgent. In this DQN variant, we populate the memory
+(also called transition buffer) with transitions and sample them as per uniform distribution. This 
+essentially means that each transition we store in the bufer has equal probability of being sampled for next 
+batch. To use this variant, set `prioritization_params=None` in `agent_args`. 
 
-- <b> Proportional based DQN </b>
+- **Proportional based DQN**
 
-    In this DQN variant, we populate the memory (also called transition buffer) with transitions with each sample 
-having a fixed priority (generally same of all samples initially) and sample them as per this priority. 
-Probabilities and weights are computed from directly using TD Errors and updates are made accordingly. 
-This was proposed by [Tom Schaul et al. (ICLR 2016)](https://arxiv.org/pdf/1511.05952.pdf). To use this variant, 
+  This variant is implemented as rlpack.dqn.dqn_proportional_prioritization_agent.DqnProportionalPrioritizationAgent. 
+In this DQN variant, we populate the memory (also called transition buffer) with transitions with each sample having a 
+fixed priority (generally same of all samples initially) and sample them as per this priority. Probabilities and weights 
+are computed from directly using TD Errors and updates are made accordingly. This was proposed 
+by [Tom Schaul et al. (ICLR 2016)](https://arxiv.org/pdf/1511.05952.pdf). To use this variant, 
 set `prioritization_params={..., "prioritization_strategy": "proportional"}` 
 
-- <b> Rank-based DQN </b>
+- **Rank-based DQN**
 
-  In this DQN variant, we populate the memory (also called transition buffer) with transitions with each sample
-having a fixed priority (generally same of all samples initially) and sample them as per this priority.
-Probabilities and weights are computed by sorting TD Errors to find each transition's ranks; updates are then made 
+  This variant is implemented as rlpack.dqn.dqn_rank_based_prioritization_agent.DqnRankBasedPrioritizationAgent. 
+In this DQN variant, we populate the memory (also called transition buffer) with transitions with each sample having 
+a fixed priority (generally same of all samples initially) and sample them as per this priority. Probabilities 
+and weights are computed by sorting TD Errors to find each transition's ranks; updates are then made 
 accordingly. This was proposed by [Tom Schaul et al. (ICLR 2016)](https://arxiv.org/pdf/1511.05952.pdf). To use this 
 set `prioritization_params={..., "prioritization_strategy": "rank-based"}`.
 

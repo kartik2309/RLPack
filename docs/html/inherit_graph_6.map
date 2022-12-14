@@ -1,0 +1,6 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" title=" " alt="" coords="5,99,135,124"/>
+<area shape="rect" id="node2" href="$classrlpack_1_1models_1_1__mlp__feature__extractor_1_1___mlp_feature_extractor.html" title="This class is a PyTorch Model implementing the MLP based feature extractor for 1&#45;D or 2&#45;D state value..." alt="" coords="205,5,351,60"/>
+<area shape="rect" id="node3" href="$classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html" title="This class is a PyTorch Model implementing the MLP based Actor&#45;Critic Policy." alt="" coords="183,84,373,139"/>
+<area shape="rect" id="node4" href="$classrlpack_1_1models_1_1mlp_1_1_mlp.html" title="This class is a PyTorch Model implementing the MLP model for 1&#45;D or 2&#45;D state values." alt="" coords="201,163,355,188"/>
+</map>

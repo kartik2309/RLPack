@@ -1,25 +1,43 @@
+"""!
+@package rlpack.dqn
+@brief This package implements the DQN methods.
+
+
+Currently following classes have been implemented:
+    - `Dqn`: This class is a helper class that selects the correct variant of DQN agent based on argument
+        `prioritization_params`.
+    - `DqnAgent`: Implemented as rlpack.dqn.dqn_agent.DqnAgent this class implements the basic DQN methodology, i.e.
+        without prioritization. It also acts as a base class for DQN agents with prioritization strategies.
+    - `DqnProportionalPrioritizationAgent`: Implemented as
+        rlpack.dqn.dqn_proportional_prioritization_agent.DqnProportionalPrioritizationAgent this class implements the
+         DQN with proportional prioritization.
+    - `DqnRankBasedPrioritizationAgent`: Implemented as
+        rlpack.dqn.dqn_rank_based_prioritization_agent.DqnRankBasedPrioritizationAgent; this class implements the
+        DQN with rank prioritization.
+"""
+
+
 import os
 import random
 from collections import OrderedDict
-from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 from numpy import ndarray
 
 from rlpack import pytorch
 from rlpack._C.memory import Memory
+from rlpack.utils import LossFunction, LRScheduler
 from rlpack.utils.base.agent import Agent
+from rlpack.utils.internal_code_setup import InternalCodeSetup
 from rlpack.utils.normalization import Normalization
-
-LRScheduler = TypeVar("LRScheduler")
-LossFunction = TypeVar("LossFunction")
-Activation = TypeVar("Activation")
 
 
 class DqnAgent(Agent):
     """
-    The DqnAgent class which implements the DQN algorithm on arguments. This class inherits from `Agent`
-        class, which is the generic base class for all the agents in the project.
+    This class implements the basic DQN methodology, i.e. DQN without prioritization. This class also acts as a base
+    class for other DQN variants all of which override the method `__apply_prioritization_strategy` to implement
+    their prioritization strategy.
     """
 
     def __init__(
@@ -27,7 +45,7 @@ class DqnAgent(Agent):
         target_model: pytorch.nn.Module,
         policy_model: pytorch.nn.Module,
         optimizer: pytorch.optim.Optimizer,
-        lr_scheduler: LRScheduler,
+        lr_scheduler: Union[LRScheduler, None],
         loss_function: LossFunction,
         gamma: float,
         epsilon: float,
@@ -37,136 +55,202 @@ class DqnAgent(Agent):
         memory_buffer_size: int,
         target_model_update_rate: int,
         policy_model_update_rate: int,
-        model_backup_frequency: int,
+        backup_frequency: int,
         lr_threshold: float,
         batch_size: int,
         num_actions: int,
         save_path: str,
+        bootstrap_rounds: int = 1,
         device: str = "cpu",
         prioritization_params: Optional[Dict[str, Any]] = None,
         force_terminal_state_selection_prob: float = 0.0,
         tau: float = 1.0,
-        apply_norm: int = -1,
-        apply_norm_to: int = -1,
+        apply_norm: Union[int, str] = -1,
+        apply_norm_to: Union[int, List[str]] = -1,
         eps_for_norm: float = 5e-12,
         p_for_norm: int = 2,
         dim_for_norm: int = 0,
+        max_grad_norm: Optional[float] = None,
+        grad_norm_p: float = 2.0,
     ):
         """
-        :param target_model: nn.Module: The target network for DQN model. This the network which has
-            its weights frozen
-        :param policy_model: nn.Module: The policy network for DQN model. This is the network which is trained.
-        :param optimizer: optim.Optimizer: The optimizer wrapped with policy model's parameters.
-        :param lr_scheduler: LRScheduler: The PyTorch LR Scheduler with wrapped optimizer.
-        :param loss_function: LossFunction: The loss function from PyTorch's nn module. Initialized
+        @param target_model: nn.Module: The target network for DQN model. This the network which has
+            its weights frozen.
+        @param policy_model: nn.Module: The policy network for DQN model. This is the network which is trained.
+        @param optimizer: optim.Optimizer: The optimizer wrapped with policy model's parameters.
+        @param lr_scheduler: Union[LRScheduler, None]: The PyTorch LR Scheduler with wrapped optimizer.
+        @param loss_function: LossFunction: The loss function from PyTorch's nn module. Initialized
             instance must be passed.
-        :param gamma: float: The gamma value for agent.
-        :param epsilon: float: The initial epsilon for the agent.
-        :param min_epsilon: float: The minimum epsilon for the agent. Once this value is reached,
+        @param gamma: float: The gamma value for agent.
+        @param epsilon: float: The initial epsilon for the agent.
+        @param min_epsilon: float: The minimum epsilon for the agent. Once this value is reached,
             it is maintained for all further episodes.
-        :param epsilon_decay_rate: float: The decay multiplier to decay the epsilon.
-        :param epsilon_decay_frequency: int: The number of timesteps after which the epsilon is decayed.
-        :param memory_buffer_size: int: The buffer size of memory: or replay buffer) for DQN.
-        :param target_model_update_rate: int: The timesteps after which target model's weights are updated with
+        @param epsilon_decay_rate: float: The decay multiplier to decay the epsilon.
+        @param epsilon_decay_frequency: int: The number of timesteps after which the epsilon is decayed.
+        @param memory_buffer_size: int: The buffer size of memory; or replay buffer for DQN.
+        @param target_model_update_rate: int: The timesteps after which target model's weights are updated with
             policy model weights: weights are weighted as per `tau`: see below)).
-        :param policy_model_update_rate: int: The timesteps after which policy model is trained. This involves
+        @param policy_model_update_rate: int: The timesteps after which policy model is trained. This involves
             backpropagation through the policy network.
-        :param model_backup_frequency: int: The timesteps after which models are backed up. This will also
-            save optimizer, lr_scheduler and agent_states: epsilon the time of saving and memory).
-        :param lr_threshold: float: The threshold LR which once reached LR scheduler is not called further.
-        :param batch_size: int: The batch size used for inference through target_model and train through policy model.
-        :param num_actions: int: Number of actions for the environment.
-        :param save_path: str: The save path for models: target_model and policy_model), optimizer,
+        @param backup_frequency: int: The timesteps after which models are backed up. This will also
+            save optimizer, lr_scheduler and agent_states: epsilon the time of saving and memory.
+        @param lr_threshold: float: The threshold LR which once reached LR scheduler is not called further.
+        @param batch_size: int: The batch size used for inference through target_model and train through policy model
+        @param num_actions: int: Number of actions for the environment.
+        @param save_path: str: The save path for models: target_model and policy_model, optimizer,
             lr_scheduler and agent_states.
-        :param device: str: The cuda on which models are run. Default: "cpu"
-        :param prioritization_params: Optional[Dict[str, Any]]: The parameters for prioritization in prioritized
-            memory: or relay buffer). Default: None
-        :param force_terminal_state_selection_prob: float: The probability for forcefully selecting a terminal state
-            in a batch. Default: 0.0
-        :param tau: float: The weighted update of weights from policy_model to target_model. This is done by formula
-            target_weight = tau * policy_weight +: 1 - tau) * target_weight/. Default: -1
-        :param apply_norm: int: The code to select the normalization procedure to be applied on selected quantities
-           : selected by `apply_norm_to`: see below)). Default: -1
-        :param apply_norm_to: int: The code to select the quantity to which normalization is to be applied.
-            Default: -1
-        :param eps_for_norm: int: Epsilon value for normalization: for numeric stability). For min-max normalization
-            and standardized normalization. Default: 5e-12
-        :param p_for_norm: int: The p value for p-normalization. Default: 2: L2 Norm)
-        :param dim_for_norm: int: The dimension across which normalization is to be performed. Default: 0.
+        @param bootstrap_rounds: int: The number of rounds until which gradients are to be accumulated before
+            performing calling optimizer step. Gradients are mean reduced for bootstrap_rounds > 1. Default: 1.
+        @param device: str: The device on which models are run. Default: "cpu".
+        @param prioritization_params: Optional[Dict[str, Any]]: The parameters for prioritization in prioritized
+            memory: or relay buffer). Default: None.
+        @param force_terminal_state_selection_prob: float: The probability for forcefully selecting a terminal state
+            in a batch. Default: 0.0.
+        @param tau: float: The weighted update of weights from policy_model to target_model. This is done by formula
+            target_weight = tau * policy_weight +: 1 - tau) * target_weight/. Default: -1.
+        @param apply_norm: Union[int, str]: The code to select the normalization procedure to be applied on
+            selected quantities; selected by `apply_norm_to`: see below)). Direct string can also be
+            passed as per accepted keys. Refer below in Notes to see the accepted values. Default: -1
+        @param apply_norm_to: Union[int, List[str]]: The code to select the quantity to which normalization is
+            to be applied. Direct list of quantities can also be passed as per accepted keys. Refer
+            below in Notes to see the accepted values. Default: -1.
+        @param eps_for_norm: float: Epsilon value for normalization: for numeric stability. For min-max normalization
+            and standardized normalization. Default: 5e-12.
+        @param p_for_norm: int: The p value for p-normalization. Default: 2: L2 Norm.
+        @param dim_for_norm: int: The dimension across which normalization is to be performed. Default: 0.
+        @param max_grad_norm: Optional[float]: The max norm for gradients for gradient clipping. Default: None
+        @param grad_norm_p: Optional[float]: The p-value for p-normalization of gradients. Default: 2.0.
 
-        NOTE:
-        For prioritization_params, when None: the default) is passed, prioritized memory is not used. To use
-            prioritized memory, pass a dictionary with keys `alpha` and `beta`. You can also pass `alpha_decay_rate`
-            and `beta_decay_rate` additionally.
+
+
+        **Notes**
+
+
         The codes for `apply_norm` are given as follows: -
-            - No Normalization: -1
-            - Min-Max Normalization: 0
-            - Standardization: 1
-            - P-Normalization: 2
+            - No Normalization: -1; (`"none"`)
+            - Min-Max Normalization: 0; (`"min_max"`)
+            - Standardization: 1; (`"standardize"`)
+            - P-Normalization: 2; (`"p_norm"`)
+
+
         The codes for `apply_norm_to` are given as follows:
-            No Normalization: -1
-            On States only: 0
-            On Rewards only: 1
-            On TD value only: 2
-            On States and Rewards: 3
-            On States and TD: 4
+            - No Normalization: -1; (`["none"]`)
+            - On States only: 0; (`["states"]`)
+            - On Rewards only: 1; (`["rewards"]`)
+            - On TD value only: 2; (`["td"]`)
+            - On States and Rewards: 3; (`["states", "rewards"]`)
+            - On States and TD: 4; (`["states", "td"]`)
+
+
+        If a valid `max_norm_grad` is passed, then gradient clipping takes place else gradient clipping step is
+        skipped. If `max_norm_grad` value was invalid, error will be raised from PyTorch.
         """
         super(DqnAgent, self).__init__()
+        setup = InternalCodeSetup()
+        ## The input target model. This model's parameters are frozen. @I{# noqa: E266}
         self.target_model = target_model.to(device)
+        ## The input policy model. @I{# noqa: E266}
         self.policy_model = policy_model.to(device)
+        ## The input optimizer wrapped with policy_model parameters. @I{# noqa: E266}
         self.optimizer = optimizer
+        ## The input optional LR Scheduler (this can be None). @I{# noqa: E266}
         self.lr_scheduler = lr_scheduler
+        ## The input loss function. @I{# noqa: E266}
         self.loss_function = loss_function
+        ## The input discounting factor. @I{# noqa: E266}
         self.gamma = gamma
+        ## The input exploration factor. @I{# noqa: E266}
         self.epsilon = epsilon
+        ## The input minimum exploration factor after decays. @I{# noqa: E266}
         self.min_epsilon = min_epsilon
+        ## The input epsilon decay rate. @I{# noqa: E266}
         self.epsilon_decay_rate = epsilon_decay_rate
+        ## The input epsilon decay frequency in terms of timesteps. @I{# noqa: E266}
         self.epsilon_decay_frequency = epsilon_decay_frequency
+        ## The input argument `memory_buffer_size`; indicating the buffer size used. @I{# noqa: E266}
         self.memory_buffer_size = memory_buffer_size
+        ## The input argument `target_model_update_rate`; indicating the update rate of target model. @I{# noqa: E266}
+        ## A soft copy of parameters takes place form policy_model to target model as per the update rate @I{# noqa: E266}
         self.target_model_update_rate = target_model_update_rate
+        ## The input argument `policy_model_update_rate`; indicating the update rate of policy model. @I{# noqa: E266}
+        ## Optimizer is called every `policy_model_update_rate`. @I{# noqa: E266}
         self.policy_model_update_rate = policy_model_update_rate
-        self.model_backup_frequency = model_backup_frequency
-        self.min_lr = float(lr_threshold)
+        ## The input model backup frequency in terms of timesteps. @I{# noqa: E266}
+        self.backup_frequency = backup_frequency
+        ## The input LR Threshold. @I{# noqa: E266}
+        self.lr_threshold = float(lr_threshold)
+        ## The batch size to be used when training policy model. @I{# noqa: E266}
+        ## Corresponding number of samples are drawn from @ref memory as per the prioritization strategy @I{# noqa: E266}
         self.batch_size = batch_size
+        ## The input number of actions. @I{# noqa: E266}
         self.num_actions = num_actions
+        ## The input save path for backing up agent models. @I{# noqa: E266}
         self.save_path = save_path
+        ## The input boostrap rounds. @I{# noqa: E266}
+        self.bootstrap_rounds = bootstrap_rounds
+        ## The input `device` argument; indicating the device name. @I{# noqa: E266}
         self.device = device
-        # Process `prioritization_params` and set flags accordingly.
-        self.prioritization_strategy_code = (
-            prioritization_params.get("prioritization_strategy", 0)
+        # Set necessary prioritization parameters. Depending on `prioritization_params`, appropriate values are set.
+        ## The prioritization strategy code. @I{# noqa: E266}
+        self.__prioritization_strategy_code = (
+            prioritization_params.get("prioritization_strategy_code", 0)
             if prioritization_params is not None
             else 0
         )
+        ## The input prioritization parameters. @I{# noqa: E266}
         self.prioritization_params = prioritization_params
+        ## The input `force_terminal_state_selection_prob`. @I{# noqa: E266}
+        ## This indicates the probability to force at least one terminal state sample in a batch.  @I{# noqa: E266}
         self.force_terminal_state_selection_prob = force_terminal_state_selection_prob
         # Sanity check for tau value.
         if tau < 0 or tau > 1:
             ValueError(
                 "Invalid value for tau passed! Expected value is between 0 and 1"
             )
+        ## The input `tau`; indicating the soft update used to update @ref target_model parameters. @I{# noqa: E266}
         self.tau = float(tau)
+        if isinstance(apply_norm, str):
+            apply_norm = setup.get_apply_norm_mode_code(apply_norm)
+        ## The input `apply_norm` argument; indicating the normalisation to be used. @I{# noqa: E266}
         self.apply_norm = apply_norm
+        if isinstance(apply_norm_to, (str, list)):
+            apply_norm_to = setup.get_apply_norm_to_mode_code(apply_norm_to)
+        ## The input `apply_norm_to` argument; indicating the quantity to normalise. @I{# noqa: E266}
         self.apply_norm_to = apply_norm_to
+        ## The input `eps_for_norm` argument; indicating epsilon to be used for normalisation. @I{# noqa: E266}
         self.eps_for_norm = eps_for_norm
+        ## The input `p_for_norm` argument; indicating p-value for p-normalisation. @I{# noqa: E266}
         self.p_for_norm = p_for_norm
+        ## The input `dim_for_norm` argument; indicating dimension along which we wish to normalise. @I{# noqa: E266}
         self.dim_for_norm = dim_for_norm
+        ## The input `max_grad_norm`; indicating the maximum gradient norm for gradient clippings. @I{# noqa: E266}
+        self.max_grad_norm = max_grad_norm
+        ## The input `grad_norm_p`; indicating the p-value for p-normalisation for gradient clippings. @I{# noqa: E266}
+        self.grad_norm_p = grad_norm_p
+        ## The step counter; counting the total timesteps done so far up to @ref memory_buffer_size. @I{# noqa: E266}
+        ## Once `buffer_size` is reached, this will restarted. @I{# noqa: E266}
         self.step_counter = 1
-        # Set necessary prioritization parameters. Depending on `prioritization_params`, appropriate values are set.
-        self.prioritization_params = self.__process_prioritization_params(
-            self.prioritization_params
-        )
-        # Initialize Memory.
+        ## The instance of @ref rlpack._C.memory.Memory used for Replay buffer. @I{# noqa: E266}
         self.memory = Memory(
             buffer_size=memory_buffer_size,
             device=device,
-            prioritization_strategy_code=self.prioritization_strategy_code,
-            batch_size=self.batch_size
+            prioritization_strategy_code=self.__prioritization_strategy_code,
+            batch_size=self.batch_size,
         )
+        ## This is only used when boostrap_rounds > 1 and is cleared after each boostrap round. @I{# noqa: E266}
+        self._grad_accumulator = list()
         # Disable gradients for target network.
         for n, p in self.target_model.named_parameters():
             p.requires_grad = False
-        # Initialize Normalization tool.
-        self.normalization = Normalization(apply_norm=apply_norm)
+        ## The normalisation tool to be used for agent. @I{# noqa: E266}
+        ## An instance of rlpack.utils.normalization.Normalization. @I{# noqa: E266}
+        self._normalization = Normalization(
+            apply_norm=apply_norm, eps=eps_for_norm, p=p_for_norm, dim=dim_for_norm
+        )
+        ## The policy model parameters names. @I{# noqa: E266}
+        self._policy_model_parameter_keys = OrderedDict(
+            self.policy_model.named_parameters()
+        ).keys()
 
     def train(
         self,
@@ -186,20 +270,20 @@ class DqnAgent(Agent):
         - For each transition (or experience) being passed, associated priority, probability and weight
             can be passed.
 
-        :param state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]: The current
+        @param state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]: The current
             state in the environment.
-        :param state_next: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]: The next
+        @param state_next: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]: The next
             state returned by the environment.
-        :param reward: Union[int, float]: Reward obtained by performing the action for the transition.
-        :param action: Union[int, float]: Action taken for the transition
-        :param done: Union[bool, int]: Indicates weather episode has terminated or not.
-        :param priority: Optional[Union[pytorch.Tensor, np.ndarray, float]]: The priority of the
+        @param reward: Union[int, float]: Reward obtained by performing the action for the transition.
+        @param action: Union[int, float]: Action taken for the transition
+        @param done: Union[bool, int]: Indicates weather episode has terminated or not.
+        @param priority: Optional[Union[pytorch.Tensor, np.ndarray, float]]: The priority of the
             transition: for priority relay memory). Default: 1.0
-        :param probability: Optional[Union[pytorch.Tensor, np.ndarray, float]]: The probability of the transition
+        @param probability: Optional[Union[pytorch.Tensor, np.ndarray, float]]: The probability of the transition
            : for priority relay memory). Default: 1.0
-        :param weight: Optional[Union[pytorch.Tensor, np.ndarray, float]]: The important sampling weight
+        @param weight: Optional[Union[pytorch.Tensor, np.ndarray, float]]: The important sampling weight
             of the transition: for priority relay memory). Default: 1.0
-        :return: int: The next action to be taken from `state_next`.
+        @return int: The next action to be taken from `state_next`.
         """
         # Insert the sample into memory.
         self.memory.insert(
@@ -217,23 +301,23 @@ class DqnAgent(Agent):
             self.step_counter % self.policy_model_update_rate == 0
             and len(self.memory) >= self.batch_size
         ):
-            self.__train_policy_model()
+            self._train_policy_model()
         # Update target model every `target_model_update_rate` steps.
         if self.step_counter % self.target_model_update_rate == 0:
-            self.__update_target_model()
+            self._update_target_model()
         # Decay epsilon every `epsilon_decay_frequency` steps.
         if self.step_counter % self.epsilon_decay_frequency == 0:
-            self.__decay_epsilon()
-        # Backup model every `model_backup_frequency` steps.
-        if self.step_counter % self.model_backup_frequency == 0:
+            self._decay_epsilon()
+        # Backup model every `backup_frequency` steps.
+        if self.step_counter % self.backup_frequency == 0:
             self.save()
         # Restart `step_counter` if `it has reached the buffer size.
         if self.step_counter == self.memory_buffer_size:
             self.step_counter = 0
         # If using prioritized memory, anneal alpha and beta.
-        if self.prioritization_strategy_code > 0:
-            self.__anneal_alpha()
-            self.__anneal_beta()
+        if self.__prioritization_strategy_code > 0:
+            self._anneal_alpha()
+            self._anneal_beta()
         # Increment `step_counter` and use policy model to get next action.
         self.step_counter += 1
         action = self.policy(state_current)
@@ -244,8 +328,8 @@ class DqnAgent(Agent):
         """
         The policy for the agent. This runs the inference on policy model with `state_current`
         and uses q-values to obtain the best action.
-        :param state_current: Union[ndarray, pytorch.Tensor, List[float]]: The current state agent is in.
-        :return: int: The action to be taken.
+        @param state_current: Union[ndarray, pytorch.Tensor, List[float]]: The current state agent is in.
+        @return int: The action to be taken.
         """
         state_current = self._cast_to_tensor(state_current).to(self.device)
         state_current = pytorch.unsqueeze(state_current, 0)
@@ -256,9 +340,7 @@ class DqnAgent(Agent):
             if self.policy_model.training:
                 self.policy_model.eval()
             if self.apply_norm_to in self.state_norm_codes:
-                state_current = self.normalization.apply_normalization(
-                    state_current, self.eps_for_norm, self.p_for_norm, self.dim_for_norm
-                )
+                state_current = self._normalization.apply_normalization(state_current)
             q_values = self.policy_model(state_current)
             action_tensor = q_values.argmax(-1)
             action = action_tensor.item()
@@ -269,7 +351,7 @@ class DqnAgent(Agent):
         This method saves the target_model, policy_model, optimizer, lr_scheduler and agent_states in the supplied
             `save_path` argument in the DQN Agent class' constructor (also called __init__).
         agent_states includes current memory and epsilon values in a dictionary.
-        :param custom_name_suffix: Optional[str]: If supplied, additional suffix is added to names of target_model,
+        @param custom_name_suffix: Optional[str]: If supplied, additional suffix is added to names of target_model,
             policy_model, optimizer and lr_scheduler. Useful to save best model by a custom suffix supplied
             during a train run. Default: None
         """
@@ -285,11 +367,6 @@ class DqnAgent(Agent):
         }
         checkpoint_policy = {"state_dict": self.policy_model.state_dict()}
         checkpoint_optimizer = {"state_dict": self.optimizer.state_dict()}
-
-        checkpoint_lr_scheduler = dict()
-        if self.lr_scheduler is not None:
-            checkpoint_lr_scheduler = {"state_dict": self.lr_scheduler.state_dict()}
-
         save_memory = True if os.getenv("SAVE_MEMORY", False) == "TRUE" else False
         agent_state = {
             "epsilon": self.epsilon,
@@ -308,6 +385,7 @@ class DqnAgent(Agent):
             os.path.join(self.save_path, f"optimizer{custom_name_suffix}.pt"),
         )
         if self.lr_scheduler is not None:
+            checkpoint_lr_scheduler = {"state_dict": self.lr_scheduler.state_dict()}
             pytorch.save(
                 checkpoint_lr_scheduler,
                 os.path.join(self.save_path, f"lr_scheduler{custom_name_suffix}.pt"),
@@ -319,7 +397,7 @@ class DqnAgent(Agent):
         """
         This method loads the target_model, policy_model, optimizer, lr_scheduler and agent_states from
             the supplied `save_path` argument in the DQN Agent class' constructor (also called __init__).
-        :param custom_name_suffix: Optional[str]: If supplied, additional suffix is added to names of target_model,
+        @param custom_name_suffix: Optional[str]: If supplied, additional suffix is added to names of target_model,
             policy_model, optimizer and lr_scheduler. Useful to load the best model by a custom suffix supplied
             for evaluation. Default: None
         """
@@ -370,14 +448,14 @@ class DqnAgent(Agent):
             self.memory = agent_state["memory"]
         return
 
-    def __train_policy_model(self) -> None:
+    def _train_policy_model(self) -> None:
         """
         Protected method of the class to train the policy model. This method is called every
             `policy_model_update_rate` timesteps supplied in the DqnAgent class constructor.
         This method will load the random samples from memory (number of samples depend on
             `batch_size` supplied in DqnAgent constructor), and train the policy_model.
         """
-        random_experiences = self.__load_random_experiences()
+        random_experiences = self._load_random_experiences()
         (
             state_current,
             state_next,
@@ -391,29 +469,21 @@ class DqnAgent(Agent):
         ) = random_experiences
         # Apply normalization if required to states.
         if self.apply_norm_to in self.state_norm_codes:
-            state_current = self.normalization.apply_normalization(
-                state_current, self.eps_for_norm, self.p_for_norm, self.dim_for_norm
-            )
-            state_next = self.normalization.apply_normalization(
-                state_next, self.eps_for_norm, self.p_for_norm, self.dim_for_norm
-            )
+            state_current = self._normalization.apply_normalization(state_current)
+            state_next = self._normalization.apply_normalization(state_next)
         # Apply normalization if required to rewards.
         if self.apply_norm_to in self.reward_norm_codes:
-            rewards = self.normalization.apply_normalization(
-                rewards, self.eps_for_norm, self.p_for_norm, self.dim_for_norm
-            )
+            rewards = self._normalization.apply_normalization(rewards)
         # Set policy model to training mode.
         if not self.policy_model.training:
             self.policy_model.train()
         # Compute target q-values from target model and temporal difference values.
         with pytorch.no_grad():
             q_values_target = self.target_model(state_next)
-            td_value = self.temporal_difference(rewards, q_values_target, dones)
+            td_value = self._temporal_difference(rewards, q_values_target, dones)
         # Apply normalization if required to TD values.
         if self.apply_norm_to in self.td_norm_codes:
-            td_value = self.normalization.apply_normalization(
-                td_value, self.eps_for_norm, self.p_for_norm, self.dim_for_norm
-            )
+            td_value = self._normalization.apply_normalization(td_value)
         # Compute current q-values from policy model.
         q_values_policy = self.policy_model(state_current)
         actions = self._adjust_dims_for_tensor(
@@ -423,44 +493,58 @@ class DqnAgent(Agent):
         q_values_gathered = pytorch.gather(q_values_policy, dim=-1, index=actions)
         self.optimizer.zero_grad()
         # If prioritized memory is used, multiply weights from sampling process to TD values.
-        if self.prioritization_strategy_code > 0:
+        if self.__prioritization_strategy_code > 0:
             weights_ = self._adjust_dims_for_tensor(weights, td_value.dim())
             td_value = td_value * weights_
         td_value = td_value.detach()
         loss = self.loss_function(q_values_gathered, td_value)
         loss.backward()
         self.loss.append(loss.item())
-        if self.prioritization_strategy_code > 0:
-            # Proportional-Based prioritization.
-            if self.prioritization_strategy_code == 1:
-                new_priorities = (
-                    pytorch.abs(td_value.cpu()) + self.prioritization_params["error"]
+        # Apply the requested prioritization strategy.
+        self._apply_prioritization_strategy(td_value, random_indices)
+        if self.bootstrap_rounds > 1:
+            # When `bootstrap_rounds` is greater than 1; accumulate gradients if no. of rounds
+            # specified by `bootstrap_rounds` have not been completed and return.
+            # If no. of rounds have been completed, perform mean reduction and proceed with optimizer step.
+            if len(self._grad_accumulator) < self.bootstrap_rounds:
+                self._grad_accumulator.append(
+                    {
+                        k: param.grad.detach().clone()
+                        for k, param in self.policy_model.named_parameters()
+                    },
                 )
-            # Rank-Based prioritization.
-            elif self.prioritization_strategy_code == 2:
-                _, sorted_td_indices = pytorch.sort(
-                    pytorch.abs(td_value.cpu()), dim=0, descending=True
-                )
-                new_priorities = 1 / (sorted_td_indices + 1)
+                return
             else:
-                raise NotImplementedError(
-                    f"The given prioritization strategy {self.prioritization_strategy_code} has not been implemented"
-                )
-            self.memory.update_priorities(
-                random_indices,
-                new_priorities,
-                probabilities,
-                weights,
+                self._grad_mean_reduction()
+        # Clip gradients if requested.
+        if self.max_grad_norm is not None:
+            pytorch.nn.utils.clip_grad_norm_(
+                self.policy_model.parameters(),
+                max_norm=self.max_grad_norm,
+                norm_type=self.grad_norm_p,
             )
+        # Call the optimizer step and LR Scheduler step.
         self.optimizer.step()
         if (
             self.lr_scheduler is not None
-            and min(self.lr_scheduler.get_last_lr()) > self.min_lr
+            and min(self.lr_scheduler.get_last_lr()) > self.lr_threshold
         ):
             self.lr_scheduler.step()
 
+    def _apply_prioritization_strategy(
+        self,
+        td_value: pytorch.Tensor,
+        random_indices: pytorch.Tensor,
+    ) -> None:
+        """
+        Void protected method that applies the relevant prioritization strategy for the DQN.
+        @param td_value: pytorch.Tensor: The computed TD value.
+        @param random_indices: The indices of randomly sampled transitions.
+        """
+        return
+
     @pytorch.no_grad()
-    def __update_target_model(self) -> None:
+    def _update_target_model(self) -> None:
         """
         Protected method of the class to update the target model. This method is called every
             `target_model_update_rate` timesteps supplied in the DqnAgent class constructor.
@@ -477,16 +561,16 @@ class DqnAgent(Agent):
         return
 
     @pytorch.no_grad()
-    def temporal_difference(
+    def _temporal_difference(
         self, rewards: pytorch.Tensor, q_values: pytorch.Tensor, dones: pytorch.Tensor
     ) -> pytorch.Tensor:
         """
         This method computes the temporal difference for given transitions.
 
-        :param rewards: pytorch.Tensor: The sampled batch of rewards.
-        :param q_values: pytorch.Tensor: The q-values inferred from target_model.
-        :param dones: pytorch.Tensor: The done values for each transition in the batch.
-        :return: pytorch.Tensor: The TD value for each sample in the batch.
+        @param rewards: pytorch.Tensor: The sampled batch of rewards.
+        @param q_values: pytorch.Tensor: The q-values inferred from target_model.
+        @param dones: pytorch.Tensor: The done values for each transition in the batch.
+        @return pytorch.Tensor: The TD value for each sample in the batch.
         """
         q_values_max_tuple = pytorch.max(q_values, dim=-1, keepdim=True)
         q_values_max = q_values_max_tuple.values
@@ -495,7 +579,7 @@ class DqnAgent(Agent):
         td_value = rewards + ((self.gamma * q_values_max) * (1 - dones))
         return td_value
 
-    def __decay_epsilon(self) -> None:
+    def _decay_epsilon(self) -> None:
         """
         Protected method to decay epsilon. This method is called every `epsilon_decay_frequency` timesteps and
             decays the epsilon by `epsilon_decay_rate`, both supplied in DqnAgent class' constructor.
@@ -506,7 +590,7 @@ class DqnAgent(Agent):
             self.epsilon = self.min_epsilon
         return
 
-    def __load_random_experiences(
+    def _load_random_experiences(
         self,
     ) -> Tuple[
         pytorch.Tensor,
@@ -525,7 +609,7 @@ class DqnAgent(Agent):
             force_terminal_state_selection_prob = 0.1, approximately every 1 in 10 batches will have at least
             one terminal state forced by the loader.
 
-        :return: Tuple[
+        @return Tuple[
                 pytorch.Tensor,
                 pytorch.Tensor,
                 pytorch.Tensor,
@@ -548,38 +632,7 @@ class DqnAgent(Agent):
         )
         return samples
 
-    @staticmethod
-    def __anneal_alpha_default_fn(alpha: float, alpha_annealing_factor: float) -> float:
-        """
-        Protected method to anneal alpha parameter for important sampling weights. This will be called
-            every `alpha_annealing_frequency` times. `alpha_annealing_frequency` is a key to be passed in dictionary
-            `prioritization_params` argument in the DqnAgent class' constructor. This method is called by default
-            to anneal alpha.
-
-        If `alpha_annealing_frequency` is not passed in `prioritization_params`, the annealing of alpha will not take
-            place. This method uses another value `alpha_annealing_factor` that must also be passed in
-            `prioritization_params`. `alpha_annealing_factor` is typically below 1 to slowly annealed it to
-            0 or `min_alpha`.
-        """
-        alpha *= alpha_annealing_factor
-        return alpha
-
-    @staticmethod
-    def __anneal_beta_default_fn(beta: float, beta_annealing_factor: float) -> float:
-        """
-        Protected method to anneal beta parameter for important sampling weights. This will be called
-            every `beta_annealing_frequency` times. `beta_annealing_frequency` is a key to be passed in dictionary
-            `prioritization_params` argument in the DqnAgent class' constructor.
-
-        If `beta_annealing_frequency` is not passed in `prioritization_params`, the annealing of beta will not take
-            place. This method uses another value `beta_annealing_factor` that must also be passed in
-            `prioritization_params`. `beta_annealing_factor` is typically above 1 to slowly annealed it to
-            1 or `max_beta`
-        """
-        beta *= beta_annealing_factor
-        return beta
-
-    def __anneal_alpha(self):
+    def _anneal_alpha(self):
         if (
             self.prioritization_params["to_anneal_alpha"]
             and (
@@ -605,7 +658,7 @@ class DqnAgent(Agent):
                     "min_alpha"
                 ]
 
-    def __anneal_beta(self):
+    def _anneal_beta(self):
         if (
             self.prioritization_params["to_anneal_beta"]
             and (
@@ -631,84 +684,19 @@ class DqnAgent(Agent):
                     "max_beta"
                 ]
 
-    def __process_prioritization_params(
-        self, prioritization_params: Dict[str, Any]
-    ) -> Dict[str, Any]:
-        """
-        Private method to process the prioritization parameters. This includes sanity check and loading of default
-            values of mandatory parameters.
-        :param prioritization_params: Dict[str, Any]: The prioritization parameters for when
-            we use prioritized memory
-        :return: Dict[str, Any]: The processed prioritization parameters with necessary parameters loaded.
-        """
-        to_anneal_alpha = False
-        to_anneal_beta = False
-        if prioritization_params is not None and self.prioritization_strategy_code > 0:
-            assert (
-                "alpha" in prioritization_params.keys()
-            ), "`alpha` must be passed when passing prioritization_params"
-            assert (
-                "beta" in prioritization_params.keys()
-            ), "`beta` must be passed when passing prioritization_params"
-        else:
-            prioritization_params = dict()
-        alpha = float(prioritization_params.get("alpha", -1))
-        beta = float(prioritization_params.get("beta", -1))
-        min_alpha = float(prioritization_params.get("min_alpha", 1.0))
-        max_beta = float(prioritization_params.get("max_beta", 1.0))
-        alpha_annealing_frequency = int(
-            prioritization_params.get("alpha_annealing_frequency", -1)
-        )
-        beta_annealing_frequency = int(
-            prioritization_params.get("beta_annealing_frequency", -1)
-        )
-        alpha_annealing_fn = prioritization_params.get(
-            "alpha_annealing_fn", self.__anneal_alpha_default_fn
-        )
-        beta_annealing_fn = prioritization_params.get(
-            "beta_annealing_fn", self.__anneal_beta_default_fn
-        )
-        # Check if to anneal alpha based on input parameters.
-        if alpha_annealing_frequency != -1:
-            to_anneal_alpha = True
-        # Get args and kwargs for to pass to alpha_annealing_fn.
-        alpha_annealing_fn_args = prioritization_params.get(
-            "alpha_annealing_fn_args", tuple()
-        )
-        alpha_annealing_fn_kwargs = prioritization_params.get(
-            "alpha_annealing_fn_kwargs", dict()
-        )
-        # Check if to anneal beta based on input parameters.
-        if beta_annealing_frequency != -1:
-            to_anneal_beta = True
-        # Get args and kwargs for to pass to beta_annealing_fn.
-        beta_annealing_fn_args = prioritization_params.get(
-            "beta_annealing_fn_args", tuple()
-        )
-        beta_annealing_fn_kwargs = prioritization_params.get(
-            "beta_annealing_fn_kwargs", dict()
-        )
-        # Error for proportional based prioritized memory.
-        error = float(prioritization_params.get("error", 5e-3))
-        # Number of segments for rank-based prioritized memory.
-        num_segments = prioritization_params.get("num_segments", self.batch_size)
-        # Creation of final process dictionary for prioritization_params
-        prioritization_params_processed = {
-            "to_anneal_alpha": to_anneal_alpha,
-            "to_anneal_beta": to_anneal_beta,
-            "alpha": alpha,
-            "beta": beta,
-            "min_alpha": min_alpha,
-            "max_beta": max_beta,
-            "alpha_annealing_frequency": alpha_annealing_frequency,
-            "beta_annealing_frequency": beta_annealing_frequency,
-            "alpha_annealing_fn": alpha_annealing_fn,
-            "alpha_annealing_fn_args": alpha_annealing_fn_args,
-            "alpha_annealing_fn_kwargs": alpha_annealing_fn_kwargs,
-            "beta_annealing_fn": beta_annealing_fn,
-            "beta_annealing_fn_args": beta_annealing_fn_args,
-            "beta_annealing_fn_kwargs": beta_annealing_fn_kwargs,
-            "error": error,
-            "num_segments": num_segments,
-        }
-        return prioritization_params_processed
+    def _grad_mean_reduction(self):
+        policy_model_grads = self._grad_accumulator
+        # OrderedDict to store reduced average value.
+        policy_model_grads_reduced = OrderedDict()
+        # No Grad mode to disable PyTorch Operation tracking.
+        with pytorch.no_grad():
+            # Perform parameter wise summation.
+            for key in self._policy_model_parameter_keys:
+                for policy_model_grad in policy_model_grads:
+                    if key not in policy_model_grads_reduced.keys():
+                        policy_model_grads_reduced[key] = policy_model_grad[key]
+                        continue
+                    policy_model_grads_reduced[key] += policy_model_grad[key]
+            # Assign average parameters to model.
+            for key, param in self.policy_model.named_parameters():
+                param.grad = policy_model_grads_reduced[key] / self.bootstrap_rounds

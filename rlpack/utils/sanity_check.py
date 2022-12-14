@@ -1,3 +1,25 @@
+"""!
+@package rlpack.utils
+@brief This package implements the basic utilities to be used across rlpack.
+
+
+Currently following classes have been implemented:
+    - `Normalization`: Normalization tool implemented as rlpack.utils.normalization.Normalization with
+        support for regular normalization methods.
+    - `SanityCheck`: Sanity check for arguments when using Simulator from rlpack.simulator.Simulator. Class is
+        implemented as rlpack.utils.sanity_check.SanityCheck.
+    - `Setup`: Sets up the simulator to run the agent with environment. Implemented as rlpack.utils.setup.Setup.
+
+Following packages are part of utils:
+    - `base`: A package for base class, implemented as utils.base
+
+Following TypeVars have been defined:
+    - `LRScheduler`: The Typing variable for LR Schedulers.
+    - `LossFunction`: The Typing variable for Loss Functions.
+    - `Activation`: The Typing variable for Activations.
+"""
+
+
 import logging
 import re
 from typing import Any, Dict, List
@@ -6,13 +28,18 @@ from rlpack.utils.base.register import Register
 
 
 class SanityCheck(Register):
+    """
+    This class does the basic sanity check of input_config.
+    """
+
     def __init__(self, input_config: Dict[str, Any]):
         """
-        This class does the basic sanity check of input_config.
-        :param input_config: (Dict[str, Any]): The input config that is to be used for training.
+        @param input_config: (Dict[str, Any]): The input config that is to be used for training/evaluation.
         """
         super(SanityCheck, self).__init__()
+        ## The arguments received from the input `input_config` keyword arguments. @I{# noqa: E266}
         self.args = list(input_config.keys())
+        ## The argument `input_config`; indicating keyword arguments to be used to training/evaluation. @I{# noqa: E266}
         self.input_config = input_config
 
     def check_mandatory_params_sanity(self) -> None:
@@ -22,7 +49,7 @@ class SanityCheck(Register):
         present_mandatory_args = [k in self.args for k in self.mandatory_keys]
         if not all(present_mandatory_args):
             raise ValueError(
-                self.__error_message("mandatory_argument", present_mandatory_args)
+                self._error_message("mandatory_argument", present_mandatory_args)
             )
 
     def check_model_init_sanity(self) -> bool:
@@ -31,7 +58,7 @@ class SanityCheck(Register):
         `model_name` and `model_args` must be passed. If both are not passed, it will try to check if there is a
         custom model that is passed. Custom models' names must correspond to their target agent's keyword argument
         name.
-        :return: A flag indicating if we use a custom model or an in-built model.
+        @return A flag indicating if we use a custom model or an in-built model.
         """
         present_model_init_args = [k in self.args for k in self.model_init_args]
         custom_model = False
@@ -67,7 +94,7 @@ class SanityCheck(Register):
             if not all(present_model_init_args):
                 raise ValueError(
                     f"Cannot initialize requested model; "
-                    f"{self.__error_message('model_args', present_model_init_args)}"
+                    f"{self._error_message('model_args', present_model_init_args)}"
                 )
             self.check_activation_init_sanity()
         else:
@@ -78,14 +105,14 @@ class SanityCheck(Register):
         """
         Check the sanity of agent input. This function will check the arguments received for agents to verify if
         all necessary arguments are received.
-        :param only_model_arg_check: bool: Indicating weather to check only the model related arguments or all of the
+        @param only_model_arg_check: bool: Indicating weather to check only the model related arguments or all of the
             mandatory arguments.
         """
         present_agent_init_args = [k in self.args for k in self.agent_init_args]
         if not all(present_agent_init_args):
             raise ValueError(
                 f"Cannot Initialize requested Agent; "
-                f"{self.__error_message('agent_init_args', present_agent_init_args)}"
+                f"{self._error_message('agent_init_args', present_agent_init_args)}"
             )
         agent_name = self.input_config.get("agent_name")
         if not isinstance(agent_name, str):
@@ -112,7 +139,7 @@ class SanityCheck(Register):
             if not all(present_agent_init_args):
                 raise ValueError(
                     f"Cannot initialize agent with custom model for given Agent; "
-                    f"{self.__error_message('agent_args', present_agent_init_args)}"
+                    f"{self._error_message('agent_args', present_agent_init_args)}"
                 )
 
     def check_activation_init_sanity(self) -> None:
@@ -121,6 +148,12 @@ class SanityCheck(Register):
         the given activation even if Activation is valid.
         If invalid arguments are passed, error will be raised by PyTorch.
         """
+        # If only activation name is passed but not the activation_args, will default to an empty dictionary.
+        if (
+            self.activation_init_args[0] in self.args
+            and self.activation_init_args[1] not in self.args
+        ):
+            self.args.append(self.activation_init_args[1])
         present_activation_init_args = [
             k in self.args for k in self.activation_init_args
         ]
@@ -130,7 +163,7 @@ class SanityCheck(Register):
         ):
             raise ValueError(
                 f"Cannot Initialize requested Activation for the given Agent; "
-                f"{self.__error_message('agent_init_args', present_activation_init_args)}"
+                f"{self._error_message('activation_init_args', present_activation_init_args)}"
             )
         activation_name = self.input_config["activation_name"]
         if not isinstance(activation_name, str):
@@ -152,7 +185,7 @@ class SanityCheck(Register):
         if not all(present_optimizer_init_args):
             raise ValueError(
                 f"Cannot Initialize requested Optimizer for the given Agent; "
-                f"{self.__error_message('agent_init_args', present_optimizer_init_args)}"
+                f"{self._error_message('optimizer_init_args', present_optimizer_init_args)}"
             )
         optimizer_name = self.input_config["optimizer_name"]
         if not isinstance(optimizer_name, str):
@@ -170,6 +203,12 @@ class SanityCheck(Register):
         the given lr_scheduler's args even if LR Scheduler valid.
         If invalid arguments are passed, error will be raised by PyTorch.
         """
+        # If not LR Scheduler is requested, no sanity check is to be done.
+        if (
+            self.lr_scheduler_init_args[0] not in self.args
+            and self.lr_scheduler_init_args[1] not in self.args
+        ):
+            return
         present_lr_scheduler_init_args = [
             k in self.args for k in self.lr_scheduler_init_args
         ]
@@ -179,7 +218,7 @@ class SanityCheck(Register):
         ):
             raise ValueError(
                 f"Cannot Initialize requested LR Scheduler for the given Agent; "
-                f"{self.__error_message('agent_init_args', present_lr_scheduler_init_args)}"
+                f"{self._error_message('lr_scheduler_init', present_lr_scheduler_init_args)}"
             )
         if all(present_lr_scheduler_init_args):
             lr_scheduler_name = self.input_config["lr_scheduler_name"]
@@ -192,12 +231,26 @@ class SanityCheck(Register):
                     f"The requested lr_scheduler {lr_scheduler_name} is not supported."
                 )
 
-    def __error_message(self, param_of_arg: str, boolean_args: List[bool]) -> str:
+    def check_if_valid_agent_for_simulator(self):
+        agent_name = self.input_config["agent_name"]
+        if agent_name in self.mandatory_distributed_agents:
+            raise ValueError(
+                "Provided `agent_name` must be used with rlpack.simulator.SimulatorDistributed"
+            )
+
+    def check_if_valid_agent_for_simulator_distributed(self):
+        agent_name = self.input_config["agent_name"]
+        if agent_name not in self.mandatory_distributed_agents:
+            raise ValueError(
+                "Provided `agent_name` must be used with rlpack.simulator.Simulator"
+            )
+
+    def _error_message(self, param_of_arg: str, boolean_args: List[bool]) -> str:
         """
-        Private method to craft the error message indicating parameters that are missing.
-        :param param_of_arg: str: The parameter for which argument is missing.
-        :param boolean_args: Boolean list of indicating if the corresponding argument was received or not
-        :return:
+        Protected method to craft the error message indicating parameters that are missing.
+        @param param_of_arg: str: The parameter for which argument is missing.
+        @param boolean_args: Boolean list of indicating if the corresponding argument was received or not
+        @return str: The error message.
         """
         message = (
             f"The following `{param_of_arg}` arguments were not received: "

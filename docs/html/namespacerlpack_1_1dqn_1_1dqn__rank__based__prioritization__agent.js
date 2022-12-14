@@ -1,0 +1,4 @@
+var namespacerlpack_1_1dqn_1_1dqn__rank__based__prioritization__agent =
+[
+    [ "DqnRankBasedPrioritizationAgent", "classrlpack_1_1dqn_1_1dqn__rank__based__prioritization__agent_1_1_dqn_rank_based_prioritization_agent.html", "classrlpack_1_1dqn_1_1dqn__rank__based__prioritization__agent_1_1_dqn_rank_based_prioritization_agent" ]
+];

@@ -1,0 +1,5 @@
+<map id="memory" name="memory">
+<area shape="rect" id="node1" href="$group__binaries__group.html" title="Binaries Module consists of C++ backend exposed via pybind11 to rlpack via rlpack...." alt="" coords="5,5,72,31"/>
+<area shape="rect" id="node2" title="Memory module is the C++ backend for rlpack._C.memory.Memory class. Heavier workloads have been optim..." alt="" coords="120,5,189,31"/>
+<area shape="rect" id="node3" href="$group__offload__group.html" title="Template class to offload some heavier computation to specialised hardware. Functions will be execute..." alt="" coords="237,5,299,31"/>
+</map>
