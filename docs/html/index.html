@@ -114,27 +114,8 @@ Installation</h1>
 </div><!-- fragment --> This will install the package in your python environment.</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md12"></a>
-Getting started</h1>
-<ul>
-<li><p class="startli">To get started, you can run the following snippet: </p><div class="fragment"><div class="line"><span class="keyword">import</span> os</div>
-<div class="line"><span class="keyword">import</span> yaml</div>
-<div class="line"><span class="keyword">from</span> <a class="code hl_namespace" href="namespacerlpack_1_1simulator.html">rlpack.simulator</a> <span class="keyword">import</span> Simulator</div>
-<div class="line"> </div>
-<div class="line"><span class="comment"># Optional, to set SAVE_PATH environment variable. </span></div>
-<div class="line">os.environ[<span class="stringliteral">&quot;SAVE_PATH&quot;</span>] = <span class="stringliteral">&#39;models/&#39;</span></div>
-<div class="line">os.makedirs(f<span class="stringliteral">&quot;{os.getenv(&#39;SAVE_PATH&#39;)}, exist_ok=True&quot;</span>)</div>
-<div class="line"> </div>
-<div class="line"><span class="comment"># Read from a yaml file with all the arguments for easy use.</span></div>
-<div class="line"><span class="keyword">with</span> open(<span class="stringliteral">&quot;config.yaml&quot;</span>, <span class="stringliteral">&quot;rb) as f:</span></div>
-<div class="line"><span class="stringliteral">  yaml.load(f, yaml.Loader)</span></div>
-<div class="line"><span class="stringliteral"></span> </div>
-<div class="line"><span class="stringliteral"></span><span class="comment"># Pass the config dictionary to Simulator.</span></div>
-<div class="line">simulator = Simulator(config=config)</div>
-<div class="line">simulator.run()</div>
-<div class="ttc" id="anamespacerlpack_1_1simulator_html"><div class="ttname"><a href="namespacerlpack_1_1simulator.html">rlpack.simulator</a></div><div class="ttdef"><b>Definition:</b> simulator.py:1</div></div>
-</div><!-- fragment --><p class="startli"><code>Simulator</code> accepts a config dictionary which must contain all mandatory arguments.</p>
-</li>
-</ul>
+Documentation</h1>
+<p >Refer to RLPack documentation <a href="https://kartik2309.github.io/RLPack/html/index.html">here</a></p>
 <h1><a class="anchor" id="autotoc_md13"></a>
 Issues and bugs</h1>
 <p >Please raise an issue on GitHub to report a bug. Pull Requests can be raised after discussion on the raised issue.</p>
