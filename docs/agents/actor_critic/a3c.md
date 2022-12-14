@@ -8,4 +8,8 @@ of gradients for training the model similar to [A2C](@ref agents/actor_critic/a2
 multiple actors which interact with the environment at the same time. Gradients of all actors' policy model are 
 asynchronously reduced and mean gradient is populated for each actor's policy model before optimizer step.
 
+
+Note that to run simulation with A3C, make sure to use rlpack.simulator_distributed.SimulatorDistributed, as this will
+run the simulation in the given environment in distributed setting.
+
 <h4> Keyword: <kbd> Keyword: `agent_name: "a3c"` </kbd> </h4>

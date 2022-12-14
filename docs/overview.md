@@ -64,6 +64,9 @@ simulator.run()
 ```
 `run` method can provide callbacks which can enable us to pass custom models to be used inside the agent.
 
+Note that corresponding class for distributed setting is also provided with RLPack defined as 
+rlpack.simulator.SimulatorDistributed. 
+
 ### Agents
 
 RLPack implements variety of agents to be easily used via config dict for training and evaluating. Learn more about

@@ -16,6 +16,7 @@ class SimulatorDistributed:
 
     def __init__(self, n_procs: int, config: Dict[str, Any], backend: str = "gloo"):
         """
+        Initialization of class SimulatorDistributed.
         @param n_procs: int: The total number of processes to be launched.
         @param config: Dict[str, Any]: The configuration to be used.
         @param backend: str: The PyTorch multiprocessing backend to be used. Default: "gloo"; the Gloo backend. More
