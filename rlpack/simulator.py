@@ -23,15 +23,21 @@ class Simulator:
     the models and agents for training and/or evaluation.
     """
 
-    def __init__(self, config: Dict[str, Any]):
+    def __init__(self, config: Dict[str, Any], is_child_process: bool = False):
         """
-        @param config: Optional[Dict[str, Any]]: The configuration dictionary for setup. Default: None
+        @param config: Dict[str, Any]: The configuration dictionary for setup.
+        @param is_child_process: bool: Indicates if Simulator is being run as a child process. Default: False
         """
         ## The object of rlpack.utils.setup.Setup to set-up models. @I{# noqa: E266}
         self.setup = Setup()
         # Perform sanity check before starting.
         ## The object of rlpack.utils.sanity_check.SanityCheck to perform sanity checks on arguments. @I{# noqa: E266}
         self.sanity_check = SanityCheck(config)
+        # Check sanity of agent depending on if Simulator is being launched as a child process.
+        if is_child_process:
+            self.sanity_check.check_if_valid_agent_for_simulator_distributed()
+        else:
+            self.sanity_check.check_if_valid_agent_for_simulator()
         ## The input config. @I{# noqa: E266}
         self.config = config
         # Check if mandatory arguments are received from config.

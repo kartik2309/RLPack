@@ -192,6 +192,7 @@ class Register:
             "a2c": {"policy_model": True},
             "a3c": {"policy_model": True},
         }
+        self.mandatory_distributed_agents = ("a3c", )
 
     @staticmethod
     def get_prefix_path():

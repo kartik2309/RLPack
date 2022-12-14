@@ -49,7 +49,7 @@ class SanityCheck(Register):
         present_mandatory_args = [k in self.args for k in self.mandatory_keys]
         if not all(present_mandatory_args):
             raise ValueError(
-                self.__error_message("mandatory_argument", present_mandatory_args)
+                self._error_message("mandatory_argument", present_mandatory_args)
             )
 
     def check_model_init_sanity(self) -> bool:
@@ -94,7 +94,7 @@ class SanityCheck(Register):
             if not all(present_model_init_args):
                 raise ValueError(
                     f"Cannot initialize requested model; "
-                    f"{self.__error_message('model_args', present_model_init_args)}"
+                    f"{self._error_message('model_args', present_model_init_args)}"
                 )
             self.check_activation_init_sanity()
         else:
@@ -112,7 +112,7 @@ class SanityCheck(Register):
         if not all(present_agent_init_args):
             raise ValueError(
                 f"Cannot Initialize requested Agent; "
-                f"{self.__error_message('agent_init_args', present_agent_init_args)}"
+                f"{self._error_message('agent_init_args', present_agent_init_args)}"
             )
         agent_name = self.input_config.get("agent_name")
         if not isinstance(agent_name, str):
@@ -139,7 +139,7 @@ class SanityCheck(Register):
             if not all(present_agent_init_args):
                 raise ValueError(
                     f"Cannot initialize agent with custom model for given Agent; "
-                    f"{self.__error_message('agent_args', present_agent_init_args)}"
+                    f"{self._error_message('agent_args', present_agent_init_args)}"
                 )
 
     def check_activation_init_sanity(self) -> None:
@@ -163,7 +163,7 @@ class SanityCheck(Register):
         ):
             raise ValueError(
                 f"Cannot Initialize requested Activation for the given Agent; "
-                f"{self.__error_message('activation_init_args', present_activation_init_args)}"
+                f"{self._error_message('activation_init_args', present_activation_init_args)}"
             )
         activation_name = self.input_config["activation_name"]
         if not isinstance(activation_name, str):
@@ -185,7 +185,7 @@ class SanityCheck(Register):
         if not all(present_optimizer_init_args):
             raise ValueError(
                 f"Cannot Initialize requested Optimizer for the given Agent; "
-                f"{self.__error_message('optimizer_init_args', present_optimizer_init_args)}"
+                f"{self._error_message('optimizer_init_args', present_optimizer_init_args)}"
             )
         optimizer_name = self.input_config["optimizer_name"]
         if not isinstance(optimizer_name, str):
@@ -218,7 +218,7 @@ class SanityCheck(Register):
         ):
             raise ValueError(
                 f"Cannot Initialize requested LR Scheduler for the given Agent; "
-                f"{self.__error_message('lr_scheduler_init', present_lr_scheduler_init_args)}"
+                f"{self._error_message('lr_scheduler_init', present_lr_scheduler_init_args)}"
             )
         if all(present_lr_scheduler_init_args):
             lr_scheduler_name = self.input_config["lr_scheduler_name"]
@@ -231,9 +231,19 @@ class SanityCheck(Register):
                     f"The requested lr_scheduler {lr_scheduler_name} is not supported."
                 )
 
-    def __error_message(self, param_of_arg: str, boolean_args: List[bool]) -> str:
+    def check_if_valid_agent_for_simulator(self):
+        agent_name = self.input_config["agent_name"]
+        if agent_name in self.mandatory_distributed_agents:
+            raise ValueError("Provided `agent_name` must be used with rlpack.simulator.SimulatorDistributed")
+
+    def check_if_valid_agent_for_simulator_distributed(self):
+        agent_name = self.input_config["agent_name"]
+        if agent_name not in self.mandatory_distributed_agents:
+            raise ValueError("Provided `agent_name` must be used with rlpack.simulator.Simulator")
+
+    def _error_message(self, param_of_arg: str, boolean_args: List[bool]) -> str:
         """
-        Private method to craft the error message indicating parameters that are missing.
+        Protected method to craft the error message indicating parameters that are missing.
         @param param_of_arg: str: The parameter for which argument is missing.
         @param boolean_args: Boolean list of indicating if the corresponding argument was received or not
         @return str: The error message.

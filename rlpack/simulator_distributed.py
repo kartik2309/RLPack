@@ -67,7 +67,7 @@ class SimulatorDistributed:
             os.environ["WORLD_SIZE"] = f"{world_size}"
         if "RANK" not in os.environ.keys():
             os.environ["RANK"] = f"{process_rank}"
-        simulator = Simulator(config)
+        simulator = Simulator(config, True)
         simulator.run(**kwargs, distributed_mode=True)
 
     def run(self, **kwargs):
