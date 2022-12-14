@@ -17,6 +17,7 @@ import gym
 import matplotlib.pyplot as plt
 import numpy as np
 
+from rlpack import dist
 from rlpack.utils.base.agent import Agent
 
 
@@ -73,6 +74,7 @@ class Environments:
         load: bool = False,
         plot: bool = False,
         verbose: int = -1,
+        distributed_mode: bool = False,
     ) -> None:
         """
         Method to train the agent in the specified environment.
@@ -95,19 +97,18 @@ class Environments:
             - 1: Log model level losses.
             - 2: Log Agent specific values.
         """
-        assert -1 <= verbose <= 2, "Argument `verbose` must be in range [-1, 2]."
+        assert -2 <= verbose <= 2, "Argument `verbose` must be in range [-1, 2]."
         if not self.is_train():
             logging.info("Currently operating in Evaluation Mode")
             return
         if load:
             self.agent.load(self.config.get("custom_suffix", "_best"))
         else:
-            if os.path.isfile(
-                os.path.join(self.config["agent_args"]["save_path"], "log.txt")
-            ):
-                os.remove(
-                    os.path.join(self.config["agent_args"]["save_path"], "log.txt")
-                )
+            if distributed_mode:
+                if dist.get_rank() == 0:
+                    self.__remove_log_file()
+            else:
+                self.__remove_log_file()
         log = list()
         highest_mv_avg_reward, timestep = 0.0, 0
         rewards_collector = {k: list() for k in range(self.config["num_episodes"])}
@@ -148,6 +149,10 @@ class Environments:
                     reward_log_message = (
                         f"Average Reward after {ep} episodes: {mean_reward}"
                     )
+                    if distributed_mode:
+                        reward_log_message = (
+                            f"{reward_log_message} from process {dist.get_rank()}"
+                        )
                     logging.info(reward_log_message)
                     log.append(f"{reward_log_message}\n")
                     if highest_mv_avg_reward < mean_reward:
@@ -159,55 +164,69 @@ class Environments:
                     # Log Mean Loss in the episode cycle
                     mean_loss = self.__list_mean(self.agent.loss)
                     if len(self.agent.loss) > 0:
-                        logging.info(f"Average Loss after {ep} episodes: {mean_loss}")
-                        log.append(f"Average Loss after {ep} episodes: {mean_loss}\n")
+                        log_mean_message = (
+                            f"Average Loss after {ep} episodes: {mean_loss}"
+                        )
+                        if distributed_mode:
+                            log_mean_message = (
+                                f"{log_mean_message} from process {dist.get_rank()}"
+                            )
+                        logging.info(log_mean_message)
+                        log.append(f"{log_mean_message}\n")
                 if verbose <= 2:
                     # Log current epsilon value
                     if hasattr(self.agent, "epsilon"):
-                        logging.info(
+                        log_epsilon_message = (
                             f"Epsilon after {ep} episodes: {self.agent.epsilon}"
                         )
-                        log.append(
-                            f"Epsilon after {ep} episodes: {self.agent.epsilon}\n"
-                        )
+                        if distributed_mode:
+                            log_epsilon_message = (
+                                f"{log_epsilon_message} from process {dist.get_rank()}"
+                            )
+                        logging.info(log_epsilon_message)
+                        log.append(f"{log_epsilon_message}\n")
                     # Log current alpha and beta values - for prioritized relay (DQN)
                     if hasattr(self.agent, "prioritization_params"):
                         if hasattr(self.agent, "prioritization_params"):
                             if "alpha" in self.agent.prioritization_params.keys():
-                                logging.info(
-                                    f"Alpha after {ep} episodes: {self.agent.prioritization_params['alpha']}"
-                                )
-                                log.append(
-                                    f"Alpha after {ep} episodes: {self.agent.prioritization_params['alpha']}\n"
-                                )
+                                log_alpha_message = f"Alpha after {ep} episodes: {self.agent.prioritization_params['alpha']}"
+                                if distributed_mode:
+                                    log_alpha_message = f"{log_alpha_message} from process {dist.get_rank()}"
+                                logging.info(log_alpha_message)
+                                log.append(f"{log_alpha_message}\n")
                             if "beta" in self.agent.prioritization_params.keys():
-                                logging.info(
-                                    f"Beta after {ep} episodes: {self.agent.prioritization_params['beta']}"
-                                )
-                                log.append(
-                                    f"Alpha after {ep} episodes: {self.agent.prioritization_params['alpha']}\n"
-                                )
-                    logging.info(f"{'~' * len(reward_log_message)}\n")
-                    log.append(f"{'~' * len(reward_log_message)}\n\n")
-                    with open(
-                        os.path.join(self.config["agent_args"]["save_path"], "log.txt"),
-                        "a+",
-                    ) as f:
-                        for line in log:
-                            f.write(line)
+                                log_beta_message = f"Beta after {ep} episodes: {self.agent.prioritization_params['beta']}"
+                                if distributed_mode:
+                                    log_beta_message = f"{log_beta_message} from process {dist.get_rank()}"
+                                logging.info(log_beta_message)
+                                log.append(f"{log_beta_message}\n")
+                    if not distributed_mode:
+                        closing_message = f"{'~' * len(reward_log_message)}\n"
+                    else:
+                        length = int(len(reward_log_message) / 2)
+                        closing_message = (
+                            f"{'~' * length} Process {dist.get_rank()} {'~' * length}\n"
+                        )
+                    logging.info(closing_message)
+                    log.append(f"{closing_message}\n")
+                    if not distributed_mode:
+                        self.__write_log_file(log)
+                    else:
+                        if dist.get_rank() == 0:
+                            self.__write_log_file(log)
                 rewards.clear()
         self.env.close()
-        self.agent.save()
+        if not distributed_mode:
+            self.agent.save()
+        else:
+            if dist.get_rank() == 0:
+                self.agent.save()
         if plot:
-            rewards_to_plot = [
-                sum(rewards_collector[k]) / len(rewards_collector[k])
-                for k in range(self.config["num_episodes"])
-            ]
-            plt.plot(range(self.config["num_episodes"]), rewards_to_plot)
-            plt.xlabel("Episodes")
-            plt.ylabel("Rewards")
-            plt.title("Lunar Lander - Rewards vs. Episodes")
-            plt.savefig(os.path.join(self.agent.save_path, "EpisodeVsReward.jpeg"))
+            if not distributed_mode:
+                self.__generate_plot(rewards_collector)
+            else:
+                if dist.get_rank() == 0:
+                    self.__generate_plot(rewards_collector)
 
     def evaluate_agent(self) -> None:
         """
@@ -268,6 +287,31 @@ class Environments:
         """
         possible_train_names = ("train", "training")
         return self.config["mode"] in possible_train_names
+
+    def __remove_log_file(self):
+        if os.path.isfile(
+            os.path.join(self.config["agent_args"]["save_path"], "log.txt")
+        ):
+            os.remove(os.path.join(self.config["agent_args"]["save_path"], "log.txt"))
+
+    def __write_log_file(self, log):
+        with open(
+            os.path.join(self.config["agent_args"]["save_path"], "log.txt"),
+            "a+",
+        ) as f:
+            for line in log:
+                f.write(line)
+
+    def __generate_plot(self, rewards_collector):
+        rewards_to_plot = [
+            sum(rewards_collector[k]) / len(rewards_collector[k])
+            for k in range(self.config["num_episodes"])
+        ]
+        plt.plot(range(self.config["num_episodes"]), rewards_to_plot)
+        plt.xlabel("Episodes")
+        plt.ylabel("Rewards")
+        plt.title("Lunar Lander - Rewards vs. Episodes")
+        plt.savefig(os.path.join(self.agent.save_path, "EpisodeVsReward.jpeg"))
 
     @staticmethod
     def __reshape_func_default(

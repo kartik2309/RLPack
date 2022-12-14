@@ -181,7 +181,11 @@ class Simulator:
             self.env.train_agent(
                 render=kwargs.get("render", self.config.get("render", False)),
                 load=kwargs.get("load", self.config.get("load", False)),
-                plot=kwargs.get("plot", self.config.get("plot", True)),
+                plot=kwargs.get("plot", self.config.get("plot", False)),
+                verbose=kwargs.get("plot", self.config.get("verbose", -1)),
+                distributed_mode=kwargs.get(
+                    "distributed_mode", self.config.get("distributed_mode", False)
+                ),
             )
         elif self.env.is_eval():
             self.env.evaluate_agent()
