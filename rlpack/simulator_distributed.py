@@ -60,8 +60,8 @@ class SimulatorDistributed:
         @param kwargs: Other keyword arguments corresponding to
             rlpack.environments.environments.Environments.train method.
         """
-        if "async_mode" in kwargs.keys():
-            kwargs.pop("async_mode")
+        if "distributed_mode" in kwargs.keys():
+            kwargs.pop("distributed_mode")
         logging.info(
             f"Launched process: {process_rank} out of {world_size} processes.\n"
         )
