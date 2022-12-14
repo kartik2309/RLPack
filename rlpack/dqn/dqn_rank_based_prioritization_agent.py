@@ -167,7 +167,7 @@ class DqnRankBasedPrioritizationAgent(DqnAgent):
             grad_norm_p,
         )
 
-    def __apply_prioritization_strategy(
+    def _apply_prioritization_strategy(
         self, td_value: pytorch.Tensor, random_indices: pytorch.Tensor
     ) -> None:
         """

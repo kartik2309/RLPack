@@ -166,14 +166,14 @@ class A2C(Agent):
         self.entropies = list()
         ## The list of gradients from each backward call. @I{# noqa: E266}
         ## This is only used when boostrap_rounds > 1 and is cleared after each boostrap round. @I{# noqa: E266}
-        self.grad_accumulator = list()
+        self._grad_accumulator = list()
         ## The normalisation tool to be used for agent. @I{# noqa: E266}
         ## An instance of rlpack.utils.normalization.Normalization. @I{# noqa: E266}
-        self.__normalization = Normalization(
+        self._normalization = Normalization(
             apply_norm=apply_norm, eps=eps_for_norm, p=p_for_norm, dim=dim_for_norm
         )
         ## The policy model parameters names. @I{# noqa: E266}
-        self.__policy_model_parameter_keys = OrderedDict(
+        self._policy_model_parameter_keys = OrderedDict(
             self.policy_model.named_parameters()
         ).keys()
 
@@ -198,7 +198,7 @@ class A2C(Agent):
         # Cast `state_current` to tensor.
         state_current = self._cast_to_tensor(state_current).to(self.device)
         actions_logits, state_current_value = self.policy_model(state_current)
-        distribution = self.__create_action_distribution(actions_logits)
+        distribution = self._create_action_distribution(actions_logits)
         action = distribution.sample()
         # Accumulate quantities.
         self.action_log_probabilities.append(distribution.log_prob(action))
@@ -206,10 +206,9 @@ class A2C(Agent):
         self.rewards.append(reward)
         self.entropies.append(distribution.entropy().mean())
         # Call train policy method.
-        self.__call_train_policy_model(done)
+        self._call_train_policy_model(done)
         # Backup model every `backup_frequency` steps.
-        if self.step_counter % self.backup_frequency == 0:
-            self.save()
+        self._call_to_save()
         return action.item()
 
     @pytorch.no_grad()
@@ -228,7 +227,7 @@ class A2C(Agent):
         self.policy_model.eval()
         state_current = self._cast_to_tensor(state_current).to(self.device)
         actions_logits, _ = self.policy_model(state_current)
-        distribution = self.__create_action_distribution(actions_logits)
+        distribution = self._create_action_distribution(actions_logits)
         action = distribution.sample().item()
         return action
 
@@ -309,18 +308,23 @@ class A2C(Agent):
             self.lr_scheduler.load_state_dict(checkpoint_lr_sc["state_dict"])
         return
 
-    def __call_train_policy_model(self, done: Union[bool, int]) -> None:
+    def _call_to_save(self) -> None:
+        if self.step_counter % self.backup_frequency == 0:
+            self.save()
+        return
+
+    def _call_train_policy_model(self, done: Union[bool, int]) -> None:
         """
-        Private method to call the appropriate method for training policy model based on initialization of A2C agent
+        Protected method to call the appropriate method for training policy model based on initialization of A2C agent
         @param done: Union[bool, int]: Flag indicating if episode has terminated or not
         """
         if isinstance(done, bool):
             if done:
-                self.__accumulate_gradients()
+                self._accumulate_gradients()
                 self.episode_counter += 1
         elif isinstance(done, int) and done == 1:
             if done == 1:
-                self.__accumulate_gradients()
+                self._accumulate_gradients()
                 self.episode_counter += 1
         else:
             raise TypeError(
@@ -330,18 +334,18 @@ class A2C(Agent):
             self.episode_counter % (self.bootstrap_rounds + 1) == 0
             and self.bootstrap_rounds > 1
         ):
-            self.__train_models()
+            self._train_models()
             self.episode_counter += 1
 
-    def __accumulate_gradients(self) -> None:
+    def _accumulate_gradients(self) -> None:
         """
-        Private void method to train the model or accumulate the gradients for training.
+        Protected void method to train the model or accumulate the gradients for training.
         - If bootstrap_rounds is passed as 1 (default), model is trained each time the method is called.
         - If bootstrap_rounds > 1, the gradients are accumulated in grad_accumulator and model is trained via
-            __train_models method.
+            _train_models method.
         """
         self.policy_model.train()
-        returns = self.__compute_returns()
+        returns = self._compute_returns()
         # Stack the action log probabilities.
         action_log_probabilities = pytorch.stack(self.action_log_probabilities).to(
             self.device
@@ -355,8 +359,8 @@ class A2C(Agent):
         )
         # Stack the State values.
         state_current_values = pytorch.stack(self.states_current_values).to(self.device)
-        # Compute TD Values
-        advantage = self.compute_advantage(returns, state_current_values).detach()
+        # Compute Advantage Values
+        advantage = self._compute_advantage(returns, state_current_values).detach()
         # Adjust dimensions for further calculations
         action_log_probabilities = self._adjust_dims_for_tensor(
             action_log_probabilities, advantage.dim()
@@ -391,28 +395,28 @@ class A2C(Agent):
                     norm_type=self.grad_norm_p,
                 )
         else:
-            self.grad_accumulator.append(
+            self._grad_accumulator.append(
                 {
                     k: param.grad.detach().clone()
                     for k, param in self.policy_model.named_parameters()
                 },
             )
-        self.__clear()
+        self._clear()
 
-    def __train_models(self) -> None:
+    def _train_models(self) -> None:
         """
-        Private method to policy model if boostrap_rounds > 1. In such cases the gradients are accumulated in
+        Protected method to policy model if boostrap_rounds > 1. In such cases the gradients are accumulated in
         grad_accumulator. This method collects the accumulated gradients and performs mean reduction and runs
         optimizer step.
         """
-        policy_model_grads = self.grad_accumulator
+        policy_model_grads = self._grad_accumulator
         # OrderedDict to store reduced average value.
         policy_model_grads_reduced = OrderedDict()
         self.optimizer.zero_grad()
         # No Grad mode to disable PyTorch Operation tracking.
         with pytorch.no_grad():
             # Perform parameter wise summation.
-            for key in self.__policy_model_parameter_keys:
+            for key in self._policy_model_parameter_keys:
                 for policy_model_grad in policy_model_grads:
                     if key not in policy_model_grads_reduced.keys():
                         policy_model_grads_reduced[key] = policy_model_grad[key]
@@ -421,15 +425,15 @@ class A2C(Agent):
             # Assign average parameters to model.
             for key, param in self.policy_model.named_parameters():
                 param.grad = policy_model_grads_reduced[key] / self.bootstrap_rounds
-        # Take an optimizer step.
-        self.optimizer.step()
-        # Clip gradients if requested.
+                # Clip gradients if requested.
         if self.max_grad_norm is not None:
             pytorch.nn.utils.clip_grad_norm_(
                 self.policy_model.parameters(),
                 max_norm=self.max_grad_norm,
                 norm_type=self.grad_norm_p,
             )
+        # Take an optimizer step.
+        self.optimizer.step()
         # Take an LR Scheduler step if required.
         if (
             self.lr_scheduler is not None
@@ -437,34 +441,34 @@ class A2C(Agent):
         ):
             self.lr_scheduler.step()
         # Clear buffers for tracked operations.
-        self.__clear()
+        self._clear()
         # Clear Accumulated Gradient buffer.
-        self.grad_accumulator.clear()
+        self._grad_accumulator.clear()
 
-    def compute_advantage(
+    def _compute_advantage(
         self, returns: pytorch.Tensor, state_current_values: pytorch.Tensor
     ) -> pytorch.Tensor:
         """
         Computes the advantage from returns and state values
-        @param returns: pytorch.Tensor: The discounted returns; computed from __compute_returns method
+        @param returns: pytorch.Tensor: The discounted returns; computed from _compute_returns method
         @param state_current_values: pytorch.Tensor: The corresponding state values
         @return pytorch.Tensor: The advantage for the given returns and state values
         """
         returns = self._adjust_dims_for_tensor(returns, state_current_values.dim())
         # Apply normalization if required to states.
         if self.apply_norm_to in self.state_norm_codes:
-            state_current_values = self.__normalization.apply_normalization(
+            state_current_values = self._normalization.apply_normalization(
                 state_current_values
             )
         # Apply normalization if required to rewards.
         if self.apply_norm_to in self.reward_norm_codes:
-            returns = self.__normalization.apply_normalization(returns)
+            returns = self._normalization.apply_normalization(returns)
         advantage = returns - state_current_values
         if self.apply_norm_to in self.advantage_norm_codes:
-            advantage = self.__normalization.apply_normalization(advantage)
+            advantage = self._normalization.apply_normalization(advantage)
         return advantage
 
-    def __compute_returns(self) -> pytorch.Tensor:
+    def _compute_returns(self) -> pytorch.Tensor:
         """
         Computes the discounted returns iteratively.
         @return pytorch.Tensor: The discounted returns
@@ -480,9 +484,9 @@ class A2C(Agent):
         returns = pytorch.tensor(returns, dtype=pytorch.float32, device=self.device)
         return returns
 
-    def __clear(self) -> None:
+    def _clear(self) -> None:
         """
-        Private void method to clear the lists of rewards, action_log_probs and state_values.
+        Protected void method to clear the lists of rewards, action_log_probs and state_values.
         """
         #
         self.rewards.clear()
@@ -492,11 +496,11 @@ class A2C(Agent):
         self.loss.clear()
 
     @staticmethod
-    def __create_action_distribution(
+    def _create_action_distribution(
         actions_logits: pytorch.Tensor,
     ) -> Categorical:
         """
-        Private static method to create distributions from action logits
+        Protected static method to create distributions from action logits
         @param actions_logits: pytorch.Tensor: The action logits from policy model
         @return Categorical: A Categorical object initialized with given action logits
         """
