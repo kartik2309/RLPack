@@ -6,34 +6,49 @@ import os
 import yaml
 
 from rlpack.simulator import Simulator
+from rlpack.simulator_distributed import SimulatorDistributed
 
 if __name__ == "__main__":
     simulator_argparse = argparse.ArgumentParser()
-    simulator_argparse.add_argument("--config_file", required=False, type=str, default=None)
-    simulator_argparse.add_argument("--algorithm", required=False, type=str, default=None)
-    simulator_argparse.add_argument("--environment", required=False, type=str, default=None)
-    simulator_argparse.add_argument(
-        "--render", required=False, type=bool, default=False
-    )
+    # Add arguments
+    simulator_argparse.add_argument("--config_file", required=True, type=str)
+    simulator_argparse.add_argument("--use_distributed", required=False, type=bool, default=False)
+    simulator_argparse.add_argument("--n_procs", required=False, type=bool, default=1)
+    simulator_argparse.add_argument("--render", required=False, type=bool, default=False)
     simulator_argparse.add_argument("--load", required=False, type=bool, default=False)
-    simulator_argparse.add_argument("--plot", required=False, type=bool, default=True)
+    simulator_argparse.add_argument("--plot", required=False, type=bool, default=False)
+    simulator_argparse.add_argument("--verbose", required=False, type=int, default=-1)
+    # Parse arguments
     simulator_args = simulator_argparse.parse_args()
-
+    # Check for the config file and raise error if not found.
     if not os.path.isfile(simulator_args.config_file):
         raise FileNotFoundError(
             "The specified config file does not exist. Please check the path and try again!"
         )
+    # Load the config file
     if simulator_args.config_file is not None:
         with open(simulator_args.config_file) as f:
             config_ = yaml.load(f, yaml.Loader)
-    elif simulator_args.algorithm is None and simulator_args.environment is None:
-        raise ValueError(
-            "Please pass either `config_file` path (--config_file=/path/to/config_file/)"
-            " or both algorithm and environment"
-        )
-    simulator = Simulator(config=config_)
+    # Get `use_distributed` argument. If parsed as string, cast it to bool.
+    use_distributed = simulator_args.use_distributed
+    if isinstance(use_distributed, str):
+        use_distributed = bool(use_distributed)
+    # Initialize correct simulator class based on `use_distributed`.
+    if not use_distributed:
+        simulator = Simulator(config=config_)
+    else:
+        n_procs = simulator_args.n_procs
+        if isinstance(n_procs, str):
+            n_procs = int(n_procs)
+        simulator = SimulatorDistributed(n_procs=n_procs, config=config_)
+    # Get `verbose` argument. If parsed as string, cast it to int.
+    verbose = simulator_args.verbose
+    if isinstance(verbose, str):
+        verbose = int(verbose)
+    # Run the simulator.
     simulator.run(
         render=simulator_args.render,
         load=simulator_args.load,
-        plot=simulator_args.plot
+        plot=simulator_args.plot,
+        verbose=verbose,
     )
