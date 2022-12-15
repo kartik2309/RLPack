@@ -18,16 +18,19 @@ from rlpack import C_GradAccumulator
 
 class GradAccumulator:
     """
-     This class provides the python interface to C_GradAccumulator, the C++ class which performs heavier workloads.
-     This class is used for accumulating gradients and performing reduction operations on it.
+    This class provides the python interface to C_GradAccumulator, the C++ class which performs heavier workloads.
+    This class is used for accumulating gradients and performing reduction operations on it.
     """
+
     def __init__(self, parameter_keys: List[str], bootstrap_rounds: int):
         """
         @param parameter_keys: List[str]: The parameter keys (names) of the model.
         @param bootstrap_rounds: int: The bootstrap rounds defined the agent.
         """
         ## The instance of C_GradAccumulator; the C++ backend of GradAccumulator class. @I{# noqa: E266}
-        self.c_grad_accumulator = C_GradAccumulator.C_GradAccumulator(parameter_keys, bootstrap_rounds)
+        self.c_grad_accumulator = C_GradAccumulator.C_GradAccumulator(
+            parameter_keys, bootstrap_rounds
+        )
         ## The instance of MapOfTensors; the custom object used by C++ backend. @I{# noqa: E266}
         self.map_of_tensors = C_GradAccumulator.MapOfTensors()
 

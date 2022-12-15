@@ -9,4 +9,3 @@ Currently following classes have been implemented:
     - `GradAccumulator`: Implemented as rlpack._C.grad_accumulator.GradAccumulator, this class is responsible for
         using optimized GradAccumulator class implemented in C++ and providing simple python methods to access it.
 """
-
