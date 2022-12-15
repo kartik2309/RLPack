@@ -1,6 +1,6 @@
 var classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c =
 [
-    [ "__init__", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a85826dab437582b48e1d1919e78e325f", null ],
+    [ "__init__", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af2657104c2a71153fa0dbc8a9884a293", null ],
     [ "_call_to_save", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a487c58b125fb7cd2e14972552bdf5ea6", null ],
     [ "_call_train_policy_model", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a2f5dd7eeab7ee5f523490c1ec65e03e8", null ],
     [ "_clear", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a77355981bba89741f7b8a15e76cf02f8", null ],

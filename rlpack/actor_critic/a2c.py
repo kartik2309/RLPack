@@ -45,8 +45,8 @@ class A2C(Agent):
         save_path: str,
         bootstrap_rounds: int = 1,
         device: str = "cpu",
-        apply_norm: int = -1,
-        apply_norm_to: int = -1,
+        apply_norm: Union[int, str] = -1,
+        apply_norm_to: Union[int, List[str]] = -1,
         eps_for_norm: float = 5e-12,
         p_for_norm: int = 2,
         dim_for_norm: int = 0,
@@ -101,9 +101,9 @@ class A2C(Agent):
             - No Normalization: -1; (`["none"]`)
             - On States only: 0; (`["states"]`)
             - On Rewards only: 1; (`["rewards"]`)
-            - On TD value only: 2; (`["td"]`)
+            - On TD value only: 2; (`["advantage"]`)
             - On States and Rewards: 3; (`["states", "rewards"]`)
-            - On States and TD: 4; (`["states", "td"]`)
+            - On States and TD: 4; (`["states", "advantage"]`)
 
 
         If a valid `max_norm_grad` is passed, then gradient clipping takes place else gradient clipping step is
@@ -143,10 +143,12 @@ class A2C(Agent):
         self.device = device
         if isinstance(apply_norm, str):
             apply_norm = setup.get_apply_norm_mode_code(apply_norm)
+        setup.check_validity_of_apply_norm_code(apply_norm)
         ## The input `apply_norm` argument; indicating the normalisation to be used. @I{# noqa: E266}
         self.apply_norm = apply_norm
-        if isinstance(apply_norm_to, (str, list)):
+        if isinstance(apply_norm_to, list):
             apply_norm_to = setup.get_apply_norm_to_mode_code(apply_norm_to)
+        setup.check_validity_of_apply_norm_to_code(apply_norm_to)
         ## The input `apply_norm_to` argument; indicating the quantity to normalise. @I{# noqa: E266}
         self.apply_norm_to = apply_norm_to
         ## The input `eps_for_norm` argument; indicating epsilon to be used for normalisation. @I{# noqa: E266}
@@ -162,7 +164,7 @@ class A2C(Agent):
         ## The step counter; counting the total timesteps done so far. @I{# noqa: E266}
         self.step_counter = 0
         ## The episode counter; counting the total episodes done so far. @I{# noqa: E266}
-        self.episode_counter = 1
+        self.episode_counter = 0
         ## The list of sampled actions from each timestep from the action distribution. @I{# noqa: E266}
         ## This is cleared after each episode. @I{# noqa: E266}
         self.action_log_probabilities = list()
@@ -201,8 +203,6 @@ class A2C(Agent):
         @return int: The action to be taken
         """
         self.policy_model.eval()
-        # Increment `step_counter` and use policy model to get next action.
-        self.step_counter += 1
         # Cast `state_current` to tensor.
         state_current = self._cast_to_tensor(state_current).to(self.device)
         actions_logits, state_current_value = self.policy_model(state_current)
@@ -217,6 +217,8 @@ class A2C(Agent):
         self._call_train_policy_model(done)
         # Backup model every `backup_frequency` steps.
         self._call_to_save()
+        # Increment `step_counter` and use policy model to get next action.
+        self.step_counter += 1
         return action.item()
 
     @pytorch.no_grad()
@@ -320,7 +322,7 @@ class A2C(Agent):
         """
         Method calling the save method when required. This method is to be overriden by asynchronous methods.
         """
-        if self.step_counter % self.backup_frequency == 0:
+        if (self.step_counter + 1) % self.backup_frequency == 0:
             self.save()
         return
 
@@ -343,10 +345,9 @@ class A2C(Agent):
             raise TypeError(
                 f"Expected `done` argument to be of type {bool} or {int} but received {type(done)}!"
             )
-        if (
-            self.episode_counter % (self.bootstrap_rounds + 1) == 0
-            and self.bootstrap_rounds > 1
-        ):
+        if (self.episode_counter + 1) % (
+            self.bootstrap_rounds + 1
+        ) == 0 and self.bootstrap_rounds > 1:
             self._optimizer_step_on_accumulated_grads()
             self.episode_counter += 1
 

@@ -11,9 +11,11 @@ var searchData=
   ['check_5fmandatory_5fparams_5fsanity_8',['check_mandatory_params_sanity',['../classrlpack_1_1utils_1_1sanity__check_1_1_sanity_check.html#a9893a9303fe753e1f8cdbbf0e8a3f060',1,'rlpack::utils::sanity_check::SanityCheck']]],
   ['check_5fmodel_5finit_5fsanity_9',['check_model_init_sanity',['../classrlpack_1_1utils_1_1sanity__check_1_1_sanity_check.html#a3a5311b7afb568421b1d910d519dddc5',1,'rlpack::utils::sanity_check::SanityCheck']]],
   ['check_5foptimizer_5finit_5fsanity_10',['check_optimizer_init_sanity',['../classrlpack_1_1utils_1_1sanity__check_1_1_sanity_check.html#a220530e7f87f684521c16e9511822b11',1,'rlpack::utils::sanity_check::SanityCheck']]],
-  ['clear_11',['clear',['../classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html#aeb0009d5af07526a1e5a6e99cbbc6120',1,'rlpack._C.grad_accumulator.GradAccumulator.clear()'],['../classrlpack_1_1___c_1_1memory_1_1_memory.html#abaf783f61b1be01a149bf9dc3d7ac90f',1,'rlpack._C.memory.Memory.clear()'],['../class_c___grad_accumulator.html#a2b3b3befbbf516dadbea8676bbcaf52f',1,'C_GradAccumulator::clear()'],['../class_c___memory.html#a78aa519d41cec4c6a1c0a9c476976160',1,'C_Memory::clear()']]],
-  ['compute_5fimportant_5fsampling_5fweights_12',['compute_important_sampling_weights',['../class_c___memory.html#a7fe7f0858461b4961598f005d91dac10',1,'C_Memory']]],
-  ['compute_5fprobabilities_13',['compute_probabilities',['../class_c___memory.html#aa2f05d80edd827d39d6fad1e030dd432',1,'C_Memory']]],
-  ['create_5ftree_14',['create_tree',['../class_sum_tree.html#a3b590b778343705f65554c133cd51453',1,'SumTree']]],
-  ['cumulative_5fsum_15',['cumulative_sum',['../class_offload.html#a24140ba1a808376bf6f2fba97f923545',1,'Offload']]]
+  ['check_5fvalidity_5fof_5fapply_5fnorm_5fcode_11',['check_validity_of_apply_norm_code',['../classrlpack_1_1utils_1_1internal__code__setup_1_1_internal_code_setup.html#ae497656b0686e3aacbf19ddabe2608b8',1,'rlpack::utils::internal_code_setup::InternalCodeSetup']]],
+  ['check_5fvalidity_5fof_5fapply_5fnorm_5fto_5fcode_12',['check_validity_of_apply_norm_to_code',['../classrlpack_1_1utils_1_1internal__code__setup_1_1_internal_code_setup.html#a33341aa536763147c28862f1b83cb978',1,'rlpack::utils::internal_code_setup::InternalCodeSetup']]],
+  ['clear_13',['clear',['../classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html#aeb0009d5af07526a1e5a6e99cbbc6120',1,'rlpack._C.grad_accumulator.GradAccumulator.clear()'],['../classrlpack_1_1___c_1_1memory_1_1_memory.html#abaf783f61b1be01a149bf9dc3d7ac90f',1,'rlpack._C.memory.Memory.clear()'],['../class_c___grad_accumulator.html#a2b3b3befbbf516dadbea8676bbcaf52f',1,'C_GradAccumulator::clear()'],['../class_c___memory.html#a78aa519d41cec4c6a1c0a9c476976160',1,'C_Memory::clear()']]],
+  ['compute_5fimportant_5fsampling_5fweights_14',['compute_important_sampling_weights',['../class_c___memory.html#a7fe7f0858461b4961598f005d91dac10',1,'C_Memory']]],
+  ['compute_5fprobabilities_15',['compute_probabilities',['../class_c___memory.html#aa2f05d80edd827d39d6fad1e030dd432',1,'C_Memory']]],
+  ['create_5ftree_16',['create_tree',['../class_sum_tree.html#a3b590b778343705f65554c133cd51453',1,'SumTree']]],
+  ['cumulative_5fsum_17',['cumulative_sum',['../class_offload.html#a24140ba1a808376bf6f2fba97f923545',1,'Offload']]]
 ];

@@ -68,3 +68,21 @@ class InternalCodeSetup(InternalCodeRegister):
             )
         code = self.prioritization_strategy_codes[prioritization_strategy]
         return code
+
+    def check_validity_of_apply_norm_code(self, apply_norm: int) -> None:
+        """
+        Check of validity of the `apply_norm` code. Raises ValueError if code is invalid.
+        @param apply_norm: int: `apply_norm` code to check
+        """
+        if apply_norm in list(self.norm_mode_codes.values()):
+            return
+        raise ValueError("Invalid value of `apply_norm` code was received!")
+
+    def check_validity_of_apply_norm_to_code(self, apply_norm_to: int) -> None:
+        """
+        Check of validity of the `apply_norm_to` code. Raises ValueError if code is invalid.
+        @param apply_norm_to: int: `apply_norm_to` code to check
+        """
+        if apply_norm_to in list(self.norm_to_mode_codes.values()):
+            return
+        raise ValueError("Invalid value of `apply_norm_to` code was received!")

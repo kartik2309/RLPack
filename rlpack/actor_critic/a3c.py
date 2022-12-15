@@ -11,7 +11,7 @@ Currently following methods are implemented:
 """
 
 
-from typing import Optional, Union
+from typing import Optional, Union, List
 
 from rlpack import dist, pytorch
 from rlpack.actor_critic.a2c import A2C
@@ -38,8 +38,8 @@ class A3C(A2C):
         save_path: str,
         bootstrap_rounds: int = 1,
         device: str = "cpu",
-        apply_norm: int = -1,
-        apply_norm_to: int = -1,
+        apply_norm: Union[int, str] = -1,
+        apply_norm_to: Union[int, List[str]] = -1,
         eps_for_norm: float = 5e-12,
         p_for_norm: int = 2,
         dim_for_norm: int = 0,
@@ -94,9 +94,9 @@ class A3C(A2C):
             - No Normalization: -1; (`["none"]`)
             - On States only: 0; (`["states"]`)
             - On Rewards only: 1; (`["rewards"]`)
-            - On TD value only: 2; (`["td"]`)
+            - On TD value only: 2; (`["advantage"]`)
             - On States and Rewards: 3; (`["states", "rewards"]`)
-            - On States and TD: 4; (`["states", "td"]`)
+            - On States and TD: 4; (`["states", "advantage"]`)
 
 
         If a valid `max_norm_grad` is passed, then gradient clipping takes place else gradient clipping step is
@@ -126,7 +126,9 @@ class A3C(A2C):
         )
 
     def _call_to_save(self) -> None:
-        if (self.step_counter % self.backup_frequency == 0) and dist.get_rank() == 0:
+        if (
+            (self.step_counter + 1) % self.backup_frequency == 0
+        ) and dist.get_rank() == 0:
             self.save()
 
     def _run_by_bootstrap_rounds(self, loss) -> None:
