@@ -120,7 +120,7 @@ void C_Memory::C_MemoryData::set_priorities_reference(
     prioritiesFloatReference_ = prioritiesFloatReference;
 }
 
-C_Memory::C_Memory(const int64_t bufferSize,
+C_Memory::C_Memory(int64_t bufferSize,
                    const std::string &device,
                    const int32_t &prioritizationStrategyCode,
                    const int32_t &batchSize) {
@@ -166,10 +166,8 @@ C_Memory::C_Memory(const int64_t bufferSize,
     switch (prioritizationStrategyCode_) {
         case 1:
             sumTreeSharedPtr_ = std::make_shared<SumTree>(bufferSize_);
-            loadedIndicesSliceToShuffle_ = std::vector<int64_t>(batchSize_);
             break;
         case 2:
-            loadedIndicesSliceToShuffle_ = std::vector<int64_t>(batchSize_);
             segmentQuantileIndices_ = std::vector<int64_t>(batchSize_);
             break;
         default:
@@ -219,10 +217,8 @@ C_Memory::C_Memory() {
     switch (prioritizationStrategyCode_) {
         case 1:
             sumTreeSharedPtr_ = std::make_shared<SumTree>(bufferSize_);
-            loadedIndicesSliceToShuffle_ = std::vector<int64_t>(batchSize_);
             break;
         case 2:
-            loadedIndicesSliceToShuffle_ = std::vector<int64_t>(batchSize_);
             segmentQuantileIndices_ = std::vector<int64_t>(batchSize_);
             break;
         default:
