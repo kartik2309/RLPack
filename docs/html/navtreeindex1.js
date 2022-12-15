@@ -1,5 +1,6 @@
 var NAVTREEINDEX1 =
 {
+"classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#aa8adcc90bb59c4bd0f1a153f89c3116d":[2,0,0,2,1,0,42],
 "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#aabbebafa737394e23228307873976a6b":[2,0,0,2,1,0,12],
 "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#ab587b11f42305490ece52cb5683cee6d":[2,0,0,2,1,0,24],
 "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#ab9c2100fbbd42aff6e85fe8b199b393e":[2,0,0,2,1,0,16],

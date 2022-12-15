@@ -1,14 +1,15 @@
 var classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c =
 [
     [ "__init__", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a85826dab437582b48e1d1919e78e325f", null ],
-    [ "_accumulate_gradients", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a0cf691d30076733d7a4584287f6bc2d5", null ],
     [ "_call_to_save", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a487c58b125fb7cd2e14972552bdf5ea6", null ],
     [ "_call_train_policy_model", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a2f5dd7eeab7ee5f523490c1ec65e03e8", null ],
     [ "_clear", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a77355981bba89741f7b8a15e76cf02f8", null ],
     [ "_compute_advantage", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aeb6b2e6aa1311b4c7850ef224a27f373", null ],
+    [ "_compute_loss", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a3c4782c1085d9741f74a5dfc0488e480", null ],
     [ "_compute_returns", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ae6f84e2eed2d807cda9fa3f9334d81a8", null ],
     [ "_create_action_distribution", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a0eb5d7ae878ab995b910f89bf60620ea", null ],
-    [ "_train_models", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a02e856e459348c7ddd286b6a9d559d9e", null ],
+    [ "_optimizer_step_on_accumulated_grads", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a36ad349e56ca7fa710bf22333181cf2f", null ],
+    [ "_run_by_bootstrap_rounds", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a0fe737dd4e0aedc6abf61ad3e4b64f00", null ],
     [ "load", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af0b97082eda91653d7a2511c3325b70f", null ],
     [ "policy", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a5e480b8b9914e283440e5278a97b42cf", null ],
     [ "save", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a7793678505da4a71178d7a1043c4023d", null ],
