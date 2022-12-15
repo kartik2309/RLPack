@@ -28,6 +28,9 @@ public:
     void accumulate(std::map<std::string, torch::Tensor> &namedParameters);
     std::map<std::string, torch::Tensor> mean_reduce();
     std::map<std::string, torch::Tensor> sum_reduce();
+    std::map<std::string, torch::Tensor> get_item(int64_t index);
+    void set_item(int64_t index, std::map<std::string, torch::Tensor> &namedParameters);
+    void delete_item(int64_t index);
     void clear();
 
 private:
@@ -44,7 +47,6 @@ private:
  * @} @I{ // End group grad_accumulator_group }
  * @} @I{ // End group binaries_group }
  */
-
 
 
 #endif//RLPACK_BINARIES_GRAD_ACCUMULATOR_CGRADACCUMULATOR_H_

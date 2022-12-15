@@ -92,6 +92,66 @@ std::map<std::string, torch::Tensor> C_GradAccumulator::sum_reduce() {
     return reducedParams_;
 }
 
+std::map<std::string, torch::Tensor> C_GradAccumulator::get_item(int64_t index) {
+    /*!
+     * Method to get the named parameter gradients in the given index.
+     *
+     * @param index : The index at which we wish to obtain the gradient values.
+     * @return : The map of parameter keys and values.
+     */
+    auto size = namedParametersGrads_.size();
+    if (index > size) {
+        std::string errorMessage =
+                "Given index " + std::to_string(index) +
+                " is out of range for GradAccumulator of size" + std::to_string(size);
+        throw std::out_of_range(errorMessage.c_str());
+    }
+    auto item = namedParametersGrads_[index];
+    return item;
+}
+
+void C_GradAccumulator::set_item(int64_t index, std::map<std::string, torch::Tensor> &namedParameters) {
+    /*!
+     * Method to set the named parameter gradients in the given index.
+     *
+     * @param index : The index at which we wish to obtain the gradient values.
+     * @param namedParameters : The item we wish to set at the given index.
+     */
+    auto size = namedParametersGrads_.size();
+    if (index > size) {
+        std::string errorMessage =
+                "Given index " + std::to_string(index) +
+                " is out of range for GradAccumulator of size" + std::to_string(size);
+        throw std::out_of_range(errorMessage.c_str());
+    }
+    std::map<std::string, torch::Tensor> namedParameterGrads;
+    for (int64_t keyIndex = 0; keyIndex != parameterKeys_.size(); keyIndex++) {
+        auto key = parameterKeys_[keyIndex];
+        auto clonedGrad = namedParameters[key].grad().detach().clone();
+        if (clonedGrad.isnan().all().item<bool>()) {
+            throw std::runtime_error("Gradients were NaN! Did you call .backward() on loss?");
+        }
+        namedParameterGrads[key] = clonedGrad;
+    }
+    namedParametersGrads_[index] = namedParameterGrads;
+}
+
+void C_GradAccumulator::delete_item(int64_t index) {
+    /*!
+     * Method to delete the named parameter gradients in the given index.
+     *
+     * @param index : The index at which we wish to obtain the gradient values.
+     */
+    auto size = namedParametersGrads_.size();
+    if (index > size) {
+        std::string errorMessage =
+                "Given index " + std::to_string(index) +
+                " is out of range for GradAccumulator of size" + std::to_string(size);
+        throw std::out_of_range(errorMessage.c_str());
+    }
+    namedParametersGrads_.erase(namedParametersGrads_.begin() + index);
+}
+
 void C_GradAccumulator::clear() {
     /*!
      * Clears all the accumulated gradients. This is C++ backend equivalent to

@@ -33,12 +33,26 @@ PYBIND11_MODULE(C_GradAccumulator, m) {
                  pybind11::arg("named_parameters"))
             .def("mean_reduce",
                  &C_GradAccumulator::mean_reduce,
-                 "Method to perform mean reduction.",
+                 "Method to perform mean reduction for named parameters' gradients",
                  pybind11::return_value_policy::reference)
             .def("sum_reduce",
                  &C_GradAccumulator::sum_reduce,
-                 "Method to perform sum reduction.",
+                 "Method to perform sum reduction for named parameters' gradients",
                  pybind11::return_value_policy::reference)
+            .def("get_item",
+                 &C_GradAccumulator::get_item,
+                 "Method to get named parameter gradients at a given index.",
+                 pybind11::return_value_policy::reference,
+                 pybind11::arg("index"))
+            .def("set_item",
+                 &C_GradAccumulator::set_item,
+                 "Method to set named parameter gradients at a given index.",
+                 pybind11::arg("index"),
+                 pybind11::arg("named_parameters"))
+            .def("delete_item",
+                 &C_GradAccumulator::delete_item,
+                 "Method to delete named parameter gradients at a given index.",
+                 pybind11::arg("index"))
             .def("clear", &C_GradAccumulator::clear, "Method to clear accumulated gradients.");
 
     /*
