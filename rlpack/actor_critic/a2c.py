@@ -6,9 +6,12 @@
 Currently following methods are implemented:
     - `A2C`: Implemented in rlpack.actor_critic.a2c.A2C. More details can be found
      [here](@ref agents/actor_critic/a2c.md)
+     - `A3C`: Implemented in rlpack.actor_critic.a3c.A3C. More details can be found
+     [here](@ref agents/actor_critic/a3c.md)
 """
+
+
 import os
-from collections import OrderedDict
 from typing import List, Optional, Union
 
 import numpy as np
@@ -130,6 +133,10 @@ class A2C(Agent):
         self.backup_frequency = backup_frequency
         ## The input save path for backing up agent models. @I{# noqa: E266}
         self.save_path = save_path
+        # Check sanity of `bootstrap_rounds`
+        assert (
+            bootstrap_rounds > 0
+        ), "Argument `bootstrap_rounds` must be an integer between 0 and 1"
         ## The input boostrap rounds. @I{# noqa: E266}
         self.bootstrap_rounds = bootstrap_rounds
         ## The input `device` argument; indicating the device name. @I{# noqa: E266}
@@ -173,11 +180,9 @@ class A2C(Agent):
         self._normalization = Normalization(
             apply_norm=apply_norm, eps=eps_for_norm, p=p_for_norm, dim=dim_for_norm
         )
-        ## The policy model parameters names. @I{# noqa: E266}
-        # self._policy_model_parameter_keys = OrderedDict(
-        #     self.policy_model.named_parameters()
-        # ).keys()
+
         keys = list(dict(self.policy_model.named_parameters()).keys())
+        ## The rlpack._C.grad_accumulator.GradAccumulator object for grad accumulation. @I{# noqa: E266}
         self._grad_accumulator = GradAccumulator(keys, bootstrap_rounds)
 
     def train(
@@ -312,6 +317,9 @@ class A2C(Agent):
         return
 
     def _call_to_save(self) -> None:
+        """
+        Method calling the save method when required. This method is to be overriden by asynchronous methods.
+        """
         if self.step_counter % self.backup_frequency == 0:
             self.save()
         return
@@ -323,11 +331,13 @@ class A2C(Agent):
         """
         if isinstance(done, bool):
             if done:
-                self._accumulate_gradients()
+                loss = self._compute_loss()
+                self._run_by_bootstrap_rounds(loss)
                 self.episode_counter += 1
         elif isinstance(done, int) and done == 1:
             if done == 1:
-                self._accumulate_gradients()
+                loss = self._compute_loss()
+                self._run_by_bootstrap_rounds(loss)
                 self.episode_counter += 1
         else:
             raise TypeError(
@@ -337,15 +347,13 @@ class A2C(Agent):
             self.episode_counter % (self.bootstrap_rounds + 1) == 0
             and self.bootstrap_rounds > 1
         ):
-            self._train_models()
+            self._optimizer_step_on_accumulated_grads()
             self.episode_counter += 1
 
-    def _accumulate_gradients(self) -> None:
+    def _compute_loss(self) -> pytorch.Tensor:
         """
-        Protected void method to train the model or accumulate the gradients for training.
-        - If bootstrap_rounds is passed as 1 (default), model is trained each time the method is called.
-        - If bootstrap_rounds > 1, the gradients are accumulated in grad_accumulator and model is trained via
-            _train_models method.
+        Method to compute total loss (from actor and critic).
+        @return pytorch.Tensor: The loss tensor.
         """
         self.policy_model.train()
         returns = self._compute_returns()
@@ -381,12 +389,23 @@ class A2C(Agent):
         policy_loss = policy_losses.mean()
         # Compute final loss
         loss = policy_loss + value_loss
+        return loss
+
+    def _run_by_bootstrap_rounds(self, loss) -> None:
+        """
+        Protected void method to train the model or accumulate the gradients for training.
+        - If bootstrap_rounds is passed as 1 (default), model is trained each time the method is called.
+        - If bootstrap_rounds > 1, the gradients are accumulated in grad_accumulator and model is trained via
+            _train_models method.
+        """
+        # If `bootstrap_rounds` less than 2, prepare for optimizer step by setting zero grads.
         if self.bootstrap_rounds < 2:
             self.optimizer.zero_grad()
         # Backward call
         loss.backward()
         # Append loss to list
         self.loss.append(loss.item())
+        # If `bootstrap_rounds` less than 2, run optimizer step immediately.
         if self.bootstrap_rounds < 2:
             # Take optimizer step.
             self.optimizer.step()
@@ -401,7 +420,7 @@ class A2C(Agent):
             self._grad_accumulator.accumulate(self.policy_model.named_parameters())
         self._clear()
 
-    def _train_models(self) -> None:
+    def _optimizer_step_on_accumulated_grads(self) -> None:
         """
         Protected method to policy model if boostrap_rounds > 1. In such cases the gradients are accumulated in
         grad_accumulator. This method collects the accumulated gradients and performs mean reduction and runs
@@ -414,7 +433,8 @@ class A2C(Agent):
             reduced_parameters = dict(self._grad_accumulator.mean_reduce())
             for key, param in self.policy_model.named_parameters():
                 param.grad = reduced_parameters[key] / self.bootstrap_rounds
-
+        # Take an optimizer step.
+        self.optimizer.step()
         # Clip gradients if requested.
         if self.max_grad_norm is not None:
             pytorch.nn.utils.clip_grad_norm_(
@@ -422,8 +442,6 @@ class A2C(Agent):
                 max_norm=self.max_grad_norm,
                 norm_type=self.grad_norm_p,
             )
-        # Take an optimizer step.
-        self.optimizer.step()
         # Take an LR Scheduler step if required.
         if (
             self.lr_scheduler is not None

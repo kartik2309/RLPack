@@ -1,4 +1,16 @@
-from collections import OrderedDict
+"""!
+@package rlpack.actor_critic
+@brief This package implements the Actor-Critic methods.
+
+
+Currently following methods are implemented:
+    - `A2C`: Implemented in rlpack.actor_critic.a2c.A2C. More details can be found
+     [here](@ref agents/actor_critic/a2c.md)
+     - `A3C`: Implemented in rlpack.actor_critic.a3c.A3C. More details can be found
+     [here](@ref agents/actor_critic/a3c.md)
+"""
+
+
 from typing import Optional, Union
 
 from rlpack import dist, pytorch
@@ -117,53 +129,21 @@ class A3C(A2C):
         if (self.step_counter % self.backup_frequency == 0) and dist.get_rank() == 0:
             self.save()
 
-    def _accumulate_gradients(self) -> None:
+    def _run_by_bootstrap_rounds(self, loss) -> None:
         """
         Protected void method to train the model or accumulate the gradients for training.
         - If bootstrap_rounds is passed as 1 (default), model is trained each time the method is called.
         - If bootstrap_rounds > 1, the gradients are accumulated in grad_accumulator and model is trained via
             _train_models method.
         """
-        self.policy_model.train()
-        returns = self._compute_returns()
-        # Stack the action log probabilities.
-        action_log_probabilities = pytorch.stack(self.action_log_probabilities).to(
-            self.device
-        )
-        # Get entropy values
-        entropy = pytorch.tensor(
-            self.entropies, dtype=pytorch.float32, device=self.device
-        )
-        entropy = self._adjust_dims_for_tensor(
-            entropy, target_dim=action_log_probabilities.dim()
-        )
-        # Stack the State values.
-        state_current_values = pytorch.stack(self.states_current_values).to(self.device)
-        # Compute Advantage Values
-        advantage = self._compute_advantage(returns, state_current_values).detach()
-        # Adjust dimensions for further calculations
-        action_log_probabilities = self._adjust_dims_for_tensor(
-            action_log_probabilities, advantage.dim()
-        )
-        entropy = self._adjust_dims_for_tensor(entropy, advantage.dim())
-        # Compute Policy Losses
-        policy_losses = (
-            -action_log_probabilities * advantage + self.entropy_coefficient * entropy
-        )
-        # Compute Value Losses
-        value_loss = self.state_value_coefficient * self.loss_function(
-            state_current_values, advantage
-        )
-        # Compute Mean for policy losses
-        policy_loss = policy_losses.mean()
-        # Compute final loss
-        loss = policy_loss + value_loss
+        # If `bootstrap_rounds` less than 2, prepare for optimizer step by setting zero grads.
         if self.bootstrap_rounds < 2:
             self.optimizer.zero_grad()
         # Backward call
         loss.backward()
         # Append loss to list
         self.loss.append(loss.item())
+        # If `bootstrap_rounds` less than 2, run optimizer step immediately.
         if self.bootstrap_rounds < 2:
             self._async_gradients()
             # Take optimizer step.
@@ -176,36 +156,24 @@ class A3C(A2C):
                     norm_type=self.grad_norm_p,
                 )
         else:
-            self._grad_accumulator.append(
-                {
-                    k: param.grad.detach().clone()
-                    for k, param in self.policy_model.named_parameters()
-                },
-            )
+            self._grad_accumulator.accumulate(self.policy_model.named_parameters())
         self._clear()
 
-    def _train_models(self) -> None:
+    def _optimizer_step_on_accumulated_grads(self) -> None:
         """
         Protected method to policy model if boostrap_rounds > 1. In such cases the gradients are accumulated in
         grad_accumulator. This method collects the accumulated gradients and performs mean reduction and runs
         optimizer step.
         """
-        policy_model_grads = self._grad_accumulator
-        # OrderedDict to store reduced average value.
-        policy_model_grads_reduced = OrderedDict()
         self.optimizer.zero_grad()
         # No Grad mode to disable PyTorch Operation tracking.
         with pytorch.no_grad():
-            # Perform parameter wise summation.
-            for key in self._policy_model_parameter_keys:
-                for policy_model_grad in policy_model_grads:
-                    if key not in policy_model_grads_reduced.keys():
-                        policy_model_grads_reduced[key] = policy_model_grad[key]
-                        continue
-                    policy_model_grads_reduced[key] += policy_model_grad[key]
             # Assign average parameters to model.
+            reduced_parameters = dict(self._grad_accumulator.mean_reduce())
             for key, param in self.policy_model.named_parameters():
-                param.grad = policy_model_grads_reduced[key] / self.bootstrap_rounds
+                param.grad = reduced_parameters[key] / self.bootstrap_rounds
+        # Synchronize gradients across different processes.
+        self._async_gradients()
         # Clip gradients if requested.
         if self.max_grad_norm is not None:
             pytorch.nn.utils.clip_grad_norm_(
@@ -213,8 +181,6 @@ class A3C(A2C):
                 max_norm=self.max_grad_norm,
                 norm_type=self.grad_norm_p,
             )
-        # Synchronize gradients across different processes.
-        self._async_gradients()
         # Take an optimizer step.
         self.optimizer.step()
         # Take an LR Scheduler step if required.
