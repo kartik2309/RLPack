@@ -17,7 +17,7 @@ var group__memory__group =
         [ "transitionInformationReference_", "struct_c___memory_1_1_c___memory_data.html#ae53ff5844a1b4adf2fb581688e38f2af", null ]
       ] ],
       [ "C_Memory", "class_c___memory.html#aa61cbd7b347eb934d96e7bb17cd33bcc", null ],
-      [ "C_Memory", "class_c___memory.html#aa2782981a76446c3a257a85bd5d047d8", null ],
+      [ "C_Memory", "class_c___memory.html#a08b4b4dbdb19e74ff380a2063c11994c", null ],
       [ "~C_Memory", "class_c___memory.html#a417f0d672c3ab5da5f064fecc3b47e67", null ],
       [ "clear", "class_c___memory.html#a78aa519d41cec4c6a1c0a9c476976160", null ],
       [ "compute_important_sampling_weights", "class_c___memory.html#a7fe7f0858461b4961598f005d91dac10", null ],
@@ -42,7 +42,6 @@ var group__memory__group =
       [ "dones_", "class_c___memory.html#aed1b6d5e37187033b423023e040bb5b0", null ],
       [ "loadedIndices_", "class_c___memory.html#ad864a40496b978b2d3c3b58e4cac7b9f", null ],
       [ "loadedIndicesSlice_", "class_c___memory.html#a0365b62476ffac2394a864fe18288b12", null ],
-      [ "loadedIndicesSliceToShuffle_", "class_c___memory.html#ace314b1dd6f3b46bffb2f617e4468d94", null ],
       [ "offloadFloat_", "class_c___memory.html#a1d37404f1f42af493a8fc954bf5a8666", null ],
       [ "offloadInt64_", "class_c___memory.html#a1383ecc4581b08ec90ccb0f50d8059a1", null ],
       [ "priorities_", "class_c___memory.html#a08d84a3f835aa96220b5c306faca0f2c", null ],

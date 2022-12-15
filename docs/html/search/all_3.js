@@ -6,7 +6,7 @@ var searchData=
   ['c_5fgradaccumulator_2eh_3',['C_GradAccumulator.h',['../_c___grad_accumulator_8h.html',1,'']]],
   ['c_5fmemory_4',['C_Memory',['../class_c___memory.html',1,'']]],
   ['c_5fmemory_5',['c_memory',['../classrlpack_1_1___c_1_1memory_1_1_memory.html#ae0f415e9920c3628e9bb5d6ffd0673ab',1,'rlpack::_C::memory::Memory']]],
-  ['c_5fmemory_6',['C_Memory',['../class_c___memory.html#aa61cbd7b347eb934d96e7bb17cd33bcc',1,'C_Memory::C_Memory()'],['../class_c___memory.html#aa2782981a76446c3a257a85bd5d047d8',1,'C_Memory::C_Memory(const int64_t bufferSize, const std::string &amp;device, const int32_t &amp;prioritizationStrategyCode, const int32_t &amp;batchSize)']]],
+  ['c_5fmemory_6',['C_Memory',['../class_c___memory.html#aa61cbd7b347eb934d96e7bb17cd33bcc',1,'C_Memory::C_Memory()'],['../class_c___memory.html#a08b4b4dbdb19e74ff380a2063c11994c',1,'C_Memory::C_Memory(int64_t bufferSize, const std::string &amp;device, const int32_t &amp;prioritizationStrategyCode, const int32_t &amp;batchSize)']]],
   ['c_5fmemory_2ecu_7',['C_Memory.cu',['../_c___memory_8cu.html',1,'']]],
   ['c_5fmemory_2ecuh_8',['C_Memory.cuh',['../_c___memory_8cuh.html',1,'']]],
   ['c_5fmemorydata_9',['C_MemoryData',['../struct_c___memory_1_1_c___memory_data.html',1,'C_Memory::C_MemoryData'],['../struct_c___memory_1_1_c___memory_data.html#aec3f0fc0ed4526c891069eaf7c74c878',1,'C_Memory::C_MemoryData::C_MemoryData()']]],

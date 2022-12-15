@@ -1,5 +1,10 @@
 var NAVTREEINDEX1 =
 {
+"classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a8599ea966ed65fd8cb9a1731b0b8cee6":[2,0,0,2,1,0,30],
+"classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a8983773caff8991f5a1429d44fbdd974":[2,0,0,2,1,0,38],
+"classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a91c03751ec814405b70c28affd48e3cd":[2,0,0,2,1,0,7],
+"classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a9855b6ae475270ab00627e7f9669adc2":[2,0,0,2,1,0,36],
+"classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a9c056ee02e4cd1b61448680a11b88e5d":[2,0,0,2,1,0,0],
 "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a9e82951d76c6c5db30d23c13d5286981":[2,0,0,2,1,0,41],
 "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a9ed207f175d082efc510ccd9ada18fc5":[2,0,0,2,1,0,14],
 "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#aa24c4cde1b3c86793aa0c163975f7e46":[2,0,0,2,1,0,23],

@@ -131,8 +131,8 @@ Data Structures</h2></td></tr>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aa61cbd7b347eb934d96e7bb17cd33bcc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___memory.html#aa61cbd7b347eb934d96e7bb17cd33bcc">C_Memory</a> ()</td></tr>
 <tr class="separator:aa61cbd7b347eb934d96e7bb17cd33bcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2782981a76446c3a257a85bd5d047d8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___memory.html#aa2782981a76446c3a257a85bd5d047d8">C_Memory</a> (const int64_t bufferSize, const std::string &amp;device, const int32_t &amp;prioritizationStrategyCode, const int32_t &amp;batchSize)</td></tr>
-<tr class="separator:aa2782981a76446c3a257a85bd5d047d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08b4b4dbdb19e74ff380a2063c11994c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___memory.html#a08b4b4dbdb19e74ff380a2063c11994c">C_Memory</a> (int64_t bufferSize, const std::string &amp;device, const int32_t &amp;prioritizationStrategyCode, const int32_t &amp;batchSize)</td></tr>
+<tr class="separator:a08b4b4dbdb19e74ff380a2063c11994c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a78aa519d41cec4c6a1c0a9c476976160"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___memory.html#a78aa519d41cec4c6a1c0a9c476976160">clear</a> ()</td></tr>
 <tr class="separator:a78aa519d41cec4c6a1c0a9c476976160"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ab987ad09d8c0338760aff72b8a05b3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___memory.html#a1ab987ad09d8c0338760aff72b8a05b3">delete_item</a> (int64_t index)</td></tr>
@@ -199,9 +199,6 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a0365b62476ffac2394a864fe18288b12"><td class="memItemLeft" align="right" valign="top">std::vector&lt; int64_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___memory.html#a0365b62476ffac2394a864fe18288b12">loadedIndicesSlice_</a></td></tr>
 <tr class="memdesc:a0365b62476ffac2394a864fe18288b12"><td class="mdescLeft">&#160;</td><td class="mdescRight">The loaded indices slice; the slice of indices that is sampled during sampling process. In each sampling size its size is equal to <a class="el" href="class_c___memory.html#a4da68ccd2f5497c7d289f75bd670aee9" title="The batch size that is set during class initialisation. Number of samples equivalent to this are sele...">C_Memory::batchSize_</a>.  <a href="class_c___memory.html#a0365b62476ffac2394a864fe18288b12">More...</a><br /></td></tr>
 <tr class="separator:a0365b62476ffac2394a864fe18288b12"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ace314b1dd6f3b46bffb2f617e4468d94"><td class="memItemLeft" align="right" valign="top">std::vector&lt; int64_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___memory.html#ace314b1dd6f3b46bffb2f617e4468d94">loadedIndicesSliceToShuffle_</a></td></tr>
-<tr class="memdesc:ace314b1dd6f3b46bffb2f617e4468d94"><td class="mdescLeft">&#160;</td><td class="mdescRight">The temporary buffer of loaded indices slice which is to be shuffled further before populating <a class="el" href="class_c___memory.html#a0365b62476ffac2394a864fe18288b12" title="The loaded indices slice; the slice of indices that is sampled during sampling process....">C_Memory::loadedIndicesSlice_</a>.  <a href="class_c___memory.html#ace314b1dd6f3b46bffb2f617e4468d94">More...</a><br /></td></tr>
-<tr class="separator:ace314b1dd6f3b46bffb2f617e4468d94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d37404f1f42af493a8fc954bf5a8666"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_offload.html">Offload</a>&lt; float_t &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___memory.html#a1d37404f1f42af493a8fc954bf5a8666">offloadFloat_</a></td></tr>
 <tr class="memdesc:a1d37404f1f42af493a8fc954bf5a8666"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_offload.html" title="Template Offload class for CPU with CPU optimized OpenMP routines.">Offload</a> class initialised with float template.  <a href="class_c___memory.html#a1d37404f1f42af493a8fc954bf5a8666">More...</a><br /></td></tr>
 <tr class="separator:a1d37404f1f42af493a8fc954bf5a8666"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -300,8 +297,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aa2782981a76446c3a257a85bd5d047d8" name="aa2782981a76446c3a257a85bd5d047d8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa2782981a76446c3a257a85bd5d047d8">&#9670;&#160;</a></span>C_Memory() <span class="overload">[2/2]</span></h2>
+<a id="a08b4b4dbdb19e74ff380a2063c11994c" name="a08b4b4dbdb19e74ff380a2063c11994c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a08b4b4dbdb19e74ff380a2063c11994c">&#9670;&#160;</a></span>C_Memory() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -312,7 +309,7 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="memname">C_Memory::C_Memory </td>
           <td>(</td>
-          <td class="paramtype">const int64_t&#160;</td>
+          <td class="paramtype">int64_t&#160;</td>
           <td class="paramname"><em>bufferSize</em>, </td>
         </tr>
         <tr>
@@ -1145,30 +1142,6 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The loaded indices slice; the slice of indices that is sampled during sampling process. In each sampling size its size is equal to <a class="el" href="class_c___memory.html#a4da68ccd2f5497c7d289f75bd670aee9" title="The batch size that is set during class initialisation. Number of samples equivalent to this are sele...">C_Memory::batchSize_</a>. </p>
-
-</div>
-</div>
-<a id="ace314b1dd6f3b46bffb2f617e4468d94" name="ace314b1dd6f3b46bffb2f617e4468d94"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ace314b1dd6f3b46bffb2f617e4468d94">&#9670;&#160;</a></span>loadedIndicesSliceToShuffle_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;int64_t&gt; C_Memory::loadedIndicesSliceToShuffle_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>The temporary buffer of loaded indices slice which is to be shuffled further before populating <a class="el" href="class_c___memory.html#a0365b62476ffac2394a864fe18288b12" title="The loaded indices slice; the slice of indices that is sampled during sampling process....">C_Memory::loadedIndicesSlice_</a>. </p>
 
 </div>
 </div>

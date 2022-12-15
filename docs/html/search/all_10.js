@@ -16,7 +16,7 @@ var searchData=
   ['seedvalues_5f_13',['seedValues_',['../class_c___memory.html#aa7e164df2616fb4ff0b76ae02c1badfe',1,'C_Memory']]],
   ['segmentquantileindices_5f_14',['segmentQuantileIndices_',['../class_c___memory.html#ad4c201bd0eb4ea1d4166b32868237bed',1,'C_Memory']]],
   ['sequence_5flength_15',['sequence_length',['../classrlpack_1_1models_1_1__mlp__feature__extractor_1_1___mlp_feature_extractor.html#ad9095997e72046a351a84b13ae45d26c',1,'rlpack::models::_mlp_feature_extractor::_MlpFeatureExtractor']]],
-  ['set_5fitem_16',['set_item',['../class_c___memory.html#ae6c3fd947f4bb65ebfd6c5a1a566c21e',1,'C_Memory']]],
+  ['set_5fitem_16',['set_item',['../class_c___grad_accumulator.html#a7070e708ec92450b0edb3c6ef6b61fff',1,'C_GradAccumulator::set_item()'],['../class_c___memory.html#ae6c3fd947f4bb65ebfd6c5a1a566c21e',1,'C_Memory::set_item()']]],
   ['set_5fleaf_5fstatus_17',['set_leaf_status',['../class_sum_tree_node.html#a55ae0dda8dd1a862c16a0728e3a2afe4',1,'SumTreeNode']]],
   ['set_5fleft_5fnode_18',['set_left_node',['../class_sum_tree_node.html#a00a1b789b189658182e56cf026d76ff2',1,'SumTreeNode']]],
   ['set_5fparent_5fnode_19',['set_parent_node',['../class_sum_tree_node.html#afe18add2d4b833b11cdb1345d9359354',1,'SumTreeNode']]],
