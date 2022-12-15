@@ -309,10 +309,10 @@ Static Private Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:af21943ec874f47fba4ea44ade7f02a5f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af21943ec874f47fba4ea44ade7f02a5f">_grad_accumulator</a></td></tr>
-<tr class="memdesc:af21943ec874f47fba4ea44ade7f02a5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html" title="This class provides the python interface to C_GradAccumulator, the C++ class which performs heavier w...">rlpack._C.grad_accumulator.GradAccumulator</a> object for grad accumulation.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af21943ec874f47fba4ea44ade7f02a5f">More...</a><br /></td></tr>
+<tr class="memdesc:af21943ec874f47fba4ea44ade7f02a5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The list of gradients from each backward call.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af21943ec874f47fba4ea44ade7f02a5f">More...</a><br /></td></tr>
 <tr class="separator:af21943ec874f47fba4ea44ade7f02a5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a297c096e4155c3ac4815f7ce95ca6767"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a297c096e4155c3ac4815f7ce95ca6767">_normalization</a></td></tr>
-<tr class="memdesc:a297c096e4155c3ac4815f7ce95ca6767"><td class="mdescLeft">&#160;</td><td class="mdescRight">The list of gradients from each backward call.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a297c096e4155c3ac4815f7ce95ca6767">More...</a><br /></td></tr>
+<tr class="memdesc:a297c096e4155c3ac4815f7ce95ca6767"><td class="mdescLeft">&#160;</td><td class="mdescRight">The normalisation tool to be used for agent.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a297c096e4155c3ac4815f7ce95ca6767">More...</a><br /></td></tr>
 <tr class="separator:a297c096e4155c3ac4815f7ce95ca6767"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -1033,7 +1033,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>The <a class="el" href="classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html" title="This class provides the python interface to C_GradAccumulator, the C++ class which performs heavier w...">rlpack._C.grad_accumulator.GradAccumulator</a> object for grad accumulation. </p>
+<p>The list of gradients from each backward call. </p>
+<p >This is only used when boostrap_rounds &gt; 1 and is cleared after each boostrap round. The <a class="el" href="classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html" title="This class provides the python interface to C_GradAccumulator, the C++ class which performs heavier w...">rlpack._C.grad_accumulator.GradAccumulator</a> object for grad accumulation. </p>
 
 </div>
 </div>
@@ -1057,8 +1058,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>The list of gradients from each backward call. </p>
-<p >This is only used when boostrap_rounds &gt; 1 and is cleared after each boostrap round. self._grad_accumulator = list() The normalisation tool to be used for agent. An instance of <a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html" title="Normalization class providing methods for normalization techniques.">rlpack.utils.normalization.Normalization</a>. </p>
+<p>The normalisation tool to be used for agent. </p>
+<p >An instance of <a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html" title="Normalization class providing methods for normalization techniques.">rlpack.utils.normalization.Normalization</a>. </p>
 
 </div>
 </div>
