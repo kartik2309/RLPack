@@ -5,6 +5,7 @@
 
 A2C implements the synchronous Actor-Critic agent which supports gradient accumulation and mean reduction 
 of gradients for training the model. Unlike A3C, only a single agent interacts with environment and mean reduced 
-gradients are synchronously used to train the policy model.
+gradients are synchronously used to train the policy model. For more
+information refer [here](https://arxiv.org/abs/1602.01783)
 
 <h4> Keyword: <kbd> Keyword: `agent_name: "a2c"` </kbd> </h4>
