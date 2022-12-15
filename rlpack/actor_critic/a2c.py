@@ -174,18 +174,17 @@ class A2C(Agent):
         self.rewards = list()
         ## The list of entropies from each timestep. This is cleared after each episode. @I{# noqa: E266}
         self.entropies = list()
+        # Parameter keys of the model.
+        keys = list(dict(self.policy_model.named_parameters()).keys())
         ## The list of gradients from each backward call. @I{# noqa: E266}
         ## This is only used when boostrap_rounds > 1 and is cleared after each boostrap round. @I{# noqa: E266}
-        # self._grad_accumulator = list()
+        ## The rlpack._C.grad_accumulator.GradAccumulator object for grad accumulation. @I{# noqa: E266}
+        self._grad_accumulator = GradAccumulator(keys, bootstrap_rounds)
         ## The normalisation tool to be used for agent. @I{# noqa: E266}
         ## An instance of rlpack.utils.normalization.Normalization. @I{# noqa: E266}
         self._normalization = Normalization(
             apply_norm=apply_norm, eps=eps_for_norm, p=p_for_norm, dim=dim_for_norm
         )
-
-        keys = list(dict(self.policy_model.named_parameters()).keys())
-        ## The rlpack._C.grad_accumulator.GradAccumulator object for grad accumulation. @I{# noqa: E266}
-        self._grad_accumulator = GradAccumulator(keys, bootstrap_rounds)
 
     def train(
         self,
