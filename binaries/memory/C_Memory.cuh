@@ -89,10 +89,10 @@ public:
     //! Shared Pointer to C_Memory::C_MemoryData.
     std::shared_ptr<C_MemoryData> cMemoryData;
 
-    explicit C_Memory(const pybind11::int_ &bufferSize,
-                      const pybind11::str &device,
-                      const pybind11::int_ &prioritizationStrategyCode,
-                      const pybind11::int_ &batchSize);
+    explicit C_Memory(const int64_t bufferSize,
+                      const std::string &device,
+                      const int32_t &prioritizationStrategyCode,
+                      const int32_t &batchSize);
     ~C_Memory();
 
     void insert(torch::Tensor &stateCurrent,

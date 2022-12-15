@@ -15,6 +15,7 @@ import numpy as np
 from torch.distributions import Categorical
 
 from rlpack import pytorch
+from rlpack._C.grad_accumulator import GradAccumulator
 from rlpack.utils import LossFunction, LRScheduler
 from rlpack.utils.base.agent import Agent
 from rlpack.utils.internal_code_setup import InternalCodeSetup
@@ -166,16 +167,18 @@ class A2C(Agent):
         self.entropies = list()
         ## The list of gradients from each backward call. @I{# noqa: E266}
         ## This is only used when boostrap_rounds > 1 and is cleared after each boostrap round. @I{# noqa: E266}
-        self._grad_accumulator = list()
+        # self._grad_accumulator = list()
         ## The normalisation tool to be used for agent. @I{# noqa: E266}
         ## An instance of rlpack.utils.normalization.Normalization. @I{# noqa: E266}
         self._normalization = Normalization(
             apply_norm=apply_norm, eps=eps_for_norm, p=p_for_norm, dim=dim_for_norm
         )
         ## The policy model parameters names. @I{# noqa: E266}
-        self._policy_model_parameter_keys = OrderedDict(
-            self.policy_model.named_parameters()
-        ).keys()
+        # self._policy_model_parameter_keys = OrderedDict(
+        #     self.policy_model.named_parameters()
+        # ).keys()
+        keys = list(dict(self.policy_model.named_parameters()).keys())
+        self._grad_accumulator = GradAccumulator(keys, bootstrap_rounds)
 
     def train(
         self,
@@ -395,12 +398,7 @@ class A2C(Agent):
                     norm_type=self.grad_norm_p,
                 )
         else:
-            self._grad_accumulator.append(
-                {
-                    k: param.grad.detach().clone()
-                    for k, param in self.policy_model.named_parameters()
-                },
-            )
+            self._grad_accumulator.accumulate(self.policy_model.named_parameters())
         self._clear()
 
     def _train_models(self) -> None:
@@ -409,23 +407,15 @@ class A2C(Agent):
         grad_accumulator. This method collects the accumulated gradients and performs mean reduction and runs
         optimizer step.
         """
-        policy_model_grads = self._grad_accumulator
-        # OrderedDict to store reduced average value.
-        policy_model_grads_reduced = OrderedDict()
         self.optimizer.zero_grad()
         # No Grad mode to disable PyTorch Operation tracking.
         with pytorch.no_grad():
-            # Perform parameter wise summation.
-            for key in self._policy_model_parameter_keys:
-                for policy_model_grad in policy_model_grads:
-                    if key not in policy_model_grads_reduced.keys():
-                        policy_model_grads_reduced[key] = policy_model_grad[key]
-                        continue
-                    policy_model_grads_reduced[key] += policy_model_grad[key]
             # Assign average parameters to model.
+            reduced_parameters = dict(self._grad_accumulator.mean_reduce())
             for key, param in self.policy_model.named_parameters():
-                param.grad = policy_model_grads_reduced[key] / self.bootstrap_rounds
-                # Clip gradients if requested.
+                param.grad = reduced_parameters[key] / self.bootstrap_rounds
+
+        # Clip gradients if requested.
         if self.max_grad_norm is not None:
             pytorch.nn.utils.clip_grad_norm_(
                 self.policy_model.parameters(),
