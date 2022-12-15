@@ -62,9 +62,7 @@ class SimulatorDistributed:
         """
         if "distributed_mode" in kwargs.keys():
             kwargs.pop("distributed_mode")
-        logging.info(
-            f"Launched process: {process_rank} out of {world_size} processes.\n"
-        )
+        logging.info(f"Launched process: {process_rank} out of {world_size} processes.")
         if "WORLD_SIZE" not in os.environ.keys():
             os.environ["WORLD_SIZE"] = f"{world_size}"
         if "RANK" not in os.environ.keys():

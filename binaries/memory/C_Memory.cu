@@ -120,10 +120,10 @@ void C_Memory::C_MemoryData::set_priorities_reference(
     prioritiesFloatReference_ = prioritiesFloatReference;
 }
 
-C_Memory::C_Memory(const pybind11::int_ &bufferSize,
-                   const pybind11::str &device,
-                   const pybind11::int_ &prioritizationStrategyCode,
-                   const pybind11::int_ &batchSize) {
+C_Memory::C_Memory(int64_t bufferSize,
+                   const std::string &device,
+                   const int32_t &prioritizationStrategyCode,
+                   const int32_t &batchSize) {
     /*!
      * The class constructor for C_Memory. This constructor initialised the C_Memory class and allocates the
      * required memory as per input arguments. This initialises the rlpack._C.memory.Memory.c_memory and is
@@ -136,10 +136,10 @@ C_Memory::C_Memory(const pybind11::int_ &bufferSize,
      * @param batchSize : The batch size to be used for sampling.
      *
      */
-    bufferSize_ = bufferSize.cast<int64_t>();
-    device_ = deviceMap_[device.cast<std::string>()];
-    prioritizationStrategyCode_ = prioritizationStrategyCode.cast<int32_t>();
-    batchSize_ = batchSize.cast<int32_t>();
+    bufferSize_ = bufferSize;
+    device_ = deviceMap_[device];
+    prioritizationStrategyCode_ = prioritizationStrategyCode;
+    batchSize_ = batchSize;
     cMemoryData = std::make_shared<C_MemoryData>();
     auto statesCurrentRawPointer = &statesCurrent_;
     auto statesNextRawPointer = &statesNext_;
@@ -166,10 +166,8 @@ C_Memory::C_Memory(const pybind11::int_ &bufferSize,
     switch (prioritizationStrategyCode_) {
         case 1:
             sumTreeSharedPtr_ = std::make_shared<SumTree>(bufferSize_);
-            loadedIndicesSliceToShuffle_ = std::vector<int64_t>(batchSize_);
             break;
         case 2:
-            loadedIndicesSliceToShuffle_ = std::vector<int64_t>(batchSize_);
             segmentQuantileIndices_ = std::vector<int64_t>(batchSize_);
             break;
         default:
@@ -219,10 +217,8 @@ C_Memory::C_Memory() {
     switch (prioritizationStrategyCode_) {
         case 1:
             sumTreeSharedPtr_ = std::make_shared<SumTree>(bufferSize_);
-            loadedIndicesSliceToShuffle_ = std::vector<int64_t>(batchSize_);
             break;
         case 2:
-            loadedIndicesSliceToShuffle_ = std::vector<int64_t>(batchSize_);
             segmentQuantileIndices_ = std::vector<int64_t>(batchSize_);
             break;
         default:

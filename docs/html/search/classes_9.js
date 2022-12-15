@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['register_0',['Register',['../classrlpack_1_1utils_1_1base_1_1register_1_1_register.html',1,'rlpack::utils::base::register']]]
+  ['offload_0',['Offload',['../class_offload.html',1,'']]],
+  ['offload_3c_20float_5ft_20_3e_1',['Offload&lt; float_t &gt;',['../class_offload.html',1,'']]],
+  ['offload_3c_20int64_5ft_20_3e_2',['Offload&lt; int64_t &gt;',['../class_offload.html',1,'']]]
 ];

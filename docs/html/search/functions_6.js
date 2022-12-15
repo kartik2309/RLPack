@@ -10,7 +10,7 @@ var searchData=
   ['get_5fcumulative_5fsum_7',['get_cumulative_sum',['../class_sum_tree.html#a686d99994ab0e167c6b7c32e689a5320',1,'SumTree']]],
   ['get_5fdones_8',['get_dones',['../classrlpack_1_1___c_1_1memory_1_1_memory.html#a3f112e1289b882ef9739ca89a1a51838',1,'rlpack::_C::memory::Memory']]],
   ['get_5findex_9',['get_index',['../class_sum_tree_node.html#a5242f91a838489c342ab366a1d1be52a',1,'SumTreeNode']]],
-  ['get_5fitem_10',['get_item',['../class_c___memory.html#a508c3ccda0323ba3e909e14dcbe2a15a',1,'C_Memory']]],
+  ['get_5fitem_10',['get_item',['../class_c___grad_accumulator.html#a6ef3c23ae821e3a53c2d0ec09eb1e939',1,'C_GradAccumulator::get_item()'],['../class_c___memory.html#a508c3ccda0323ba3e909e14dcbe2a15a',1,'C_Memory::get_item()']]],
   ['get_5fleft_5fnode_11',['get_left_node',['../class_sum_tree_node.html#a831ec890c605689123d39fde1f5a87f6',1,'SumTreeNode']]],
   ['get_5floss_5ffunction_12',['get_loss_function',['../classrlpack_1_1utils_1_1setup_1_1_setup.html#a7e793e9b2999ea425f7ee23c1dad55ef',1,'rlpack::utils::setup::Setup']]],
   ['get_5flr_5fscheduler_13',['get_lr_scheduler',['../classrlpack_1_1utils_1_1setup_1_1_setup.html#a65060ea2070c75549de779f8b7c68123',1,'rlpack::utils::setup::Setup']]],

@@ -24,7 +24,7 @@ PYBIND11_MODULE(C_Memory, m) {
      */
     m.doc() = "Module to provide Python binding for C_Memory class";
     pybind11::class_<C_Memory>(m, "C_Memory")
-            .def(pybind11::init<pybind11::int_ &, pybind11::str &, pybind11::int_ &, pybind11::int_ &>(),
+            .def(pybind11::init<int64_t, std::string &, int32_t, int32_t>(),
                  "Class constructor for C_Memory",
                  pybind11::arg("buffer_size"),
                  pybind11::arg("device"),
@@ -196,7 +196,7 @@ PYBIND11_MODULE(C_Memory, m) {
                  for (auto &pair : init) {
                    mapOfTensors[pair.first.cast<std::string>()] = pair.second.cast<torch::Tensor>();
                  }
-                 return mapOfTensors; }), "Pickle method for C_MemoryData.", pybind11::return_value_policy::reference);
+                 return mapOfTensors; }), "Pickle method for MapOfTensors.", pybind11::return_value_policy::reference);
     /*
      * Binding the opaque object std::map<std::string, std::deque<torch::Tensor>> to Python.
      * This will be exposed as C_MemoryDataMap to Python.
@@ -282,7 +282,7 @@ PYBIND11_MODULE(C_Memory, m) {
               mapOfDequeOfInt64[pair.first.cast<std::string>()] = pair.second.cast<std::deque<int64_t>>();
             }
             return mapOfDequeOfInt64; }), pybind11::return_value_policy::reference);
-};
+}
 /*!
  * @} @I{ // End group Memory }
  * @} @I{ // End group Binaries }

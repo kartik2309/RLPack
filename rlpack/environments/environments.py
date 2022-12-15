@@ -98,7 +98,7 @@ class Environments:
             - 1: Log model level losses.
             - 2: Log Agent specific values.
         """
-        assert -2 <= verbose <= 2, "Argument `verbose` must be in range [-1, 2]."
+        assert -1 <= verbose <= 2, "Argument `verbose` must be in range [-1, 2]."
         if not self.is_train():
             logging.info("Currently operating in Evaluation Mode")
             return
@@ -143,7 +143,16 @@ class Environments:
                 )
             rewards.append(scores)
             if ep % self.config["reward_logging_frequency"] == 0:
-                reward_log_message = "~" * 60
+                head_message = "~" * 60
+                if not distributed_mode:
+                    closing_message = f"\n{'~' * len(head_message)}"
+                else:
+                    length = int(len(head_message) / 2)
+                    closing_message = (
+                        f"\n{'~' * length} Process {dist.get_rank()} {'~' * length}"
+                    )
+                logging.info(closing_message)
+                log.append(f"{closing_message}\n")
                 # Log Mean Reward in the episode cycle
                 if verbose <= 0:
                     mean_reward = self._list_mean(rewards)
@@ -201,15 +210,6 @@ class Environments:
                                     log_beta_message = f"{log_beta_message} from process {dist.get_rank()}"
                                 logging.info(log_beta_message)
                                 log.append(f"{log_beta_message}\n")
-                    if not distributed_mode:
-                        closing_message = f"{'~' * len(reward_log_message)}\n"
-                    else:
-                        length = int(len(reward_log_message) / 2)
-                        closing_message = (
-                            f"{'~' * length} Process {dist.get_rank()} {'~' * length}\n"
-                        )
-                    logging.info(closing_message)
-                    log.append(f"{closing_message}\n")
                     if not distributed_mode:
                         self._write_log_file(log)
                     else:

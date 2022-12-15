@@ -13,7 +13,7 @@ var searchData=
   ['get_5fcumulative_5fsum_10',['get_cumulative_sum',['../class_sum_tree.html#a686d99994ab0e167c6b7c32e689a5320',1,'SumTree']]],
   ['get_5fdones_11',['get_dones',['../classrlpack_1_1___c_1_1memory_1_1_memory.html#a3f112e1289b882ef9739ca89a1a51838',1,'rlpack::_C::memory::Memory']]],
   ['get_5findex_12',['get_index',['../class_sum_tree_node.html#a5242f91a838489c342ab366a1d1be52a',1,'SumTreeNode']]],
-  ['get_5fitem_13',['get_item',['../class_c___memory.html#a508c3ccda0323ba3e909e14dcbe2a15a',1,'C_Memory']]],
+  ['get_5fitem_13',['get_item',['../class_c___grad_accumulator.html#a6ef3c23ae821e3a53c2d0ec09eb1e939',1,'C_GradAccumulator::get_item()'],['../class_c___memory.html#a508c3ccda0323ba3e909e14dcbe2a15a',1,'C_Memory::get_item()']]],
   ['get_5fleft_5fnode_14',['get_left_node',['../class_sum_tree_node.html#a831ec890c605689123d39fde1f5a87f6',1,'SumTreeNode']]],
   ['get_5floss_5ffunction_15',['get_loss_function',['../classrlpack_1_1utils_1_1setup_1_1_setup.html#a7e793e9b2999ea425f7ee23c1dad55ef',1,'rlpack::utils::setup::Setup']]],
   ['get_5flr_5fscheduler_16',['get_lr_scheduler',['../classrlpack_1_1utils_1_1setup_1_1_setup.html#a65060ea2070c75549de779f8b7c68123',1,'rlpack::utils::setup::Setup']]],
@@ -35,5 +35,8 @@ var searchData=
   ['get_5ftree_5findex_32',['get_tree_index',['../class_sum_tree_node.html#a0531258ec3abd0519204c6187bbd5a99',1,'SumTreeNode']]],
   ['get_5ftree_5flevel_33',['get_tree_level',['../class_sum_tree_node.html#ad4439ac9482b8277f0ce497eb413318c',1,'SumTreeNode']]],
   ['get_5fvalue_34',['get_value',['../class_sum_tree_node.html#ad63a839702ce6e2c41fbb534300e9706',1,'SumTreeNode']]],
-  ['grad_5fnorm_5fp_35',['grad_norm_p',['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a3f1d962e32fb21e733c9161a3e5ec206',1,'rlpack.actor_critic.a2c.A2C.grad_norm_p()'],['../classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a1e27aba2fbce8d9ec056ae95fd97f1f1',1,'rlpack.dqn.dqn_agent.DqnAgent.grad_norm_p()']]]
+  ['grad_5faccumulator_35',['grad_accumulator',['../group__grad__accumulator__group.html',1,'']]],
+  ['grad_5faccumulator_2epy_36',['grad_accumulator.py',['../grad__accumulator_8py.html',1,'']]],
+  ['grad_5fnorm_5fp_37',['grad_norm_p',['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a3f1d962e32fb21e733c9161a3e5ec206',1,'rlpack.actor_critic.a2c.A2C.grad_norm_p()'],['../classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a1e27aba2fbce8d9ec056ae95fd97f1f1',1,'rlpack.dqn.dqn_agent.DqnAgent.grad_norm_p()']]],
+  ['gradaccumulator_38',['GradAccumulator',['../classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html',1,'rlpack::_C::grad_accumulator']]]
 ];

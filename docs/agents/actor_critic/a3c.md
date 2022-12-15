@@ -6,7 +6,8 @@
 A3C implements the asynchronous Actor-Critic agent which supports gradient accumulation and mean reduction
 of gradients for training the model similar to [A2C](@ref agents/actor_critic/a2c.md). Along with this A3C supports
 multiple actors which interact with the environment at the same time. Gradients of all actors' policy model are 
-asynchronously reduced and mean gradient is populated for each actor's policy model before optimizer step.
+asynchronously reduced and mean gradient is populated for each actor's policy model before optimizer step. For more 
+information refer [here](https://arxiv.org/abs/1602.01783)
 
 
 Note that to run simulation with A3C, make sure to use rlpack.simulator_distributed.SimulatorDistributed, as this will

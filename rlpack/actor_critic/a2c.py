@@ -6,15 +6,19 @@
 Currently following methods are implemented:
     - `A2C`: Implemented in rlpack.actor_critic.a2c.A2C. More details can be found
      [here](@ref agents/actor_critic/a2c.md)
+     - `A3C`: Implemented in rlpack.actor_critic.a3c.A3C. More details can be found
+     [here](@ref agents/actor_critic/a3c.md)
 """
+
+
 import os
-from collections import OrderedDict
 from typing import List, Optional, Union
 
 import numpy as np
 from torch.distributions import Categorical
 
 from rlpack import pytorch
+from rlpack._C.grad_accumulator import GradAccumulator
 from rlpack.utils import LossFunction, LRScheduler
 from rlpack.utils.base.agent import Agent
 from rlpack.utils.internal_code_setup import InternalCodeSetup
@@ -41,8 +45,8 @@ class A2C(Agent):
         save_path: str,
         bootstrap_rounds: int = 1,
         device: str = "cpu",
-        apply_norm: int = -1,
-        apply_norm_to: int = -1,
+        apply_norm: Union[int, str] = -1,
+        apply_norm_to: Union[int, List[str]] = -1,
         eps_for_norm: float = 5e-12,
         p_for_norm: int = 2,
         dim_for_norm: int = 0,
@@ -97,9 +101,9 @@ class A2C(Agent):
             - No Normalization: -1; (`["none"]`)
             - On States only: 0; (`["states"]`)
             - On Rewards only: 1; (`["rewards"]`)
-            - On TD value only: 2; (`["td"]`)
+            - On TD value only: 2; (`["advantage"]`)
             - On States and Rewards: 3; (`["states", "rewards"]`)
-            - On States and TD: 4; (`["states", "td"]`)
+            - On States and TD: 4; (`["states", "advantage"]`)
 
 
         If a valid `max_norm_grad` is passed, then gradient clipping takes place else gradient clipping step is
@@ -129,16 +133,22 @@ class A2C(Agent):
         self.backup_frequency = backup_frequency
         ## The input save path for backing up agent models. @I{# noqa: E266}
         self.save_path = save_path
+        # Check sanity of `bootstrap_rounds`
+        assert (
+            bootstrap_rounds > 0
+        ), "Argument `bootstrap_rounds` must be an integer between 0 and 1"
         ## The input boostrap rounds. @I{# noqa: E266}
         self.bootstrap_rounds = bootstrap_rounds
         ## The input `device` argument; indicating the device name. @I{# noqa: E266}
         self.device = device
         if isinstance(apply_norm, str):
             apply_norm = setup.get_apply_norm_mode_code(apply_norm)
+        setup.check_validity_of_apply_norm_code(apply_norm)
         ## The input `apply_norm` argument; indicating the normalisation to be used. @I{# noqa: E266}
         self.apply_norm = apply_norm
-        if isinstance(apply_norm_to, (str, list)):
+        if isinstance(apply_norm_to, list):
             apply_norm_to = setup.get_apply_norm_to_mode_code(apply_norm_to)
+        setup.check_validity_of_apply_norm_to_code(apply_norm_to)
         ## The input `apply_norm_to` argument; indicating the quantity to normalise. @I{# noqa: E266}
         self.apply_norm_to = apply_norm_to
         ## The input `eps_for_norm` argument; indicating epsilon to be used for normalisation. @I{# noqa: E266}
@@ -154,7 +164,7 @@ class A2C(Agent):
         ## The step counter; counting the total timesteps done so far. @I{# noqa: E266}
         self.step_counter = 0
         ## The episode counter; counting the total episodes done so far. @I{# noqa: E266}
-        self.episode_counter = 1
+        self.episode_counter = 0
         ## The list of sampled actions from each timestep from the action distribution. @I{# noqa: E266}
         ## This is cleared after each episode. @I{# noqa: E266}
         self.action_log_probabilities = list()
@@ -164,18 +174,17 @@ class A2C(Agent):
         self.rewards = list()
         ## The list of entropies from each timestep. This is cleared after each episode. @I{# noqa: E266}
         self.entropies = list()
+        # Parameter keys of the model.
+        keys = list(dict(self.policy_model.named_parameters()).keys())
         ## The list of gradients from each backward call. @I{# noqa: E266}
         ## This is only used when boostrap_rounds > 1 and is cleared after each boostrap round. @I{# noqa: E266}
-        self._grad_accumulator = list()
+        ## The rlpack._C.grad_accumulator.GradAccumulator object for grad accumulation. @I{# noqa: E266}
+        self._grad_accumulator = GradAccumulator(keys, bootstrap_rounds)
         ## The normalisation tool to be used for agent. @I{# noqa: E266}
         ## An instance of rlpack.utils.normalization.Normalization. @I{# noqa: E266}
         self._normalization = Normalization(
             apply_norm=apply_norm, eps=eps_for_norm, p=p_for_norm, dim=dim_for_norm
         )
-        ## The policy model parameters names. @I{# noqa: E266}
-        self._policy_model_parameter_keys = OrderedDict(
-            self.policy_model.named_parameters()
-        ).keys()
 
     def train(
         self,
@@ -193,8 +202,6 @@ class A2C(Agent):
         @return int: The action to be taken
         """
         self.policy_model.eval()
-        # Increment `step_counter` and use policy model to get next action.
-        self.step_counter += 1
         # Cast `state_current` to tensor.
         state_current = self._cast_to_tensor(state_current).to(self.device)
         actions_logits, state_current_value = self.policy_model(state_current)
@@ -209,6 +216,8 @@ class A2C(Agent):
         self._call_train_policy_model(done)
         # Backup model every `backup_frequency` steps.
         self._call_to_save()
+        # Increment `step_counter` and use policy model to get next action.
+        self.step_counter += 1
         return action.item()
 
     @pytorch.no_grad()
@@ -309,7 +318,10 @@ class A2C(Agent):
         return
 
     def _call_to_save(self) -> None:
-        if self.step_counter % self.backup_frequency == 0:
+        """
+        Method calling the save method when required. This method is to be overriden by asynchronous methods.
+        """
+        if (self.step_counter + 1) % self.backup_frequency == 0:
             self.save()
         return
 
@@ -320,29 +332,28 @@ class A2C(Agent):
         """
         if isinstance(done, bool):
             if done:
-                self._accumulate_gradients()
+                loss = self._compute_loss()
+                self._run_by_bootstrap_rounds(loss)
                 self.episode_counter += 1
         elif isinstance(done, int) and done == 1:
             if done == 1:
-                self._accumulate_gradients()
+                loss = self._compute_loss()
+                self._run_by_bootstrap_rounds(loss)
                 self.episode_counter += 1
         else:
             raise TypeError(
                 f"Expected `done` argument to be of type {bool} or {int} but received {type(done)}!"
             )
-        if (
-            self.episode_counter % (self.bootstrap_rounds + 1) == 0
-            and self.bootstrap_rounds > 1
-        ):
-            self._train_models()
+        if (self.episode_counter + 1) % (
+            self.bootstrap_rounds + 1
+        ) == 0 and self.bootstrap_rounds > 1:
+            self._optimizer_step_on_accumulated_grads()
             self.episode_counter += 1
 
-    def _accumulate_gradients(self) -> None:
+    def _compute_loss(self) -> pytorch.Tensor:
         """
-        Protected void method to train the model or accumulate the gradients for training.
-        - If bootstrap_rounds is passed as 1 (default), model is trained each time the method is called.
-        - If bootstrap_rounds > 1, the gradients are accumulated in grad_accumulator and model is trained via
-            _train_models method.
+        Method to compute total loss (from actor and critic).
+        @return pytorch.Tensor: The loss tensor.
         """
         self.policy_model.train()
         returns = self._compute_returns()
@@ -378,12 +389,23 @@ class A2C(Agent):
         policy_loss = policy_losses.mean()
         # Compute final loss
         loss = policy_loss + value_loss
+        return loss
+
+    def _run_by_bootstrap_rounds(self, loss) -> None:
+        """
+        Protected void method to train the model or accumulate the gradients for training.
+        - If bootstrap_rounds is passed as 1 (default), model is trained each time the method is called.
+        - If bootstrap_rounds > 1, the gradients are accumulated in grad_accumulator and model is trained via
+            _train_models method.
+        """
+        # If `bootstrap_rounds` less than 2, prepare for optimizer step by setting zero grads.
         if self.bootstrap_rounds < 2:
             self.optimizer.zero_grad()
         # Backward call
         loss.backward()
         # Append loss to list
         self.loss.append(loss.item())
+        # If `bootstrap_rounds` less than 2, run optimizer step immediately.
         if self.bootstrap_rounds < 2:
             # Take optimizer step.
             self.optimizer.step()
@@ -395,45 +417,31 @@ class A2C(Agent):
                     norm_type=self.grad_norm_p,
                 )
         else:
-            self._grad_accumulator.append(
-                {
-                    k: param.grad.detach().clone()
-                    for k, param in self.policy_model.named_parameters()
-                },
-            )
+            self._grad_accumulator.accumulate(self.policy_model.named_parameters())
         self._clear()
 
-    def _train_models(self) -> None:
+    def _optimizer_step_on_accumulated_grads(self) -> None:
         """
         Protected method to policy model if boostrap_rounds > 1. In such cases the gradients are accumulated in
         grad_accumulator. This method collects the accumulated gradients and performs mean reduction and runs
         optimizer step.
         """
-        policy_model_grads = self._grad_accumulator
-        # OrderedDict to store reduced average value.
-        policy_model_grads_reduced = OrderedDict()
         self.optimizer.zero_grad()
         # No Grad mode to disable PyTorch Operation tracking.
         with pytorch.no_grad():
-            # Perform parameter wise summation.
-            for key in self._policy_model_parameter_keys:
-                for policy_model_grad in policy_model_grads:
-                    if key not in policy_model_grads_reduced.keys():
-                        policy_model_grads_reduced[key] = policy_model_grad[key]
-                        continue
-                    policy_model_grads_reduced[key] += policy_model_grad[key]
             # Assign average parameters to model.
+            reduced_parameters = dict(self._grad_accumulator.mean_reduce())
             for key, param in self.policy_model.named_parameters():
-                param.grad = policy_model_grads_reduced[key] / self.bootstrap_rounds
-                # Clip gradients if requested.
+                param.grad = reduced_parameters[key] / self.bootstrap_rounds
+        # Take an optimizer step.
+        self.optimizer.step()
+        # Clip gradients if requested.
         if self.max_grad_norm is not None:
             pytorch.nn.utils.clip_grad_norm_(
                 self.policy_model.parameters(),
                 max_norm=self.max_grad_norm,
                 norm_type=self.grad_norm_p,
             )
-        # Take an optimizer step.
-        self.optimizer.step()
         # Take an LR Scheduler step if required.
         if (
             self.lr_scheduler is not None

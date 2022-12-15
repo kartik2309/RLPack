@@ -211,10 +211,12 @@ class DqnAgent(Agent):
         self.tau = float(tau)
         if isinstance(apply_norm, str):
             apply_norm = setup.get_apply_norm_mode_code(apply_norm)
+        setup.check_validity_of_apply_norm_code(apply_norm)
         ## The input `apply_norm` argument; indicating the normalisation to be used. @I{# noqa: E266}
         self.apply_norm = apply_norm
         if isinstance(apply_norm_to, (str, list)):
             apply_norm_to = setup.get_apply_norm_to_mode_code(apply_norm_to)
+        setup.check_validity_of_apply_norm_to_code(apply_norm_to)
         ## The input `apply_norm_to` argument; indicating the quantity to normalise. @I{# noqa: E266}
         self.apply_norm_to = apply_norm_to
         ## The input `eps_for_norm` argument; indicating epsilon to be used for normalisation. @I{# noqa: E266}
@@ -228,8 +230,7 @@ class DqnAgent(Agent):
         ## The input `grad_norm_p`; indicating the p-value for p-normalisation for gradient clippings. @I{# noqa: E266}
         self.grad_norm_p = grad_norm_p
         ## The step counter; counting the total timesteps done so far up to @ref memory_buffer_size. @I{# noqa: E266}
-        ## Once `buffer_size` is reached, this will restarted. @I{# noqa: E266}
-        self.step_counter = 1
+        self.step_counter = 0
         ## The instance of @ref rlpack._C.memory.Memory used for Replay buffer. @I{# noqa: E266}
         self.memory = Memory(
             buffer_size=memory_buffer_size,
@@ -297,23 +298,19 @@ class DqnAgent(Agent):
             weight,
         )
         # Train policy model every at every `policy_model_update_rate` steps.
-        if (
-            self.step_counter % self.policy_model_update_rate == 0
-            and len(self.memory) >= self.batch_size
-        ):
+        if (self.step_counter + 1) % self.policy_model_update_rate == 0 and len(
+            self.memory
+        ) >= self.batch_size:
             self._train_policy_model()
         # Update target model every `target_model_update_rate` steps.
-        if self.step_counter % self.target_model_update_rate == 0:
+        if (self.step_counter + 1) % self.target_model_update_rate == 0:
             self._update_target_model()
         # Decay epsilon every `epsilon_decay_frequency` steps.
-        if self.step_counter % self.epsilon_decay_frequency == 0:
+        if (self.step_counter + 1) % self.epsilon_decay_frequency == 0:
             self._decay_epsilon()
         # Backup model every `backup_frequency` steps.
-        if self.step_counter % self.backup_frequency == 0:
+        if (self.step_counter + 1) % self.backup_frequency == 0:
             self.save()
-        # Restart `step_counter` if `it has reached the buffer size.
-        if self.step_counter == self.memory_buffer_size:
-            self.step_counter = 0
         # If using prioritized memory, anneal alpha and beta.
         if self.__prioritization_strategy_code > 0:
             self._anneal_alpha()

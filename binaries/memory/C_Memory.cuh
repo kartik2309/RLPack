@@ -89,10 +89,10 @@ public:
     //! Shared Pointer to C_Memory::C_MemoryData.
     std::shared_ptr<C_MemoryData> cMemoryData;
 
-    explicit C_Memory(const pybind11::int_ &bufferSize,
-                      const pybind11::str &device,
-                      const pybind11::int_ &prioritizationStrategyCode,
-                      const pybind11::int_ &batchSize);
+    explicit C_Memory(int64_t bufferSize,
+                      const std::string &device,
+                      const int32_t &prioritizationStrategyCode,
+                      const int32_t &batchSize);
     ~C_Memory();
 
     void insert(torch::Tensor &stateCurrent,
@@ -176,8 +176,6 @@ private:
     Offload<int64_t> *offloadInt64_;
     //! The loaded indices slice; the slice of indices that is sampled during sampling process. In each sampling size its size is equal to C_Memory::batchSize_.
     std::vector<int64_t> loadedIndicesSlice_;
-    //! The temporary buffer of loaded indices slice which is to be shuffled further before populating C_Memory::loadedIndicesSlice_.
-    std::vector<int64_t> loadedIndicesSliceToShuffle_;
     //! The Quantile segment indices sampled when rank-based prioritization is used.
     std::vector<int64_t> segmentQuantileIndices_;
     //! The seed values generated during each sampling cycle for proportional based prioritization.
