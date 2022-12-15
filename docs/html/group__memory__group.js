@@ -17,7 +17,7 @@ var group__memory__group =
         [ "transitionInformationReference_", "struct_c___memory_1_1_c___memory_data.html#ae53ff5844a1b4adf2fb581688e38f2af", null ]
       ] ],
       [ "C_Memory", "class_c___memory.html#aa61cbd7b347eb934d96e7bb17cd33bcc", null ],
-      [ "C_Memory", "class_c___memory.html#a65af0d7e85e2e530b52ba9ecac821109", null ],
+      [ "C_Memory", "class_c___memory.html#aa2782981a76446c3a257a85bd5d047d8", null ],
       [ "~C_Memory", "class_c___memory.html#a417f0d672c3ab5da5f064fecc3b47e67", null ],
       [ "clear", "class_c___memory.html#a78aa519d41cec4c6a1c0a9c476976160", null ],
       [ "compute_important_sampling_weights", "class_c___memory.html#a7fe7f0858461b4961598f005d91dac10", null ],

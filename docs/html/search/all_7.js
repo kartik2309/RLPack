@@ -35,5 +35,8 @@ var searchData=
   ['get_5ftree_5findex_32',['get_tree_index',['../class_sum_tree_node.html#a0531258ec3abd0519204c6187bbd5a99',1,'SumTreeNode']]],
   ['get_5ftree_5flevel_33',['get_tree_level',['../class_sum_tree_node.html#ad4439ac9482b8277f0ce497eb413318c',1,'SumTreeNode']]],
   ['get_5fvalue_34',['get_value',['../class_sum_tree_node.html#ad63a839702ce6e2c41fbb534300e9706',1,'SumTreeNode']]],
-  ['grad_5fnorm_5fp_35',['grad_norm_p',['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a3f1d962e32fb21e733c9161a3e5ec206',1,'rlpack.actor_critic.a2c.A2C.grad_norm_p()'],['../classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a1e27aba2fbce8d9ec056ae95fd97f1f1',1,'rlpack.dqn.dqn_agent.DqnAgent.grad_norm_p()']]]
+  ['grad_5faccumulator_35',['grad_accumulator',['../group__grad__accumulator__group.html',1,'']]],
+  ['grad_5faccumulator_2epy_36',['grad_accumulator.py',['../grad__accumulator_8py.html',1,'']]],
+  ['grad_5fnorm_5fp_37',['grad_norm_p',['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a3f1d962e32fb21e733c9161a3e5ec206',1,'rlpack.actor_critic.a2c.A2C.grad_norm_p()'],['../classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a1e27aba2fbce8d9ec056ae95fd97f1f1',1,'rlpack.dqn.dqn_agent.DqnAgent.grad_norm_p()']]],
+  ['gradaccumulator_38',['GradAccumulator',['../classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html',1,'rlpack::_C::grad_accumulator']]]
 ];

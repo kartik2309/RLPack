@@ -15,7 +15,6 @@ var classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c =
     [ "train", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ae2c4c474849c70cdedf6b98aea2f63c4", null ],
     [ "_grad_accumulator", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af21943ec874f47fba4ea44ade7f02a5f", null ],
     [ "_normalization", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a297c096e4155c3ac4815f7ce95ca6767", null ],
-    [ "_policy_model_parameter_keys", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aff61f209ed6cee2571b8c0d5c09af6c3", null ],
     [ "action_log_probabilities", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a989698a1260432ca0fcbd1668fe9c7ac", null ],
     [ "apply_norm", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a57416c3545397ddaaa31ee69142e67da", null ],
     [ "apply_norm_to", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aeef17e7ec0e0b81e2b47b0c4663bad2c", null ],
