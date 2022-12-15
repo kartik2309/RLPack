@@ -10,5 +10,4 @@ import torch.distributed as dist
 import torch.multiprocessing as mp
 
 # Import CPP Backend
-from rlpack.lib import C_Memory
-from rlpack.lib import C_GradAccumulator
+from rlpack.lib import C_GradAccumulator, C_Memory
