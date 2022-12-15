@@ -1,5 +1,8 @@
 var NAVTREEINDEX1 =
 {
+"classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a9e82951d76c6c5db30d23c13d5286981":[2,0,0,2,1,0,41],
+"classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a9ed207f175d082efc510ccd9ada18fc5":[2,0,0,2,1,0,14],
+"classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#aa24c4cde1b3c86793aa0c163975f7e46":[2,0,0,2,1,0,23],
 "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#aa8adcc90bb59c4bd0f1a153f89c3116d":[2,0,0,2,1,0,42],
 "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#aabbebafa737394e23228307873976a6b":[2,0,0,2,1,0,12],
 "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#ab587b11f42305490ece52cb5683cee6d":[2,0,0,2,1,0,24],

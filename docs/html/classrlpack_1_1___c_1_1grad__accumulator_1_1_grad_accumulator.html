@@ -119,6 +119,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac17fc3bee0ce36b494ed11c59532119d"><td class="memItemLeft" align="right" valign="top">C_GradAccumulator.MapOfTensors&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html#ac17fc3bee0ce36b494ed11c59532119d">mean_reduce</a> (self)</td></tr>
 <tr class="memdesc:ac17fc3bee0ce36b494ed11c59532119d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs the mean reduction of accumulated gradients.  <a href="classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html#ac17fc3bee0ce36b494ed11c59532119d">More...</a><br /></td></tr>
 <tr class="separator:ac17fc3bee0ce36b494ed11c59532119d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7178de11550b5ad801f68f76e9c823e"><td class="memItemLeft" align="right" valign="top">C_GradAccumulator.MapOfTensors&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html#ae7178de11550b5ad801f68f76e9c823e">sum_reduce</a> (self)</td></tr>
+<tr class="memdesc:ae7178de11550b5ad801f68f76e9c823e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs the sum reduction of accumulated gradients.  <a href="classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html#ae7178de11550b5ad801f68f76e9c823e">More...</a><br /></td></tr>
+<tr class="separator:ae7178de11550b5ad801f68f76e9c823e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
@@ -248,6 +251,27 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Performs the mean reduction of accumulated gradients. </p>
+<dl class="section return"><dt>Returns</dt><dd>MapOfTensors: The custom map object from C++ backend with mean parameters for each key. </dd></dl>
+
+</div>
+</div>
+<a id="ae7178de11550b5ad801f68f76e9c823e" name="ae7178de11550b5ad801f68f76e9c823e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7178de11550b5ad801f68f76e9c823e">&#9670;&#160;</a></span>sum_reduce()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> C_GradAccumulator.MapOfTensors rlpack._C.grad_accumulator.GradAccumulator.sum_reduce </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Performs the sum reduction of accumulated gradients. </p>
 <dl class="section return"><dt>Returns</dt><dd>MapOfTensors: The custom map object from C++ backend with mean parameters for each key. </dd></dl>
 
 </div>

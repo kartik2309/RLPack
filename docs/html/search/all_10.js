@@ -44,13 +44,14 @@ var searchData=
   ['statesnext_5f_41',['statesNext_',['../class_c___memory.html#aa380df50f9bd1d9aca52062a0862e43c',1,'C_Memory']]],
   ['step_5fcounter_42',['step_counter',['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aa40ba92a0c825186f61c04e9ac713a55',1,'rlpack.actor_critic.a2c.A2C.step_counter()'],['../classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a1ba7d14eb2a55b43b904c7f89ff37148',1,'rlpack.dqn.dqn_agent.DqnAgent.step_counter()']]],
   ['stepcounter_5f_43',['stepCounter_',['../class_c___memory.html#acd130832d6caa8902956b6cb0395117f',1,'C_Memory']]],
-  ['sumtree_44',['SumTree',['../class_sum_tree.html',1,'SumTree'],['../class_sum_tree.html#ab82aca8168e803c8b16c9437aa48bf2f',1,'SumTree::SumTree(int32_t bufferSize)'],['../class_sum_tree.html#aabf380616b5397f6d741449e3680cfc9',1,'SumTree::SumTree()']]],
-  ['sumtree_2ecpp_45',['SumTree.cpp',['../_sum_tree_8cpp.html',1,'']]],
-  ['sumtree_2eh_46',['SumTree.h',['../_sum_tree_8h.html',1,'']]],
-  ['sumtree_5f_47',['sumTree_',['../class_sum_tree.html#ab9654f67332bd176faaec853dcc5950f',1,'SumTree']]],
-  ['sumtreenode_48',['SumTreeNode',['../class_sum_tree_node.html',1,'SumTreeNode'],['../class_sum_tree_node.html#a6375b590bb4d12c91d06d3a992b45a6a',1,'SumTreeNode::SumTreeNode()']]],
-  ['sumtreenode_2ecpp_49',['SumTreeNode.cpp',['../_sum_tree_node_8cpp.html',1,'']]],
-  ['sumtreenode_2eh_50',['SumTreeNode.h',['../_sum_tree_node_8h.html',1,'']]],
-  ['sumtreesharedptr_5f_51',['sumTreeSharedPtr_',['../class_c___memory.html#a6723072d72e59879282b7792a89a2e8a',1,'C_Memory']]],
-  ['synchronized_20actor_2dcritic_20_28a2c_29_52',['Synchronized Actor-Critic (A2C)',['../a2c.html',1,'']]]
+  ['sum_5freduce_44',['sum_reduce',['../classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html#ae7178de11550b5ad801f68f76e9c823e',1,'rlpack._C.grad_accumulator.GradAccumulator.sum_reduce()'],['../class_c___grad_accumulator.html#a548330ee790f9eb03ab3f38aa3a33ee7',1,'C_GradAccumulator::sum_reduce()']]],
+  ['sumtree_45',['SumTree',['../class_sum_tree.html',1,'SumTree'],['../class_sum_tree.html#ab82aca8168e803c8b16c9437aa48bf2f',1,'SumTree::SumTree(int32_t bufferSize)'],['../class_sum_tree.html#aabf380616b5397f6d741449e3680cfc9',1,'SumTree::SumTree()']]],
+  ['sumtree_2ecpp_46',['SumTree.cpp',['../_sum_tree_8cpp.html',1,'']]],
+  ['sumtree_2eh_47',['SumTree.h',['../_sum_tree_8h.html',1,'']]],
+  ['sumtree_5f_48',['sumTree_',['../class_sum_tree.html#ab9654f67332bd176faaec853dcc5950f',1,'SumTree']]],
+  ['sumtreenode_49',['SumTreeNode',['../class_sum_tree_node.html',1,'SumTreeNode'],['../class_sum_tree_node.html#a6375b590bb4d12c91d06d3a992b45a6a',1,'SumTreeNode::SumTreeNode()']]],
+  ['sumtreenode_2ecpp_50',['SumTreeNode.cpp',['../_sum_tree_node_8cpp.html',1,'']]],
+  ['sumtreenode_2eh_51',['SumTreeNode.h',['../_sum_tree_node_8h.html',1,'']]],
+  ['sumtreesharedptr_5f_52',['sumTreeSharedPtr_',['../class_c___memory.html#a6723072d72e59879282b7792a89a2e8a',1,'C_Memory']]],
+  ['synchronized_20actor_2dcritic_20_28a2c_29_53',['Synchronized Actor-Critic (A2C)',['../a2c.html',1,'']]]
 ];
