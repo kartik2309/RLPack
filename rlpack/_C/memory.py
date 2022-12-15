@@ -6,6 +6,8 @@
 Currently following classes have been implemented:
     - `Memory`: Implemented as rlpack._C.memory.Memory, this class is responsible for using Optimized C_Memory class
         implemented in C++ and providing simple Python methods to access it.
+    - `GradAccumulator`: Implemented as rlpack._C.grad_accumulator.GradAccumulator, this class is responsible for
+        using optimized GradAccumulator class implemented in C++ and providing simple python methods to access it.
 """
 
 
@@ -19,7 +21,9 @@ from rlpack import C_Memory, pytorch
 
 class Memory(object):
     """
-    This class provides the python interface to C_Memory, the C++ class which performs heavier workloads.
+    This class provides the python interface to C_Memory, the C++ class which performs heavier workloads. This class
+    is used as a container to store tensors and sample from that container as per desired strategy (for DQN). This is
+    equivalent to Experience Buffer, Replay Buffer etc.
     """
 
     def __init__(
