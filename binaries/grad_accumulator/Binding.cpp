@@ -31,7 +31,14 @@ PYBIND11_MODULE(C_GradAccumulator, m) {
                  &C_GradAccumulator::accumulate,
                  "Method to accumulate gradients.",
                  pybind11::arg("named_parameters"))
-            .def("mean_reduce", &C_GradAccumulator::mean_reduce, "Method to perform mean reduction.")
+            .def("mean_reduce",
+                 &C_GradAccumulator::mean_reduce,
+                 "Method to perform mean reduction.",
+                 pybind11::return_value_policy::reference)
+            .def("sum_reduce",
+                 &C_GradAccumulator::sum_reduce,
+                 "Method to perform sum reduction.",
+                 pybind11::return_value_policy::reference)
             .def("clear", &C_GradAccumulator::clear, "Method to clear accumulated gradients.");
 
     /*
@@ -72,8 +79,7 @@ PYBIND11_MODULE(C_GradAccumulator, m) {
                      for (auto &pair : init) {
                          mapOfTensors[pair.first.cast<std::string>()] = pair.second.cast<torch::Tensor>();
                      }
-                     return mapOfTensors; }),
-                 "Pickle method for mapOfTensors.", pybind11::return_value_policy::reference);
+                     return mapOfTensors; }), "Pickle method for MapOfTensors.", pybind11::return_value_policy::reference);
 }
 /*!
  * @} @I{ // End group grad_accumulator_group }

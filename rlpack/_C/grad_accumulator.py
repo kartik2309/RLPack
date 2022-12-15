@@ -51,6 +51,14 @@ class GradAccumulator:
         mean_reduced_params = self.c_grad_accumulator.mean_reduce()
         return mean_reduced_params
 
+    def sum_reduce(self) -> C_GradAccumulator.MapOfTensors:
+        """
+        Performs the sum reduction of accumulated gradients.
+        @return MapOfTensors: The custom map object from C++ backend with mean parameters for each key.
+        """
+        sum_reduced_params = self.c_grad_accumulator.sum_reduce()
+        return sum_reduced_params
+
     def clear(self) -> None:
         """
         Clears the accumulated gradients.

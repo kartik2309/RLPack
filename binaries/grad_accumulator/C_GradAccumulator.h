@@ -17,8 +17,7 @@
  * optimized to perform heavier workloads.
  * @{
  * @addtogroup grad_accumulator_group grad_accumulator
- * @brief Memory module is the C++ backend for rlpack._C.grad_accumulator.GradAccumulator class. Heavier workloads
- * have been optimized with multithreading with OpenMP.
+ * @brief Memory module is the C++ backend for rlpack._C.grad_accumulator.GradAccumulator class.
  * @{
  */
 class C_GradAccumulator {
@@ -28,6 +27,7 @@ public:
 
     void accumulate(std::map<std::string, torch::Tensor> &namedParameters);
     std::map<std::string, torch::Tensor> mean_reduce();
+    std::map<std::string, torch::Tensor> sum_reduce();
     void clear();
 
 private:
@@ -37,6 +37,8 @@ private:
     std::vector<std::string> parameterKeys_;
     //! The vector to accumulate the gradients.
     std::vector<std::map<std::string, torch::Tensor>> namedParametersGrads_;
+    //! The map to store final results of reduced parameters.
+    std::map<std::string, torch::Tensor> reducedParams_;
 };
 /*!
  * @} @I{ // End group grad_accumulator_group }

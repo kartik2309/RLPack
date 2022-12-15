@@ -26,12 +26,16 @@ void C_GradAccumulator::accumulate(std::map<std::string, torch::Tensor> &namedPa
      * @param namedParameters : Map of named parameters.
      */
     if (namedParametersGrads_.size() == bootstrapRounds_) {
-        throw std::overflow_error("Attempted to accumulate more than bootstrap_rounds!");
+        throw std::overflow_error("Attempted to accumulate more than `bootstrap_rounds` (in Py; bootstrapRounds in C++)!");
     }
     std::map<std::string, torch::Tensor> namedParameterGrads;
     for (int64_t keyIndex = 0; keyIndex != parameterKeys_.size(); keyIndex++) {
         auto key = parameterKeys_[keyIndex];
-        namedParameterGrads[key] = namedParameters[key].grad().detach().clone();
+        auto clonedGrad = namedParameters[key].grad().detach().clone();
+        if (clonedGrad.isnan().all().item<bool>()) {
+            throw std::runtime_error("Gradients were NaN! Did you call .backward() on loss?");
+        }
+        namedParameterGrads[key] = clonedGrad;
     }
     namedParametersGrads_.push_back(namedParameterGrads);
 }
@@ -44,27 +48,50 @@ std::map<std::string, torch::Tensor> C_GradAccumulator::mean_reduce() {
     if (namedParametersGrads_.empty()) {
         throw std::length_error("No gradients have been accumulated! Kindly accumulate gradients with `accumulate` method");
     }
-    std::map<std::string, torch::Tensor> meanReducedParams;
     {
         // No grad scope
         torch::NoGradGuard no_grad_guard;
-        bool parameterKeyAddedToReduce;
-        for (int64_t keyIndex = 0; keyIndex != parameterKeys_.size(); keyIndex++) {
-            auto key = parameterKeys_[keyIndex];
-            parameterKeyAddedToReduce = false;
-            for (int64_t namedParametersIndex = 0; namedParametersIndex != bootstrapRounds_; namedParametersIndex++) {
+        for (int64_t namedParametersIndex = 0; namedParametersIndex != bootstrapRounds_; namedParametersIndex++) {
+            for (int64_t keyIndex = 0; keyIndex != parameterKeys_.size(); keyIndex++) {
+                auto key = parameterKeys_[keyIndex];
                 auto param = namedParametersGrads_[namedParametersIndex][key];
-                if (parameterKeyAddedToReduce) {
-                    meanReducedParams[key] += param / bootstrapRounds_;
+                if (namedParametersIndex != 0) {
+                    reducedParams_[key] += param / bootstrapRounds_;
                 } else {
-                    meanReducedParams[key] = param / bootstrapRounds_;
-                    parameterKeyAddedToReduce = true;
+                    reducedParams_[key] = param / bootstrapRounds_;
                 }
             }
         }
     }
-    return meanReducedParams;
+    return reducedParams_;
 }
+
+std::map<std::string, torch::Tensor> C_GradAccumulator::sum_reduce() {
+    /*!
+     * Performs sum reduction of accumulated gradients. This is C++ backend equivalent to
+     * rlpack._C.grad_accumulator.GradAccumulator.mean_reduce.
+     */
+    if (namedParametersGrads_.empty()) {
+        throw std::length_error("No gradients have been accumulated! Kindly accumulate gradients with `accumulate` method");
+    }
+    {
+        // No grad scope
+        torch::NoGradGuard no_grad_guard;
+        for (int64_t namedParametersIndex = 0; namedParametersIndex != bootstrapRounds_; namedParametersIndex++) {
+            for (int64_t keyIndex = 0; keyIndex != parameterKeys_.size(); keyIndex++) {
+                auto key = parameterKeys_[keyIndex];
+                auto param = namedParametersGrads_[namedParametersIndex][key];
+                if (namedParametersIndex != 0) {
+                    reducedParams_[key] += param;
+                } else {
+                    reducedParams_[key] = param;
+                }
+            }
+        }
+    }
+    return reducedParams_;
+}
+
 void C_GradAccumulator::clear() {
     /*!
      * Clears all the accumulated gradients. This is C++ backend equivalent to
