@@ -31,29 +31,29 @@ class A2C(Agent):
     """
 
     def __init__(
-        self,
-        policy_model: pytorch.nn.Module,
-        optimizer: pytorch.optim.Optimizer,
-        lr_scheduler: Union[LRScheduler, None],
-        loss_function: LossFunction,
-        distribution: Distribution,
-        gamma: float,
-        entropy_coefficient: float,
-        state_value_coefficient: float,
-        lr_threshold: float,
-        action_space: Union[int, List[Union[int, List[int]]]],
-        backup_frequency: int,
-        save_path: str,
-        bootstrap_rounds: int = 1,
-        device: str = "cpu",
-        apply_norm: Union[int, str] = -1,
-        apply_norm_to: Union[int, List[str]] = -1,
-        eps_for_norm: float = 5e-12,
-        p_for_norm: int = 2,
-        dim_for_norm: int = 0,
-        max_grad_norm: Optional[float] = None,
-        grad_norm_p: float = 2.0,
-        variance: Optional[Tuple[float, Callable[[float, bool, int], float]]] = None,
+            self,
+            policy_model: pytorch.nn.Module,
+            optimizer: pytorch.optim.Optimizer,
+            lr_scheduler: Union[LRScheduler, None],
+            loss_function: LossFunction,
+            distribution: Distribution,
+            gamma: float,
+            entropy_coefficient: float,
+            state_value_coefficient: float,
+            lr_threshold: float,
+            action_space: Union[int, List[Union[int, List[int]]]],
+            backup_frequency: int,
+            save_path: str,
+            bootstrap_rounds: int = 1,
+            device: str = "cpu",
+            apply_norm: Union[int, str] = -1,
+            apply_norm_to: Union[int, List[str]] = -1,
+            eps_for_norm: float = 5e-12,
+            p_for_norm: int = 2,
+            dim_for_norm: int = 0,
+            max_grad_norm: Optional[float] = None,
+            grad_norm_p: float = 2.0,
+            variance: Optional[Tuple[float, Callable[[float, bool, int], float]]] = None,
     ):
         """!
         @param policy_model: *pytorch.nn.Module*: The policy model to be used. Policy model must return a tuple of
@@ -149,7 +149,7 @@ class A2C(Agent):
         self.save_path = save_path
         # Check sanity of `bootstrap_rounds`
         assert (
-            bootstrap_rounds > 0
+                bootstrap_rounds > 0
         ), "Argument `bootstrap_rounds` must be an integer between 0 and 1"
         ## The input boostrap rounds. @I{# noqa: E266}
         self.bootstrap_rounds = bootstrap_rounds
@@ -219,11 +219,11 @@ class A2C(Agent):
         )
 
     def train(
-        self,
-        state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
-        reward: Union[int, float],
-        done: Union[bool, int],
-        **kwargs,
+            self,
+            state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
+            reward: Union[int, float],
+            done: Union[bool, int],
+            **kwargs,
     ) -> Union[int, np.ndarray]:
         """
         The train method to train the agent and underlying policy model.
@@ -265,9 +265,9 @@ class A2C(Agent):
 
     @pytorch.no_grad()
     def policy(
-        self,
-        state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
-        **kwargs,
+            self,
+            state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
+            **kwargs,
     ) -> Union[int, np.ndarray]:
         """
         The policy method to evaluate the agent. This runs in pure inference mode.
@@ -306,22 +306,20 @@ class A2C(Agent):
                 f"Argument `custom_name_suffix` must be of type "
                 f"{str} or {type(None)}, but got of type {type(custom_name_suffix)}"
             )
-        checkpoint_policy = {"state_dict": self.policy_model.state_dict()}
-        checkpoint_optimizer = {"state_dict": self.optimizer.state_dict()}
-        pytorch.save(
-            checkpoint_policy,
-            os.path.join(self.save_path, f"policy{custom_name_suffix}.pt"),
-        )
-        pytorch.save(
-            checkpoint_optimizer,
-            os.path.join(self.save_path, f"optimizer{custom_name_suffix}.pt"),
-        )
+        save_path = self.save_path
+        checkpoint = {
+            "policy_model_state_dict": self.policy_model.state_dict(),
+            "optimizer_state_dict": self.optimizer.state_dict(),
+        }
         if self.lr_scheduler is not None:
-            checkpoint_lr_scheduler = {"state_dict": self.lr_scheduler.state_dict()}
-            pytorch.save(
-                checkpoint_lr_scheduler,
-                os.path.join(self.save_path, f"lr_scheduler{custom_name_suffix}.pt"),
+            checkpoint["lr_scheduler_state_dict"] = self.lr_scheduler.state_dict()
+        if self._operate_with_variance:
+            checkpoint["variance_value"] = self.variance_value
+        if os.path.isdir(save_path):
+            save_path = os.path.join(
+                save_path, f"actor_critic{custom_name_suffix}.pt"
             )
+        pytorch.save(checkpoint, save_path)
         return
 
     def load(self, custom_name_suffix: Optional[str] = None) -> None:
@@ -339,32 +337,28 @@ class A2C(Agent):
                 f"Argument `custom_name_suffix` must be of type "
                 f"{str} or {type(None)}, but got of type {type(custom_name_suffix)}"
             )
-        if os.path.isfile(
-            os.path.join(self.save_path, f"policy{custom_name_suffix}.pt")
-        ):
-            checkpoint_policy = pytorch.load(
-                os.path.join(self.save_path, f"policy{custom_name_suffix}.pt"),
-                map_location="cpu",
+        save_path = self.save_path
+        if os.path.isdir(save_path):
+            save_path = os.path.join(
+                save_path, f"actor_critic{custom_name_suffix}.pt"
             )
-            self.policy_model.load_state_dict(checkpoint_policy["state_dict"])
-        else:
-            raise FileNotFoundError("The Policy model was not found in the given path!")
-        if os.path.isfile(
-            os.path.join(self.save_path, f"optimizer{custom_name_suffix}.pt")
-        ):
-            checkpoint_optimizer = pytorch.load(
-                os.path.join(self.save_path, f"optimizer{custom_name_suffix}.pt"),
-                map_location="cpu",
+        if not os.path.isfile(save_path):
+            raise FileNotFoundError(
+                "Given path does not contain the valid agent. "
+                "If directory is passed, the file named `actor_critic.pth` or `actor_critic_<custom_suffix>.pth "
+                "must be present, else must pass the valid file path!"
             )
-            self.optimizer.load_state_dict(checkpoint_optimizer["state_dict"])
-        if os.path.isfile(
-            os.path.join(self.save_path, f"lr_scheduler{custom_name_suffix}.pt")
+        checkpoint = pytorch.load(save_path, map_location="cpu")
+        self.policy_model.load_state_dict(checkpoint["policy_model_state_dict"])
+        self.optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
+        if (
+                self.lr_scheduler is not None
+                and "lr_scheduler_state_dict" in checkpoint.keys()
         ):
-            checkpoint_lr_sc = pytorch.load(
-                os.path.join(self.save_path, f"lr_scheduler{custom_name_suffix}.pt"),
-                map_location="cpu",
-            )
-            self.lr_scheduler.load_state_dict(checkpoint_lr_sc["state_dict"])
+            self.lr_scheduler.load_state_dict(checkpoint["lr_scheduler_state_dict"])
+        if "variance_value" in checkpoint.keys():
+            self.variance_value = checkpoint["variance_value"]
+            self._operate_with_variance = True
         return
 
     def _call_to_save(self) -> None:
@@ -426,7 +420,7 @@ class A2C(Agent):
         entropy = self._adjust_dims_for_tensor(entropy, advantage.dim())
         # Compute Policy Losses
         policy_losses = (
-            -action_log_probabilities * advantage + self.entropy_coefficient * entropy
+                -action_log_probabilities * advantage + self.entropy_coefficient * entropy
         )
         # Compute Value Losses
         value_loss = self.state_value_coefficient * self.loss_function(
@@ -476,8 +470,8 @@ class A2C(Agent):
         self.optimizer.step()
         # Take an LR Scheduler step if required.
         if (
-            self.lr_scheduler is not None
-            and min([*self.lr_scheduler.get_last_lr()]) > self.lr_threshold
+                self.lr_scheduler is not None
+                and min([*self.lr_scheduler.get_last_lr()]) > self.lr_threshold
         ):
             self.lr_scheduler.step()
 
@@ -492,7 +486,7 @@ class A2C(Agent):
             param.grad = reduced_parameters[key] / self.bootstrap_rounds
 
     def _compute_advantage(
-        self, returns: pytorch.Tensor, state_current_values: pytorch.Tensor
+            self, returns: pytorch.Tensor, state_current_values: pytorch.Tensor
     ) -> pytorch.Tensor:
         """
         Computes the advantage from returns and state values
@@ -541,8 +535,8 @@ class A2C(Agent):
         self.entropies.clear()
 
     def _create_action_distribution(
-        self,
-        action_values: pytorch.Tensor,
+            self,
+            action_values: pytorch.Tensor,
     ) -> Distribution:
         """
         Protected static method to create distributions from action logits
