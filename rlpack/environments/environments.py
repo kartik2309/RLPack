@@ -50,25 +50,32 @@ class Environments:
         else:
             self.reshape_func = reshape_func
         new_shape = self.config.get("new_shape")
-        if not isinstance(new_shape, list):
-            raise TypeError("`new_shape` must be a list of new shape")
+        if not isinstance(new_shape, (list, type(None))):
+            raise TypeError(f"`new_shape` must be a {list} of new shape or {type(None)}")
         ## The new shape requested in config to be used with @ref reshape_func. @I{# noqa: E266}
         self.new_shape = tuple(new_shape) if new_shape is not None else None
-        render_mode = None
-        if config["render"]:
-            render_mode = "human"
-            if self.is_train():
-                logging.warning(
-                    "Rendering environment during training will slow down the training! "
-                    "Consider setting `render` to False."
-                )
         ## The gym environment on which the agent will run. @I{# noqa: E266}
         if self.config.get("env") is None:
             assert self.config.get("env_name") is not None, (
                 "Either `env` (for gym environment) or `env_name` (for env name registered with gym)"
                 " must be passed in config"
             )
-            self.env = gym.make(self.config["env_name"], render_mode=render_mode)
+            # Retrieve env_args if passed.
+            env_args = config.get("env_args", dict())
+            # Dictionary is empty, assign `render_mode` appropriately.
+            # For eval -> "human"
+            # For train -> None
+            if len(env_args) == 0:
+                if self.is_eval():
+                    env_args["render_mode"] = "human"
+                elif self.is_train():
+                    env_args["render_mode"] = None
+            if self.is_train() and env_args["render_mode"] == "human":
+                logging.warning(
+                    "Rendering environment during training will slow down the training! "
+                    f"Consider passing `render_mode` as {type(None)} in `env_args`"
+                )
+            self.env = gym.make(self.config["env_name"], **env_args)
         else:
             self.env = config["env"]
         self.env.spec.max_episode_steps = self.config["max_timesteps"]
