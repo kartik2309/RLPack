@@ -27,7 +27,8 @@ An example of `model_args` is:
 }
 ```
 here
-- `num_actions` is the number of actions of the agent (for discrete action space).
+- `action_space` represents the action space for the agent. For more information you can refer 
+[here](@ref agents/actor_critic/index.md)
 - `sequence_length` is the length of sequence of input data. Depending on how states are reshaped, this can be 1 or
   above, but has to be at least 1. In cases where states are vectors, it can be reshaped manually before calling the
   agent's train function, or better yet, pass `new_shape` in the config dict to reshape the input under the hood. For
@@ -39,4 +40,21 @@ here
   passed in config dict, this can be adjusted accordingly.
 - `dropout`: The dropout probability to be applied on the last layer.
 
-The activation (keyed `activation_args`) is applied at the output of each layer except the final layer. 
+Since this model contains two heads (for actor and critic), you can choose to apply activation on either or both of 
+them. This can be achieved by passing `activation` as a list. When using config with simulator, you can pass a list of 
+strings (keywords) for activations. If you simply pass a string (keyword) for activation, activation is only applied 
+to MLP based feature extractor (between hidden layers). To pass the activation args, you can pass the corresponding 
+arguments as a list of keyword dictionary.If you pass a list, following will be followed:
+- First element of list would be activation applied to MLP based feature extractor (between hidden layers) 
+- Second element of list would be the activation applied to output of actor head. 
+- Third element of list would be the activation applied to the output of critic head. 
+
+Corresponding keyword arguments are used to initialize the activation objects.
+ 
+
+You can pass a list of any size between one and three and activations will be applied as per above. For example if 
+you pass a list as `["relu", "softplus"]`, only MLP based feature extractor and actor head get activations applied and 
+output of critic head is passed as it is. 
+
+Note that if you are directly using the class and not the simulator, make sure to read the documentation for
+`rlpack.models.actor_critic_mlp_policy.ActorCriticMlpPolicy`

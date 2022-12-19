@@ -34,4 +34,6 @@ corresponding to the number of features in states. Following the previous exampl
 passed in config dict, this can be adjusted accordingly.
 - `dropout`: The dropout probability to be applied on the last layer. 
 
-The activation (keyed `activation_args`) is applied at the output of each layer except the final layer. 
+The activation (keyed `activation_args`) is applied at the output of each layer except the final layer.
+Note that if you are directly using the class and not the simulator, make sure to read the documentation for
+`rlpack.models.mlp.Mlp`
