@@ -148,6 +148,9 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a9e146a1012a89e3f5139b84681a76567"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1environments_1_1environments_1_1_environments.html#a9e146a1012a89e3f5139b84681a76567">_generate_plot</a> (self, Dict[int, List[float]] rewards_collector)</td></tr>
 <tr class="memdesc:a9e146a1012a89e3f5139b84681a76567"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates plot with <code>matplotlib</code> for Episodes vs.  <a href="classrlpack_1_1environments_1_1environments_1_1_environments.html#a9e146a1012a89e3f5139b84681a76567">More...</a><br /></td></tr>
 <tr class="separator:a9e146a1012a89e3f5139b84681a76567"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af71ffa10b18442e31ebe29b6ade58194"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1environments_1_1environments_1_1_environments.html#af71ffa10b18442e31ebe29b6ade58194">_log</a> (self, int ep, float mean_reward, bool distributed_mode, int verbose)</td></tr>
+<tr class="memdesc:af71ffa10b18442e31ebe29b6ade58194"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper method to perform logging operations (both on console and cache).  <a href="classrlpack_1_1environments_1_1environments_1_1_environments.html#af71ffa10b18442e31ebe29b6ade58194">More...</a><br /></td></tr>
+<tr class="separator:af71ffa10b18442e31ebe29b6ade58194"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1987b6a7cafb63a58e236f5126661ff0"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1environments_1_1environments_1_1_environments.html#a1987b6a7cafb63a58e236f5126661ff0">_remove_log_file</a> (self)</td></tr>
 <tr class="memdesc:a1987b6a7cafb63a58e236f5126661ff0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes the <code>log.txt</code> file if it is present in the set <code>save_path</code>.  <a href="classrlpack_1_1environments_1_1environments_1_1_environments.html#a1987b6a7cafb63a58e236f5126661ff0">More...</a><br /></td></tr>
 <tr class="separator:a1987b6a7cafb63a58e236f5126661ff0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -294,6 +297,72 @@ Static Private Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Union[None, float]: The mean value. </dd></dl>
+
+</div>
+</div>
+<a id="af71ffa10b18442e31ebe29b6ade58194" name="af71ffa10b18442e31ebe29b6ade58194"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af71ffa10b18442e31ebe29b6ade58194">&#9670;&#160;</a></span>_log()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> None rlpack.environments.environments.Environments._log </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>ep</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>mean_reward</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>distributed_mode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int
+    &#160;</td>
+          <td class="paramname"><em>verbose</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Helper method to perform logging operations (both on console and cache). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ep</td><td>int: The episode which is currently being logged. </td></tr>
+    <tr><td class="paramname">mean_reward</td><td>float: The mean reward acquired between two successive calls of this method. </td></tr>
+    <tr><td class="paramname">distributed_mode</td><td>bool: Indicates if the environment is being run in distributed mode. </td></tr>
+    <tr><td class="paramname">verbose</td><td>bool: Indicates the verbose level. Refer notes for more details. This also refers to values logged on screen. If you want to disable the logging on screen, set logging level to WARNING. Default: -1 </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -534,7 +603,7 @@ Static Private Member Functions</h2></td></tr>
     <tr><td class="paramname">render</td><td>bool: Indicates if we wish to render the environment (in animation). Default: False. </td></tr>
     <tr><td class="paramname">load</td><td>bool: Indicates weather to load a previously saved model or train a new one. If set true, config must be <code>save_path</code> or set or environment variable SAVE_PATH must be set. </td></tr>
     <tr><td class="paramname">plot</td><td>bool: Indicates if to plot the training progress. If set True, rewards and episodes are recorded and plot is saved in <code>save_path</code>. </td></tr>
-    <tr><td class="paramname">verbose</td><td>bool: Indicates the verbose level. Refer notes for more details. This also refers to values logged on screen. If you want to disable the logging on screen, set logging level to WARNING. Default: -1 config must have set mode='train' to run evaluation. </td></tr>
+    <tr><td class="paramname">verbose</td><td>bool: Indicates the verbose level. Refer notes for more details. This also refers to values logged on screen. If you want to disable the logging on screen, set logging level to WARNING. Default: -1 </td></tr>
     <tr><td class="paramname">distributed_mode</td><td>Indicates if the environment is being run in distributed mode. Rewards are logged on console every <code>reward_logging_frequency</code> set in the console.</td></tr>
   </table>
   </dd>

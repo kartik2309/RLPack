@@ -9,6 +9,7 @@ var group__grad__accumulator__group =
       [ "get_item", "class_c___grad_accumulator.html#a6ef3c23ae821e3a53c2d0ec09eb1e939", null ],
       [ "mean_reduce", "class_c___grad_accumulator.html#a5171e9bc7b55f23e179fee896c946a69", null ],
       [ "set_item", "class_c___grad_accumulator.html#a7070e708ec92450b0edb3c6ef6b61fff", null ],
+      [ "size", "class_c___grad_accumulator.html#a328b0bb90ed7853e7270385c1b2afbea", null ],
       [ "sum_reduce", "class_c___grad_accumulator.html#a548330ee790f9eb03ab3f38aa3a33ee7", null ],
       [ "bootstrapRounds_", "class_c___grad_accumulator.html#a3cb7289bd1dcd654ab0343de19fd8186", null ],
       [ "namedParametersGrads_", "class_c___grad_accumulator.html#ad59f4483058644f047b7d60381649c23", null ],

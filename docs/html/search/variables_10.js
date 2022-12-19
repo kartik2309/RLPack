@@ -13,13 +13,12 @@ var searchData=
   ['segmentquantileindices_5f_10',['segmentQuantileIndices_',['../class_c___memory.html#ad4c201bd0eb4ea1d4166b32868237bed',1,'C_Memory']]],
   ['sequence_5flength_11',['sequence_length',['../classrlpack_1_1models_1_1__mlp__feature__extractor_1_1___mlp_feature_extractor.html#ad9095997e72046a351a84b13ae45d26c',1,'rlpack::models::_mlp_feature_extractor::_MlpFeatureExtractor']]],
   ['setup_12',['setup',['../classrlpack_1_1simulator_1_1_simulator.html#a2b7953e8f6e5b3acbff728e6ca7bd56d',1,'rlpack::simulator::Simulator']]],
-  ['state_5fnorm_5fcodes_13',['state_norm_codes',['../classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#ae0500457a682bad272e8e28b9a475fcb',1,'rlpack::utils::base::agent::Agent']]],
-  ['state_5fvalue_5fcoefficient_14',['state_value_coefficient',['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a808c41752e5a391ccccc5eaa820abc09',1,'rlpack::actor_critic::a2c::A2C']]],
-  ['states_5fcurrent_5fvalues_15',['states_current_values',['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aaf2d6eee242ba098e6b977b9b39e5cda',1,'rlpack::actor_critic::a2c::A2C']]],
-  ['statescurrent_5f_16',['statesCurrent_',['../class_c___memory.html#ab0dbf85dfc94fadb70c1ce4f3a6f7caf',1,'C_Memory']]],
-  ['statesnext_5f_17',['statesNext_',['../class_c___memory.html#aa380df50f9bd1d9aca52062a0862e43c',1,'C_Memory']]],
-  ['step_5fcounter_18',['step_counter',['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aa40ba92a0c825186f61c04e9ac713a55',1,'rlpack.actor_critic.a2c.A2C.step_counter()'],['../classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a1ba7d14eb2a55b43b904c7f89ff37148',1,'rlpack.dqn.dqn_agent.DqnAgent.step_counter()']]],
-  ['stepcounter_5f_19',['stepCounter_',['../class_c___memory.html#acd130832d6caa8902956b6cb0395117f',1,'C_Memory']]],
-  ['sumtree_5f_20',['sumTree_',['../class_sum_tree.html#ab9654f67332bd176faaec853dcc5950f',1,'SumTree']]],
-  ['sumtreesharedptr_5f_21',['sumTreeSharedPtr_',['../class_c___memory.html#a6723072d72e59879282b7792a89a2e8a',1,'C_Memory']]]
+  ['state_5fvalue_5fcoefficient_13',['state_value_coefficient',['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a808c41752e5a391ccccc5eaa820abc09',1,'rlpack::actor_critic::a2c::A2C']]],
+  ['states_5fcurrent_5fvalues_14',['states_current_values',['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aaf2d6eee242ba098e6b977b9b39e5cda',1,'rlpack::actor_critic::a2c::A2C']]],
+  ['statescurrent_5f_15',['statesCurrent_',['../class_c___memory.html#ab0dbf85dfc94fadb70c1ce4f3a6f7caf',1,'C_Memory']]],
+  ['statesnext_5f_16',['statesNext_',['../class_c___memory.html#aa380df50f9bd1d9aca52062a0862e43c',1,'C_Memory']]],
+  ['step_5fcounter_17',['step_counter',['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aa40ba92a0c825186f61c04e9ac713a55',1,'rlpack.actor_critic.a2c.A2C.step_counter()'],['../classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a1ba7d14eb2a55b43b904c7f89ff37148',1,'rlpack.dqn.dqn_agent.DqnAgent.step_counter()']]],
+  ['stepcounter_5f_18',['stepCounter_',['../class_c___memory.html#acd130832d6caa8902956b6cb0395117f',1,'C_Memory']]],
+  ['sumtree_5f_19',['sumTree_',['../class_sum_tree.html#ab9654f67332bd176faaec853dcc5950f',1,'SumTree']]],
+  ['sumtreesharedptr_5f_20',['sumTreeSharedPtr_',['../class_c___memory.html#a6723072d72e59879282b7792a89a2e8a',1,'C_Memory']]]
 ];

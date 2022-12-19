@@ -113,12 +113,19 @@ $(document).ready(function(){initNavTree('a2c_mlp.html',''); initResizable(); })
 <div class="line">  ... </div>
 <div class="line">}</div>
 </div><!-- fragment --><p> here</p><ul>
-<li><code>num_actions</code> is the number of actions of the agent (for discrete action space).</li>
+<li><code>action_space</code> represents the action space for the agent. For more information you can refer <a class="el" href="actor_critic.html#md_agents_actor_critic_index">here</a></li>
 <li><code>sequence_length</code> is the length of sequence of input data. Depending on how states are reshaped, this can be 1 or above, but has to be at least 1. In cases where states are vectors, it can be reshaped manually before calling the agent's train function, or better yet, pass <code>new_shape</code> in the config dict to reshape the input under the hood. For example if states are vectors of shape <code>(4, )</code>, we can pass <code>"new_shape": [1, 4]</code> in the config dict. This reshapes the input accordingly. Consequently, we can see that sequence length is 1, hence we can set <code>sequence_length</code> to 1.</li>
 <li><code>hidden_sizes</code>: The hidden features of each layer of the MLP. The first element of the list passed here must be corresponding to the number of features in states. Following the previous example provided in explanation of <code>sequence_length</code>, the first layer must have the size of 4, hence <code>"hidden_sizes": [4, ...]</code>. Depending on <code>new_shape</code> passed in config dict, this can be adjusted accordingly.</li>
 <li><code>dropout</code>: The dropout probability to be applied on the last layer.</li>
 </ul>
-<p >The activation (keyed <code>activation_args</code>) is applied at the output of each layer except the final layer. </p>
+<p >Since this model contains two heads (for actor and critic), you can choose to apply activation on either or both of them. This can be achieved by passing <code>activation</code> as a list. When using config with simulator, you can pass a list of strings (keywords) for activations. If you simply pass a string (keyword) for activation, activation is only applied to MLP based feature extractor (between hidden layers). To pass the activation args, you can pass the corresponding arguments as a list of keyword dictionary.If you pass a list, following will be followed:</p><ul>
+<li>First element of list would be activation applied to MLP based feature extractor (between hidden layers)</li>
+<li>Second element of list would be the activation applied to output of actor head.</li>
+<li>Third element of list would be the activation applied to the output of critic head.</li>
+</ul>
+<p >Corresponding keyword arguments are used to initialize the activation objects.</p>
+<p >You can pass a list of any size between one and three and activations will be applied as per above. For example if you pass a list as <code>["relu", "softplus"]</code>, only MLP based feature extractor and actor head get activations applied and output of critic head is passed as it is.</p>
+<p >Note that if you are directly using the class and not the simulator, make sure to read the documentation for <code><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html" title="This class is a PyTorch Model implementing the MLP based Actor-Critic Policy.">rlpack.models.actor_critic_mlp_policy.ActorCriticMlpPolicy</a></code> </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

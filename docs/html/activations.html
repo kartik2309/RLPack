@@ -110,7 +110,13 @@ $(document).ready(function(){initNavTree('activations.html',''); initResizable()
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>LeakyReLU</code>   </td><td class="markdownTableBodyNone">The Leaky Rectified Linear-Unit Activation function. If you wish to pass additional parameters for LeakyReLU as per PyTorch's arguments, you can pass <code>activation_args</code> with keyword arguments in the config dict. If not passed, default values are loaded as per <a href="https://pytorch.org/docs/stable/generated/torch.nn.LeakyReLU.html">PyTorch's default</a>.   </td><td class="markdownTableBodyNone"><code>"leaky_relu"</code>    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>TanH</code>   </td><td class="markdownTableBodyNone">Hyperbolic Tangent Activation function. No arguments are required and hence we can pass <code>"activation_args"=None</code>, or not pass it at all.   </td><td class="markdownTableBodyNone"><code>"tanh"</code>   </td></tr>
+<td class="markdownTableBodyNone"><code>TanH</code>   </td><td class="markdownTableBodyNone">Hyperbolic Tangent Activation function. No arguments are required and hence we can pass <code>"activation_args"=None</code>, or not pass it at all.   </td><td class="markdownTableBodyNone"><code>"tanh"</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>SoftPlus</code>   </td><td class="markdownTableBodyNone">The Softplus activation function. Optional arguments can be looked up <a href="https://pytorch.org/docs/stable/generated/torch.nn.Softplus.html">here</a>   </td><td class="markdownTableBodyNone"><code>softplus</code>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>Softmax</code>   </td><td class="markdownTableBodyNone">The Softmax activation function. Optional arguments can be looked up <a href="https://pytorch.org/docs/stable/generated/torch.nn.Softmax.html">here</a>   </td><td class="markdownTableBodyNone"><code>softmax</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>Sigmoid</code>   </td><td class="markdownTableBodyNone">The Sigmoid activation function. Optional arguments can be looked up <a href="https://pytorch.org/docs/stable/generated/torch.nn.Sigmoid.html">here</a>   </td><td class="markdownTableBodyNone"><code>sigmoid</code>   </td></tr>
 </table>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

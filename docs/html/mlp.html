@@ -118,7 +118,7 @@ $(document).ready(function(){initNavTree('mlp.html',''); initResizable(); });
 <li><code>hidden_sizes</code>: The hidden features of each layer of the MLP. The first element of the list passed here must be corresponding to the number of features in states. Following the previous example provided in explanation of <code>sequence_length</code>, the first layer must have the size of 4, hence <code>"hidden_sizes": [4, ...]</code>. Depending on <code>new_shape</code> passed in config dict, this can be adjusted accordingly.</li>
 <li><code>dropout</code>: The dropout probability to be applied on the last layer.</li>
 </ul>
-<p >The activation (keyed <code>activation_args</code>) is applied at the output of each layer except the final layer. </p>
+<p >The activation (keyed <code>activation_args</code>) is applied at the output of each layer except the final layer. Note that if you are directly using the class and not the simulator, make sure to read the documentation for <code><a class="el" href="classrlpack_1_1models_1_1mlp_1_1_mlp.html" title="This class is a PyTorch Model implementing the MLP model for 1-D or 2-D state values.">rlpack.models.mlp.Mlp</a></code> </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

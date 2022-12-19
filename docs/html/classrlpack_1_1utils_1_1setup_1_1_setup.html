@@ -133,14 +133,16 @@ $(document).ready(function(){initNavTree('classrlpack_1_1utils_1_1setup_1_1_setu
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a6aac47d366473d072279d356b4f829a6"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1setup_1_1_setup.html#a6aac47d366473d072279d356b4f829a6">__init__</a> (self)</td></tr>
 <tr class="separator:a6aac47d366473d072279d356b4f829a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a690ebab7db5016df64be9823d8e9bb28"><td class="memItemLeft" align="right" valign="top">Activation&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1setup_1_1_setup.html#a690ebab7db5016df64be9823d8e9bb28">get_activation</a> (self, str activation_name, Dict[str, Any] activation_args)</td></tr>
-<tr class="memdesc:a690ebab7db5016df64be9823d8e9bb28"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method retrieves the activation to be supplied for the models.  <a href="classrlpack_1_1utils_1_1setup_1_1_setup.html#a690ebab7db5016df64be9823d8e9bb28">More...</a><br /></td></tr>
-<tr class="separator:a690ebab7db5016df64be9823d8e9bb28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76ea90e7e9ca8b28f36d0bd2314de7cd"><td class="memItemLeft" align="right" valign="top">Union[Activation, List[Activation]]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1setup_1_1_setup.html#a76ea90e7e9ca8b28f36d0bd2314de7cd">get_activation</a> (self, Union[str, List[str]] activation_name, Union[Dict[str, Any], List[Dict[str, Any]]] activation_args)</td></tr>
+<tr class="memdesc:a76ea90e7e9ca8b28f36d0bd2314de7cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method retrieves the activation to be supplied for the models.  <a href="classrlpack_1_1utils_1_1setup_1_1_setup.html#a76ea90e7e9ca8b28f36d0bd2314de7cd">More...</a><br /></td></tr>
+<tr class="separator:a76ea90e7e9ca8b28f36d0bd2314de7cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6c4c9addf30255fea16d0182f332600f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html">Agent</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1setup_1_1_setup.html#a6c4c9addf30255fea16d0182f332600f">get_agent</a> (self, str agent_name, *args, **kwargs)</td></tr>
 <tr class="memdesc:a6c4c9addf30255fea16d0182f332600f"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method retrieves the agent given the agent name.  <a href="classrlpack_1_1utils_1_1setup_1_1_setup.html#a6c4c9addf30255fea16d0182f332600f">More...</a><br /></td></tr>
 <tr class="separator:a6c4c9addf30255fea16d0182f332600f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a88b91132eb3ee55188dadebc404a058d"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1setup_1_1_setup.html#a88b91132eb3ee55188dadebc404a058d">get_agent_model_args</a> (self, str agent_name)</td></tr>
 <tr class="separator:a88b91132eb3ee55188dadebc404a058d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9559c694d2c0c8d7f177a054fa14cc8"><td class="memItemLeft" align="right" valign="top">Distribution&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1setup_1_1_setup.html#ae9559c694d2c0c8d7f177a054fa14cc8">get_distribution_class</a> (self, str distribution)</td></tr>
+<tr class="separator:ae9559c694d2c0c8d7f177a054fa14cc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e793e9b2999ea425f7ee23c1dad55ef"><td class="memItemLeft" align="right" valign="top">LossFunction&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1setup_1_1_setup.html#a7e793e9b2999ea425f7ee23c1dad55ef">get_loss_function</a> (self, str loss_function_name, Dict[str, Any] loss_function_args)</td></tr>
 <tr class="memdesc:a7e793e9b2999ea425f7ee23c1dad55ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method retrieves the Loss Function to be supplied for the models.  <a href="classrlpack_1_1utils_1_1setup_1_1_setup.html#a7e793e9b2999ea425f7ee23c1dad55ef">More...</a><br /></td></tr>
 <tr class="separator:a7e793e9b2999ea425f7ee23c1dad55ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -185,6 +187,9 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:a977f23a2ec1143d5aeb32e362562b295 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1register_1_1_register"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#a977f23a2ec1143d5aeb32e362562b295">agents</a></td></tr>
 <tr class="memdesc:a977f23a2ec1143d5aeb32e362562b295 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1register_1_1_register"><td class="mdescLeft">&#160;</td><td class="mdescRight">The mapping between given keyword and <a class="el" href="agents.html#md_agents_index">agents</a> models.  <a href="classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#a977f23a2ec1143d5aeb32e362562b295">More...</a><br /></td></tr>
 <tr class="separator:a977f23a2ec1143d5aeb32e362562b295 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1register_1_1_register"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a4f01f371201400fe35f2c17bb08e3c inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1register_1_1_register"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#a4a4f01f371201400fe35f2c17bb08e3c">distributions_map</a></td></tr>
+<tr class="memdesc:a4a4f01f371201400fe35f2c17bb08e3c inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1register_1_1_register"><td class="mdescLeft">&#160;</td><td class="mdescRight">The mapping between given keyword and PyTorch Distribution class.  <a href="classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#a4a4f01f371201400fe35f2c17bb08e3c">More...</a><br /></td></tr>
+<tr class="separator:a4a4f01f371201400fe35f2c17bb08e3c inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1register_1_1_register"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad95e7eed976cd6bbc7fa01e9d8f26acb inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1register_1_1_register"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#ad95e7eed976cd6bbc7fa01e9d8f26acb">loss_function_map</a></td></tr>
 <tr class="memdesc:ad95e7eed976cd6bbc7fa01e9d8f26acb inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1register_1_1_register"><td class="mdescLeft">&#160;</td><td class="mdescRight">The mapping between given keyword and PyTorch loss function class.  <a href="classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#ad95e7eed976cd6bbc7fa01e9d8f26acb">More...</a><br /></td></tr>
 <tr class="separator:ad95e7eed976cd6bbc7fa01e9d8f26acb inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1register_1_1_register"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -196,6 +201,8 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:afd0005ebd89f779294a4be9d16212a85 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1register_1_1_register"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a70f63d7d0e69eee705e47489a4f98770 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1register_1_1_register"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#a70f63d7d0e69eee705e47489a4f98770">mandatory_distributed_agents</a></td></tr>
 <tr class="separator:a70f63d7d0e69eee705e47489a4f98770 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1register_1_1_register"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae599f786379a41afae3d0839ba6c7283 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1register_1_1_register"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#ae599f786379a41afae3d0839ba6c7283">mandatory_distribution_required_agents</a></td></tr>
+<tr class="separator:ae599f786379a41afae3d0839ba6c7283 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1register_1_1_register"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad2bbe33d59c9a706b708abfbe69bacac inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1register_1_1_register"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#ad2bbe33d59c9a706b708abfbe69bacac">mandatory_keys</a></td></tr>
 <tr class="memdesc:ad2bbe33d59c9a706b708abfbe69bacac inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1register_1_1_register"><td class="mdescLeft">&#160;</td><td class="mdescRight">The tuple for mandatory keys (or keyword arguments) always expected.  <a href="classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#ad2bbe33d59c9a706b708abfbe69bacac">More...</a><br /></td></tr>
 <tr class="separator:ad2bbe33d59c9a706b708abfbe69bacac inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1register_1_1_register"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -255,14 +262,14 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a690ebab7db5016df64be9823d8e9bb28" name="a690ebab7db5016df64be9823d8e9bb28"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a690ebab7db5016df64be9823d8e9bb28">&#9670;&#160;</a></span>get_activation()</h2>
+<a id="a76ea90e7e9ca8b28f36d0bd2314de7cd" name="a76ea90e7e9ca8b28f36d0bd2314de7cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a76ea90e7e9ca8b28f36d0bd2314de7cd">&#9670;&#160;</a></span>get_activation()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"> Activation rlpack.utils.setup.Setup.get_activation </td>
+          <td class="memname"> Union[Activation, List[Activation]] rlpack.utils.setup.Setup.get_activation </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><em>self</em>, </td>
@@ -270,14 +277,13 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">str&#160;</td>
+          <td class="paramtype">Union[str, List[str]]&#160;</td>
           <td class="paramname"><em>activation_name</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Dict[str, Any]
-    &#160;</td>
+          <td class="paramtype">Union[Dict[str, Any], List[Dict[str, Any]]]&#160;</td>
           <td class="paramname"><em>activation_args</em>&#160;</td>
         </tr>
         <tr>
@@ -289,14 +295,14 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>This method retrieves the activation to be supplied for the models. </p>
-<dl class="params"><dt>Parameters</dt><dd>
+<p >If list is passed, list of initialized activation objects are retrieved. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">activation_name</td><td>str: The activation name to be used. </td></tr>
-    <tr><td class="paramname">activation_args</td><td>Dict[str, Any]: A dictionary with keyword arguments for to-be initialized activation function. </td></tr>
+    <tr><td class="paramname">activation_name</td><td>Union[str, List[str]]: The activation name to be used. </td></tr>
+    <tr><td class="paramname">activation_args</td><td>DUnion[Dict[str, Any], List[Dict[str, Any]]]: A dictionary with keyword arguments for to-be initialized activation function. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Activation: The initialized activated function. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Union[Activation, List[Activation]]: The initialized activated function. </dd></dl>
 
 </div>
 </div>
@@ -368,6 +374,34 @@ Additional Inherited Members</h2></td></tr>
           <td></td>
           <td class="paramtype">str&#160;</td>
           <td class="paramname"><em>agent_name</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae9559c694d2c0c8d7f177a054fa14cc8" name="ae9559c694d2c0c8d7f177a054fa14cc8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9559c694d2c0c8d7f177a054fa14cc8">&#9670;&#160;</a></span>get_distribution_class()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Distribution rlpack.utils.setup.Setup.get_distribution_class </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>distribution</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
