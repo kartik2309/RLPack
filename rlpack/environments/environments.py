@@ -51,7 +51,9 @@ class Environments:
             self.reshape_func = reshape_func
         new_shape = self.config.get("new_shape")
         if not isinstance(new_shape, (list, type(None))):
-            raise TypeError(f"`new_shape` must be a {list} of new shape or {type(None)}")
+            raise TypeError(
+                f"`new_shape` must be a {list} of new shape or {type(None)}"
+            )
         ## The new shape requested in config to be used with @ref reshape_func. @I{# noqa: E266}
         self.new_shape = tuple(new_shape) if new_shape is not None else None
         ## The gym environment on which the agent will run. @I{# noqa: E266}
