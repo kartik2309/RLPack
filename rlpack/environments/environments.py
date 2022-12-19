@@ -204,6 +204,7 @@ class Environments:
             observation, _ = self.env.reset()
             score = 0
             for timestep in range(self.config["max_timesteps"]):
+                self.env.render()
                 action = self.agent.policy(
                     self.reshape_func(observation, self.new_shape)
                 )
