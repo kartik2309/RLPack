@@ -54,11 +54,11 @@ std::map<std::string, torch::Tensor> C_GradAccumulator::mean_reduce() {
         for (int64_t namedParametersIndex = 0; namedParametersIndex != bootstrapRounds_; namedParametersIndex++) {
             for (int64_t keyIndex = 0; keyIndex != parameterKeys_.size(); keyIndex++) {
                 auto key = parameterKeys_[keyIndex];
-                auto param = namedParametersGrads_[namedParametersIndex][key];
+                auto param = namedParametersGrads_[namedParametersIndex][key] / bootstrapRounds_;
                 if (namedParametersIndex != 0) {
-                    reducedParams_[key] += param / bootstrapRounds_;
+                    reducedParams_[key] += param;
                 } else {
-                    reducedParams_[key] = param / bootstrapRounds_;
+                    reducedParams_[key] = param;
                 }
             }
         }
@@ -150,6 +150,10 @@ void C_GradAccumulator::delete_item(int64_t index) {
         throw std::out_of_range(errorMessage.c_str());
     }
     namedParametersGrads_.erase(namedParametersGrads_.begin() + index);
+}
+
+size_t C_GradAccumulator::size() {
+    return namedParametersGrads_.size();
 }
 
 void C_GradAccumulator::clear() {

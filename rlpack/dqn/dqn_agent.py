@@ -26,6 +26,7 @@ import numpy as np
 from numpy import ndarray
 
 from rlpack import pytorch
+from rlpack._C.grad_accumulator import GradAccumulator
 from rlpack._C.memory import Memory
 from rlpack.utils import LossFunction, LRScheduler
 from rlpack.utils.base.agent import Agent
@@ -238,8 +239,12 @@ class DqnAgent(Agent):
             prioritization_strategy_code=self.__prioritization_strategy_code,
             batch_size=self.batch_size,
         )
+        # Parameter keys of the model.
+        keys = list(dict(self.policy_model.named_parameters()).keys())
+        ## The list of gradients from each backward call. @I{# noqa: E266}
         ## This is only used when boostrap_rounds > 1 and is cleared after each boostrap round. @I{# noqa: E266}
-        self._grad_accumulator = list()
+        ## The rlpack._C.grad_accumulator.GradAccumulator object for grad accumulation. @I{# noqa: E266}
+        self._grad_accumulator = GradAccumulator(keys, bootstrap_rounds)
         # Disable gradients for target network.
         for n, p in self.target_model.named_parameters():
             p.requires_grad = False
@@ -248,10 +253,6 @@ class DqnAgent(Agent):
         self._normalization = Normalization(
             apply_norm=apply_norm, eps=eps_for_norm, p=p_for_norm, dim=dim_for_norm
         )
-        ## The policy model parameters names. @I{# noqa: E266}
-        self._policy_model_parameter_keys = OrderedDict(
-            self.policy_model.named_parameters()
-        ).keys()
 
     def train(
         self,
@@ -317,7 +318,7 @@ class DqnAgent(Agent):
             self._anneal_beta()
         # Increment `step_counter` and use policy model to get next action.
         self.step_counter += 1
-        action = self.policy(state_current)
+        action = self._infer_action(state_current, call_from_policy=False)
         return action
 
     @pytorch.no_grad()
@@ -330,17 +331,7 @@ class DqnAgent(Agent):
         """
         state_current = self._cast_to_tensor(state_current).to(self.device)
         state_current = pytorch.unsqueeze(state_current, 0)
-        p = random.random()
-        if p < self.epsilon:
-            action = random.randint(0, self.num_actions - 1)
-        else:
-            if self.policy_model.training:
-                self.policy_model.eval()
-            if self.apply_norm_to in self.state_norm_codes:
-                state_current = self._normalization.apply_normalization(state_current)
-            q_values = self.policy_model(state_current)
-            action_tensor = q_values.argmax(-1)
-            action = action_tensor.item()
+        action = self._infer_action(state_current)
         return action
 
     def save(self, custom_name_suffix: Optional[str] = None) -> None:
@@ -445,6 +436,33 @@ class DqnAgent(Agent):
             self.memory = agent_state["memory"]
         return
 
+    @pytorch.no_grad()
+    def _infer_action(
+        self, state_current: pytorch.Tensor, call_from_policy: bool = True
+    ) -> int:
+        """
+        Helper method to support action inference form policy model.
+        @param state_current: pytorch.Tensor: The current state of the agent in the environment
+        @param call_from_policy: bool: The flag indicating if the method is being from `DqnAgent.policy`
+            method or not. Default: True
+        @return int: The discrete action
+        """
+        if not call_from_policy:
+            p = random.random()
+        else:
+            p = 1e2
+        if p < self.epsilon:
+            action = random.randint(0, self.num_actions - 1)
+        else:
+            if self.policy_model.training:
+                self.policy_model.eval()
+            if self.apply_norm_to in self._state_norm_codes:
+                state_current = self._normalization.apply_normalization(state_current)
+            q_values = self.policy_model(state_current)
+            action_tensor = q_values.argmax(-1)
+            action = action_tensor.item()
+        return action
+
     def _train_policy_model(self) -> None:
         """
         Protected method of the class to train the policy model. This method is called every
@@ -465,11 +483,11 @@ class DqnAgent(Agent):
             random_indices,
         ) = random_experiences
         # Apply normalization if required to states.
-        if self.apply_norm_to in self.state_norm_codes:
+        if self.apply_norm_to in self._state_norm_codes:
             state_current = self._normalization.apply_normalization(state_current)
             state_next = self._normalization.apply_normalization(state_next)
         # Apply normalization if required to rewards.
-        if self.apply_norm_to in self.reward_norm_codes:
+        if self.apply_norm_to in self._reward_norm_codes:
             rewards = self._normalization.apply_normalization(rewards)
         # Set policy model to training mode.
         if not self.policy_model.training:
@@ -479,7 +497,7 @@ class DqnAgent(Agent):
             q_values_target = self.target_model(state_next)
             td_value = self._temporal_difference(rewards, q_values_target, dones)
         # Apply normalization if required to TD values.
-        if self.apply_norm_to in self.td_norm_codes:
+        if self.apply_norm_to in self._td_norm_codes:
             td_value = self._normalization.apply_normalization(td_value)
         # Compute current q-values from policy model.
         q_values_policy = self.policy_model(state_current)
@@ -504,15 +522,13 @@ class DqnAgent(Agent):
             # specified by `bootstrap_rounds` have not been completed and return.
             # If no. of rounds have been completed, perform mean reduction and proceed with optimizer step.
             if len(self._grad_accumulator) < self.bootstrap_rounds:
-                self._grad_accumulator.append(
-                    {
-                        k: param.grad.detach().clone()
-                        for k, param in self.policy_model.named_parameters()
-                    },
-                )
+                self._grad_accumulator.accumulate(self.policy_model.named_parameters())
                 return
             else:
+                # Perform mean reduction.
                 self._grad_mean_reduction()
+                # Clear Accumulated Gradient buffer.
+                self._grad_accumulator.clear()
         # Clip gradients if requested.
         if self.max_grad_norm is not None:
             pytorch.nn.utils.clip_grad_norm_(
@@ -575,6 +591,16 @@ class DqnAgent(Agent):
         dones = self._adjust_dims_for_tensor(dones, target_dim=q_values.dim())
         td_value = rewards + ((self.gamma * q_values_max) * (1 - dones))
         return td_value
+
+    @pytorch.no_grad()
+    def _grad_mean_reduction(self) -> None:
+        """
+        Performs mean reduction and assigns the policy model's parameter the mean reduced gradients.
+        """
+        reduced_parameters = self._grad_accumulator.mean_reduce()
+        # Assign average parameters to model.
+        for key, param in self.policy_model.named_parameters():
+            param.grad = reduced_parameters[key] / self.bootstrap_rounds
 
     def _decay_epsilon(self) -> None:
         """
@@ -680,20 +706,3 @@ class DqnAgent(Agent):
                 self.prioritization_params["beta"] = self.prioritization_params[
                     "max_beta"
                 ]
-
-    def _grad_mean_reduction(self):
-        policy_model_grads = self._grad_accumulator
-        # OrderedDict to store reduced average value.
-        policy_model_grads_reduced = OrderedDict()
-        # No Grad mode to disable PyTorch Operation tracking.
-        with pytorch.no_grad():
-            # Perform parameter wise summation.
-            for key in self._policy_model_parameter_keys:
-                for policy_model_grad in policy_model_grads:
-                    if key not in policy_model_grads_reduced.keys():
-                        policy_model_grads_reduced[key] = policy_model_grad[key]
-                        continue
-                    policy_model_grads_reduced[key] += policy_model_grad[key]
-            # Assign average parameters to model.
-            for key, param in self.policy_model.named_parameters():
-                param.grad = policy_model_grads_reduced[key] / self.bootstrap_rounds

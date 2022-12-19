@@ -27,13 +27,13 @@ class Agent(object):
         The class initializer. Defines basic variables useful for all agents.
         """
         ## The state normalisation codes; indicating the codes to normalise states. @I{# noqa: E266}
-        self.state_norm_codes = (0, 3, 4)
+        self._state_norm_codes = (0, 3, 4)
         ## The reward normalisation codes; indicating the codes to normalise rewards. @I{# noqa: E266}
-        self.reward_norm_codes = (1, 3)
+        self._reward_norm_codes = (1, 3)
         ## The TD normalisation codes; indicating the codes to normalise TD Errors. @I{# noqa: E266}
-        self.td_norm_codes = (2, 4)
+        self._td_norm_codes = (2, 4)
         ## The Advantage normalisation codes; indicating the codes to normalise Advantages. @I{# noqa: E266}
-        self.advantage_norm_codes = (2, 4)
+        self._advantage_norm_codes = (2, 4)
         ## The list of losses accumulated after each backward call. @I{# noqa: E266}
         self.loss = list()
         ## The path to save agent states and models. @I{# noqa: E266}

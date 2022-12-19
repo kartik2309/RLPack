@@ -7,6 +7,7 @@ been optimized with C++ backend.
 # Import pytorch packages
 import torch as pytorch
 import torch.distributed as dist
+import torch.distributions as distributions_math
 import torch.multiprocessing as mp
 
 # Import CPP Backend

@@ -53,6 +53,9 @@ PYBIND11_MODULE(C_GradAccumulator, m) {
                  &C_GradAccumulator::delete_item,
                  "Method to delete named parameter gradients at a given index.",
                  pybind11::arg("index"))
+            .def("size",
+                 &C_GradAccumulator::size,
+                 "Method to retrieve the size of the C_GradAccumulator i.e. the number of accumulated parameters")
             .def("clear", &C_GradAccumulator::clear, "Method to clear accumulated gradients.");
 
     /*

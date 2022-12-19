@@ -58,6 +58,7 @@ class SanityCheck(Register):
         `model_name` and `model_args` must be passed. If both are not passed, it will try to check if there is a
         custom model that is passed. Custom models' names must correspond to their target agent's keyword argument
         name.
+
         @return A flag indicating if we use a custom model or an in-built model.
         """
         present_model_init_args = [k in self.args for k in self.model_init_args]
@@ -166,14 +167,25 @@ class SanityCheck(Register):
                 f"{self._error_message('activation_init_args', present_activation_init_args)}"
             )
         activation_name = self.input_config["activation_name"]
-        if not isinstance(activation_name, str):
+        if not isinstance(activation_name, (str, list)):
             raise TypeError(
                 f"Expected `activation_name` to be of type {str} but received type {type(activation_name)}"
             )
-        if activation_name not in self.activation_map.keys():
-            raise NotImplementedError(
-                f"The requested activation {activation_name} is not supported."
-            )
+        if isinstance(activation_name, str):
+            if activation_name not in self.activation_map.keys():
+                raise NotImplementedError(
+                    f"The requested activation {activation_name} is not supported."
+                )
+        else:
+            not_implemented_activations = [
+                activation_name_ in self.activation_map.keys()
+                for activation_name_ in activation_name
+            ]
+            if not all(not_implemented_activations):
+                raise NotImplementedError(
+                    f"The requested activation {activation_name} is not supported; "
+                    f"refer the boolean map: {not_implemented_activations}"
+                )
 
     def check_optimizer_init_sanity(self) -> None:
         """
@@ -231,14 +243,42 @@ class SanityCheck(Register):
                     f"The requested lr_scheduler {lr_scheduler_name} is not supported."
                 )
 
-    def check_if_valid_agent_for_simulator(self):
+    def check_distribution_sanity(self) -> bool:
+        """
+        For agents with requirements of the argument `distribution`, checks if valid distribution is being passed.
+        If agent requires distribution argument and valid argument is passed, True is returned.
+        If agent doesn't require distribution argument returns False.
+
+        @return bool: Flag indicating if agent requires `distribution` argument or not.
+        """
+        agent_name = self.input_config["agent_name"]
+        if agent_name not in self.mandatory_distribution_required_agents:
+            return False
+        distribution = self.input_config["agent_args"].get("distribution")
+        if distribution is None:
+            raise ValueError(
+                "Mandatory argument `distribution` has not been passed in `agent_args`"
+            )
+        if distribution not in self.distributions_map.keys():
+            raise NotImplementedError(
+                "The passed distribution is either invalid or has not been implemented/registered in rlpack"
+            )
+        return True
+
+    def check_if_valid_agent_for_simulator(self) -> None:
+        """
+        Checks if agent is valid for rlpack.simulator.Simulator (single process agent).
+        """
         agent_name = self.input_config["agent_name"]
         if agent_name in self.mandatory_distributed_agents:
             raise ValueError(
                 "Provided `agent_name` must be used with rlpack.simulator.SimulatorDistributed"
             )
 
-    def check_if_valid_agent_for_simulator_distributed(self):
+    def check_if_valid_agent_for_simulator_distributed(self) -> None:
+        """
+        Checks if agent is valid for rlpack.simulator_distributed.SimulatorDistributed (multi process agent).
+        """
         agent_name = self.input_config["agent_name"]
         if agent_name not in self.mandatory_distributed_agents:
             raise ValueError(

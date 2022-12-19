@@ -87,3 +87,10 @@ class GradAccumulator:
         @param index: int: The index at which we wish to set the gradient values.
         """
         self.c_grad_accumulator.delete_item(index)
+
+    def __len__(self):
+        """
+        Get the number of named parameters' accumulated gradients so far.
+        @return int: The size of GradAccumulator.
+        """
+        return self.c_grad_accumulator.size()

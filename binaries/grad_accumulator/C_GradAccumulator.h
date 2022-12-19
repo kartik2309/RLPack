@@ -31,6 +31,7 @@ public:
     std::map<std::string, torch::Tensor> get_item(int64_t index);
     void set_item(int64_t index, std::map<std::string, torch::Tensor> &namedParameters);
     void delete_item(int64_t index);
+    size_t size();
     void clear();
 
 private:

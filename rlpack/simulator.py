@@ -75,6 +75,7 @@ class Simulator:
         self.sanity_check.check_agent_init_sanity()
         self.sanity_check.check_optimizer_init_sanity()
         self.sanity_check.check_lr_scheduler_init_sanity()
+        requires_distribution = self.sanity_check.check_distribution_sanity()
         agent_args_for_models = [
             arg
             for arg in self.setup.agent_args[self.config["agent_name"]]
@@ -122,6 +123,14 @@ class Simulator:
             ),
             save_path=self.config["agent_args"]["save_path"],
         )
+        # Add distribution object to arguments if required by agent.
+        if requires_distribution:
+            distribution_kwargs = dict(
+                distribution=self.setup.get_distribution_class(
+                    self.config["agent_args"]["distribution"]
+                )
+            )
+            processed_agent_args.update(distribution_kwargs)
         agent_args_from_config = {
             k: v
             for k, v in self.config["agent_args"].items()
@@ -133,7 +142,6 @@ class Simulator:
             **agent_args_from_config,
             **default_model_args,
         }
-
         agent = self.setup.get_agent(
             agent_name=self.config["agent_name"], **agent_kwargs
         )
@@ -160,7 +168,9 @@ class Simulator:
                 activation_args=self.config.get("activation_args", dict()),
             )
             model_kwargs = {
-                k: self.config["model_args"][k] if k != "activation" else activation
+                k: self.config["model_args"][k]
+                if k not in ("activation",)
+                else activation
                 for k in self.setup.get_model_args(self.config["model_name"])
             }
             models = self.setup.get_models(

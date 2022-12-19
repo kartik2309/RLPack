@@ -21,10 +21,10 @@ Following TypeVars have been defined:
 
 
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from rlpack import pytorch
-from rlpack.utils import Activation, LossFunction, LRScheduler
+from rlpack.utils import Activation, Distribution, LossFunction, LRScheduler
 from rlpack.utils.base.agent import Agent
 from rlpack.utils.base.internal_code_register import InternalCodeRegister
 from rlpack.utils.base.register import Register
@@ -97,16 +97,29 @@ class Setup(Register, InternalCodeRegister):
         return optimizer
 
     def get_activation(
-        self, activation_name: str, activation_args: Dict[str, Any]
-    ) -> Activation:
+        self,
+        activation_name: Union[str, List[str]],
+        activation_args: Union[Dict[str, Any], List[Dict[str, Any]]],
+    ) -> Union[Activation, List[Activation]]:
         """
-        This method retrieves the activation to be supplied for the models.
-        @param activation_name: str: The activation name to be used.
-        @param activation_args: Dict[str, Any]: A dictionary with keyword arguments for to-be initialized
-            activation function.
-        @return Activation: The initialized activated function.
+        This method retrieves the activation to be supplied for the models. If list is passed, list of initialized
+        activation objects are retrieved.
+        @param activation_name: Union[str, List[str]]: The activation name to be used.
+        @param activation_args: DUnion[Dict[str, Any], List[Dict[str, Any]]]: A dictionary with keyword arguments
+            for to-be initialized activation function.
+        @return Union[Activation, List[Activation]]: The initialized activated function.
         """
-        activation = self.activation_map[activation_name](**activation_args)
+        if isinstance(activation_name, str) and isinstance(activation_args, dict):
+            activation = self.activation_map[activation_name](**activation_args)
+        else:
+            if isinstance(activation_args, dict):
+                activation_args = [dict()] * len(activation_name)
+            activation = [
+                self.activation_map[activation_name_](**activation_args_)
+                for activation_name_, activation_args_ in zip(
+                    activation_name, activation_args
+                )
+            ]
         return activation
 
     def get_lr_scheduler(
@@ -142,3 +155,6 @@ class Setup(Register, InternalCodeRegister):
         """
         loss_function = self.loss_function_map[loss_function_name](**loss_function_args)
         return loss_function
+
+    def get_distribution_class(self, distribution: str) -> Distribution:
+        return self.distributions_map[distribution]

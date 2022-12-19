@@ -55,8 +55,13 @@ class Environments:
         ## The new shape requested in config to be used with @ref reshape_func. @I{# noqa: E266}
         self.new_shape = tuple(new_shape) if new_shape is not None else None
         render_mode = None
-        if self.is_eval() and config["render"]:
+        if config["render"]:
             render_mode = "human"
+            if self.is_train():
+                logging.warning(
+                    "Rendering environment during training will slow down the training! "
+                    "Consider setting `render` to False."
+                )
         ## The gym environment on which the agent will run. @I{# noqa: E266}
         if self.config.get("env") is None:
             assert self.config.get("env_name") is not None, (
@@ -85,7 +90,6 @@ class Environments:
             recorded and plot is saved in `save_path`.
         @param verbose: bool: Indicates the verbose level. Refer notes for more details. This also refers to values
             logged on screen. If you want to disable the logging on screen, set logging level to WARNING. Default: -1
-        config must have set mode='train' to run evaluation.
         @param distributed_mode: Indicates if the environment is being run in distributed mode.
         Rewards are logged on console every `reward_logging_frequency` set in the console.
 
@@ -110,18 +114,24 @@ class Environments:
                     self._remove_log_file()
             else:
                 self._remove_log_file()
-        log = list()
         highest_mv_avg_reward, timestep = 0.0, 0
         rewards_collector = {k: list() for k in range(self.config["num_episodes"])}
         rewards = list()
+        # Start episodic loop
         for ep in range(self.config["num_episodes"]):
             observation_current, _ = self.env.reset()
             action = self.env.action_space.sample()
             scores = 0
+            done = False
+            # Start timestep loop
             for timestep in range(self.config["max_timesteps"]):
                 if render:
                     self.env.render()
-                observation_next, reward, done, info, _ = self.env.step(action=action)
+                observation_next, reward, terminated, truncated, info = self.env.step(
+                    action=action
+                )
+                if terminated or truncated:
+                    done = True
                 action = self.agent.train(
                     state_current=self.reshape_func(
                         observation_current, self.new_shape
@@ -132,89 +142,30 @@ class Environments:
                     done=done,
                 )
                 scores += reward
+                # If plotting is required, add rewards to `rewards_collector`
                 if plot:
                     rewards_collector[ep].append(reward)
                 observation_current = observation_next
+                # Break the loop once done
                 if done:
                     break
-            if timestep == self.config["max_timesteps"]:
-                logging.info(
-                    f"Maximum timesteps of {timestep} reached in the episode {ep}"
-                )
             rewards.append(scores)
             if ep % self.config["reward_logging_frequency"] == 0:
-                head_message = "~" * 60
-                if not distributed_mode:
-                    closing_message = f"\n{'~' * len(head_message)}"
-                else:
-                    length = int(len(head_message) / 2)
-                    closing_message = (
-                        f"\n{'~' * length} Process {dist.get_rank()} {'~' * length}"
+                mean_reward = self._list_mean(rewards)
+                # If mean reward obtained is higher than moving average of rewards so far, save the agent with
+                # custom suffix. If no custom suffix is present, save with the suffix `_best`.
+                if highest_mv_avg_reward < mean_reward:
+                    self.agent.save(
+                        custom_name_suffix=self.config.get("suffix", "_best")
                     )
-                logging.info(closing_message)
-                log.append(f"{closing_message}\n")
-                # Log Mean Reward in the episode cycle
-                if verbose <= 0:
-                    mean_reward = self._list_mean(rewards)
-                    reward_log_message = (
-                        f"Average Reward after {ep} episodes: {mean_reward}"
-                    )
-                    if distributed_mode:
-                        reward_log_message = (
-                            f"{reward_log_message} from process {dist.get_rank()}"
-                        )
-                    logging.info(reward_log_message)
-                    log.append(f"{reward_log_message}\n")
-                    if highest_mv_avg_reward < mean_reward:
-                        self.agent.save(
-                            custom_name_suffix=self.config.get("suffix", "_best")
-                        )
-                        highest_mv_avg_reward = mean_reward
-                if verbose <= 1:
-                    # Log Mean Loss in the episode cycle
-                    mean_loss = self._list_mean(self.agent.loss)
-                    if len(self.agent.loss) > 0:
-                        log_mean_message = (
-                            f"Average Loss after {ep} episodes: {mean_loss}"
-                        )
-                        if distributed_mode:
-                            log_mean_message = (
-                                f"{log_mean_message} from process {dist.get_rank()}"
-                            )
-                        logging.info(log_mean_message)
-                        log.append(f"{log_mean_message}\n")
-                if verbose <= 2:
-                    # Log current epsilon value
-                    if hasattr(self.agent, "epsilon"):
-                        log_epsilon_message = (
-                            f"Epsilon after {ep} episodes: {self.agent.epsilon}"
-                        )
-                        if distributed_mode:
-                            log_epsilon_message = (
-                                f"{log_epsilon_message} from process {dist.get_rank()}"
-                            )
-                        logging.info(log_epsilon_message)
-                        log.append(f"{log_epsilon_message}\n")
-                    # Log current alpha and beta values - for prioritized relay (DQN)
-                    if hasattr(self.agent, "prioritization_params"):
-                        if hasattr(self.agent, "prioritization_params"):
-                            if "alpha" in self.agent.prioritization_params.keys():
-                                log_alpha_message = f"Alpha after {ep} episodes: {self.agent.prioritization_params['alpha']}"
-                                if distributed_mode:
-                                    log_alpha_message = f"{log_alpha_message} from process {dist.get_rank()}"
-                                logging.info(log_alpha_message)
-                                log.append(f"{log_alpha_message}\n")
-                            if "beta" in self.agent.prioritization_params.keys():
-                                log_beta_message = f"Beta after {ep} episodes: {self.agent.prioritization_params['beta']}"
-                                if distributed_mode:
-                                    log_beta_message = f"{log_beta_message} from process {dist.get_rank()}"
-                                logging.info(log_beta_message)
-                                log.append(f"{log_beta_message}\n")
-                    if not distributed_mode:
-                        self._write_log_file(log)
-                    else:
-                        if dist.get_rank() == 0:
-                            self._write_log_file(log)
+                    highest_mv_avg_reward = mean_reward
+                # Perform logging
+                self._log(
+                    ep=ep,
+                    mean_reward=mean_reward,
+                    distributed_mode=distributed_mode,
+                    verbose=verbose,
+                )
                 rewards.clear()
         self.env.close()
         if not distributed_mode:
@@ -241,10 +192,7 @@ class Environments:
 
         # Load agent's necessary objects (models, states etc.)
         self.agent.load(self.config.get("custom_suffix", "_best"))
-        # Temporarily save epsilon before setting it 0.0
-        epsilon = self.agent.epsilon
         rewards = list()
-        self.agent.epsilon, timestep, ep, score = 0.0, 0, 0, 0
         for ep in range(self.config["num_episodes"]):
             observation, _ = self.env.reset()
             score = 0
@@ -257,20 +205,11 @@ class Environments:
                 if done:
                     break
             rewards.append(score)
-        if timestep == self.config["max_timesteps"]:
-            logging.info("Max timesteps was reached!")
-        if ep < 1:
-            # When only single episode was performed and evaluated.
+            # Log the rewards observed.
             logging.info(
-                f"Total Reward after {timestep} timesteps: {score}",
+                f'Average Rewards after {self.config["max_timesteps"]} '
+                f"timesteps: {self._list_mean(rewards)}"
             )
-        else:
-            # When more than one episode was performed and evaluated.
-            logging.info(
-                f'Average Rewards after {self.config["num_episodes"]} episodes: {self._list_mean(rewards)}'
-            )
-        # Restore epsilon value of the agent.
-        self.agent.epsilon = epsilon
         self.env.close()
 
     def is_eval(self) -> bool:
@@ -288,6 +227,95 @@ class Environments:
         """
         possible_train_names = ("train", "training")
         return self.config["mode"] in possible_train_names
+
+    def _log(
+        self, ep: int, mean_reward: float, distributed_mode: bool, verbose: int
+    ) -> None:
+        """
+        Helper method to perform logging operations (both on console and cache).
+        @param ep: int: The episode which is currently being logged.
+        @param mean_reward: float: The mean reward acquired between two successive calls of this method.
+        @param distributed_mode: bool: Indicates if the environment is being run in distributed mode.
+        @param verbose: bool: Indicates the verbose level. Refer notes for more details. This also refers to values
+            logged on screen. If you want to disable the logging on screen, set logging level to WARNING. Default: -1
+        """
+        log = list()
+        head_message = "~" * 60
+        if not distributed_mode:
+            closing_message = f"\n{'~' * len(head_message)}"
+        else:
+            length = int(len(head_message) / 2)
+            closing_message = (
+                f"\n{'~' * length} Process {dist.get_rank()} {'~' * length}"
+            )
+        # Log Mean Reward in the episode cycle
+        if verbose <= 0:
+            logging.info(closing_message)
+            log.append(f"{closing_message}\n")
+            reward_log_message = f"Average Reward after {ep} episodes: {mean_reward}"
+            if distributed_mode:
+                reward_log_message = (
+                    f"{reward_log_message} from process {dist.get_rank()}"
+                )
+            logging.info(reward_log_message)
+            log.append(f"{reward_log_message}\n")
+        if verbose <= 1:
+            # Log Mean Loss in the episode cycle
+            mean_loss = self._list_mean(self.agent.loss)
+            if len(self.agent.loss) > 0:
+                log_mean_message = f"Average Loss after {ep} episodes: {mean_loss}"
+                if distributed_mode:
+                    log_mean_message = (
+                        f"{log_mean_message} from process {dist.get_rank()}"
+                    )
+                logging.info(log_mean_message)
+                log.append(f"{log_mean_message}\n")
+        if verbose <= 2:
+            # Log current epsilon value
+            if hasattr(self.agent, "epsilon"):
+                log_epsilon_message = (
+                    f"Epsilon after {ep} episodes: {self.agent.epsilon}"
+                )
+                if distributed_mode:
+                    log_epsilon_message = (
+                        f"{log_epsilon_message} from process {dist.get_rank()}"
+                    )
+                logging.info(log_epsilon_message)
+                log.append(f"{log_epsilon_message}\n")
+            # Log current alpha and beta values - for prioritized relay (DQN)
+            if hasattr(self.agent, "prioritization_params"):
+                if hasattr(self.agent, "prioritization_params"):
+                    if "alpha" in self.agent.prioritization_params.keys():
+                        log_alpha_message = f"Alpha after {ep} episodes: {self.agent.prioritization_params['alpha']}"
+                        if distributed_mode:
+                            log_alpha_message = (
+                                f"{log_alpha_message} from process {dist.get_rank()}"
+                            )
+                        logging.info(log_alpha_message)
+                        log.append(f"{log_alpha_message}\n")
+                    if "beta" in self.agent.prioritization_params.keys():
+                        log_beta_message = f"Beta after {ep} episodes: {self.agent.prioritization_params['beta']}"
+                        if distributed_mode:
+                            log_beta_message = (
+                                f"{log_beta_message} from process {dist.get_rank()}"
+                            )
+                        logging.info(log_beta_message)
+                        log.append(f"{log_beta_message}\n")
+            if hasattr(self.agent, "variance_value"):
+                log_variance_message = (
+                    f"Variance after {ep} episodes: {self.agent.variance_value}"
+                )
+                if distributed_mode:
+                    log_variance_message = (
+                        f"{log_variance_message} from process {dist.get_rank()}"
+                    )
+                logging.info(log_variance_message)
+                log.append(f"{log_variance_message}\n")
+        if not distributed_mode:
+            self._write_log_file(log)
+        else:
+            if dist.get_rank() == 0:
+                self._write_log_file(log)
 
     def _remove_log_file(self) -> None:
         """
