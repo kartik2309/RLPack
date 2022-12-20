@@ -3,7 +3,7 @@
 # Introduction
 
 Implementation of RL Algorithms built on top of PyTorch. Heavy workloads have
-been optimized with C++ backend.
+been optimized with C++ backend with CUDA and OpenMP (depending on the hardware availability).
 
 # Installation
 
