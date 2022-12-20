@@ -1,5 +1,13 @@
 # General structure {#overview}
 
+To make RLPack easy to use, there are "keywords". This loosely refers to various functionalities 
+implemented in RLPack which can be accessed by simply passing a string. These keywords can be collectively passed 
+in a dictionary (more on this below) to run an experiment. To use a feature, you can refer to its corresponding page
+and look for the keyword which you wish to use. For example, you can see the keywords for models
+[here](@ref models/index.md). You can collectively pass the dictionary of simple and intuitive keywords to 
+`rlpack.Simulator` or `rlpack.SimulatorDistributed` (depending on the agent you use), and your experiments will be
+up and running!
+
 RLPack runs `Simulator` defined in `rlpack.simulator`. This class provides an easy-to-use
 interface to train agents. `Simulator` accepts a dictionary (keyword argument `config`) which
 must contain parameters specific to the agent you are about to train or evaluate. In general, the
@@ -46,8 +54,6 @@ config dictionary must contain some mandatory keys as discussed below:
 - `lr_scheduler_args`: If `lr_scheduler_name` is passed in config dictionary, this argument must be passed. Necessary
   arguments for the provided activation with `lr_scheduler_name` must be passed in this dictionary as keyword arguments.
   Further details on how they are used of in-built models and values supported is provided [here](@ref models/lr_schedulers.md).
-- `device`: The device on which we want the model within the agent to be trained. This relies on PyTorch's support for
-  device argument. Recommended devices are `cpu`, `cuda` and `mps`.
 
 The config dictionary to be passed into `Simulator` must contain all the necessary arguments as mentioned. Once prepared
 a dictionary named `config` we can write the following:
@@ -67,7 +73,10 @@ simulator.run()
 `run` method can provide callbacks which can enable us to pass custom models to be used inside the agent.
 
 Note that corresponding class for distributed setting is also provided with RLPack defined as 
-rlpack.simulator.SimulatorDistributed. 
+`rlpack.simulator.SimulatorDistributed`.
+
+You can also avoid using `Simulator` to run experiments as all the agents have separate implements. You can find more
+information on Agents and their implementations below. 
 
 ### Agents
 
