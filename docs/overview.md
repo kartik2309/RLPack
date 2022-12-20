@@ -20,6 +20,8 @@ config dictionary must contain some mandatory keys as discussed below:
   passed. Keywords for `loss_function_name` and further details on them can be found [here](@ref models/loss_functions.md).
 - `lr_scheduler_name`: The name of Learning-Rate Scheduler to be used. This is an optional argument. Keywords for
   `lr_scheduler_name` and further details on them can be found [here](@ref models/lr_schedulers.md).
+- `env_args`: The arguments to be passed while making the gym environment. This will be equivalent 
+   to `gym.make(<env_name>, **env_args)`
 - `agent_name`: The agent intended to be trained. This must be a string. Currently implemented
   models and further details on them is provided [here](@ref agents/index.md).
 - `num_episodes`: The number of episodes up to which the agent is to be trained. This must be an integer

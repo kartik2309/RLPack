@@ -10,10 +10,10 @@ var classrlpack_1_1utils_1_1base_1_1agent_1_1_agent =
     [ "save", "classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#aa61ea2248a43a7bbc9b7c9ab7c240564", null ],
     [ "train", "classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a38c313422ef6c713efd5ef9301b35111", null ],
     [ "__dict__", "classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#aff8c8c9261819399a09fb3727529135e", null ],
-    [ "advantage_norm_codes", "classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#aa4b5b7a651697524896373ca24d0ba16", null ],
+    [ "_advantage_norm_codes", "classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a8ffc0e6945ca3cb2fd322139f5a3d808", null ],
+    [ "_reward_norm_codes", "classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#acd1fdd611f925bf4ea7834a54fa1849f", null ],
+    [ "_state_norm_codes", "classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a5ae6867b9e07f0419f08d9646d6f142e", null ],
+    [ "_td_norm_codes", "classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#ae23803298a22178209253ffb03eba240", null ],
     [ "loss", "classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#ab3ce395269c69c095865fee40818db2e", null ],
-    [ "reward_norm_codes", "classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a4084a4f3b18536d1c0a871b151971bd7", null ],
-    [ "save_path", "classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a4779a7186807d901e8ffc8cc8951527a", null ],
-    [ "state_norm_codes", "classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#ae0500457a682bad272e8e28b9a475fcb", null ],
-    [ "td_norm_codes", "classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#aa672333065b88d4734b58ad8bc1433eb", null ]
+    [ "save_path", "classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a4779a7186807d901e8ffc8cc8951527a", null ]
 ];

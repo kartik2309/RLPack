@@ -12,14 +12,14 @@ Currently following methods are implemented:
 
 
 import os
-from typing import List, Optional, Union
+from typing import Callable, List, Optional, Tuple, Union
 
 import numpy as np
-from torch.distributions import Categorical
+import torch
 
 from rlpack import pytorch
 from rlpack._C.grad_accumulator import GradAccumulator
-from rlpack.utils import LossFunction, LRScheduler
+from rlpack.utils import Distribution, LossFunction, LRScheduler
 from rlpack.utils.base.agent import Agent
 from rlpack.utils.internal_code_setup import InternalCodeSetup
 from rlpack.utils.normalization import Normalization
@@ -31,27 +31,29 @@ class A2C(Agent):
     """
 
     def __init__(
-        self,
-        policy_model: pytorch.nn.Module,
-        optimizer: pytorch.optim.Optimizer,
-        lr_scheduler: Union[LRScheduler, None],
-        loss_function: LossFunction,
-        gamma: float,
-        entropy_coefficient: float,
-        state_value_coefficient: float,
-        lr_threshold: float,
-        num_actions: int,
-        backup_frequency: int,
-        save_path: str,
-        bootstrap_rounds: int = 1,
-        device: str = "cpu",
-        apply_norm: Union[int, str] = -1,
-        apply_norm_to: Union[int, List[str]] = -1,
-        eps_for_norm: float = 5e-12,
-        p_for_norm: int = 2,
-        dim_for_norm: int = 0,
-        max_grad_norm: Optional[float] = None,
-        grad_norm_p: float = 2.0,
+            self,
+            policy_model: pytorch.nn.Module,
+            optimizer: pytorch.optim.Optimizer,
+            lr_scheduler: Union[LRScheduler, None],
+            loss_function: LossFunction,
+            distribution: Distribution,
+            gamma: float,
+            entropy_coefficient: float,
+            state_value_coefficient: float,
+            lr_threshold: float,
+            action_space: Union[int, List[Union[int, List[int]]]],
+            backup_frequency: int,
+            save_path: str,
+            bootstrap_rounds: int = 1,
+            device: str = "cpu",
+            apply_norm: Union[int, str] = -1,
+            apply_norm_to: Union[int, List[str]] = -1,
+            eps_for_norm: float = 5e-12,
+            p_for_norm: int = 2,
+            dim_for_norm: int = 0,
+            max_grad_norm: Optional[float] = None,
+            grad_norm_p: float = 2.0,
+            variance: Optional[Tuple[float, Callable[[float, bool, int], float]]] = None,
     ):
         """!
         @param policy_model: *pytorch.nn.Module*: The policy model to be used. Policy model must return a tuple of
@@ -61,11 +63,16 @@ class A2C(Agent):
         @param lr_scheduler: Union[LRScheduler, None]: The LR Scheduler to be used to decay the learning rate.
             LR Scheduler must be initialized and wrapped with passed optimizer.
         @param loss_function: LossFunction: A PyTorch loss function.
+        @param distribution : dist_math.distribution.Distribution: The distribution of PyTorch to be used to sampled
+            actions in action space. (See `action_space`).
         @param gamma: float: The discounting factor for rewards.
         @param entropy_coefficient: float: The coefficient to be used for entropy in policy loss computation.
         @param state_value_coefficient: float: The coefficient to be used for state value in final loss computation.
         @param lr_threshold: float: The threshold LR which once reached LR scheduler is not called further.
-        @param num_actions: int: Number of actions for the environment.
+        @param action_space: Union[int, List[Union[int, List[int]]]]: The action space of the environment. If
+            discrete action set is used, number of actions can be passed. If continuous action space is used,
+            a list must be passed with first element representing the output features from model, second
+            representing the shape of action to be sampled.
         @param backup_frequency: int: The timesteps after which policy model, optimizer states and lr
             scheduler states are backed up.
         @param save_path: str: The path where policy model, optimizer states and lr scheduler states are to be saved.
@@ -83,8 +90,12 @@ class A2C(Agent):
         @param p_for_norm: int: The p value for p-normalization. Default: 2; L2 Norm.
         @param dim_for_norm: int: The dimension across which normalization is to be performed. Default: 0.
         @param max_grad_norm: Optional[float]: The max norm for gradients for gradient clipping. Default: None
-        @param grad_norm_p: Optional[float]: The p-value for p-normalization of gradients. Default: 2.0
-
+        @param grad_norm_p: float: The p-value for p-normalization of gradients. Default: 2.0
+        @param variance: Optional[Tuple[float, Callable[[float, bool, int], float]]]: The tuple of variance to be used
+            to sample actions for continuous action space and a method to be used to decay it. The passed method have
+            the signature Callable[[float, int], float]. The first argument would be the variance value and
+            second value be the boolean, done flag indicating if the state is terminal or not and third will be the
+            timestep; returning the updated variance value. Default: None
 
 
         **Notes**
@@ -108,6 +119,7 @@ class A2C(Agent):
 
         If a valid `max_norm_grad` is passed, then gradient clipping takes place else gradient clipping step is
         skipped. If `max_norm_grad` value was invalid, error will be raised from PyTorch.
+        :param distribution:
         """
         super(A2C, self).__init__()
         setup = InternalCodeSetup()
@@ -119,6 +131,8 @@ class A2C(Agent):
         self.lr_scheduler = lr_scheduler
         ## The input loss function. @I{# noqa: E266}
         self.loss_function = loss_function
+        ## The input distribution object. @I{# noqa: E266}
+        self.distribution = distribution
         ## The input discounting factor. @I{# noqa: E266}
         self.gamma = gamma
         ## The input entropy coefficient. @I{# noqa: E266}
@@ -128,14 +142,14 @@ class A2C(Agent):
         ## The input LR Threshold. @I{# noqa: E266}
         self.lr_threshold = float(lr_threshold)
         ## The input number of actions. @I{# noqa: E266}
-        self.num_actions = num_actions
+        self.action_space = action_space
         ## The input model backup frequency in terms of timesteps. @I{# noqa: E266}
         self.backup_frequency = backup_frequency
         ## The input save path for backing up agent models. @I{# noqa: E266}
         self.save_path = save_path
         # Check sanity of `bootstrap_rounds`
         assert (
-            bootstrap_rounds > 0
+                bootstrap_rounds > 0
         ), "Argument `bootstrap_rounds` must be an integer between 0 and 1"
         ## The input boostrap rounds. @I{# noqa: E266}
         self.bootstrap_rounds = bootstrap_rounds
@@ -161,10 +175,24 @@ class A2C(Agent):
         self.max_grad_norm = max_grad_norm
         ## The input `grad_norm_p`; indicating the p-value for p-normalisation for gradient clippings. @I{# noqa: E266}
         self.grad_norm_p = grad_norm_p
+        ## The current variance value. This will be None if `variance` argument was not passed @I{# noqa: E266}
+        self.variance_value = None
+        ## The variance decay method. This will be None if `variance` argument was not passed @I{# noqa: E266}
+        self.variance_decay_fn = None
+        ## The boolean flag indicating if variance operations are to be used. @I{# noqa: E266}
+        self._operate_with_variance = False
+        if variance is not None:
+            if len(variance) != 2:
+                raise ValueError(
+                    "Length of `variance` arg must be 2, "
+                    "first argument being the variance value and "
+                    "the second being the decay function"
+                )
+            self.variance_value = variance[0]
+            self.variance_decay_fn = variance[1]
+            self._operate_with_variance = True
         ## The step counter; counting the total timesteps done so far. @I{# noqa: E266}
         self.step_counter = 0
-        ## The episode counter; counting the total episodes done so far. @I{# noqa: E266}
-        self.episode_counter = 0
         ## The list of sampled actions from each timestep from the action distribution. @I{# noqa: E266}
         ## This is cleared after each episode. @I{# noqa: E266}
         self.action_log_probabilities = list()
@@ -174,6 +202,10 @@ class A2C(Agent):
         self.rewards = list()
         ## The list of entropies from each timestep. This is cleared after each episode. @I{# noqa: E266}
         self.entropies = list()
+        ## Flag indicating if action space is continuous or discrete. @I{# noqa: E266}
+        self.is_continuous_action_space = True
+        if isinstance(self.action_space, int):
+            self.is_continuous_action_space = False
         # Parameter keys of the model.
         keys = list(dict(self.policy_model.named_parameters()).keys())
         ## The list of gradients from each backward call. @I{# noqa: E266}
@@ -187,12 +219,12 @@ class A2C(Agent):
         )
 
     def train(
-        self,
-        state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
-        reward: Union[int, float],
-        done: Union[bool, int],
-        **kwargs,
-    ) -> int:
+            self,
+            state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
+            reward: Union[int, float],
+            done: Union[bool, int],
+            **kwargs,
+    ) -> Union[int, np.ndarray]:
         """
         The train method to train the agent and underlying policy model.
         @param state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]: The current state returned
@@ -201,31 +233,42 @@ class A2C(Agent):
         @param kwargs: Other keyword arguments.
         @return int: The action to be taken
         """
-        self.policy_model.eval()
         # Cast `state_current` to tensor.
         state_current = self._cast_to_tensor(state_current).to(self.device)
-        actions_logits, state_current_value = self.policy_model(state_current)
-        distribution = self._create_action_distribution(actions_logits)
-        action = distribution.sample()
+        action_values, state_current_value = self.policy_model(state_current)
+        distribution = self._create_action_distribution(action_values)
+        if self._operate_with_variance:
+            self.variance_value = self.variance_decay_fn(
+                self.variance_value, done, self.step_counter
+            )
+        if not self.is_continuous_action_space:
+            action = distribution.sample()
+        else:
+            action = distribution.rsample(sample_shape=tuple(self.action_space[1]))
         # Accumulate quantities.
         self.action_log_probabilities.append(distribution.log_prob(action))
         self.states_current_values.append(state_current_value)
         self.rewards.append(reward)
         self.entropies.append(distribution.entropy().mean())
         # Call train policy method.
-        self._call_train_policy_model(done)
+        self._call_to_train_policy_model(done)
         # Backup model every `backup_frequency` steps.
         self._call_to_save()
         # Increment `step_counter` and use policy model to get next action.
         self.step_counter += 1
-        return action.item()
+        with torch.no_grad():
+            if not self.is_continuous_action_space:
+                action = action.item()
+            else:
+                action = action.cpu().numpy()
+        return action
 
     @pytorch.no_grad()
     def policy(
-        self,
-        state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
-        **kwargs,
-    ) -> int:
+            self,
+            state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
+            **kwargs,
+    ) -> Union[int, np.ndarray]:
         """
         The policy method to evaluate the agent. This runs in pure inference mode.
         @param state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]: The current state returned
@@ -235,9 +278,16 @@ class A2C(Agent):
         """
         self.policy_model.eval()
         state_current = self._cast_to_tensor(state_current).to(self.device)
-        actions_logits, _ = self.policy_model(state_current)
-        distribution = self._create_action_distribution(actions_logits)
-        action = distribution.sample().item()
+        action_values, _ = self.policy_model(state_current)
+        distribution = self._create_action_distribution(action_values)
+        if not self.is_continuous_action_space:
+            action = distribution.sample().item()
+        else:
+            action = (
+                distribution.sample(sample_shape=tuple(self.action_space[1]))
+                .cpu()
+                .numpy()
+            )
         return action
 
     def save(self, custom_name_suffix: Optional[str] = None) -> None:
@@ -256,22 +306,20 @@ class A2C(Agent):
                 f"Argument `custom_name_suffix` must be of type "
                 f"{str} or {type(None)}, but got of type {type(custom_name_suffix)}"
             )
-        checkpoint_policy = {"state_dict": self.policy_model.state_dict()}
-        checkpoint_optimizer = {"state_dict": self.optimizer.state_dict()}
-        pytorch.save(
-            checkpoint_policy,
-            os.path.join(self.save_path, f"policy{custom_name_suffix}.pt"),
-        )
-        pytorch.save(
-            checkpoint_optimizer,
-            os.path.join(self.save_path, f"optimizer{custom_name_suffix}.pt"),
-        )
+        save_path = self.save_path
+        checkpoint = {
+            "policy_model_state_dict": self.policy_model.state_dict(),
+            "optimizer_state_dict": self.optimizer.state_dict(),
+        }
         if self.lr_scheduler is not None:
-            checkpoint_lr_scheduler = {"state_dict": self.lr_scheduler.state_dict()}
-            pytorch.save(
-                checkpoint_lr_scheduler,
-                os.path.join(self.save_path, f"lr_scheduler{custom_name_suffix}.pt"),
+            checkpoint["lr_scheduler_state_dict"] = self.lr_scheduler.state_dict()
+        if self._operate_with_variance:
+            checkpoint["variance_value"] = self.variance_value
+        if os.path.isdir(save_path):
+            save_path = os.path.join(
+                save_path, f"actor_critic{custom_name_suffix}.pt"
             )
+        pytorch.save(checkpoint, save_path)
         return
 
     def load(self, custom_name_suffix: Optional[str] = None) -> None:
@@ -289,32 +337,28 @@ class A2C(Agent):
                 f"Argument `custom_name_suffix` must be of type "
                 f"{str} or {type(None)}, but got of type {type(custom_name_suffix)}"
             )
-        if os.path.isfile(
-            os.path.join(self.save_path, f"policy{custom_name_suffix}.pt")
-        ):
-            checkpoint_policy = pytorch.load(
-                os.path.join(self.save_path, f"policy{custom_name_suffix}.pt"),
-                map_location="cpu",
+        save_path = self.save_path
+        if os.path.isdir(save_path):
+            save_path = os.path.join(
+                save_path, f"actor_critic{custom_name_suffix}.pt"
             )
-            self.policy_model.load_state_dict(checkpoint_policy["state_dict"])
-        else:
-            raise FileNotFoundError("The Policy model was not found in the given path!")
-        if os.path.isfile(
-            os.path.join(self.save_path, f"optimizer{custom_name_suffix}.pt")
-        ):
-            checkpoint_optimizer = pytorch.load(
-                os.path.join(self.save_path, f"optimizer{custom_name_suffix}.pt"),
-                map_location="cpu",
+        if not os.path.isfile(save_path):
+            raise FileNotFoundError(
+                "Given path does not contain the valid agent. "
+                "If directory is passed, the file named `actor_critic.pth` or `actor_critic_<custom_suffix>.pth "
+                "must be present, else must pass the valid file path!"
             )
-            self.optimizer.load_state_dict(checkpoint_optimizer["state_dict"])
-        if os.path.isfile(
-            os.path.join(self.save_path, f"lr_scheduler{custom_name_suffix}.pt")
+        checkpoint = pytorch.load(save_path, map_location="cpu")
+        self.policy_model.load_state_dict(checkpoint["policy_model_state_dict"])
+        self.optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
+        if (
+                self.lr_scheduler is not None
+                and "lr_scheduler_state_dict" in checkpoint.keys()
         ):
-            checkpoint_lr_sc = pytorch.load(
-                os.path.join(self.save_path, f"lr_scheduler{custom_name_suffix}.pt"),
-                map_location="cpu",
-            )
-            self.lr_scheduler.load_state_dict(checkpoint_lr_sc["state_dict"])
+            self.lr_scheduler.load_state_dict(checkpoint["lr_scheduler_state_dict"])
+        if "variance_value" in checkpoint.keys():
+            self.variance_value = checkpoint["variance_value"]
+            self._operate_with_variance = True
         return
 
     def _call_to_save(self) -> None:
@@ -325,30 +369,27 @@ class A2C(Agent):
             self.save()
         return
 
-    def _call_train_policy_model(self, done: Union[bool, int]) -> None:
+    def _call_to_train_policy_model(self, done: Union[bool, int]) -> None:
         """
-        Protected method to call the appropriate method for training policy model based on initialization of A2C agent
+        Protected method to train the policy model. If done flag is True, will compute the loss and run the optimizer.
+        This method is meant to periodically check if episode hsa been terminated or and train policy models if
+        episode has terminated.
         @param done: Union[bool, int]: Flag indicating if episode has terminated or not
         """
+        run_optimizer = False
         if isinstance(done, bool):
             if done:
-                loss = self._compute_loss()
-                self._run_by_bootstrap_rounds(loss)
-                self.episode_counter += 1
-        elif isinstance(done, int) and done == 1:
+                run_optimizer = True
+        elif isinstance(done, int):
             if done == 1:
-                loss = self._compute_loss()
-                self._run_by_bootstrap_rounds(loss)
-                self.episode_counter += 1
+                run_optimizer = True
         else:
             raise TypeError(
                 f"Expected `done` argument to be of type {bool} or {int} but received {type(done)}!"
             )
-        if (self.episode_counter + 1) % (
-            self.bootstrap_rounds + 1
-        ) == 0 and self.bootstrap_rounds > 1:
-            self._optimizer_step_on_accumulated_grads()
-            self.episode_counter += 1
+        if run_optimizer:
+            loss = self._compute_loss()
+            self._run_optimizer(loss)
 
     def _compute_loss(self) -> pytorch.Tensor:
         """
@@ -379,7 +420,7 @@ class A2C(Agent):
         entropy = self._adjust_dims_for_tensor(entropy, advantage.dim())
         # Compute Policy Losses
         policy_losses = (
-            -action_log_probabilities * advantage + self.entropy_coefficient * entropy
+                -action_log_probabilities * advantage + self.entropy_coefficient * entropy
         )
         # Compute Value Losses
         value_loss = self.state_value_coefficient * self.loss_function(
@@ -391,50 +432,33 @@ class A2C(Agent):
         loss = policy_loss + value_loss
         return loss
 
-    def _run_by_bootstrap_rounds(self, loss) -> None:
+    def _run_optimizer(self, loss) -> None:
         """
         Protected void method to train the model or accumulate the gradients for training.
         - If bootstrap_rounds is passed as 1 (default), model is trained each time the method is called.
         - If bootstrap_rounds > 1, the gradients are accumulated in grad_accumulator and model is trained via
             _train_models method.
         """
-        # If `bootstrap_rounds` less than 2, prepare for optimizer step by setting zero grads.
-        if self.bootstrap_rounds < 2:
-            self.optimizer.zero_grad()
+        # Clear the buffer values.
+        self._clear()
+        # Prepare for optimizer step by setting zero grads.
+        self.optimizer.zero_grad()
         # Backward call
         loss.backward()
         # Append loss to list
         self.loss.append(loss.item())
-        # If `bootstrap_rounds` less than 2, run optimizer step immediately.
-        if self.bootstrap_rounds < 2:
-            # Take optimizer step.
-            self.optimizer.step()
-            # Clip gradients if requested.
-            if self.max_grad_norm is not None:
-                pytorch.nn.utils.clip_grad_norm_(
-                    self.policy_model.parameters(),
-                    max_norm=self.max_grad_norm,
-                    norm_type=self.grad_norm_p,
-                )
-        else:
-            self._grad_accumulator.accumulate(self.policy_model.named_parameters())
-        self._clear()
-
-    def _optimizer_step_on_accumulated_grads(self) -> None:
-        """
-        Protected method to policy model if boostrap_rounds > 1. In such cases the gradients are accumulated in
-        grad_accumulator. This method collects the accumulated gradients and performs mean reduction and runs
-        optimizer step.
-        """
-        self.optimizer.zero_grad()
-        # No Grad mode to disable PyTorch Operation tracking.
-        with pytorch.no_grad():
-            # Assign average parameters to model.
-            reduced_parameters = dict(self._grad_accumulator.mean_reduce())
-            for key, param in self.policy_model.named_parameters():
-                param.grad = reduced_parameters[key] / self.bootstrap_rounds
-        # Take an optimizer step.
-        self.optimizer.step()
+        if self.bootstrap_rounds > 1:
+            # When `bootstrap_rounds` is greater than 1; accumulate gradients if no. of rounds
+            # specified by `bootstrap_rounds` have not been completed and return.
+            # If no. of rounds have been completed, perform mean reduction and proceed with optimizer step.
+            if len(self._grad_accumulator) < self.bootstrap_rounds:
+                self._grad_accumulator.accumulate(self.policy_model.named_parameters())
+                return
+            else:
+                # Perform mean reduction.
+                self._grad_mean_reduction()
+                # Clear Accumulated Gradient buffer.
+                self._grad_accumulator.clear()
         # Clip gradients if requested.
         if self.max_grad_norm is not None:
             pytorch.nn.utils.clip_grad_norm_(
@@ -442,19 +466,27 @@ class A2C(Agent):
                 max_norm=self.max_grad_norm,
                 norm_type=self.grad_norm_p,
             )
+        # Take optimizer step.
+        self.optimizer.step()
         # Take an LR Scheduler step if required.
         if (
-            self.lr_scheduler is not None
-            and min([*self.lr_scheduler.get_last_lr()]) > self.lr_threshold
+                self.lr_scheduler is not None
+                and min([*self.lr_scheduler.get_last_lr()]) > self.lr_threshold
         ):
             self.lr_scheduler.step()
-        # Clear buffers for tracked operations.
-        self._clear()
-        # Clear Accumulated Gradient buffer.
-        self._grad_accumulator.clear()
+
+    @pytorch.no_grad()
+    def _grad_mean_reduction(self) -> None:
+        """
+        Performs mean reduction and assigns the policy model's parameter the mean reduced gradients.
+        """
+        reduced_parameters = self._grad_accumulator.mean_reduce()
+        # Assign average parameters to model.
+        for key, param in self.policy_model.named_parameters():
+            param.grad = reduced_parameters[key] / self.bootstrap_rounds
 
     def _compute_advantage(
-        self, returns: pytorch.Tensor, state_current_values: pytorch.Tensor
+            self, returns: pytorch.Tensor, state_current_values: pytorch.Tensor
     ) -> pytorch.Tensor:
         """
         Computes the advantage from returns and state values
@@ -464,15 +496,15 @@ class A2C(Agent):
         """
         returns = self._adjust_dims_for_tensor(returns, state_current_values.dim())
         # Apply normalization if required to states.
-        if self.apply_norm_to in self.state_norm_codes:
+        if self.apply_norm_to in self._state_norm_codes:
             state_current_values = self._normalization.apply_normalization(
                 state_current_values
             )
         # Apply normalization if required to rewards.
-        if self.apply_norm_to in self.reward_norm_codes:
+        if self.apply_norm_to in self._reward_norm_codes:
             returns = self._normalization.apply_normalization(returns)
         advantage = returns - state_current_values
-        if self.apply_norm_to in self.advantage_norm_codes:
+        if self.apply_norm_to in self._advantage_norm_codes:
             advantage = self._normalization.apply_normalization(advantage)
         return advantage
 
@@ -501,16 +533,21 @@ class A2C(Agent):
         self.action_log_probabilities.clear()
         self.states_current_values.clear()
         self.entropies.clear()
-        self.loss.clear()
 
-    @staticmethod
     def _create_action_distribution(
-        actions_logits: pytorch.Tensor,
-    ) -> Categorical:
+            self,
+            action_values: pytorch.Tensor,
+    ) -> Distribution:
         """
         Protected static method to create distributions from action logits
-        @param actions_logits: pytorch.Tensor: The action logits from policy model
-        @return Categorical: A Categorical object initialized with given action logits
+        @param action_values: pytorch.Tensor: The action values from policy model
+        @return Distribution: A Distribution object initialized with given action logits
         """
-        categorical = Categorical(logits=actions_logits)
-        return categorical
+        if not self.is_continuous_action_space:
+            distribution = self.distribution(logits=action_values)
+        else:
+            action_values_ = action_values.flatten()
+            if self._operate_with_variance:
+                action_values_[-1] = self.variance_value**0.5
+            distribution = self.distribution(*action_values_)
+        return distribution

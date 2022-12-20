@@ -116,6 +116,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a063ec05fd776a07af44e62086a476fea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9efa4c6f18763846177f16d5b7f52ce"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html#aa9efa4c6f18763846177f16d5b7f52ce">__init__</a> (self, List[str] parameter_keys, int bootstrap_rounds)</td></tr>
 <tr class="separator:aa9efa4c6f18763846177f16d5b7f52ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa33876d63e03ff9a4d05d17326b86e82"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html#aa33876d63e03ff9a4d05d17326b86e82">__len__</a> (self)</td></tr>
+<tr class="memdesc:aa33876d63e03ff9a4d05d17326b86e82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of named parameters' accumulated gradients so far.  <a href="classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html#aa33876d63e03ff9a4d05d17326b86e82">More...</a><br /></td></tr>
+<tr class="separator:aa33876d63e03ff9a4d05d17326b86e82"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb725eb49e401dfe1aac7b9c3e428246"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html#adb725eb49e401dfe1aac7b9c3e428246">__setitem__</a> (self, int index, Iterable named_parameters)</td></tr>
 <tr class="memdesc:adb725eb49e401dfe1aac7b9c3e428246"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set named parameter gradients at a given index.  <a href="classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html#adb725eb49e401dfe1aac7b9c3e428246">More...</a><br /></td></tr>
 <tr class="separator:adb725eb49e401dfe1aac7b9c3e428246"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -257,6 +260,27 @@ Data Fields</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>MapOfTensors: The custom map object from C++ backend with gradient of parameters for each key. </dd></dl>
+
+</div>
+</div>
+<a id="aa33876d63e03ff9a4d05d17326b86e82" name="aa33876d63e03ff9a4d05d17326b86e82"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa33876d63e03ff9a4d05d17326b86e82">&#9670;&#160;</a></span>__len__()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def rlpack._C.grad_accumulator.GradAccumulator.__len__ </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the number of named parameters' accumulated gradients so far. </p>
+<dl class="section return"><dt>Returns</dt><dd>int: The size of <a class="el" href="classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html" title="This class provides the python interface to C_GradAccumulator, the C++ class which performs heavier w...">GradAccumulator</a>. </dd></dl>
 
 </div>
 </div>

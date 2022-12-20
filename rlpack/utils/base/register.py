@@ -57,12 +57,16 @@ class Register:
         self.loss_function_map = {
             "huber_loss": pytorch.nn.HuberLoss,
             "mse": pytorch.nn.MSELoss,
+            "smooth_l1_loss": pytorch.nn.SmoothL1Loss,
         }
         ## The mapping between given keyword and PyTorch activation function class. @I{# noqa: E266}
         self.activation_map = {
             "relu": pytorch.nn.ReLU,
             "leaky_relu": pytorch.nn.LeakyReLU,
             "tanh": pytorch.nn.Tanh,
+            "softplus": pytorch.nn.Softplus,
+            "softmax": pytorch.nn.Softmax,
+            "sigmoid": pytorch.nn.Sigmoid,
         }
         ## The mapping between given keyword and PyTorch LR Scheduler class. @I{# noqa: E266}
         self.lr_scheduler_map = {
@@ -70,7 +74,15 @@ class Register:
             "linear_lr": pytorch.optim.lr_scheduler.LinearLR,
             "cyclic_lr": pytorch.optim.lr_scheduler.CyclicLR,
         }
-
+        ## The mapping between given keyword and PyTorch Distribution class. @I{# noqa: E266}
+        self.distributions_map = {
+            "categorical": pytorch.distributions.Categorical,
+            "bernoulli": pytorch.distributions.Bernoulli,
+            "binomial": pytorch.distributions.Binomial,
+            "normal": pytorch.distributions.Normal,
+            "log_normal": pytorch.distributions.LogNormal,
+            "multivariate_normal": pytorch.distributions.MultivariateNormal,
+        }
         ## The mapping between given keyword and [in-built](@ref models/index.md) models. @I{# noqa: E266}
         self.models = {"mlp": Mlp, "actor_critic_mlp_policy": ActorCriticMlpPolicy}
         ## The mapping between given keyword and [agents](@ref agents/index.md) models. @I{# noqa: E266}
@@ -91,7 +103,7 @@ class Register:
             "actor_critic_mlp_policy": (
                 "sequence_length",
                 "hidden_sizes",
-                "num_actions",
+                "action_space",
                 *self.model_args_default["actor_critic_mlp_policy"],
             ),
         }
@@ -121,6 +133,7 @@ class Register:
                 "dim_for_norm",
                 "max_grad_norm",
                 "grad_norm_p",
+                "variance",
             ),
             "a3c": (
                 "bootstrap_rounds",
@@ -132,6 +145,7 @@ class Register:
                 "dim_for_norm",
                 "max_grad_norm",
                 "grad_norm_p",
+                "variance",
             ),
         }
         ## The mapping between given keyword and [agent](@ref agents/index.md) agents' arguments. @I{# noqa: E266}
@@ -162,12 +176,13 @@ class Register:
                 "optimizer",
                 "lr_scheduler",
                 "loss_function",
+                "distribution",
                 "gamma",
                 "entropy_coefficient",
                 "state_value_coefficient",
                 "backup_frequency",
                 "lr_threshold",
-                "num_actions",
+                "action_space",
                 "save_path",
                 *self.agent_args_default["a2c"],
             ),
@@ -176,12 +191,13 @@ class Register:
                 "optimizer",
                 "lr_scheduler",
                 "loss_function",
+                "distribution",
                 "gamma",
                 "entropy_coefficient",
                 "state_value_coefficient",
                 "backup_frequency",
                 "lr_threshold",
-                "num_actions",
+                "action_space",
                 "save_path",
                 *self.agent_args_default["a3c"],
             ),
@@ -193,6 +209,7 @@ class Register:
             "a3c": {"policy_model": True},
         }
         self.mandatory_distributed_agents = ("a3c",)
+        self.mandatory_distribution_required_agents = ("a2c", "a3c")
 
     @staticmethod
     def get_prefix_path():

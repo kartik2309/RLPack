@@ -28,3 +28,5 @@ LRScheduler = TypeVar("LRScheduler")
 LossFunction = TypeVar("LossFunction")
 ## The Typing variable for Activations. @I{# noqa: E266}
 Activation = TypeVar("Activation")
+## The Typing variable for Distribution. @I{# noqa: E266}
+Distribution = TypeVar("Distribution")

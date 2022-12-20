@@ -14,7 +14,7 @@ var searchData=
   ['setup_5fagent_11',['setup_agent',['../classrlpack_1_1simulator_1_1_simulator.html#ac43b3463ffb17c3513850ae47bcb3697',1,'rlpack::simulator::Simulator']]],
   ['setup_5fmodels_12',['setup_models',['../classrlpack_1_1simulator_1_1_simulator.html#ac150766d6cf866400dd54bcd1b1f35dd',1,'rlpack::simulator::Simulator']]],
   ['shuffle_13',['shuffle',['../class_offload.html#ad53d1d4ff220de676ed53d9b9e9a2193',1,'Offload']]],
-  ['size_14',['size',['../class_c___memory.html#aa717a53127902e7eda84158b5770d96b',1,'C_Memory']]],
+  ['size_14',['size',['../class_c___grad_accumulator.html#a328b0bb90ed7853e7270385c1b2afbea',1,'C_GradAccumulator::size()'],['../class_c___memory.html#aa717a53127902e7eda84158b5770d96b',1,'C_Memory::size()']]],
   ['standardization_15',['standardization',['../classrlpack_1_1utils_1_1normalization_1_1_normalization.html#a85727ae96856128f5266bb0ed2607fe6',1,'rlpack::utils::normalization::Normalization']]],
   ['sum_5freduce_16',['sum_reduce',['../classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html#ae7178de11550b5ad801f68f76e9c823e',1,'rlpack._C.grad_accumulator.GradAccumulator.sum_reduce()'],['../class_c___grad_accumulator.html#a548330ee790f9eb03ab3f38aa3a33ee7',1,'C_GradAccumulator::sum_reduce()']]],
   ['sumtree_17',['SumTree',['../class_sum_tree.html#ab82aca8168e803c8b16c9437aa48bf2f',1,'SumTree::SumTree(int32_t bufferSize)'],['../class_sum_tree.html#aabf380616b5397f6d741449e3680cfc9',1,'SumTree::SumTree()']]],

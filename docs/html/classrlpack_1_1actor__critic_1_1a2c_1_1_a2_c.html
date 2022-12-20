@@ -100,7 +100,6 @@ $(document).ready(function(){initNavTree('classrlpack_1_1actor__critic_1_1a2c_1_
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Data Fields</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
-<a href="#pri-static-methods">Static Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a>  </div>
   <div class="headertitle"><div class="title">rlpack.actor_critic.a2c.A2C Class Reference</div></div>
 </div><!--header-->
@@ -136,20 +135,20 @@ $(document).ready(function(){initNavTree('classrlpack_1_1actor__critic_1_1a2c_1_
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:af2657104c2a71153fa0dbc8a9884a293"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af2657104c2a71153fa0dbc8a9884a293">__init__</a> (self, pytorch.nn.Module <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a186663b4b9a13fdff2d3a6c068573a4b">policy_model</a>, pytorch.optim.Optimizer <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a531fa341471a4ad1f97d36c00f221981">optimizer</a>, Union[LRScheduler, None] <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a67fd595af5ce5ef1a935083e8383f6af">lr_scheduler</a>, LossFunction <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ace16f409552ad6b3d8274b91be4b5157">loss_function</a>, float <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a335067fc595b3c6bf62395024fd0008a">gamma</a>, float <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a6def13b25087f4b35685140b0a8e31ff">entropy_coefficient</a>, float <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a808c41752e5a391ccccc5eaa820abc09">state_value_coefficient</a>, float <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#abca9e9f63b00391c576378683d000d8a">lr_threshold</a>, int <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a6b420f1579a75aae43c82105a98c311e">num_actions</a>, int <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a26e70f7a784551fa58fa81b1f2dcc894">backup_frequency</a>, str <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#affac024bad4b94c555d8299db2e7a64c">save_path</a>, int <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a67a8def97a97cef04686199250556bd0">bootstrap_rounds</a>=1, str <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a3f3c23d256a14d2b124fb866732051b6">device</a>=&quot;cpu&quot;, Union[int, str] <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a57416c3545397ddaaa31ee69142e67da">apply_norm</a>=-1, Union[int, List[str]] <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aeef17e7ec0e0b81e2b47b0c4663bad2c">apply_norm_to</a>=-1, float <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ab79962d551f8a638f440166462456111">eps_for_norm</a>=5e-12, int <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af4f2a8721367dc7865955f308cc6149b">p_for_norm</a>=2, int <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ac3f70110b14a2bc1354fadaa02f3bdff">dim_for_norm</a>=0, Optional[float] <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af326d53cbea6b99ed2792a0b88f73539">max_grad_norm</a>=None, float <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a3f1d962e32fb21e733c9161a3e5ec206">grad_norm_p</a>=2.0)</td></tr>
-<tr class="separator:af2657104c2a71153fa0dbc8a9884a293"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adba1d3b5950c18986254b7d1c88e5670"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#adba1d3b5950c18986254b7d1c88e5670">__init__</a> (self, pytorch.nn.Module <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a186663b4b9a13fdff2d3a6c068573a4b">policy_model</a>, pytorch.optim.Optimizer <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a531fa341471a4ad1f97d36c00f221981">optimizer</a>, Union[LRScheduler, None] <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a67fd595af5ce5ef1a935083e8383f6af">lr_scheduler</a>, LossFunction <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ace16f409552ad6b3d8274b91be4b5157">loss_function</a>, Distribution <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ad1b2cb43a9ea064b3809838bbb0270f4">distribution</a>, float <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a335067fc595b3c6bf62395024fd0008a">gamma</a>, float <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a6def13b25087f4b35685140b0a8e31ff">entropy_coefficient</a>, float <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a808c41752e5a391ccccc5eaa820abc09">state_value_coefficient</a>, float <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#abca9e9f63b00391c576378683d000d8a">lr_threshold</a>, Union[int, List[Union[int, List[int]]]] <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a4d1c1b160e9cd0cf5ae5a21ace351b56">action_space</a>, int <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a26e70f7a784551fa58fa81b1f2dcc894">backup_frequency</a>, str <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#affac024bad4b94c555d8299db2e7a64c">save_path</a>, int <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a67a8def97a97cef04686199250556bd0">bootstrap_rounds</a>=1, str <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a3f3c23d256a14d2b124fb866732051b6">device</a>=&quot;cpu&quot;, Union[int, str] <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a57416c3545397ddaaa31ee69142e67da">apply_norm</a>=-1, Union[int, List[str]] <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aeef17e7ec0e0b81e2b47b0c4663bad2c">apply_norm_to</a>=-1, float <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ab79962d551f8a638f440166462456111">eps_for_norm</a>=5e-12, int <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af4f2a8721367dc7865955f308cc6149b">p_for_norm</a>=2, int <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ac3f70110b14a2bc1354fadaa02f3bdff">dim_for_norm</a>=0, Optional[float] <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af326d53cbea6b99ed2792a0b88f73539">max_grad_norm</a>=None, float <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a3f1d962e32fb21e733c9161a3e5ec206">grad_norm_p</a>=2.0, Optional[Tuple[float, Callable[[float, bool, int], float]]] variance=None)</td></tr>
+<tr class="separator:adba1d3b5950c18986254b7d1c88e5670"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af0b97082eda91653d7a2511c3325b70f"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af0b97082eda91653d7a2511c3325b70f">load</a> (self, Optional[str] custom_name_suffix=None)</td></tr>
 <tr class="memdesc:af0b97082eda91653d7a2511c3325b70f"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method loads the target_model, policy_model, optimizer, lr_scheduler and agent_states from the supplied <code>save_path</code> argument in the DQN Agent class' constructor (also called <b>init</b>).  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af0b97082eda91653d7a2511c3325b70f">More...</a><br /></td></tr>
 <tr class="separator:af0b97082eda91653d7a2511c3325b70f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5e480b8b9914e283440e5278a97b42cf"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a5e480b8b9914e283440e5278a97b42cf">policy</a> (self, Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]] state_current, **kwargs)</td></tr>
-<tr class="memdesc:a5e480b8b9914e283440e5278a97b42cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">The policy method to evaluate the agent.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a5e480b8b9914e283440e5278a97b42cf">More...</a><br /></td></tr>
-<tr class="separator:a5e480b8b9914e283440e5278a97b42cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb6171b51be4c79316278355e78fb25e"><td class="memItemLeft" align="right" valign="top">Union[int, np.ndarray]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#afb6171b51be4c79316278355e78fb25e">policy</a> (self, Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]] state_current, **kwargs)</td></tr>
+<tr class="memdesc:afb6171b51be4c79316278355e78fb25e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The policy method to evaluate the agent.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#afb6171b51be4c79316278355e78fb25e">More...</a><br /></td></tr>
+<tr class="separator:afb6171b51be4c79316278355e78fb25e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7793678505da4a71178d7a1043c4023d"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a7793678505da4a71178d7a1043c4023d">save</a> (self, Optional[str] custom_name_suffix=None)</td></tr>
 <tr class="memdesc:a7793678505da4a71178d7a1043c4023d"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method saves the target_model, policy_model, optimizer, lr_scheduler and agent_states in the supplied <code>save_path</code> argument in the DQN Agent class' constructor (also called <b>init</b>).  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a7793678505da4a71178d7a1043c4023d">More...</a><br /></td></tr>
 <tr class="separator:a7793678505da4a71178d7a1043c4023d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae2c4c474849c70cdedf6b98aea2f63c4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ae2c4c474849c70cdedf6b98aea2f63c4">train</a> (self, Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]] state_current, Union[int, float] reward, Union[bool, int] done, **kwargs)</td></tr>
-<tr class="memdesc:ae2c4c474849c70cdedf6b98aea2f63c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The train method to train the agent and underlying policy model.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ae2c4c474849c70cdedf6b98aea2f63c4">More...</a><br /></td></tr>
-<tr class="separator:ae2c4c474849c70cdedf6b98aea2f63c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8082ac2128495030e29f87cb454ab44"><td class="memItemLeft" align="right" valign="top">Union[int, np.ndarray]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aa8082ac2128495030e29f87cb454ab44">train</a> (self, Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]] state_current, Union[int, float] reward, Union[bool, int] done, **kwargs)</td></tr>
+<tr class="memdesc:aa8082ac2128495030e29f87cb454ab44"><td class="mdescLeft">&#160;</td><td class="mdescRight">The train method to train the agent and underlying policy model.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aa8082ac2128495030e29f87cb454ab44">More...</a><br /></td></tr>
+<tr class="separator:aa8082ac2128495030e29f87cb454ab44"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html">rlpack.utils.base.agent.Agent</a></td></tr>
 <tr class="memitem:accaa47a12b6f65fee88824d3018b8c8e inherit pub_methods_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td class="memItemLeft" align="right" valign="top">Dict[str, Any]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#accaa47a12b6f65fee88824d3018b8c8e">__getstate__</a> (self)</td></tr>
 <tr class="memdesc:accaa47a12b6f65fee88824d3018b8c8e inherit pub_methods_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">To get the agent's current state (dict of attributes).  <a href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#accaa47a12b6f65fee88824d3018b8c8e">More...</a><br /></td></tr>
@@ -178,6 +177,9 @@ Data Fields</h2></td></tr>
 <tr class="memitem:a989698a1260432ca0fcbd1668fe9c7ac"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a989698a1260432ca0fcbd1668fe9c7ac">action_log_probabilities</a></td></tr>
 <tr class="memdesc:a989698a1260432ca0fcbd1668fe9c7ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">The list of sampled actions from each timestep from the action distribution.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a989698a1260432ca0fcbd1668fe9c7ac">More...</a><br /></td></tr>
 <tr class="separator:a989698a1260432ca0fcbd1668fe9c7ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d1c1b160e9cd0cf5ae5a21ace351b56"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a4d1c1b160e9cd0cf5ae5a21ace351b56">action_space</a></td></tr>
+<tr class="memdesc:a4d1c1b160e9cd0cf5ae5a21ace351b56"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input number of actions.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a4d1c1b160e9cd0cf5ae5a21ace351b56">More...</a><br /></td></tr>
+<tr class="separator:a4d1c1b160e9cd0cf5ae5a21ace351b56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a57416c3545397ddaaa31ee69142e67da"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a57416c3545397ddaaa31ee69142e67da">apply_norm</a></td></tr>
 <tr class="memdesc:a57416c3545397ddaaa31ee69142e67da"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>apply_norm</code> argument; indicating the normalisation to be used.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a57416c3545397ddaaa31ee69142e67da">More...</a><br /></td></tr>
 <tr class="separator:a57416c3545397ddaaa31ee69142e67da"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -196,15 +198,15 @@ Data Fields</h2></td></tr>
 <tr class="memitem:ac3f70110b14a2bc1354fadaa02f3bdff"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ac3f70110b14a2bc1354fadaa02f3bdff">dim_for_norm</a></td></tr>
 <tr class="memdesc:ac3f70110b14a2bc1354fadaa02f3bdff"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>dim_for_norm</code> argument; indicating dimension along which we wish to normalise.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ac3f70110b14a2bc1354fadaa02f3bdff">More...</a><br /></td></tr>
 <tr class="separator:ac3f70110b14a2bc1354fadaa02f3bdff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1b2cb43a9ea064b3809838bbb0270f4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ad1b2cb43a9ea064b3809838bbb0270f4">distribution</a></td></tr>
+<tr class="memdesc:ad1b2cb43a9ea064b3809838bbb0270f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input distribution object.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ad1b2cb43a9ea064b3809838bbb0270f4">More...</a><br /></td></tr>
+<tr class="separator:ad1b2cb43a9ea064b3809838bbb0270f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac030e4955c3b5317db360d8539e51163"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ac030e4955c3b5317db360d8539e51163">entropies</a></td></tr>
 <tr class="memdesc:ac030e4955c3b5317db360d8539e51163"><td class="mdescLeft">&#160;</td><td class="mdescRight">The list of entropies from each timestep.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ac030e4955c3b5317db360d8539e51163">More...</a><br /></td></tr>
 <tr class="separator:ac030e4955c3b5317db360d8539e51163"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6def13b25087f4b35685140b0a8e31ff"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a6def13b25087f4b35685140b0a8e31ff">entropy_coefficient</a></td></tr>
 <tr class="memdesc:a6def13b25087f4b35685140b0a8e31ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input entropy coefficient.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a6def13b25087f4b35685140b0a8e31ff">More...</a><br /></td></tr>
 <tr class="separator:a6def13b25087f4b35685140b0a8e31ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad806193a87f792ffdc0e349f0fa5f3e2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ad806193a87f792ffdc0e349f0fa5f3e2">episode_counter</a></td></tr>
-<tr class="memdesc:ad806193a87f792ffdc0e349f0fa5f3e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The episode counter; counting the total episodes done so far.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ad806193a87f792ffdc0e349f0fa5f3e2">More...</a><br /></td></tr>
-<tr class="separator:ad806193a87f792ffdc0e349f0fa5f3e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab79962d551f8a638f440166462456111"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ab79962d551f8a638f440166462456111">eps_for_norm</a></td></tr>
 <tr class="memdesc:ab79962d551f8a638f440166462456111"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>eps_for_norm</code> argument; indicating epsilon to be used for normalisation.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ab79962d551f8a638f440166462456111">More...</a><br /></td></tr>
 <tr class="separator:ab79962d551f8a638f440166462456111"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -214,6 +216,9 @@ Data Fields</h2></td></tr>
 <tr class="memitem:a3f1d962e32fb21e733c9161a3e5ec206"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a3f1d962e32fb21e733c9161a3e5ec206">grad_norm_p</a></td></tr>
 <tr class="memdesc:a3f1d962e32fb21e733c9161a3e5ec206"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>grad_norm_p</code>; indicating the p-value for p-normalisation for gradient clippings.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a3f1d962e32fb21e733c9161a3e5ec206">More...</a><br /></td></tr>
 <tr class="separator:a3f1d962e32fb21e733c9161a3e5ec206"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0959df6d9aaba07b171fa0bc30d9c306"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a0959df6d9aaba07b171fa0bc30d9c306">is_continuous_action_space</a></td></tr>
+<tr class="memdesc:a0959df6d9aaba07b171fa0bc30d9c306"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag indicating if action space is continuous or discrete.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a0959df6d9aaba07b171fa0bc30d9c306">More...</a><br /></td></tr>
+<tr class="separator:a0959df6d9aaba07b171fa0bc30d9c306"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace16f409552ad6b3d8274b91be4b5157"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ace16f409552ad6b3d8274b91be4b5157">loss_function</a></td></tr>
 <tr class="memdesc:ace16f409552ad6b3d8274b91be4b5157"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input loss function.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ace16f409552ad6b3d8274b91be4b5157">More...</a><br /></td></tr>
 <tr class="separator:ace16f409552ad6b3d8274b91be4b5157"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -226,9 +231,6 @@ Data Fields</h2></td></tr>
 <tr class="memitem:af326d53cbea6b99ed2792a0b88f73539"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af326d53cbea6b99ed2792a0b88f73539">max_grad_norm</a></td></tr>
 <tr class="memdesc:af326d53cbea6b99ed2792a0b88f73539"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>max_grad_norm</code>; indicating the maximum gradient norm for gradient clippings.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af326d53cbea6b99ed2792a0b88f73539">More...</a><br /></td></tr>
 <tr class="separator:af326d53cbea6b99ed2792a0b88f73539"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b420f1579a75aae43c82105a98c311e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a6b420f1579a75aae43c82105a98c311e">num_actions</a></td></tr>
-<tr class="memdesc:a6b420f1579a75aae43c82105a98c311e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input number of actions.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a6b420f1579a75aae43c82105a98c311e">More...</a><br /></td></tr>
-<tr class="separator:a6b420f1579a75aae43c82105a98c311e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a531fa341471a4ad1f97d36c00f221981"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a531fa341471a4ad1f97d36c00f221981">optimizer</a></td></tr>
 <tr class="memdesc:a531fa341471a4ad1f97d36c00f221981"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input optimizer wrapped with policy_model parameters.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a531fa341471a4ad1f97d36c00f221981">More...</a><br /></td></tr>
 <tr class="separator:a531fa341471a4ad1f97d36c00f221981"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -253,34 +255,28 @@ Data Fields</h2></td></tr>
 <tr class="memitem:aa40ba92a0c825186f61c04e9ac713a55"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aa40ba92a0c825186f61c04e9ac713a55">step_counter</a></td></tr>
 <tr class="memdesc:aa40ba92a0c825186f61c04e9ac713a55"><td class="mdescLeft">&#160;</td><td class="mdescRight">The step counter; counting the total timesteps done so far.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aa40ba92a0c825186f61c04e9ac713a55">More...</a><br /></td></tr>
 <tr class="separator:aa40ba92a0c825186f61c04e9ac713a55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9002f6e78992ea0a133036ac944fc971"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a9002f6e78992ea0a133036ac944fc971">variance_decay_fn</a></td></tr>
+<tr class="memdesc:a9002f6e78992ea0a133036ac944fc971"><td class="mdescLeft">&#160;</td><td class="mdescRight">The variance decay method.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a9002f6e78992ea0a133036ac944fc971">More...</a><br /></td></tr>
+<tr class="separator:a9002f6e78992ea0a133036ac944fc971"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87e1de2217cd2e1d25827d6fc4d3f4ca"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a87e1de2217cd2e1d25827d6fc4d3f4ca">variance_value</a></td></tr>
+<tr class="memdesc:a87e1de2217cd2e1d25827d6fc4d3f4ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current variance value.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a87e1de2217cd2e1d25827d6fc4d3f4ca">More...</a><br /></td></tr>
+<tr class="separator:a87e1de2217cd2e1d25827d6fc4d3f4ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent')"><img src="closed.png" alt="-"/>&#160;Data Fields inherited from <a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html">rlpack.utils.base.agent.Agent</a></td></tr>
-<tr class="memitem:aa4b5b7a651697524896373ca24d0ba16 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#aa4b5b7a651697524896373ca24d0ba16">advantage_norm_codes</a></td></tr>
-<tr class="memdesc:aa4b5b7a651697524896373ca24d0ba16 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Advantage normalisation codes; indicating the codes to normalise Advantages.  <a href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#aa4b5b7a651697524896373ca24d0ba16">More...</a><br /></td></tr>
-<tr class="separator:aa4b5b7a651697524896373ca24d0ba16 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3ce395269c69c095865fee40818db2e inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#ab3ce395269c69c095865fee40818db2e">loss</a></td></tr>
 <tr class="memdesc:ab3ce395269c69c095865fee40818db2e inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The list of losses accumulated after each backward call.  <a href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#ab3ce395269c69c095865fee40818db2e">More...</a><br /></td></tr>
 <tr class="separator:ab3ce395269c69c095865fee40818db2e inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4084a4f3b18536d1c0a871b151971bd7 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a4084a4f3b18536d1c0a871b151971bd7">reward_norm_codes</a></td></tr>
-<tr class="memdesc:a4084a4f3b18536d1c0a871b151971bd7 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The reward normalisation codes; indicating the codes to normalise rewards.  <a href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a4084a4f3b18536d1c0a871b151971bd7">More...</a><br /></td></tr>
-<tr class="separator:a4084a4f3b18536d1c0a871b151971bd7 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4779a7186807d901e8ffc8cc8951527a inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a4779a7186807d901e8ffc8cc8951527a">save_path</a></td></tr>
 <tr class="memdesc:a4779a7186807d901e8ffc8cc8951527a inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The path to save agent states and models.  <a href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a4779a7186807d901e8ffc8cc8951527a">More...</a><br /></td></tr>
 <tr class="separator:a4779a7186807d901e8ffc8cc8951527a inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae0500457a682bad272e8e28b9a475fcb inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#ae0500457a682bad272e8e28b9a475fcb">state_norm_codes</a></td></tr>
-<tr class="memdesc:ae0500457a682bad272e8e28b9a475fcb inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The state normalisation codes; indicating the codes to normalise states.  <a href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#ae0500457a682bad272e8e28b9a475fcb">More...</a><br /></td></tr>
-<tr class="separator:ae0500457a682bad272e8e28b9a475fcb inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa672333065b88d4734b58ad8bc1433eb inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#aa672333065b88d4734b58ad8bc1433eb">td_norm_codes</a></td></tr>
-<tr class="memdesc:aa672333065b88d4734b58ad8bc1433eb inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The TD normalisation codes; indicating the codes to normalise TD Errors.  <a href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#aa672333065b88d4734b58ad8bc1433eb">More...</a><br /></td></tr>
-<tr class="separator:aa672333065b88d4734b58ad8bc1433eb inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
 <tr class="memitem:a487c58b125fb7cd2e14972552bdf5ea6"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a487c58b125fb7cd2e14972552bdf5ea6">_call_to_save</a> (self)</td></tr>
 <tr class="memdesc:a487c58b125fb7cd2e14972552bdf5ea6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method calling the save method when required.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a487c58b125fb7cd2e14972552bdf5ea6">More...</a><br /></td></tr>
 <tr class="separator:a487c58b125fb7cd2e14972552bdf5ea6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f5dd7eeab7ee5f523490c1ec65e03e8"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a2f5dd7eeab7ee5f523490c1ec65e03e8">_call_train_policy_model</a> (self, Union[bool, int] done)</td></tr>
-<tr class="memdesc:a2f5dd7eeab7ee5f523490c1ec65e03e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Protected method to call the appropriate method for training policy model based on initialization of <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html" title="The A2C class implements the synchronous Actor-Critic method.">A2C</a> agent.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a2f5dd7eeab7ee5f523490c1ec65e03e8">More...</a><br /></td></tr>
-<tr class="separator:a2f5dd7eeab7ee5f523490c1ec65e03e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad43ca7f87560723e0c6e448723e9512"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aad43ca7f87560723e0c6e448723e9512">_call_to_train_policy_model</a> (self, Union[bool, int] done)</td></tr>
+<tr class="memdesc:aad43ca7f87560723e0c6e448723e9512"><td class="mdescLeft">&#160;</td><td class="mdescRight">Protected method to train the policy model.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aad43ca7f87560723e0c6e448723e9512">More...</a><br /></td></tr>
+<tr class="separator:aad43ca7f87560723e0c6e448723e9512"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77355981bba89741f7b8a15e76cf02f8"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a77355981bba89741f7b8a15e76cf02f8">_clear</a> (self)</td></tr>
 <tr class="memdesc:a77355981bba89741f7b8a15e76cf02f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Protected void method to clear the lists of rewards, action_log_probs and state_values.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a77355981bba89741f7b8a15e76cf02f8">More...</a><br /></td></tr>
 <tr class="separator:a77355981bba89741f7b8a15e76cf02f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -293,18 +289,15 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:ae6f84e2eed2d807cda9fa3f9334d81a8"><td class="memItemLeft" align="right" valign="top">pytorch.Tensor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ae6f84e2eed2d807cda9fa3f9334d81a8">_compute_returns</a> (self)</td></tr>
 <tr class="memdesc:ae6f84e2eed2d807cda9fa3f9334d81a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the discounted returns iteratively.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ae6f84e2eed2d807cda9fa3f9334d81a8">More...</a><br /></td></tr>
 <tr class="separator:ae6f84e2eed2d807cda9fa3f9334d81a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a36ad349e56ca7fa710bf22333181cf2f"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a36ad349e56ca7fa710bf22333181cf2f">_optimizer_step_on_accumulated_grads</a> (self)</td></tr>
-<tr class="memdesc:a36ad349e56ca7fa710bf22333181cf2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Protected method to policy model if boostrap_rounds &gt; 1.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a36ad349e56ca7fa710bf22333181cf2f">More...</a><br /></td></tr>
-<tr class="separator:a36ad349e56ca7fa710bf22333181cf2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0fe737dd4e0aedc6abf61ad3e4b64f00"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a0fe737dd4e0aedc6abf61ad3e4b64f00">_run_by_bootstrap_rounds</a> (self, <a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#ab3ce395269c69c095865fee40818db2e">loss</a>)</td></tr>
-<tr class="memdesc:a0fe737dd4e0aedc6abf61ad3e4b64f00"><td class="mdescLeft">&#160;</td><td class="mdescRight">Protected void method to train the model or accumulate the gradients for training.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a0fe737dd4e0aedc6abf61ad3e4b64f00">More...</a><br /></td></tr>
-<tr class="separator:a0fe737dd4e0aedc6abf61ad3e4b64f00"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-methods" name="pri-static-methods"></a>
-Static Private Member Functions</h2></td></tr>
-<tr class="memitem:a0eb5d7ae878ab995b910f89bf60620ea"><td class="memItemLeft" align="right" valign="top">Categorical&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a0eb5d7ae878ab995b910f89bf60620ea">_create_action_distribution</a> (pytorch.Tensor actions_logits)</td></tr>
-<tr class="memdesc:a0eb5d7ae878ab995b910f89bf60620ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Protected static method to create distributions from action logits.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a0eb5d7ae878ab995b910f89bf60620ea">More...</a><br /></td></tr>
-<tr class="separator:a0eb5d7ae878ab995b910f89bf60620ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abddfe99b1ebe51dc9f930cc45bc4d1f8"><td class="memItemLeft" align="right" valign="top">Distribution&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#abddfe99b1ebe51dc9f930cc45bc4d1f8">_create_action_distribution</a> (self, pytorch.Tensor action_values)</td></tr>
+<tr class="memdesc:abddfe99b1ebe51dc9f930cc45bc4d1f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Protected static method to create distributions from action logits.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#abddfe99b1ebe51dc9f930cc45bc4d1f8">More...</a><br /></td></tr>
+<tr class="separator:abddfe99b1ebe51dc9f930cc45bc4d1f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93e3f2cd3bef82ef0eb36667c27c13af"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a93e3f2cd3bef82ef0eb36667c27c13af">_grad_mean_reduction</a> (self)</td></tr>
+<tr class="memdesc:a93e3f2cd3bef82ef0eb36667c27c13af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs mean reduction and assigns the policy model's parameter the mean reduced gradients.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a93e3f2cd3bef82ef0eb36667c27c13af">More...</a><br /></td></tr>
+<tr class="separator:a93e3f2cd3bef82ef0eb36667c27c13af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ff4a067c80053f646906c6603e196a8"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a1ff4a067c80053f646906c6603e196a8">_run_optimizer</a> (self, <a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#ab3ce395269c69c095865fee40818db2e">loss</a>)</td></tr>
+<tr class="memdesc:a1ff4a067c80053f646906c6603e196a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Protected void method to train the model or accumulate the gradients for training.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a1ff4a067c80053f646906c6603e196a8">More...</a><br /></td></tr>
+<tr class="separator:a1ff4a067c80053f646906c6603e196a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -314,12 +307,15 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a297c096e4155c3ac4815f7ce95ca6767"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a297c096e4155c3ac4815f7ce95ca6767">_normalization</a></td></tr>
 <tr class="memdesc:a297c096e4155c3ac4815f7ce95ca6767"><td class="mdescLeft">&#160;</td><td class="mdescRight">The normalisation tool to be used for agent.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a297c096e4155c3ac4815f7ce95ca6767">More...</a><br /></td></tr>
 <tr class="separator:a297c096e4155c3ac4815f7ce95ca6767"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35562483f002903358c95096accfec89"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a35562483f002903358c95096accfec89">_operate_with_variance</a></td></tr>
+<tr class="memdesc:a35562483f002903358c95096accfec89"><td class="mdescLeft">&#160;</td><td class="mdescRight">The boolean flag indicating if variance operations are to be used.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a35562483f002903358c95096accfec89">More...</a><br /></td></tr>
+<tr class="separator:a35562483f002903358c95096accfec89"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >The <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html" title="The A2C class implements the synchronous Actor-Critic method.">A2C</a> class implements the synchronous Actor-Critic method. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="af2657104c2a71153fa0dbc8a9884a293" name="af2657104c2a71153fa0dbc8a9884a293"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af2657104c2a71153fa0dbc8a9884a293">&#9670;&#160;</a></span>__init__()</h2>
+<a id="adba1d3b5950c18986254b7d1c88e5670" name="adba1d3b5950c18986254b7d1c88e5670"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adba1d3b5950c18986254b7d1c88e5670">&#9670;&#160;</a></span>__init__()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -357,6 +353,12 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">Distribution&#160;</td>
+          <td class="paramname"><em>distribution</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">float&#160;</td>
           <td class="paramname"><em>gamma</em>, </td>
         </tr>
@@ -381,8 +383,8 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>num_actions</em>, </td>
+          <td class="paramtype">Union[int, List[Union[int, List[int]]]]&#160;</td>
+          <td class="paramname"><em>action_space</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -448,7 +450,13 @@ Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float &#160;</td>
-          <td class="paramname"><em>grad_norm_p</em> = <code>2.0</code>&#160;</td>
+          <td class="paramname"><em>grad_norm_p</em> = <code>2.0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Optional[Tuple[float, Callable[[float, bool, int], float]]] &#160;</td>
+          <td class="paramname"><em>variance</em> = <code>None</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -463,11 +471,12 @@ Private Attributes</h2></td></tr>
     <tr><td class="paramname">optimizer</td><td>pytorch.optim.Optimizer: The optimizer to be used for policy model. Optimizer must be initialized and wrapped with policy model parameters. </td></tr>
     <tr><td class="paramname">lr_scheduler</td><td>Union[LRScheduler, None]: The LR Scheduler to be used to decay the learning rate. LR Scheduler must be initialized and wrapped with passed optimizer. </td></tr>
     <tr><td class="paramname">loss_function</td><td>LossFunction: A PyTorch loss function. </td></tr>
+    <tr><td class="paramname">distribution</td><td>: dist_math.distribution.Distribution: The distribution of PyTorch to be used to sampled actions in action space. (See <code>action_space</code>). </td></tr>
     <tr><td class="paramname">gamma</td><td>float: The discounting factor for rewards. </td></tr>
     <tr><td class="paramname">entropy_coefficient</td><td>float: The coefficient to be used for entropy in policy loss computation. </td></tr>
     <tr><td class="paramname">state_value_coefficient</td><td>float: The coefficient to be used for state value in final loss computation. </td></tr>
     <tr><td class="paramname">lr_threshold</td><td>float: The threshold LR which once reached LR scheduler is not called further. </td></tr>
-    <tr><td class="paramname">num_actions</td><td>int: Number of actions for the environment. </td></tr>
+    <tr><td class="paramname">action_space</td><td>Union[int, List[Union[int, List[int]]]]: The action space of the environment. If discrete action set is used, number of actions can be passed. If continuous action space is used, a list must be passed with first element representing the output features from model, second representing the shape of action to be sampled. </td></tr>
     <tr><td class="paramname">backup_frequency</td><td>int: The timesteps after which policy model, optimizer states and lr scheduler states are backed up. </td></tr>
     <tr><td class="paramname">save_path</td><td>str: The path where policy model, optimizer states and lr scheduler states are to be saved. </td></tr>
     <tr><td class="paramname">bootstrap_rounds</td><td>int: The number of rounds until which gradients are to be accumulated before performing calling optimizer step. Gradients are mean reduced for bootstrap_rounds &gt; 1. Default: 1. </td></tr>
@@ -478,7 +487,8 @@ Private Attributes</h2></td></tr>
     <tr><td class="paramname">p_for_norm</td><td>int: The p value for p-normalization. Default: 2; L2 Norm. </td></tr>
     <tr><td class="paramname">dim_for_norm</td><td>int: The dimension across which normalization is to be performed. Default: 0. </td></tr>
     <tr><td class="paramname">max_grad_norm</td><td>Optional[float]: The max norm for gradients for gradient clipping. Default: None </td></tr>
-    <tr><td class="paramname">grad_norm_p</td><td>Optional[float]: The p-value for p-normalization of gradients. Default: 2.0</td></tr>
+    <tr><td class="paramname">grad_norm_p</td><td>float: The p-value for p-normalization of gradients. Default: 2.0 </td></tr>
+    <tr><td class="paramname">variance</td><td>Optional[Tuple[float, Callable[[float, bool, int], float]]]: The tuple of variance to be used to sample actions for continuous action space and a method to be used to decay it. The passed method have the signature Callable[[float, int], float]. The first argument would be the variance value and second value be the boolean, done flag indicating if the state is terminal or not and third will be the timestep; returning the updated variance value. Default: None</td></tr>
   </table>
   </dd>
 </dl>
@@ -497,11 +507,11 @@ Private Attributes</h2></td></tr>
 <li>On States and Rewards: 3; (<code>["states", "rewards"]</code>)</li>
 <li>On States and TD: 4; (<code>["states", "advantage"]</code>)</li>
 </ul>
-<p >If a valid <code>max_norm_grad</code> is passed, then gradient clipping takes place else gradient clipping step is skipped. If <code>max_norm_grad</code> value was invalid, error will be raised from PyTorch. </p>
+<p >If a valid <code>max_norm_grad</code> is passed, then gradient clipping takes place else gradient clipping step is skipped. If <code>max_norm_grad</code> value was invalid, error will be raised from PyTorch. :param distribution: </p>
 
 <p>Reimplemented from <a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a364aa41c59de32a363b2e4c241dfef3f">rlpack.utils.base.agent.Agent</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#a483a0ddf60fd397518087bdf99bfced7">rlpack.actor_critic.a3c.A3C</a>.</p>
+<p>Reimplemented in <a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#aeeade381614a6fc5eb01aff4600bc59a">rlpack.actor_critic.a3c.A3C</a>.</p>
 
 </div>
 </div>
@@ -537,8 +547,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a2f5dd7eeab7ee5f523490c1ec65e03e8" name="a2f5dd7eeab7ee5f523490c1ec65e03e8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2f5dd7eeab7ee5f523490c1ec65e03e8">&#9670;&#160;</a></span>_call_train_policy_model()</h2>
+<a id="aad43ca7f87560723e0c6e448723e9512" name="aad43ca7f87560723e0c6e448723e9512"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad43ca7f87560723e0c6e448723e9512">&#9670;&#160;</a></span>_call_to_train_policy_model()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -547,7 +557,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"> None rlpack.actor_critic.a2c.A2C._call_train_policy_model </td>
+          <td class="memname"> None rlpack.actor_critic.a2c.A2C._call_to_train_policy_model </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><em>self</em>, </td>
@@ -571,8 +581,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Protected method to call the appropriate method for training policy model based on initialization of <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html" title="The A2C class implements the synchronous Actor-Critic method.">A2C</a> agent. </p>
-<dl class="params"><dt>Parameters</dt><dd>
+<p>Protected method to train the policy model. </p>
+<p >If done flag is True, will compute the loss and run the optimizer. This method is meant to periodically check if episode hsa been terminated or and train policy models if episode has terminated. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">done</td><td>Union[bool, int]: Flag indicating if episode has terminated or not </td></tr>
   </table>
@@ -720,8 +730,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a0eb5d7ae878ab995b910f89bf60620ea" name="a0eb5d7ae878ab995b910f89bf60620ea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0eb5d7ae878ab995b910f89bf60620ea">&#9670;&#160;</a></span>_create_action_distribution()</h2>
+<a id="abddfe99b1ebe51dc9f930cc45bc4d1f8" name="abddfe99b1ebe51dc9f930cc45bc4d1f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abddfe99b1ebe51dc9f930cc45bc4d1f8">&#9670;&#160;</a></span>_create_action_distribution()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -730,16 +740,26 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"> Categorical rlpack.actor_critic.a2c.A2C._create_action_distribution </td>
+          <td class="memname"> Distribution rlpack.actor_critic.a2c.A2C._create_action_distribution </td>
           <td>(</td>
-          <td class="paramtype">pytorch.Tensor&#160;</td>
-          <td class="paramname"><em>actions_logits</em></td><td>)</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">pytorch.Tensor&#160;</td>
+          <td class="paramname"><em>action_values</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -747,16 +767,16 @@ Private Attributes</h2></td></tr>
 <p>Protected static method to create distributions from action logits. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">actions_logits</td><td>pytorch.Tensor: The action logits from policy model </td></tr>
+    <tr><td class="paramname">action_values</td><td>pytorch.Tensor: The action values from policy model </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Categorical: A Categorical object initialized with given action logits </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Distribution: A Distribution object initialized with given action logits </dd></dl>
 
 </div>
 </div>
-<a id="a36ad349e56ca7fa710bf22333181cf2f" name="a36ad349e56ca7fa710bf22333181cf2f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a36ad349e56ca7fa710bf22333181cf2f">&#9670;&#160;</a></span>_optimizer_step_on_accumulated_grads()</h2>
+<a id="a93e3f2cd3bef82ef0eb36667c27c13af" name="a93e3f2cd3bef82ef0eb36667c27c13af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93e3f2cd3bef82ef0eb36667c27c13af">&#9670;&#160;</a></span>_grad_mean_reduction()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -765,7 +785,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"> None rlpack.actor_critic.a2c.A2C._optimizer_step_on_accumulated_grads </td>
+          <td class="memname"> None rlpack.actor_critic.a2c.A2C._grad_mean_reduction </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><em>self</em></td><td>)</td>
@@ -779,15 +799,12 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Protected method to policy model if boostrap_rounds &gt; 1. </p>
-<p >In such cases the gradients are accumulated in grad_accumulator. This method collects the accumulated gradients and performs mean reduction and runs optimizer step. </p>
-
-<p>Reimplemented in <a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#ad5ace4d35c1e16be69e4860d0217fca6">rlpack.actor_critic.a3c.A3C</a>.</p>
+<p>Performs mean reduction and assigns the policy model's parameter the mean reduced gradients. </p>
 
 </div>
 </div>
-<a id="a0fe737dd4e0aedc6abf61ad3e4b64f00" name="a0fe737dd4e0aedc6abf61ad3e4b64f00"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0fe737dd4e0aedc6abf61ad3e4b64f00">&#9670;&#160;</a></span>_run_by_bootstrap_rounds()</h2>
+<a id="a1ff4a067c80053f646906c6603e196a8" name="a1ff4a067c80053f646906c6603e196a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ff4a067c80053f646906c6603e196a8">&#9670;&#160;</a></span>_run_optimizer()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -796,7 +813,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"> None rlpack.actor_critic.a2c.A2C._run_by_bootstrap_rounds </td>
+          <td class="memname"> None rlpack.actor_critic.a2c.A2C._run_optimizer </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><em>self</em>, </td>
@@ -826,7 +843,7 @@ Private Attributes</h2></td></tr>
 <li>If bootstrap_rounds &gt; 1, the gradients are accumulated in grad_accumulator and model is trained via _train_models method. </li>
 </ul>
 
-<p>Reimplemented in <a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#ab6d824137a5e61e8ff296fc2094666a2">rlpack.actor_critic.a3c.A3C</a>.</p>
+<p>Reimplemented in <a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#a4436f7743be9e692d44b3af582c25193">rlpack.actor_critic.a3c.A3C</a>.</p>
 
 </div>
 </div>
@@ -868,14 +885,14 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a5e480b8b9914e283440e5278a97b42cf" name="a5e480b8b9914e283440e5278a97b42cf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5e480b8b9914e283440e5278a97b42cf">&#9670;&#160;</a></span>policy()</h2>
+<a id="afb6171b51be4c79316278355e78fb25e" name="afb6171b51be4c79316278355e78fb25e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb6171b51be4c79316278355e78fb25e">&#9670;&#160;</a></span>policy()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"> int rlpack.actor_critic.a2c.A2C.policy </td>
+          <td class="memname"> Union[int, np.ndarray] rlpack.actor_critic.a2c.A2C.policy </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><em>self</em>, </td>
@@ -952,14 +969,14 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ae2c4c474849c70cdedf6b98aea2f63c4" name="ae2c4c474849c70cdedf6b98aea2f63c4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae2c4c474849c70cdedf6b98aea2f63c4">&#9670;&#160;</a></span>train()</h2>
+<a id="aa8082ac2128495030e29f87cb454ab44" name="aa8082ac2128495030e29f87cb454ab44"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8082ac2128495030e29f87cb454ab44">&#9670;&#160;</a></span>train()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"> int rlpack.actor_critic.a2c.A2C.train </td>
+          <td class="memname"> Union[int, np.ndarray] rlpack.actor_critic.a2c.A2C.train </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><em>self</em>, </td>
@@ -1063,6 +1080,30 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a35562483f002903358c95096accfec89" name="a35562483f002903358c95096accfec89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35562483f002903358c95096accfec89">&#9670;&#160;</a></span>_operate_with_variance</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">rlpack.actor_critic.a2c.A2C._operate_with_variance</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The boolean flag indicating if variance operations are to be used. </p>
+
+</div>
+</div>
 <a id="a989698a1260432ca0fcbd1668fe9c7ac" name="a989698a1260432ca0fcbd1668fe9c7ac"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a989698a1260432ca0fcbd1668fe9c7ac">&#9670;&#160;</a></span>action_log_probabilities</h2>
 
@@ -1077,6 +1118,22 @@ Private Attributes</h2></td></tr>
 
 <p>The list of sampled actions from each timestep from the action distribution. </p>
 <p >This is cleared after each episode. </p>
+
+</div>
+</div>
+<a id="a4d1c1b160e9cd0cf5ae5a21ace351b56" name="a4d1c1b160e9cd0cf5ae5a21ace351b56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d1c1b160e9cd0cf5ae5a21ace351b56">&#9670;&#160;</a></span>action_space</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">rlpack.actor_critic.a2c.A2C.action_space</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The input number of actions. </p>
 
 </div>
 </div>
@@ -1176,6 +1233,22 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="ad1b2cb43a9ea064b3809838bbb0270f4" name="ad1b2cb43a9ea064b3809838bbb0270f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1b2cb43a9ea064b3809838bbb0270f4">&#9670;&#160;</a></span>distribution</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">rlpack.actor_critic.a2c.A2C.distribution</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The input distribution object. </p>
+
+</div>
+</div>
 <a id="ac030e4955c3b5317db360d8539e51163" name="ac030e4955c3b5317db360d8539e51163"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac030e4955c3b5317db360d8539e51163">&#9670;&#160;</a></span>entropies</h2>
 
@@ -1206,22 +1279,6 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The input entropy coefficient. </p>
-
-</div>
-</div>
-<a id="ad806193a87f792ffdc0e349f0fa5f3e2" name="ad806193a87f792ffdc0e349f0fa5f3e2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad806193a87f792ffdc0e349f0fa5f3e2">&#9670;&#160;</a></span>episode_counter</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">rlpack.actor_critic.a2c.A2C.episode_counter</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>The episode counter; counting the total episodes done so far. </p>
 
 </div>
 </div>
@@ -1270,6 +1327,22 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The input <code>grad_norm_p</code>; indicating the p-value for p-normalisation for gradient clippings. </p>
+
+</div>
+</div>
+<a id="a0959df6d9aaba07b171fa0bc30d9c306" name="a0959df6d9aaba07b171fa0bc30d9c306"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0959df6d9aaba07b171fa0bc30d9c306">&#9670;&#160;</a></span>is_continuous_action_space</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">rlpack.actor_critic.a2c.A2C.is_continuous_action_space</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Flag indicating if action space is continuous or discrete. </p>
 
 </div>
 </div>
@@ -1334,22 +1407,6 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The input <code>max_grad_norm</code>; indicating the maximum gradient norm for gradient clippings. </p>
-
-</div>
-</div>
-<a id="a6b420f1579a75aae43c82105a98c311e" name="a6b420f1579a75aae43c82105a98c311e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6b420f1579a75aae43c82105a98c311e">&#9670;&#160;</a></span>num_actions</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">rlpack.actor_critic.a2c.A2C.num_actions</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>The input number of actions. </p>
 
 </div>
 </div>
@@ -1481,6 +1538,40 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The step counter; counting the total timesteps done so far. </p>
+
+</div>
+</div>
+<a id="a9002f6e78992ea0a133036ac944fc971" name="a9002f6e78992ea0a133036ac944fc971"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9002f6e78992ea0a133036ac944fc971">&#9670;&#160;</a></span>variance_decay_fn</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">rlpack.actor_critic.a2c.A2C.variance_decay_fn</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The variance decay method. </p>
+<p >This will be None if <code>variance</code> argument was not passed </p>
+
+</div>
+</div>
+<a id="a87e1de2217cd2e1d25827d6fc4d3f4ca" name="a87e1de2217cd2e1d25827d6fc4d3f4ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a87e1de2217cd2e1d25827d6fc4d3f4ca">&#9670;&#160;</a></span>variance_value</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">rlpack.actor_critic.a2c.A2C.variance_value</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The current variance value. </p>
+<p >This will be None if <code>variance</code> argument was not passed </p>
 
 </div>
 </div>
