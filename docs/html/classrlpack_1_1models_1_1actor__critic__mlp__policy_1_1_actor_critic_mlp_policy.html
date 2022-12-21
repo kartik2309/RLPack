@@ -99,6 +99,7 @@ $(document).ready(function(){initNavTree('classrlpack_1_1models_1_1actor__critic
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Data Fields</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-static-methods">Static Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a>  </div>
   <div class="headertitle"><div class="title">rlpack.models.actor_critic_mlp_policy.ActorCriticMlpPolicy Class Reference</div></div>
@@ -132,20 +133,26 @@ $(document).ready(function(){initNavTree('classrlpack_1_1models_1_1actor__critic
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ad9cb1b850d5b347a3738da4a34837923"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#ad9cb1b850d5b347a3738da4a34837923">__init__</a> (self, int sequence_length, List[int] hidden_sizes, Union[int, List[Union[int, List[int]]]] action_space, Union[Activation, List[Activation]] activation=pytorch.nn.ReLU(), float dropout=0.5)</td></tr>
-<tr class="memdesc:ad9cb1b850d5b347a3738da4a34837923"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize <a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html" title="This class is a PyTorch Model implementing the MLP based Actor-Critic Policy.">ActorCriticMlpPolicy</a> model.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#ad9cb1b850d5b347a3738da4a34837923">More...</a><br /></td></tr>
-<tr class="separator:ad9cb1b850d5b347a3738da4a34837923"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5acfc50c0fd44ab94e7a741a7e54ec54"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a5acfc50c0fd44ab94e7a741a7e54ec54">forward</a> (self, x)</td></tr>
-<tr class="memdesc:a5acfc50c0fd44ab94e7a741a7e54ec54"><td class="mdescLeft">&#160;</td><td class="mdescRight">The forwards method of the nn.Module.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a5acfc50c0fd44ab94e7a741a7e54ec54">More...</a><br /></td></tr>
-<tr class="separator:a5acfc50c0fd44ab94e7a741a7e54ec54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8756524dc6c0bcf27b0d8f664f19bc7f"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a8756524dc6c0bcf27b0d8f664f19bc7f">__init__</a> (self, int sequence_length, List[int] hidden_sizes, Union[int, List[Union[int, List[int]]]] action_space, Union[Activation, List[Activation]] activation=pytorch.nn.ReLU(), float dropout=0.5, bool <a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aecf9f6171326ea4e102b94f500ec83bc">share_network</a>=False)</td></tr>
+<tr class="memdesc:a8756524dc6c0bcf27b0d8f664f19bc7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize <a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html" title="This class is a PyTorch Model implementing the MLP based Actor-Critic Policy.">ActorCriticMlpPolicy</a> model.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a8756524dc6c0bcf27b0d8f664f19bc7f">More...</a><br /></td></tr>
+<tr class="separator:a8756524dc6c0bcf27b0d8f664f19bc7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95da8357401ed25058701edf2d978d36"><td class="memItemLeft" align="right" valign="top">Tuple[pytorch.Tensor, pytorch.Tensor]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a95da8357401ed25058701edf2d978d36">forward</a> (self, pytorch.Tensor x)</td></tr>
+<tr class="memdesc:a95da8357401ed25058701edf2d978d36"><td class="mdescLeft">&#160;</td><td class="mdescRight">The forwards method of the nn.Module.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a95da8357401ed25058701edf2d978d36">More...</a><br /></td></tr>
+<tr class="separator:a95da8357401ed25058701edf2d978d36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
 <tr class="memitem:a72b8e01161f5c361e73a872ed9adf713"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a72b8e01161f5c361e73a872ed9adf713">actor_activation</a></td></tr>
 <tr class="separator:a72b8e01161f5c361e73a872ed9adf713"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5cf6dc54f85cb7adb659dcef3cf6302"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aa5cf6dc54f85cb7adb659dcef3cf6302">actor_feature_extractor</a></td></tr>
+<tr class="memdesc:aa5cf6dc54f85cb7adb659dcef3cf6302"><td class="mdescLeft">&#160;</td><td class="mdescRight">The feature extractor for actor model.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aa5cf6dc54f85cb7adb659dcef3cf6302">More...</a><br /></td></tr>
+<tr class="separator:aa5cf6dc54f85cb7adb659dcef3cf6302"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeccac34c455d3068c34a4cde629e7d85"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aeccac34c455d3068c34a4cde629e7d85">actor_head</a></td></tr>
-<tr class="memdesc:aeccac34c455d3068c34a4cde629e7d85"><td class="mdescLeft">&#160;</td><td class="mdescRight">The final head for actor; creates logits for actions.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aeccac34c455d3068c34a4cde629e7d85">More...</a><br /></td></tr>
+<tr class="memdesc:aeccac34c455d3068c34a4cde629e7d85"><td class="mdescLeft">&#160;</td><td class="mdescRight">The final head for actor; creates logits/parameters for actions.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aeccac34c455d3068c34a4cde629e7d85">More...</a><br /></td></tr>
 <tr class="separator:aeccac34c455d3068c34a4cde629e7d85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa41057f745afd80c3c64913d4a7e9806"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aa41057f745afd80c3c64913d4a7e9806">critic_feature_extractor</a></td></tr>
+<tr class="memdesc:aa41057f745afd80c3c64913d4a7e9806"><td class="mdescLeft">&#160;</td><td class="mdescRight">The feature extractor for critic model.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aa41057f745afd80c3c64913d4a7e9806">More...</a><br /></td></tr>
+<tr class="separator:aa41057f745afd80c3c64913d4a7e9806"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a20b1b9443191489e94af5b586d6fae8f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a20b1b9443191489e94af5b586d6fae8f">critic_head</a></td></tr>
 <tr class="memdesc:a20b1b9443191489e94af5b586d6fae8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The final head for critic; creates the state value.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a20b1b9443191489e94af5b586d6fae8f">More...</a><br /></td></tr>
 <tr class="separator:a20b1b9443191489e94af5b586d6fae8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -155,8 +162,25 @@ Data Fields</h2></td></tr>
 <tr class="memitem:acb05c340b3bf2f6693382040abbda5d3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#acb05c340b3bf2f6693382040abbda5d3">mlp_feature_extractor</a></td></tr>
 <tr class="memdesc:acb05c340b3bf2f6693382040abbda5d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The feature extractor instance of <a class="el" href="classrlpack_1_1models_1_1__mlp__feature__extractor_1_1___mlp_feature_extractor.html" title="This class is a PyTorch Model implementing the MLP based feature extractor for 1-D or 2-D state value...">rlpack.models._mlp_feature_extractor._MlpFeatureExtractor</a>.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#acb05c340b3bf2f6693382040abbda5d3">More...</a><br /></td></tr>
 <tr class="separator:acb05c340b3bf2f6693382040abbda5d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aecf9f6171326ea4e102b94f500ec83bc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aecf9f6171326ea4e102b94f500ec83bc">share_network</a></td></tr>
+<tr class="separator:aecf9f6171326ea4e102b94f500ec83bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a243b342828ce37830e4713f8ba996edd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a243b342828ce37830e4713f8ba996edd">value_activation</a></td></tr>
 <tr class="separator:a243b342828ce37830e4713f8ba996edd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:aad28102be7e36eb33c6b784cda834afc"><td class="memItemLeft" align="right" valign="top">Tuple[pytorch.Tensor, pytorch.Tensor]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aad28102be7e36eb33c6b784cda834afc">_run_non_shared_forward</a> (self, pytorch.Tensor x)</td></tr>
+<tr class="memdesc:aad28102be7e36eb33c6b784cda834afc"><td class="mdescLeft">&#160;</td><td class="mdescRight">The forwards method of the nn.Module when actor and critic do not share network.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aad28102be7e36eb33c6b784cda834afc">More...</a><br /></td></tr>
+<tr class="separator:aad28102be7e36eb33c6b784cda834afc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba8c6e80a1f940c3f3e993ea8b3f9945"><td class="memItemLeft" align="right" valign="top">Tuple[pytorch.Tensor, pytorch.Tensor]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aba8c6e80a1f940c3f3e993ea8b3f9945">_run_shared_forward</a> (self, pytorch.Tensor x)</td></tr>
+<tr class="memdesc:aba8c6e80a1f940c3f3e993ea8b3f9945"><td class="mdescLeft">&#160;</td><td class="mdescRight">The forwards method of the nn.Module when actor and critic share network.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aba8c6e80a1f940c3f3e993ea8b3f9945">More...</a><br /></td></tr>
+<tr class="separator:aba8c6e80a1f940c3f3e993ea8b3f9945"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d73c1241a8599dcb513e380c350f86e"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a0d73c1241a8599dcb513e380c350f86e">_set_non_shared_network_attributes</a> (self, int sequence_length, List[int] hidden_sizes, List[Activation] activation, float dropout=0.5)</td></tr>
+<tr class="memdesc:a0d73c1241a8599dcb513e380c350f86e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets appropriate attributes to create non-shared network.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a0d73c1241a8599dcb513e380c350f86e">More...</a><br /></td></tr>
+<tr class="separator:a0d73c1241a8599dcb513e380c350f86e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea64146a1c5ff9db574c2024b201ec1d"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aea64146a1c5ff9db574c2024b201ec1d">_set_shared_network_attributes</a> (self, int sequence_length, List[int] hidden_sizes, List[Activation] activation, float dropout=0.5)</td></tr>
+<tr class="memdesc:aea64146a1c5ff9db574c2024b201ec1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets appropriate attributes to create shared network.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aea64146a1c5ff9db574c2024b201ec1d">More...</a><br /></td></tr>
+<tr class="separator:aea64146a1c5ff9db574c2024b201ec1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-methods" name="pri-static-methods"></a>
 Static Private Member Functions</h2></td></tr>
@@ -179,8 +203,8 @@ Private Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >This class is a PyTorch Model implementing the MLP based Actor-Critic Policy. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ad9cb1b850d5b347a3738da4a34837923" name="ad9cb1b850d5b347a3738da4a34837923"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad9cb1b850d5b347a3738da4a34837923">&#9670;&#160;</a></span>__init__()</h2>
+<a id="a8756524dc6c0bcf27b0d8f664f19bc7f" name="a8756524dc6c0bcf27b0d8f664f19bc7f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8756524dc6c0bcf27b0d8f664f19bc7f">&#9670;&#160;</a></span>__init__()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -219,7 +243,13 @@ Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float &#160;</td>
-          <td class="paramname"><em>dropout</em> = <code>0.5</code>&#160;</td>
+          <td class="paramname"><em>dropout</em> = <code>0.5</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &#160;</td>
+          <td class="paramname"><em>share_network</em> = <code>False</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -237,6 +267,7 @@ Private Attributes</h2></td></tr>
     <tr><td class="paramname">action_space</td><td>Union[int, List[Union[int, List[int]]]]: The action space of the environment. If discrete action set is used, number of actions can be passed. If continuous action space is used, a list must be passed with first element representing the output features from model, second representing the shape of action to be sampled. </td></tr>
     <tr><td class="paramname">activation</td><td>Union[Activation, List[Activation]]: The activation function class(es) for the model. Must be an initialized activation object from PyTorch's nn (torch.nn) module. If a list is passed, List must be of length [1, 3], first activation for feature extractor, second for actor head and third for critic head. </td></tr>
     <tr><td class="paramname">dropout</td><td>float: The dropout to be used in the final Linear (FC) layer. </td></tr>
+    <tr><td class="paramname">share_network</td><td>bool: Flag indicating whether to use the shared network for actor and critic or separate networks. Default: False </td></tr>
   </table>
   </dd>
 </dl>
@@ -314,14 +345,17 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a5acfc50c0fd44ab94e7a741a7e54ec54" name="a5acfc50c0fd44ab94e7a741a7e54ec54"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5acfc50c0fd44ab94e7a741a7e54ec54">&#9670;&#160;</a></span>forward()</h2>
+<a id="aad28102be7e36eb33c6b784cda834afc" name="aad28102be7e36eb33c6b784cda834afc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad28102be7e36eb33c6b784cda834afc">&#9670;&#160;</a></span>_run_non_shared_forward()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">def rlpack.models.actor_critic_mlp_policy.ActorCriticMlpPolicy.forward </td>
+          <td class="memname"> Tuple[pytorch.Tensor, pytorch.Tensor] rlpack.models.actor_critic_mlp_policy.ActorCriticMlpPolicy._run_non_shared_forward </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><em>self</em>, </td>
@@ -329,7 +363,226 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">pytorch.Tensor
+    &#160;</td>
+          <td class="paramname"><em>x</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The forwards method of the nn.Module when actor and critic do not share network. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>pytorch.Tensor: The model input. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Tuple[pytorch.Tensor, pytorch.Tensor]: The tuple of actor and critic outputs. </dd></dl>
+
+</div>
+</div>
+<a id="aba8c6e80a1f940c3f3e993ea8b3f9945" name="aba8c6e80a1f940c3f3e993ea8b3f9945"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba8c6e80a1f940c3f3e993ea8b3f9945">&#9670;&#160;</a></span>_run_shared_forward()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Tuple[pytorch.Tensor, pytorch.Tensor] rlpack.models.actor_critic_mlp_policy.ActorCriticMlpPolicy._run_shared_forward </td>
+          <td>(</td>
           <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">pytorch.Tensor
+    &#160;</td>
+          <td class="paramname"><em>x</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The forwards method of the nn.Module when actor and critic share network. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>pytorch.Tensor: The model input. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Tuple[pytorch.Tensor, pytorch.Tensor]: The tuple of actor and critic outputs. </dd></dl>
+
+</div>
+</div>
+<a id="a0d73c1241a8599dcb513e380c350f86e" name="a0d73c1241a8599dcb513e380c350f86e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d73c1241a8599dcb513e380c350f86e">&#9670;&#160;</a></span>_set_non_shared_network_attributes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> None rlpack.models.actor_critic_mlp_policy.ActorCriticMlpPolicy._set_non_shared_network_attributes </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>sequence_length</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">List[int]&#160;</td>
+          <td class="paramname"><em>hidden_sizes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">List[Activation]&#160;</td>
+          <td class="paramname"><em>activation</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float &#160;</td>
+          <td class="paramname"><em>dropout</em> = <code>0.5</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets appropriate attributes to create non-shared network. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sequence_length</td><td>int: The sequence length of the expected tensor. </td></tr>
+    <tr><td class="paramname">hidden_sizes</td><td>List[int]: The list of hidden sizes for each layer. </td></tr>
+    <tr><td class="paramname">activation</td><td>List[Activation]: List of activations to be used. </td></tr>
+    <tr><td class="paramname">dropout</td><td>float: The dropout to be used in the final Linear (FC) layer. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aea64146a1c5ff9db574c2024b201ec1d" name="aea64146a1c5ff9db574c2024b201ec1d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea64146a1c5ff9db574c2024b201ec1d">&#9670;&#160;</a></span>_set_shared_network_attributes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> None rlpack.models.actor_critic_mlp_policy.ActorCriticMlpPolicy._set_shared_network_attributes </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>sequence_length</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">List[int]&#160;</td>
+          <td class="paramname"><em>hidden_sizes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">List[Activation]&#160;</td>
+          <td class="paramname"><em>activation</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float &#160;</td>
+          <td class="paramname"><em>dropout</em> = <code>0.5</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets appropriate attributes to create shared network. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sequence_length</td><td>int: The sequence length of the expected tensor. </td></tr>
+    <tr><td class="paramname">hidden_sizes</td><td>List[int]: The list of hidden sizes for each layer. </td></tr>
+    <tr><td class="paramname">activation</td><td>List[Activation]: List of activations to be used. </td></tr>
+    <tr><td class="paramname">dropout</td><td>float: The dropout to be used in the final Linear (FC) layer. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a95da8357401ed25058701edf2d978d36" name="a95da8357401ed25058701edf2d978d36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a95da8357401ed25058701edf2d978d36">&#9670;&#160;</a></span>forward()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Tuple[pytorch.Tensor, pytorch.Tensor] rlpack.models.actor_critic_mlp_policy.ActorCriticMlpPolicy.forward </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">pytorch.Tensor&#160;</td>
           <td class="paramname"><em>x</em>&#160;</td>
         </tr>
         <tr>
@@ -347,7 +600,7 @@ Private Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>pytorch.Tensor: The model output (logits). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Tuple[pytorch.Tensor, pytorch.Tensor]: The tuple of actor and critic outputs. </dd></dl>
 
 </div>
 </div>
@@ -414,6 +667,23 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="aa5cf6dc54f85cb7adb659dcef3cf6302" name="aa5cf6dc54f85cb7adb659dcef3cf6302"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5cf6dc54f85cb7adb659dcef3cf6302">&#9670;&#160;</a></span>actor_feature_extractor</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">rlpack.models.actor_critic_mlp_policy.ActorCriticMlpPolicy.actor_feature_extractor</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The feature extractor for actor model. </p>
+<p >This will always be None if network is shared. </p>
+
+</div>
+</div>
 <a id="aeccac34c455d3068c34a4cde629e7d85" name="aeccac34c455d3068c34a4cde629e7d85"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aeccac34c455d3068c34a4cde629e7d85">&#9670;&#160;</a></span>actor_head</h2>
 
@@ -426,7 +696,24 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>The final head for actor; creates logits for actions. </p>
+<p>The final head for actor; creates logits/parameters for actions. </p>
+
+</div>
+</div>
+<a id="aa41057f745afd80c3c64913d4a7e9806" name="aa41057f745afd80c3c64913d4a7e9806"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa41057f745afd80c3c64913d4a7e9806">&#9670;&#160;</a></span>critic_feature_extractor</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">rlpack.models.actor_critic_mlp_policy.ActorCriticMlpPolicy.critic_feature_extractor</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The feature extractor for critic model. </p>
+<p >This will always be None if network is shared. </p>
 
 </div>
 </div>
@@ -475,6 +762,21 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The feature extractor instance of <a class="el" href="classrlpack_1_1models_1_1__mlp__feature__extractor_1_1___mlp_feature_extractor.html" title="This class is a PyTorch Model implementing the MLP based feature extractor for 1-D or 2-D state value...">rlpack.models._mlp_feature_extractor._MlpFeatureExtractor</a>. </p>
+<p >This will be None if network is not shared. </p>
+
+</div>
+</div>
+<a id="aecf9f6171326ea4e102b94f500ec83bc" name="aecf9f6171326ea4e102b94f500ec83bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aecf9f6171326ea4e102b94f500ec83bc">&#9670;&#160;</a></span>share_network</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">rlpack.models.actor_critic_mlp_policy.ActorCriticMlpPolicy.share_network</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>

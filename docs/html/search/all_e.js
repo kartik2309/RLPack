@@ -18,5 +18,6 @@ var searchData=
   ['priorityfrequencies_5f_15',['priorityFrequencies_',['../class_offload.html#a5e7be56fe3c2f531fab7577bc9019d58',1,'Offload']]],
   ['probabilities_5f_16',['probabilities_',['../class_c___memory.html#a2f963bedf97454a00878155658c5c57f',1,'C_Memory']]],
   ['propagate_5fchanges_5fupwards_17',['propagate_changes_upwards',['../class_sum_tree.html#ae13c3c8793a5dbbb5badd8e69da9b99f',1,'SumTree']]],
-  ['pybind11_5fmodule_18',['PYBIND11_MODULE',['../group__grad__accumulator__group.html#ga6c6f30d5d2df9f96f907debc36b7a701',1,'PYBIND11_MODULE(C_GradAccumulator, m):&#160;Binding.cpp'],['../group__memory__group.html#ga928a5a8e698b6e34d86df1e225a97c13',1,'PYBIND11_MODULE(C_Memory, m):&#160;Binding.cu']]]
+  ['pybind11_5fmodule_18',['PYBIND11_MODULE',['../group__grad__accumulator__group.html#ga6c6f30d5d2df9f96f907debc36b7a701',1,'PYBIND11_MODULE(C_GradAccumulator, m):&#160;Binding.cpp'],['../group__memory__group.html#ga928a5a8e698b6e34d86df1e225a97c13',1,'PYBIND11_MODULE(C_Memory, m):&#160;Binding.cu']]],
+  ['pytorch_5fdtype_5fmap_19',['pytorch_dtype_map',['../classrlpack_1_1utils_1_1base_1_1internal__code__register_1_1_internal_code_register.html#a5dd9f2de54e163a5b11145c411e89b88',1,'rlpack::utils::base::internal_code_register::InternalCodeRegister']]]
 ];

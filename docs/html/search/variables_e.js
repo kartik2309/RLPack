@@ -14,5 +14,6 @@ var searchData=
   ['prioritization_5fstrategy_5fcodes_11',['prioritization_strategy_codes',['../classrlpack_1_1utils_1_1base_1_1internal__code__register_1_1_internal_code_register.html#ad0ecebadf507e35b4958970e0c38d385',1,'rlpack::utils::base::internal_code_register::InternalCodeRegister']]],
   ['prioritizationstrategycode_5f_12',['prioritizationStrategyCode_',['../class_c___memory.html#a264bebb33c770c92fcbc46d1de64d802',1,'C_Memory']]],
   ['priorityfrequencies_5f_13',['priorityFrequencies_',['../class_offload.html#a5e7be56fe3c2f531fab7577bc9019d58',1,'Offload']]],
-  ['probabilities_5f_14',['probabilities_',['../class_c___memory.html#a2f963bedf97454a00878155658c5c57f',1,'C_Memory']]]
+  ['probabilities_5f_14',['probabilities_',['../class_c___memory.html#a2f963bedf97454a00878155658c5c57f',1,'C_Memory']]],
+  ['pytorch_5fdtype_5fmap_15',['pytorch_dtype_map',['../classrlpack_1_1utils_1_1base_1_1internal__code__register_1_1_internal_code_register.html#a5dd9f2de54e163a5b11145c411e89b88',1,'rlpack::utils::base::internal_code_register::InternalCodeRegister']]]
 ];

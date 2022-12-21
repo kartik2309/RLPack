@@ -31,13 +31,14 @@ var searchData=
   ['get_5fstates_5fcurrent_28',['get_states_current',['../classrlpack_1_1___c_1_1memory_1_1_memory.html#a1d57b56fafcb0eae202ed5de8c09631b',1,'rlpack::_C::memory::Memory']]],
   ['get_5fstates_5fnext_29',['get_states_next',['../classrlpack_1_1___c_1_1memory_1_1_memory.html#adb9e43c7a695618d85a69aeb668e5d3f',1,'rlpack::_C::memory::Memory']]],
   ['get_5fterminal_5fstate_5findices_30',['get_terminal_state_indices',['../classrlpack_1_1___c_1_1memory_1_1_memory.html#a56db9cfb35402b28d7e557813e220c44',1,'rlpack::_C::memory::Memory']]],
-  ['get_5ftransitions_31',['get_transitions',['../classrlpack_1_1___c_1_1memory_1_1_memory.html#ad3a7f91902d5de7853c3f1c0061ef522',1,'rlpack::_C::memory::Memory']]],
-  ['get_5ftree_5fheight_32',['get_tree_height',['../class_sum_tree.html#a22b02f73a9c18024c7c52e39a01f2d37',1,'SumTree']]],
-  ['get_5ftree_5findex_33',['get_tree_index',['../class_sum_tree_node.html#a0531258ec3abd0519204c6187bbd5a99',1,'SumTreeNode']]],
-  ['get_5ftree_5flevel_34',['get_tree_level',['../class_sum_tree_node.html#ad4439ac9482b8277f0ce497eb413318c',1,'SumTreeNode']]],
-  ['get_5fvalue_35',['get_value',['../class_sum_tree_node.html#ad63a839702ce6e2c41fbb534300e9706',1,'SumTreeNode']]],
-  ['grad_5faccumulator_36',['grad_accumulator',['../group__grad__accumulator__group.html',1,'']]],
-  ['grad_5faccumulator_2epy_37',['grad_accumulator.py',['../grad__accumulator_8py.html',1,'']]],
-  ['grad_5fnorm_5fp_38',['grad_norm_p',['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a3f1d962e32fb21e733c9161a3e5ec206',1,'rlpack.actor_critic.a2c.A2C.grad_norm_p()'],['../classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a1e27aba2fbce8d9ec056ae95fd97f1f1',1,'rlpack.dqn.dqn_agent.DqnAgent.grad_norm_p()']]],
-  ['gradaccumulator_39',['GradAccumulator',['../classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html',1,'rlpack::_C::grad_accumulator']]]
+  ['get_5ftorch_5fdtype_31',['get_torch_dtype',['../classrlpack_1_1utils_1_1internal__code__setup_1_1_internal_code_setup.html#a25834108311f63450a71561fde2bb494',1,'rlpack::utils::internal_code_setup::InternalCodeSetup']]],
+  ['get_5ftransitions_32',['get_transitions',['../classrlpack_1_1___c_1_1memory_1_1_memory.html#ad3a7f91902d5de7853c3f1c0061ef522',1,'rlpack::_C::memory::Memory']]],
+  ['get_5ftree_5fheight_33',['get_tree_height',['../class_sum_tree.html#a22b02f73a9c18024c7c52e39a01f2d37',1,'SumTree']]],
+  ['get_5ftree_5findex_34',['get_tree_index',['../class_sum_tree_node.html#a0531258ec3abd0519204c6187bbd5a99',1,'SumTreeNode']]],
+  ['get_5ftree_5flevel_35',['get_tree_level',['../class_sum_tree_node.html#ad4439ac9482b8277f0ce497eb413318c',1,'SumTreeNode']]],
+  ['get_5fvalue_36',['get_value',['../class_sum_tree_node.html#ad63a839702ce6e2c41fbb534300e9706',1,'SumTreeNode']]],
+  ['grad_5faccumulator_37',['grad_accumulator',['../group__grad__accumulator__group.html',1,'']]],
+  ['grad_5faccumulator_2epy_38',['grad_accumulator.py',['../grad__accumulator_8py.html',1,'']]],
+  ['grad_5fnorm_5fp_39',['grad_norm_p',['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a3f1d962e32fb21e733c9161a3e5ec206',1,'rlpack.actor_critic.a2c.A2C.grad_norm_p()'],['../classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a1e27aba2fbce8d9ec056ae95fd97f1f1',1,'rlpack.dqn.dqn_agent.DqnAgent.grad_norm_p()']]],
+  ['gradaccumulator_40',['GradAccumulator',['../classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html',1,'rlpack::_C::grad_accumulator']]]
 ];

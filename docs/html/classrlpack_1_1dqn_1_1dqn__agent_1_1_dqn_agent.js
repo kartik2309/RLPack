@@ -1,6 +1,6 @@
 var classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent =
 [
-    [ "__init__", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a9c056ee02e4cd1b61448680a11b88e5d", null ],
+    [ "__init__", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#adaafce130393bf44eadb52278cf1191c", null ],
     [ "_anneal_alpha", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a0d9b14c38d0d94d9daf6b98d14631ca7", null ],
     [ "_anneal_beta", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#ad8de8220f415d66696d1d42855f4ea97", null ],
     [ "_apply_prioritization_strategy", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a3968de174bcc4879f641136b85f9a876", null ],
@@ -23,6 +23,7 @@ var classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent =
     [ "backup_frequency", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#aeb63fe78cd7970482dd191f9186a54b4", null ],
     [ "batch_size", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a0dcef173b93afb6eeb2c2f2bbed8fe7d", null ],
     [ "bootstrap_rounds", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a1e74b6687e80197fc0764726533899bb", null ],
+    [ "clip_grad_value", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a7c4db3301269ef487097c5d7a89e0f70", null ],
     [ "device", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#aa24c4cde1b3c86793aa0c163975f7e46", null ],
     [ "dim_for_norm", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#ab587b11f42305490ece52cb5683cee6d", null ],
     [ "eps_for_norm", "classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#ac2f3ca72d4ac525130ddab5c3ab08f3c", null ],

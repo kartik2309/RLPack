@@ -1,6 +1,6 @@
 var classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c =
 [
-    [ "__init__", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#adba1d3b5950c18986254b7d1c88e5670", null ],
+    [ "__init__", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a5a982a8ad2a06c3b077393183bf55840", null ],
     [ "_call_to_save", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a487c58b125fb7cd2e14972552bdf5ea6", null ],
     [ "_call_to_train_policy_model", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aad43ca7f87560723e0c6e448723e9512", null ],
     [ "_clear", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a77355981bba89741f7b8a15e76cf02f8", null ],
@@ -23,6 +23,7 @@ var classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c =
     [ "apply_norm_to", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aeef17e7ec0e0b81e2b47b0c4663bad2c", null ],
     [ "backup_frequency", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a26e70f7a784551fa58fa81b1f2dcc894", null ],
     [ "bootstrap_rounds", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a67a8def97a97cef04686199250556bd0", null ],
+    [ "clip_grad_value", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a56424016ec1920db6de100a35d23a16f", null ],
     [ "device", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a3f3c23d256a14d2b124fb866732051b6", null ],
     [ "dim_for_norm", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ac3f70110b14a2bc1354fadaa02f3bdff", null ],
     [ "distribution", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ad1b2cb43a9ea064b3809838bbb0270f4", null ],

@@ -27,9 +27,10 @@ var searchData=
   ['get_5fstates_5fcurrent_24',['get_states_current',['../classrlpack_1_1___c_1_1memory_1_1_memory.html#a1d57b56fafcb0eae202ed5de8c09631b',1,'rlpack::_C::memory::Memory']]],
   ['get_5fstates_5fnext_25',['get_states_next',['../classrlpack_1_1___c_1_1memory_1_1_memory.html#adb9e43c7a695618d85a69aeb668e5d3f',1,'rlpack::_C::memory::Memory']]],
   ['get_5fterminal_5fstate_5findices_26',['get_terminal_state_indices',['../classrlpack_1_1___c_1_1memory_1_1_memory.html#a56db9cfb35402b28d7e557813e220c44',1,'rlpack::_C::memory::Memory']]],
-  ['get_5ftransitions_27',['get_transitions',['../classrlpack_1_1___c_1_1memory_1_1_memory.html#ad3a7f91902d5de7853c3f1c0061ef522',1,'rlpack::_C::memory::Memory']]],
-  ['get_5ftree_5fheight_28',['get_tree_height',['../class_sum_tree.html#a22b02f73a9c18024c7c52e39a01f2d37',1,'SumTree']]],
-  ['get_5ftree_5findex_29',['get_tree_index',['../class_sum_tree_node.html#a0531258ec3abd0519204c6187bbd5a99',1,'SumTreeNode']]],
-  ['get_5ftree_5flevel_30',['get_tree_level',['../class_sum_tree_node.html#ad4439ac9482b8277f0ce497eb413318c',1,'SumTreeNode']]],
-  ['get_5fvalue_31',['get_value',['../class_sum_tree_node.html#ad63a839702ce6e2c41fbb534300e9706',1,'SumTreeNode']]]
+  ['get_5ftorch_5fdtype_27',['get_torch_dtype',['../classrlpack_1_1utils_1_1internal__code__setup_1_1_internal_code_setup.html#a25834108311f63450a71561fde2bb494',1,'rlpack::utils::internal_code_setup::InternalCodeSetup']]],
+  ['get_5ftransitions_28',['get_transitions',['../classrlpack_1_1___c_1_1memory_1_1_memory.html#ad3a7f91902d5de7853c3f1c0061ef522',1,'rlpack::_C::memory::Memory']]],
+  ['get_5ftree_5fheight_29',['get_tree_height',['../class_sum_tree.html#a22b02f73a9c18024c7c52e39a01f2d37',1,'SumTree']]],
+  ['get_5ftree_5findex_30',['get_tree_index',['../class_sum_tree_node.html#a0531258ec3abd0519204c6187bbd5a99',1,'SumTreeNode']]],
+  ['get_5ftree_5flevel_31',['get_tree_level',['../class_sum_tree_node.html#ad4439ac9482b8277f0ce497eb413318c',1,'SumTreeNode']]],
+  ['get_5fvalue_32',['get_value',['../class_sum_tree_node.html#ad63a839702ce6e2c41fbb534300e9706',1,'SumTreeNode']]]
 ];
