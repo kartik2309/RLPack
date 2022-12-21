@@ -11,7 +11,7 @@ from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext
 from torch.utils import cmake_prefix_path
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 
 class CMakeExtension(Extension):
@@ -85,7 +85,7 @@ setup(
     author="Kartik Rajeshwaran",
     author_email="kartik.rajeshwaran@gmail.com",
     description="Implementation of RL Algorithms",
-    long_description="Implementation of RL Algorithms with PyTorch and optimization with C++.",
+    long_description=(Path(__file__).parent / "README.md").read_text(),
     long_description_content_type="text/markdown",
     url="https://github.com/kartik2309/RLPack",
     packages=[
