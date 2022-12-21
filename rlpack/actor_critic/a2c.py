@@ -11,6 +11,7 @@ Currently following methods are implemented:
 """
 
 
+import math
 import os
 from typing import Callable, List, Optional, Tuple, Union
 
@@ -41,7 +42,7 @@ class A2C(Agent):
         entropy_coefficient: float,
         state_value_coefficient: float,
         lr_threshold: float,
-        action_space: Union[int, List[Union[int, List[int]]]],
+        action_space: Union[int, Tuple[int, Union[List[int], None]]],
         backup_frequency: int,
         save_path: str,
         bootstrap_rounds: int = 1,
@@ -55,7 +56,12 @@ class A2C(Agent):
         max_grad_norm: Optional[float] = None,
         grad_norm_p: float = 2.0,
         clip_grad_value: Optional[float] = None,
-        variance: Optional[Tuple[float, Callable[[float, bool, int], float]]] = None,
+        variance: Optional[
+            Tuple[
+                Union[float, np.ndarray, pytorch.Tensor],
+                Callable[[float, bool, int], float],
+            ]
+        ] = None,
     ):
         """!
         @param policy_model: *pytorch.nn.Module*: The policy model to be used. Policy model must return a tuple of
@@ -71,10 +77,11 @@ class A2C(Agent):
         @param entropy_coefficient: float: The coefficient to be used for entropy in policy loss computation.
         @param state_value_coefficient: float: The coefficient to be used for state value in final loss computation.
         @param lr_threshold: float: The threshold LR which once reached LR scheduler is not called further.
-        @param action_space: Union[int, List[Union[int, List[int]]]]: The action space of the environment. If
-            discrete action set is used, number of actions can be passed. If continuous action space is used,
-            a list must be passed with first element representing the output features from model, second
-            representing the shape of action to be sampled.
+        @param action_space: Union[int, Tuple[int, Union[List[int], None]]]: The action space of the environment.
+            - If discrete action set is used, number of actions can be passed.
+            - If continuous action space is used, a list must be passed with first element representing
+            the output features from model, second element representing the shape of action to be sampled. Second
+            element can be an empty list or None, if you wish to sample the default no. of samples.
         @param backup_frequency: int: The timesteps after which policy model, optimizer states and lr
             scheduler states are backed up.
         @param save_path: str: The path where policy model, optimizer states and lr scheduler states are to be saved.
@@ -95,11 +102,13 @@ class A2C(Agent):
         @param max_grad_norm: Optional[float]: The max norm for gradients for gradient clipping. Default: None
         @param grad_norm_p: float: The p-value for p-normalization of gradients. Default: 2.0
         @param clip_grad_value: Optional[float]: The gradient value for clipping gradients by value. Default: None
-        @param variance: Optional[Tuple[float, Callable[[float, bool, int], float]]]: The tuple of variance to be used
-            to sample actions for continuous action space and a method to be used to decay it. The passed method have
-            the signature Callable[[float, int], float]. The first argument would be the variance value and
-            second value be the boolean, done flag indicating if the state is terminal or not and third will be the
-            timestep; returning the updated variance value. Default: None
+        @param variance: Tuple[
+                Union[float, np.ndarray, pytorch.Tensor],
+                Callable[[Union[float, np.ndarray, pytorch.Tensor], bool, int], float],
+            ]: The tuple of variance to be used to sample actions for continuous action space and a method to
+            be used to decay it. The passed method have the signature Callable[[float, int], float]. The first
+            argument would be the variance value and second value be the boolean, done flag indicating if the state
+            is terminal or not and third will be the timestep; returning the updated variance value. Default: None
 
 
         **Notes**
@@ -123,13 +132,15 @@ class A2C(Agent):
 
         If a valid `max_norm_grad` is passed, then gradient clipping takes place else gradient clipping step is
         skipped. If `max_norm_grad` value was invalid, error will be raised from PyTorch.
+        If a valid `clip_grad_value` is passed, then gradients will be clipped by value. If `clip_grad_value` value
+        was invalid, error will be raised from PyTorch.
         """
         super(A2C, self).__init__()
         setup = InternalCodeSetup()
+        device = pytorch.device(device=device)
+        dtype = setup.get_torch_dtype(dtype)
         ## The input policy model moved to desired device. @I{# noqa: E266}
-        self.policy_model = policy_model.to(
-            device=pytorch.device(device=device), dtype=setup.get_torch_dtype(dtype)
-        )
+        self.policy_model = policy_model.to(device=device, dtype=dtype)
         ## The input optimizer wrapped with policy_model parameters. @I{# noqa: E266}
         self.optimizer = optimizer
         ## The input optional LR Scheduler (this can be None). @I{# noqa: E266}
@@ -146,6 +157,8 @@ class A2C(Agent):
         self.state_value_coefficient = state_value_coefficient
         ## The input LR Threshold. @I{# noqa: E266}
         self.lr_threshold = float(lr_threshold)
+        # Check validity of action space before setting the attribute.
+        setup.check_validity_of_action_space(action_space)
         ## The input number of actions. @I{# noqa: E266}
         self.action_space = action_space
         ## The input model backup frequency in terms of timesteps. @I{# noqa: E266}
@@ -158,8 +171,10 @@ class A2C(Agent):
         ), "Argument `bootstrap_rounds` must be an integer between 0 and 1"
         ## The input boostrap rounds. @I{# noqa: E266}
         self.bootstrap_rounds = bootstrap_rounds
-        ## The input `device` argument; indicating the device name. @I{# noqa: E266}
+        ## The input `device` argument; indicating the device name as device type class. @I{# noqa: E266}
         self.device = device
+        ## The input `device` argument; indicating the datatype class. @I{# noqa: E266}
+        self.dtype = dtype
         if isinstance(apply_norm, str):
             apply_norm = setup.get_apply_norm_mode_code(apply_norm)
         setup.check_validity_of_apply_norm_code(apply_norm)
@@ -231,14 +246,14 @@ class A2C(Agent):
         reward: Union[int, float],
         done: Union[bool, int],
         **kwargs,
-    ) -> Union[int, np.ndarray]:
+    ) -> np.ndarray:
         """
         The train method to train the agent and underlying policy model.
         @param state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]: The current state returned
         @param reward: Union[int, float]: The reward returned from previous action
         @param done: Union[bool, int]: Flag indicating if episode has terminated or not
         @param kwargs: Other keyword arguments.
-        @return int: The action to be taken
+        @return np.ndarray: The action to be taken
         """
         # Cast `state_current` to tensor.
         state_current = self._cast_to_tensor(state_current).to(self.device)
@@ -251,7 +266,8 @@ class A2C(Agent):
         if not self.is_continuous_action_space:
             action = distribution.sample()
         else:
-            action = distribution.rsample(sample_shape=tuple(self.action_space[1]))
+            sample_shape = self._get_action_sample_shape_for_continuous()
+            action = distribution.rsample(sample_shape=sample_shape)
         # Accumulate quantities.
         self.action_log_probabilities.append(distribution.log_prob(action))
         self.states_current_values.append(state_current_value)
@@ -264,10 +280,7 @@ class A2C(Agent):
         # Increment `step_counter` and use policy model to get next action.
         self.step_counter += 1
         with torch.no_grad():
-            if not self.is_continuous_action_space:
-                action = action.item()
-            else:
-                action = action.cpu().numpy()
+            action = action.cpu().numpy()
         return action
 
     @pytorch.no_grad()
@@ -275,26 +288,24 @@ class A2C(Agent):
         self,
         state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
         **kwargs,
-    ) -> Union[int, np.ndarray]:
+    ) -> np.ndarray:
         """
         The policy method to evaluate the agent. This runs in pure inference mode.
         @param state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]: The current state returned
             from gym environment
         @param kwargs: Other keyword arguments
-        @return int: The action to be taken
+        @return np.ndarray: The action to be taken
         """
         self.policy_model.eval()
         state_current = self._cast_to_tensor(state_current).to(self.device)
         action_values, _ = self.policy_model(state_current)
         distribution = self._create_action_distribution(action_values)
         if not self.is_continuous_action_space:
-            action = distribution.sample().item()
+            action = distribution.sample()
         else:
-            action = (
-                distribution.sample(sample_shape=tuple(self.action_space[1]))
-                .cpu()
-                .numpy()
-            )
+            sample_shape = self._get_action_sample_shape_for_continuous()
+            action = distribution.sample(sample_shape=sample_shape)
+        action = action.cpu().numpy()
         return action
 
     def save(self, custom_name_suffix: Optional[str] = None) -> None:
@@ -521,15 +532,15 @@ class A2C(Agent):
         Computes the discounted returns iteratively.
         @return pytorch.Tensor: The discounted returns
         """
-        rewards_in_descending_timesteps = self.rewards[::-1]
-        returns = list()
+        total_rewards = len(self.rewards)
+        returns = [0] * total_rewards
         r_ = 0
-        # Compute discounted returns
-        for r in rewards_in_descending_timesteps:
-            r_ = r + self.gamma * r_
-            returns.insert(0, r_)
-        # Convert discounted returns to tensor and move it to correct device.
-        returns = pytorch.tensor(returns, dtype=pytorch.float32, device=self.device)
+        for idx in range(total_rewards):
+            idx = total_rewards - idx - 1
+            r_ = self.rewards[idx] + self.gamma * r_
+            returns[idx] = r_
+        # Convert discounted returns to tensor and move it to correct device and dtype
+        returns = pytorch.tensor(returns, dtype=self.dtype, device=self.device)
         return returns
 
     def _clear(self) -> None:
@@ -542,20 +553,69 @@ class A2C(Agent):
         self.states_current_values.clear()
         self.entropies.clear()
 
+    def _get_action_sample_shape_for_continuous(self) -> pytorch.Size:
+        """
+        Gets the action sample shape to be sampled from continuous distribution.
+        @return pytorch.Size: Sample shape of to-be sampled tensor from continuous distribution
+        """
+        if self.is_continuous_action_space:
+            assert len(self.action_space) == 2
+            if self.action_space[-1] is None:
+                return pytorch.Size([])
+            return pytorch.Size(self.action_space[-1])
+        raise ValueError(
+            "`_get_action_sample_shape_for_continuous` must only be called for continuous action spaces"
+        )
+
     def _create_action_distribution(
         self,
-        action_values: pytorch.Tensor,
+        action_values: Union[List[pytorch.Tensor], pytorch.Tensor],
     ) -> Distribution:
         """
         Protected static method to create distributions from action logits
-        @param action_values: pytorch.Tensor: The action values from policy model
+        @param action_values: Union[List[pytorch.Tensor], pytorch.Tensor]: The action values from policy model
         @return Distribution: A Distribution object initialized with given action logits
         """
         if not self.is_continuous_action_space:
             distribution = self.distribution(logits=action_values)
         else:
-            action_values_ = action_values.flatten()
-            if self._operate_with_variance:
-                action_values_[-1] = self.variance_value**0.5
-            distribution = self.distribution(*action_values_)
+            if isinstance(action_values, pytorch.Tensor):
+                action_values_ = action_values.flatten()
+                if self._operate_with_variance:
+                    action_values_[-1] = self.variance_value**0.5
+                distribution = self.distribution(*action_values_)
+            elif isinstance(action_values, list):
+                assert len(action_values) == 2, (
+                    f"`action_values, if a list, must be a list of two tensors, "
+                    f"but got list of length {len(action_values)}.\n"
+                    "HINT: Check your policy model's output."
+                )
+                action_values = [
+                    action_value.squeeze(0)
+                    if action_value.size(0) == 1
+                    else action_value
+                    for action_value in action_values
+                ]
+                if self._operate_with_variance:
+                    if isinstance(self.variance_value, (float, int)):
+                        action_values[-1] = math.sqrt(self.variance_value)
+                    elif isinstance(self.variance_value, np.ndarray):
+                        action_values[-1] = pytorch.from_numpy(
+                            np.sqrt(self.variance_value)
+                        ).to(device=self.device, dtype=self.dtype)
+                    elif isinstance(self.variance_value, pytorch.Tensor):
+                        action_values[-1] = pytorch.sqrt(self.variance_value).to(
+                            device=self.device, dtype=self.dtype
+                        )
+                    else:
+                        raise TypeError(
+                            f"Invalid datatype passed for `variance` value. Must be either of "
+                            f"{float}, {np.ndarray} or {pytorch.Tensor}"
+                        )
+                distribution = self.distribution(*action_values)
+            else:
+                raise TypeError(
+                    f"Expected `action_values` to be either a tensor or a list of Tensors, "
+                    f"received {type(action_values)}"
+                )
         return distribution

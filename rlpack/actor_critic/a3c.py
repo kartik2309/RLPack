@@ -13,6 +13,8 @@ Currently following methods are implemented:
 
 from typing import Callable, List, Optional, Tuple, Union
 
+import numpy as np
+
 from rlpack import dist, pytorch
 from rlpack.actor_critic.a2c import A2C
 from rlpack.utils import Distribution, LossFunction, LRScheduler
@@ -34,7 +36,7 @@ class A3C(A2C):
         entropy_coefficient: float,
         state_value_coefficient: float,
         lr_threshold: float,
-        action_space: Union[int, List[Union[int, List[int]]]],
+        action_space: Union[int, Tuple[int, Union[List[int], None]]],
         backup_frequency: int,
         save_path: str,
         bootstrap_rounds: int = 1,
@@ -48,7 +50,12 @@ class A3C(A2C):
         max_grad_norm: Optional[float] = None,
         grad_norm_p: float = 2.0,
         clip_grad_value: Optional[float] = None,
-        variance: Optional[Tuple[float, Callable[[float, bool, int], float]]] = None,
+        variance: Optional[
+            Tuple[
+                Union[float, np.ndarray, pytorch.Tensor],
+                Callable[[Union[float, np.ndarray, pytorch.Tensor], bool, int], float],
+            ]
+        ] = None,
     ):
         """!
         @param policy_model: *pytorch.nn.Module*: The policy model to be used. Policy model must return a tuple of
@@ -64,10 +71,11 @@ class A3C(A2C):
         @param entropy_coefficient: float: The coefficient to be used for entropy in policy loss computation.
         @param state_value_coefficient: float: The coefficient to be used for state value in final loss computation.
         @param lr_threshold: float: The threshold LR which once reached LR scheduler is not called further.
-        @param action_space: Union[int, List[Union[int, List[int]]]]: The action space of the environment. If
-            discrete action set is used, number of actions can be passed. If continuous action space is used,
-            a list must be passed with first element representing the output features from model, second
-            representing the shape of action to be sampled.
+        @param action_space: Union[int, Tuple[int, Union[List[int], None]]]: The action space of the environment.
+            - If discrete action set is used, number of actions can be passed.
+            - If continuous action space is used, a list must be passed with first element representing
+            the output features from model, second element representing the shape of action to be sampled. Second
+            element can be an empty list or None, if you wish to sample the default no. of samples.
         @param backup_frequency: int: The timesteps after which policy model, optimizer states and lr
             scheduler states are backed up.
         @param save_path: str: The path where policy model, optimizer states and lr scheduler states are to be saved.
@@ -88,11 +96,13 @@ class A3C(A2C):
         @param max_grad_norm: Optional[float]: The max norm for gradients for gradient clipping. Default: None
         @param grad_norm_p: float: The p-value for p-normalization of gradients. Default: 2.0
         @param clip_grad_value: Optional[float]: The gradient value for clipping gradients by value. Default: None
-        @param variance: Optional[Tuple[float, Callable[[float, bool, int], float]]]: The tuple of variance to be used
-            to sample actions for continuous action space and a method to be used to decay it. The passed method have
-            the signature Callable[[float, int], float]. The first argument would be the variance value and
-            second value be the boolean, done flag indicating if the state is terminal or not and third will be the
-            timestep; returning the updated variance value. Default: None
+        @param variance: Tuple[
+                Union[float, np.ndarray, pytorch.Tensor],
+                Callable[[Union[float, np.ndarray, pytorch.Tensor], bool, int], float],
+            ]: The tuple of variance to be used to sample actions for continuous action space and a method to
+            be used to decay it. The passed method have the signature Callable[[float, int], float]. The first
+            argument would be the variance value and second value be the boolean, done flag indicating if the state
+            is terminal or not and third will be the timestep; returning the updated variance value. Default: None
 
 
 
@@ -117,6 +127,8 @@ class A3C(A2C):
 
         If a valid `max_norm_grad` is passed, then gradient clipping takes place else gradient clipping step is
         skipped. If `max_norm_grad` value was invalid, error will be raised from PyTorch.
+        If a valid `clip_grad_value` is passed, then gradients will be clipped by value. If `clip_grad_value` value
+        was invalid, error will be raised from PyTorch.
         """
         super(A3C, self).__init__(
             policy_model,
@@ -190,6 +202,11 @@ class A3C(A2C):
                 max_norm=self.max_grad_norm,
                 norm_type=self.grad_norm_p,
             )
+        # Clip gradients by value if requested.
+        if self.clip_grad_value is not None:
+            pytorch.nn.utils.clip_grad_value_(
+                self.policy_model.parameters(), clip_value=self.clip_grad_value
+            )
         # Take optimizer step.
         self.optimizer.step()
         # Take an LR Scheduler step if required.
@@ -207,5 +224,6 @@ class A3C(A2C):
         """
         world_size = dist.get_world_size()
         for param in self.policy_model.parameters():
-            dist.all_reduce(param.grad, op=dist.ReduceOp.SUM)
-            param.grad /= world_size
+            if param.requires_grad:
+                dist.all_reduce(param.grad, op=dist.ReduceOp.SUM)
+                param.grad /= world_size
