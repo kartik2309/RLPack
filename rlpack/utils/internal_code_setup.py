@@ -1,4 +1,28 @@
-from typing import List
+"""!
+@package rlpack.utils
+@brief This package implements the basic utilities to be used across rlpack.
+
+
+Currently following classes have been implemented:
+    - `Normalization`: Normalization tool implemented as rlpack.utils.normalization.Normalization with
+        support for regular normalization methods.
+    - `SanityCheck`: Sanity check for arguments when using Simulator from rlpack.simulator.Simulator. Class is
+        implemented as rlpack.utils.sanity_check.SanityCheck.
+    - `Setup`: Sets up the simulator to run the agent with environment. Implemented as rlpack.utils.setup.Setup.
+    - `InternalCodeSetup`: For internal use to check/validate arguments and to retrieve codes for internal use.
+        Implemented as rlpack.utils.internal_code_setup.InternalCodeSetup.
+
+Following packages are part of utils:
+    - `base`: A package for base class, implemented as utils.base
+
+Following TypeVars have been defined:
+    - `LRScheduler`: The Typing variable for LR Schedulers.
+    - `LossFunction`: The Typing variable for Loss Functions.
+    - `Activation`: The Typing variable for Activations.
+"""
+
+
+from typing import List, Union
 
 from rlpack import pytorch
 from rlpack.utils.base.internal_code_register import InternalCodeRegister
@@ -100,3 +124,20 @@ class InternalCodeSetup(InternalCodeRegister):
         if apply_norm_to in list(self.norm_to_mode_codes.values()):
             return
         raise ValueError("Invalid value of `apply_norm_to` code was received!")
+
+    @staticmethod
+    def check_validity_of_action_space(action_space: Union[int, List[int, Union[List[int], None]]]) -> None:
+        """
+        Checks the validity of action space for agents.
+        @param action_space: Union[int, List[int, Union[List[int], None]]]: The action space to check
+        """
+        if isinstance(action_space, int):
+            return
+        if isinstance(action_space, list):
+            if len(action_space) == 2:
+                if isinstance(action_space[0], int) and isinstance(action_space[-1], (list, type(None))):
+                    return
+        raise ValueError(
+            "`action_space` must be either an int for discrete actions or a list for continuous actions. "
+            "Please refer to rlpack.actor_critic.a2c.A2c.__init__ for more details."
+        )
