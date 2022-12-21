@@ -1,6 +1,6 @@
 import logging
 import os
-from typing import Any, Callable, Dict
+from typing import Any, Dict, Protocol
 
 from rlpack import dist, mp
 from rlpack.simulator import Simulator
@@ -13,6 +13,24 @@ class SimulatorDistributed:
     there will be multiple agents interacting with their local copy of environment. Agents are responsible
     for maintaining any synchronization.
     """
+
+    class RunFuncSignature(Protocol):
+        """
+        Typing hint for function to be spawned in multiprocess.
+        """
+
+        def __call__(
+            self, process_rank: int, world_size: int, config: Dict[str, Any], **kwargs
+        ) -> None:
+            """
+            __call__ method to define the signature for the callable.
+            @param process_rank: int: The process rank of the initialized process.
+            @param world_size: int: Total number of processes launched or to be launched.
+            @param config: Dict[str, Any]: The configuration to be used.
+            @param kwargs: Other keyword arguments corresponding to
+                rlpack.environments.environments.Environments.train method.
+            """
+            return
 
     def __init__(self, n_procs: int, config: Dict[str, Any], backend: str = "gloo"):
         """
@@ -30,7 +48,7 @@ class SimulatorDistributed:
     def init_process(
         process_rank: int,
         world_size: int,
-        func: Callable[[int, int, Dict[str, Any], ...], None],
+        func: RunFuncSignature,
         config: Dict[str, Any],
         backend: str = "gloo",
         **kwargs,
@@ -39,7 +57,7 @@ class SimulatorDistributed:
         Initialized the distributed environment to run the given func.
         @param process_rank: int: The process rank of the initialized process.
         @param world_size: int: Total number of processes launched or to be launched.
-        @param func: Callable[[int, int, Dict[str, Any], ...], None]: A function with given signature to be launched
+        @param func: RunFuncSignature: A function with given signature to be launched
             in distributed setting on processes.
         @param config: Dict[str, Any]: The configuration to be used.
         @param backend: str: The PyTorch multiprocessing backend to be used.
