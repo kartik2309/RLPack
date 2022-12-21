@@ -276,7 +276,7 @@ class DqnAgent(Agent):
         priority: Optional[Union[pytorch.Tensor, np.ndarray, float]] = 1.0,
         probability: Optional[Union[pytorch.Tensor, np.ndarray, float]] = 1.0,
         weight: Optional[Union[pytorch.Tensor, np.ndarray, float]] = 1.0,
-    ) -> int:
+    ) -> np.ndarray:
         """
         - The training method for agent, which accepts a transition from environment and returns an action for next
             transition. Use this method when you intend to train the agent.
@@ -297,7 +297,7 @@ class DqnAgent(Agent):
            : for priority relay memory). Default: 1.0
         @param weight: Optional[Union[pytorch.Tensor, np.ndarray, float]]: The important sampling weight
             of the transition: for priority relay memory). Default: 1.0
-        @return int: The next action to be taken from `state_next`.
+        @return np.ndarray: The next action to be taken from `state_next`.
         """
         # Insert the sample into memory.
         self.memory.insert(
@@ -334,12 +334,12 @@ class DqnAgent(Agent):
         return action
 
     @pytorch.no_grad()
-    def policy(self, state_current: Union[ndarray, pytorch.Tensor, List[float]]) -> int:
+    def policy(self, state_current: Union[ndarray, pytorch.Tensor, List[float]]) -> np.ndarray:
         """
         The policy for the agent. This runs the inference on policy model with `state_current`
         and uses q-values to obtain the best action.
         @param state_current: Union[ndarray, pytorch.Tensor, List[float]]: The current state agent is in.
-        @return int: The action to be taken.
+        @return np.ndarray: The action to be taken.
         """
         state_current = self._cast_to_tensor(state_current).to(self.device)
         state_current = pytorch.unsqueeze(state_current, 0)
@@ -426,13 +426,13 @@ class DqnAgent(Agent):
     @pytorch.no_grad()
     def _infer_action(
         self, state_current: pytorch.Tensor, call_from_policy: bool = True
-    ) -> int:
+    ) -> np.ndarray:
         """
         Helper method to support action inference form policy model.
         @param state_current: pytorch.Tensor: The current state of the agent in the environment
         @param call_from_policy: bool: The flag indicating if the method is being from `DqnAgent.policy`
             method or not. Default: True
-        @return int: The discrete action
+        @return np.ndarray: The discrete action
         """
         if not call_from_policy:
             p = random.random()
@@ -447,7 +447,7 @@ class DqnAgent(Agent):
                 state_current = self._normalization.apply_normalization(state_current)
             q_values = self.policy_model(state_current)
             action_tensor = q_values.argmax(-1)
-            action = action_tensor.item()
+            action = action_tensor.cpu().numpy()
         return action
 
     def _train_policy_model(self) -> None:
