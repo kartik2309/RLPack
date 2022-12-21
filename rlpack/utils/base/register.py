@@ -93,7 +93,12 @@ class Register:
         ## The mapping between given keyword and [in-built](@ref models/index.md) model's default arguments. @I{# noqa: E266}
         self.model_args_default = {
             "mlp": ("activation", "dropout"),
-            "actor_critic_mlp_policy": ("activation", "dropout", "share_network"),
+            "actor_critic_mlp_policy": (
+                "activation",
+                "dropout",
+                "share_network",
+                "use_actor_projection",
+            ),
         }
         ## The mapping between given keyword and [in-built](@ref models/index.md) models' arguments. @I{# noqa: E266}
         self.model_args = {
@@ -138,8 +143,8 @@ class Register:
                 "dim_for_norm",
                 "max_grad_norm",
                 "grad_norm_p",
-                "variance",
                 "clip_grad_value",
+                "variance",
             ),
             "a3c": (
                 "bootstrap_rounds",
@@ -152,8 +157,8 @@ class Register:
                 "dim_for_norm",
                 "max_grad_norm",
                 "grad_norm_p",
-                "variance",
                 "clip_grad_value",
+                "variance",
             ),
         }
         ## The mapping between given keyword and [agent](@ref agents/index.md) agents' arguments. @I{# noqa: E266}
