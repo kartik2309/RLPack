@@ -1,5 +1,6 @@
 from typing import List
 
+from rlpack import pytorch
 from rlpack.utils.base.internal_code_register import InternalCodeRegister
 
 
@@ -69,9 +70,22 @@ class InternalCodeSetup(InternalCodeRegister):
         code = self.prioritization_strategy_codes[prioritization_strategy]
         return code
 
+    def get_torch_dtype(self, dtype: str) -> pytorch.dtype:
+        """
+        Check if the input given strong for torch datatype is valid. If valid, return the datatype class from
+        PyTorch.
+        @param dtype: str: The datatype string.
+        :return: pytorch.dtype: The datatype class for given string.
+        """
+        if dtype not in self.pytorch_dtype_map.keys():
+            raise ValueError(
+                "Invalid or unsupported datatype has been passed! Either pass 'float64' or 'float32'"
+            )
+        return self.pytorch_dtype_map[dtype]
+
     def check_validity_of_apply_norm_code(self, apply_norm: int) -> None:
         """
-        Check of validity of the `apply_norm` code. Raises ValueError if code is invalid.
+        Check if validity of the `apply_norm` code. Raises ValueError if code is invalid.
         @param apply_norm: int: `apply_norm` code to check
         """
         if apply_norm in list(self.norm_mode_codes.values()):
