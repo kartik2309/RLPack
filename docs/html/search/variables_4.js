@@ -9,5 +9,6 @@ var searchData=
   ['distribution_6',['Distribution',['../namespacerlpack_1_1utils.html#aaad9a70a6c4529173da81bf76d2ceadd',1,'rlpack::utils']]],
   ['distributions_5fmap_7',['distributions_map',['../classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#a4a4f01f371201400fe35f2c17bb08e3c',1,'rlpack::utils::base::register::Register']]],
   ['dones_5f_8',['dones_',['../class_c___memory.html#aed1b6d5e37187033b423023e040bb5b0',1,'C_Memory']]],
-  ['dropout_9',['dropout',['../classrlpack_1_1models_1_1__mlp__feature__extractor_1_1___mlp_feature_extractor.html#a57eb1081b87bfe42e59f70681b723425',1,'rlpack::models::_mlp_feature_extractor::_MlpFeatureExtractor']]]
+  ['dropout_9',['dropout',['../classrlpack_1_1models_1_1__mlp__feature__extractor_1_1___mlp_feature_extractor.html#a57eb1081b87bfe42e59f70681b723425',1,'rlpack::models::_mlp_feature_extractor::_MlpFeatureExtractor']]],
+  ['dtype_10',['dtype',['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ac408f55979c88c963e4e67d5254da262',1,'rlpack::actor_critic::a2c::A2C']]]
 ];

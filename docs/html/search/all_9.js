@@ -4,7 +4,7 @@ var searchData=
   ['index_2emd_1',['index.md',['../agents_2actor__critic_2index_8md.html',1,'(Global Namespace)'],['../agents_2index_8md.html',1,'(Global Namespace)'],['../index_8md.html',1,'(Global Namespace)'],['../models_2in__built_2index_8md.html',1,'(Global Namespace)'],['../models_2index_8md.html',1,'(Global Namespace)']]],
   ['index_5f_2',['index_',['../class_sum_tree_node.html#af550902575001cac1ea811ff34afceb4',1,'SumTreeNode']]],
   ['indexarray_5f_3',['indexArray_',['../class_offload.html#a273d5876da15227d27caece25af1280d',1,'Offload']]],
-  ['init_5fprocess_4',['init_process',['../classrlpack_1_1simulator__distributed_1_1_simulator_distributed.html#a352a5cf59baedd8988fd2ee8beb53286',1,'rlpack::simulator_distributed::SimulatorDistributed']]],
+  ['init_5fprocess_4',['init_process',['../classrlpack_1_1simulator__distributed_1_1_simulator_distributed.html#a0655924015158c90aedb9b672bac1d66',1,'rlpack::simulator_distributed::SimulatorDistributed']]],
   ['initialize_5',['initialize',['../classrlpack_1_1___c_1_1memory_1_1_memory.html#a05868f1c95b791df02e6a801e689659f',1,'rlpack._C.memory.Memory.initialize()'],['../class_c___memory.html#a94ebf72f884215d7bb75b94f7904655f',1,'C_Memory::initialize()']]],
   ['input_5fconfig_6',['input_config',['../classrlpack_1_1utils_1_1sanity__check_1_1_sanity_check.html#a9458c7762a6c9ab6baf7cb560e7a772b',1,'rlpack::utils::sanity_check::SanityCheck']]],
   ['inputcontainerdata_5f_7',['inputContainerData_',['../class_offload.html#ad8c6a8ae732aa46f9fdc362ce5bd0fc7',1,'Offload']]],

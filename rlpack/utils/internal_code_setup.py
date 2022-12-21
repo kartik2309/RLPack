@@ -22,7 +22,7 @@ Following TypeVars have been defined:
 """
 
 
-from typing import List, Union
+from typing import List, Tuple, Union
 
 from rlpack import pytorch
 from rlpack.utils.base.internal_code_register import InternalCodeRegister
@@ -126,16 +126,20 @@ class InternalCodeSetup(InternalCodeRegister):
         raise ValueError("Invalid value of `apply_norm_to` code was received!")
 
     @staticmethod
-    def check_validity_of_action_space(action_space: Union[int, List[int, Union[List[int], None]]]) -> None:
+    def check_validity_of_action_space(
+        action_space: Union[int, Tuple[int, Union[List[int], None]]]
+    ) -> None:
         """
         Checks the validity of action space for agents.
-        @param action_space: Union[int, List[int, Union[List[int], None]]]: The action space to check
+        @param action_space: Union[int, Tuple[int, Union[List[int], None]]]: The action space to check
         """
         if isinstance(action_space, int):
             return
         if isinstance(action_space, list):
             if len(action_space) == 2:
-                if isinstance(action_space[0], int) and isinstance(action_space[-1], (list, type(None))):
+                if isinstance(action_space[0], int) and isinstance(
+                    action_space[-1], (list, type(None))
+                ):
                     return
         raise ValueError(
             "`action_space` must be either an int for discrete actions or a list for continuous actions. "

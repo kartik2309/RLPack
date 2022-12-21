@@ -42,9 +42,10 @@ var searchData=
   ['rlpack_5fbinaries_5futils_5fops_5farg_5fmergesort_5fcuh_5f_39',['RLPACK_BINARIES_UTILS_OPS_ARG_MERGESORT_CUH_',['../arg__mergesort_8cuh.html#a0ab8bce8755f1b9be96ae7fa0f14c977',1,'arg_mergesort.cuh']]],
   ['run_40',['run',['../classrlpack_1_1simulator_1_1_simulator.html#ab900dc528c641be010262487361bcb97',1,'rlpack.simulator.Simulator.run()'],['../classrlpack_1_1simulator__distributed_1_1_simulator_distributed.html#a763fb34e298ccedcc98d0af597b78792',1,'rlpack.simulator_distributed.SimulatorDistributed.run(self, **kwargs)']]],
   ['run_5f_41',['run_',['../classrlpack_1_1simulator__distributed_1_1_simulator_distributed.html#a3ed47f74a90523bbfba6ed81beb86113',1,'rlpack::simulator_distributed::SimulatorDistributed']]],
-  ['sanity_5fcheck_42',['sanity_check',['../namespacerlpack_1_1utils_1_1sanity__check.html',1,'rlpack::utils']]],
-  ['setup_43',['setup',['../namespacerlpack_1_1utils_1_1setup.html',1,'rlpack::utils']]],
-  ['simulator_44',['simulator',['../namespacerlpack_1_1simulator.html',1,'rlpack']]],
-  ['simulator_5fdistributed_45',['simulator_distributed',['../namespacerlpack_1_1simulator__distributed.html',1,'rlpack']]],
-  ['utils_46',['utils',['../namespacerlpack_1_1utils.html',1,'rlpack']]]
+  ['runfuncsignature_42',['RunFuncSignature',['../classrlpack_1_1simulator__distributed_1_1_simulator_distributed_1_1_run_func_signature.html',1,'rlpack::simulator_distributed::SimulatorDistributed']]],
+  ['sanity_5fcheck_43',['sanity_check',['../namespacerlpack_1_1utils_1_1sanity__check.html',1,'rlpack::utils']]],
+  ['setup_44',['setup',['../namespacerlpack_1_1utils_1_1setup.html',1,'rlpack::utils']]],
+  ['simulator_45',['simulator',['../namespacerlpack_1_1simulator.html',1,'rlpack']]],
+  ['simulator_5fdistributed_46',['simulator_distributed',['../namespacerlpack_1_1simulator__distributed.html',1,'rlpack']]],
+  ['utils_47',['utils',['../namespacerlpack_1_1utils.html',1,'rlpack']]]
 ];

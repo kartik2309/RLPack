@@ -30,7 +30,7 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         self,
         sequence_length: int,
         hidden_sizes: List[int],
-        action_space: Union[int, List[int, Union[List[int], None]]],
+        action_space: Union[int, Tuple[int, Union[List[int], None]]],
         activation: Union[Activation, List[Activation]] = pytorch.nn.ReLU(),
         dropout: float = 0.5,
         share_network: bool = False,
@@ -40,7 +40,7 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         Initialize ActorCriticMlpPolicy model.
         @param sequence_length: int: The sequence length of the expected tensor.
         @param hidden_sizes: List[int]: The list of hidden sizes for each layer.
-        @param action_space: Union[int, List[int, Union[List[int], None]]]: The action space of the environment.
+        @param action_space: Union[int, Tuple[int, Union[List[int], None]]]: The action space of the environment.
             - If discrete action set is used, number of actions can be passed.
             - If continuous action space is used, a list must be passed with first element representing
             the output features from model, second element representing the shape of action to be sampled. Second
