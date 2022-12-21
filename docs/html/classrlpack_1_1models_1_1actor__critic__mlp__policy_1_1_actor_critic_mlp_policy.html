@@ -133,9 +133,9 @@ $(document).ready(function(){initNavTree('classrlpack_1_1models_1_1actor__critic
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a7f02ee1d8ed6525429a61c40dc9ca54c"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a7f02ee1d8ed6525429a61c40dc9ca54c">__init__</a> (self, int sequence_length, List[int] hidden_sizes, Union[int, List[int, Union[List[int], None]]] action_space, Union[Activation, List[Activation]] activation=pytorch.nn.ReLU(), float dropout=0.5, bool <a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aecf9f6171326ea4e102b94f500ec83bc">share_network</a>=False, bool <a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#acc3d0c82767c3101f50c0dd71b9a6e42">use_actor_projection</a>=False)</td></tr>
-<tr class="memdesc:a7f02ee1d8ed6525429a61c40dc9ca54c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize <a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html" title="This class is a PyTorch Model implementing the MLP based Actor-Critic Policy.">ActorCriticMlpPolicy</a> model.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a7f02ee1d8ed6525429a61c40dc9ca54c">More...</a><br /></td></tr>
-<tr class="separator:a7f02ee1d8ed6525429a61c40dc9ca54c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1724d3929f1f8ff24afce5735bf292ee"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a1724d3929f1f8ff24afce5735bf292ee">__init__</a> (self, int sequence_length, List[int] hidden_sizes, Union[int, Tuple[int, Union[List[int], None]]] action_space, Union[Activation, List[Activation]] activation=pytorch.nn.ReLU(), float dropout=0.5, bool <a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aecf9f6171326ea4e102b94f500ec83bc">share_network</a>=False, bool <a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#acc3d0c82767c3101f50c0dd71b9a6e42">use_actor_projection</a>=False)</td></tr>
+<tr class="memdesc:a1724d3929f1f8ff24afce5735bf292ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize <a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html" title="This class is a PyTorch Model implementing the MLP based Actor-Critic Policy.">ActorCriticMlpPolicy</a> model.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a1724d3929f1f8ff24afce5735bf292ee">More...</a><br /></td></tr>
+<tr class="separator:a1724d3929f1f8ff24afce5735bf292ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a80306f9557f50f930ca86426af1bd922"><td class="memItemLeft" align="right" valign="top">Union[ Tuple[List[pytorch.Tensor], pytorch.Tensor], Tuple[pytorch.Tensor, pytorch.Tensor],]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a80306f9557f50f930ca86426af1bd922">forward</a> (self, pytorch.Tensor x)</td></tr>
 <tr class="memdesc:a80306f9557f50f930ca86426af1bd922"><td class="mdescLeft">&#160;</td><td class="mdescRight">The forwards method of the nn.Module.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a80306f9557f50f930ca86426af1bd922">More...</a><br /></td></tr>
 <tr class="separator:a80306f9557f50f930ca86426af1bd922"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -215,8 +215,8 @@ Private Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >This class is a PyTorch Model implementing the MLP based Actor-Critic Policy. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a7f02ee1d8ed6525429a61c40dc9ca54c" name="a7f02ee1d8ed6525429a61c40dc9ca54c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7f02ee1d8ed6525429a61c40dc9ca54c">&#9670;&#160;</a></span>__init__()</h2>
+<a id="a1724d3929f1f8ff24afce5735bf292ee" name="a1724d3929f1f8ff24afce5735bf292ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1724d3929f1f8ff24afce5735bf292ee">&#9670;&#160;</a></span>__init__()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -242,7 +242,7 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Union[int, List[int, Union[List[int], None]]]&#160;</td>
+          <td class="paramtype">Union[int, Tuple[int, Union[List[int], None]]]&#160;</td>
           <td class="paramname"><em>action_space</em>, </td>
         </tr>
         <tr>
@@ -282,7 +282,7 @@ Private Attributes</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">sequence_length</td><td>int: The sequence length of the expected tensor. </td></tr>
     <tr><td class="paramname">hidden_sizes</td><td>List[int]: The list of hidden sizes for each layer. </td></tr>
-    <tr><td class="paramname">action_space</td><td>Union[int, List[int, Union[List[int], None]]]: The action space of the environment.<ul>
+    <tr><td class="paramname">action_space</td><td>Union[int, Tuple[int, Union[List[int], None]]]: The action space of the environment.<ul>
 <li>If discrete action set is used, number of actions can be passed.</li>
 <li>If continuous action space is used, a list must be passed with first element representing the output features from model, second element representing the shape of action to be sampled. Second element can be an empty list or None, if you wish to sample the default no. of samples. </li>
 </ul>

@@ -1,6 +1,6 @@
 var classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c =
 [
-    [ "__init__", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a51eaba75d004406681b1b49abd34c75d", null ],
+    [ "__init__", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a24148402d58bd7ec446d253d4cbcf491", null ],
     [ "_call_to_save", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a487c58b125fb7cd2e14972552bdf5ea6", null ],
     [ "_call_to_train_policy_model", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aad43ca7f87560723e0c6e448723e9512", null ],
     [ "_clear", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a77355981bba89741f7b8a15e76cf02f8", null ],
@@ -12,9 +12,9 @@ var classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c =
     [ "_grad_mean_reduction", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a93e3f2cd3bef82ef0eb36667c27c13af", null ],
     [ "_run_optimizer", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a1ff4a067c80053f646906c6603e196a8", null ],
     [ "load", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af0b97082eda91653d7a2511c3325b70f", null ],
-    [ "policy", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#afb6171b51be4c79316278355e78fb25e", null ],
+    [ "policy", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a2a6cca5792c65a6654917def7e608216", null ],
     [ "save", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a7793678505da4a71178d7a1043c4023d", null ],
-    [ "train", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aa8082ac2128495030e29f87cb454ab44", null ],
+    [ "train", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aa44993731efa92e7820bb3a56fc28bbb", null ],
     [ "_grad_accumulator", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af21943ec874f47fba4ea44ade7f02a5f", null ],
     [ "_normalization", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a297c096e4155c3ac4815f7ce95ca6767", null ],
     [ "_operate_with_variance", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a35562483f002903358c95096accfec89", null ],

@@ -1,6 +1,6 @@
 var classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy =
 [
-    [ "__init__", "classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a7f02ee1d8ed6525429a61c40dc9ca54c", null ],
+    [ "__init__", "classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a1724d3929f1f8ff24afce5735bf292ee", null ],
     [ "_process_action_space", "classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a30304f5d8d09ef4581f2c772f7f9f7d0", null ],
     [ "_process_activation", "classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a076fd8667055342bdabc1d80a12a6790", null ],
     [ "_run_non_shared_forward", "classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a6778ff44fc25d10be2f3d50b16f39b10", null ],
