@@ -7,6 +7,8 @@ Currently following base classes have been implemented:
     - `Agent`: Base class for all agents, implemented as rlpack.utils.base.agent.Agent.
     - `Register`: Register of information of all in-built models and agents implemented as
         rlpack.utils.base.register.Register.
+    - `InternalCodeRegister`: Register for information on codes to be used internally in RLPack; implemented as
+        rlpack.utils.base.internal_code_register.InternalCodeRegister
 """
 
 
@@ -67,6 +69,7 @@ class Register:
             "softplus": pytorch.nn.Softplus,
             "softmax": pytorch.nn.Softmax,
             "sigmoid": pytorch.nn.Sigmoid,
+            "gelu": pytorch.nn.GELU,
         }
         ## The mapping between given keyword and PyTorch LR Scheduler class. @I{# noqa: E266}
         self.lr_scheduler_map = {
@@ -90,7 +93,7 @@ class Register:
         ## The mapping between given keyword and [in-built](@ref models/index.md) model's default arguments. @I{# noqa: E266}
         self.model_args_default = {
             "mlp": ("activation", "dropout"),
-            "actor_critic_mlp_policy": ("activation", "dropout"),
+            "actor_critic_mlp_policy": ("activation", "dropout", "share_network"),
         }
         ## The mapping between given keyword and [in-built](@ref models/index.md) models' arguments. @I{# noqa: E266}
         self.model_args = {
@@ -122,10 +125,12 @@ class Register:
                 "dim_for_norm",
                 "max_grad_norm",
                 "grad_norm_p",
+                "clip_grad_value",
             ),
             "a2c": (
                 "bootstrap_rounds",
                 "device",
+                "dtype",
                 "apply_norm",
                 "apply_norm_to",
                 "eps_for_norm",
@@ -134,10 +139,12 @@ class Register:
                 "max_grad_norm",
                 "grad_norm_p",
                 "variance",
+                "clip_grad_value",
             ),
             "a3c": (
                 "bootstrap_rounds",
                 "device",
+                "dtype",
                 "apply_norm",
                 "apply_norm_to",
                 "eps_for_norm",
@@ -146,6 +153,7 @@ class Register:
                 "max_grad_norm",
                 "grad_norm_p",
                 "variance",
+                "clip_grad_value",
             ),
         }
         ## The mapping between given keyword and [agent](@ref agents/index.md) agents' arguments. @I{# noqa: E266}
