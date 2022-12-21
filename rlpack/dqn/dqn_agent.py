@@ -334,7 +334,9 @@ class DqnAgent(Agent):
         return action
 
     @pytorch.no_grad()
-    def policy(self, state_current: Union[ndarray, pytorch.Tensor, List[float]]) -> np.ndarray:
+    def policy(
+        self, state_current: Union[ndarray, pytorch.Tensor, List[float]]
+    ) -> np.ndarray:
         """
         The policy for the agent. This runs the inference on policy model with `state_current`
         and uses q-values to obtain the best action.
