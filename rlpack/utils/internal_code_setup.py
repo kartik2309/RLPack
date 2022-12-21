@@ -43,7 +43,7 @@ class InternalCodeSetup(InternalCodeRegister):
             - ["states", "rewards"]: Apply normalization to states and rewards.
             - ["states", "td"]: Apply normalization to states and TD values.
         """
-        apply_norm_to = tuple(apply_norm_to)
+        apply_norm_to = sorted(tuple(apply_norm_to))
         if apply_norm_to not in self.norm_to_mode_codes.keys():
             raise ValueError("Invalid or unsupported value for `apply_norm_to` passed")
         return self.norm_to_mode_codes[apply_norm_to]

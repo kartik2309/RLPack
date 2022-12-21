@@ -26,9 +26,9 @@ class InternalCodeRegister:
             ("rewards",): 1,
             ("td",): 2,
             ("advantage",): 2,
-            ("states", "rewards"): 3,
+            ("rewards", "states"): 3,
             ("states", "td"): 4,
-            ("states", "advantage"): 4,
+            ("advantage", "states"): 4,
         }
         ## The mapping between prioritization strategy keywords and prioritization strategy codes. @I{# noqa: E266}
         self.prioritization_strategy_codes = {
