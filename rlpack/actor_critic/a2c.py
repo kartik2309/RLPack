@@ -31,29 +31,31 @@ class A2C(Agent):
     """
 
     def __init__(
-            self,
-            policy_model: pytorch.nn.Module,
-            optimizer: pytorch.optim.Optimizer,
-            lr_scheduler: Union[LRScheduler, None],
-            loss_function: LossFunction,
-            distribution: Distribution,
-            gamma: float,
-            entropy_coefficient: float,
-            state_value_coefficient: float,
-            lr_threshold: float,
-            action_space: Union[int, List[Union[int, List[int]]]],
-            backup_frequency: int,
-            save_path: str,
-            bootstrap_rounds: int = 1,
-            device: str = "cpu",
-            apply_norm: Union[int, str] = -1,
-            apply_norm_to: Union[int, List[str]] = -1,
-            eps_for_norm: float = 5e-12,
-            p_for_norm: int = 2,
-            dim_for_norm: int = 0,
-            max_grad_norm: Optional[float] = None,
-            grad_norm_p: float = 2.0,
-            variance: Optional[Tuple[float, Callable[[float, bool, int], float]]] = None,
+        self,
+        policy_model: pytorch.nn.Module,
+        optimizer: pytorch.optim.Optimizer,
+        lr_scheduler: Union[LRScheduler, None],
+        loss_function: LossFunction,
+        distribution: Distribution,
+        gamma: float,
+        entropy_coefficient: float,
+        state_value_coefficient: float,
+        lr_threshold: float,
+        action_space: Union[int, List[Union[int, List[int]]]],
+        backup_frequency: int,
+        save_path: str,
+        bootstrap_rounds: int = 1,
+        device: str = "cpu",
+        dtype: str = "float32",
+        apply_norm: Union[int, str] = -1,
+        apply_norm_to: Union[int, List[str]] = -1,
+        eps_for_norm: float = 5e-12,
+        p_for_norm: int = 2,
+        dim_for_norm: int = 0,
+        max_grad_norm: Optional[float] = None,
+        grad_norm_p: float = 2.0,
+        clip_grad_value: Optional[float] = None,
+        variance: Optional[Tuple[float, Callable[[float, bool, int], float]]] = None,
     ):
         """!
         @param policy_model: *pytorch.nn.Module*: The policy model to be used. Policy model must return a tuple of
@@ -79,6 +81,7 @@ class A2C(Agent):
         @param bootstrap_rounds: int: The number of rounds until which gradients are to be accumulated before
             performing calling optimizer step. Gradients are mean reduced for bootstrap_rounds > 1. Default: 1.
         @param device: str: The device on which models are run. Default: "cpu".
+        @param dtype: str: The datatype for model parameters. Default: "float32"
         @param apply_norm: Union[int, str]: The code to select the normalization procedure to be applied on
             selected quantities; selected by `apply_norm_to`: see below)). Direct string can also be
             passed as per accepted keys. Refer below in Notes to see the accepted values. Default: -1
@@ -91,6 +94,7 @@ class A2C(Agent):
         @param dim_for_norm: int: The dimension across which normalization is to be performed. Default: 0.
         @param max_grad_norm: Optional[float]: The max norm for gradients for gradient clipping. Default: None
         @param grad_norm_p: float: The p-value for p-normalization of gradients. Default: 2.0
+        @param clip_grad_value: Optional[float]: The gradient value for clipping gradients by value. Default: None
         @param variance: Optional[Tuple[float, Callable[[float, bool, int], float]]]: The tuple of variance to be used
             to sample actions for continuous action space and a method to be used to decay it. The passed method have
             the signature Callable[[float, int], float]. The first argument would be the variance value and
@@ -119,12 +123,13 @@ class A2C(Agent):
 
         If a valid `max_norm_grad` is passed, then gradient clipping takes place else gradient clipping step is
         skipped. If `max_norm_grad` value was invalid, error will be raised from PyTorch.
-        :param distribution:
         """
         super(A2C, self).__init__()
         setup = InternalCodeSetup()
         ## The input policy model moved to desired device. @I{# noqa: E266}
-        self.policy_model = policy_model.to(device)
+        self.policy_model = policy_model.to(
+            device=pytorch.device(device=device), dtype=setup.get_torch_dtype(dtype)
+        )
         ## The input optimizer wrapped with policy_model parameters. @I{# noqa: E266}
         self.optimizer = optimizer
         ## The input optional LR Scheduler (this can be None). @I{# noqa: E266}
@@ -149,7 +154,7 @@ class A2C(Agent):
         self.save_path = save_path
         # Check sanity of `bootstrap_rounds`
         assert (
-                bootstrap_rounds > 0
+            bootstrap_rounds > 0
         ), "Argument `bootstrap_rounds` must be an integer between 0 and 1"
         ## The input boostrap rounds. @I{# noqa: E266}
         self.bootstrap_rounds = bootstrap_rounds
@@ -175,6 +180,8 @@ class A2C(Agent):
         self.max_grad_norm = max_grad_norm
         ## The input `grad_norm_p`; indicating the p-value for p-normalisation for gradient clippings. @I{# noqa: E266}
         self.grad_norm_p = grad_norm_p
+        ## The input `clip_grad_value`; indicating the clipping range for gradients. @I{# noqa: E266}
+        self.clip_grad_value = clip_grad_value
         ## The current variance value. This will be None if `variance` argument was not passed @I{# noqa: E266}
         self.variance_value = None
         ## The variance decay method. This will be None if `variance` argument was not passed @I{# noqa: E266}
@@ -219,11 +226,11 @@ class A2C(Agent):
         )
 
     def train(
-            self,
-            state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
-            reward: Union[int, float],
-            done: Union[bool, int],
-            **kwargs,
+        self,
+        state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
+        reward: Union[int, float],
+        done: Union[bool, int],
+        **kwargs,
     ) -> Union[int, np.ndarray]:
         """
         The train method to train the agent and underlying policy model.
@@ -265,9 +272,9 @@ class A2C(Agent):
 
     @pytorch.no_grad()
     def policy(
-            self,
-            state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
-            **kwargs,
+        self,
+        state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
+        **kwargs,
     ) -> Union[int, np.ndarray]:
         """
         The policy method to evaluate the agent. This runs in pure inference mode.
@@ -316,9 +323,7 @@ class A2C(Agent):
         if self._operate_with_variance:
             checkpoint["variance_value"] = self.variance_value
         if os.path.isdir(save_path):
-            save_path = os.path.join(
-                save_path, f"actor_critic{custom_name_suffix}.pt"
-            )
+            save_path = os.path.join(save_path, f"actor_critic{custom_name_suffix}.pt")
         pytorch.save(checkpoint, save_path)
         return
 
@@ -339,9 +344,7 @@ class A2C(Agent):
             )
         save_path = self.save_path
         if os.path.isdir(save_path):
-            save_path = os.path.join(
-                save_path, f"actor_critic{custom_name_suffix}.pt"
-            )
+            save_path = os.path.join(save_path, f"actor_critic{custom_name_suffix}.pt")
         if not os.path.isfile(save_path):
             raise FileNotFoundError(
                 "Given path does not contain the valid agent. "
@@ -352,8 +355,8 @@ class A2C(Agent):
         self.policy_model.load_state_dict(checkpoint["policy_model_state_dict"])
         self.optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
         if (
-                self.lr_scheduler is not None
-                and "lr_scheduler_state_dict" in checkpoint.keys()
+            self.lr_scheduler is not None
+            and "lr_scheduler_state_dict" in checkpoint.keys()
         ):
             self.lr_scheduler.load_state_dict(checkpoint["lr_scheduler_state_dict"])
         if "variance_value" in checkpoint.keys():
@@ -420,7 +423,7 @@ class A2C(Agent):
         entropy = self._adjust_dims_for_tensor(entropy, advantage.dim())
         # Compute Policy Losses
         policy_losses = (
-                -action_log_probabilities * advantage + self.entropy_coefficient * entropy
+            -action_log_probabilities * advantage + self.entropy_coefficient * entropy
         )
         # Compute Value Losses
         value_loss = self.state_value_coefficient * self.loss_function(
@@ -459,19 +462,24 @@ class A2C(Agent):
                 self._grad_mean_reduction()
                 # Clear Accumulated Gradient buffer.
                 self._grad_accumulator.clear()
-        # Clip gradients if requested.
+        # Clip gradients by norm if requested.
         if self.max_grad_norm is not None:
             pytorch.nn.utils.clip_grad_norm_(
                 self.policy_model.parameters(),
                 max_norm=self.max_grad_norm,
                 norm_type=self.grad_norm_p,
             )
+        # Clip gradients by value if requested.
+        if self.clip_grad_value is not None:
+            pytorch.nn.utils.clip_grad_value_(
+                self.policy_model.parameters(), clip_value=self.clip_grad_value
+            )
         # Take optimizer step.
         self.optimizer.step()
         # Take an LR Scheduler step if required.
         if (
-                self.lr_scheduler is not None
-                and min([*self.lr_scheduler.get_last_lr()]) > self.lr_threshold
+            self.lr_scheduler is not None
+            and min([*self.lr_scheduler.get_last_lr()]) > self.lr_threshold
         ):
             self.lr_scheduler.step()
 
@@ -486,7 +494,7 @@ class A2C(Agent):
             param.grad = reduced_parameters[key] / self.bootstrap_rounds
 
     def _compute_advantage(
-            self, returns: pytorch.Tensor, state_current_values: pytorch.Tensor
+        self, returns: pytorch.Tensor, state_current_values: pytorch.Tensor
     ) -> pytorch.Tensor:
         """
         Computes the advantage from returns and state values
@@ -535,8 +543,8 @@ class A2C(Agent):
         self.entropies.clear()
 
     def _create_action_distribution(
-            self,
-            action_values: pytorch.Tensor,
+        self,
+        action_values: pytorch.Tensor,
     ) -> Distribution:
         """
         Protected static method to create distributions from action logits

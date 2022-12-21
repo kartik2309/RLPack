@@ -63,6 +63,7 @@ class DqnAgent(Agent):
         save_path: str,
         bootstrap_rounds: int = 1,
         device: str = "cpu",
+        dtype: str = "float32",
         prioritization_params: Optional[Dict[str, Any]] = None,
         force_terminal_state_selection_prob: float = 0.0,
         tau: float = 1.0,
@@ -73,6 +74,7 @@ class DqnAgent(Agent):
         dim_for_norm: int = 0,
         max_grad_norm: Optional[float] = None,
         grad_norm_p: float = 2.0,
+        clip_grad_value: Optional[float] = None,
     ):
         """
         @param target_model: nn.Module: The target network for DQN model. This the network which has
@@ -103,6 +105,7 @@ class DqnAgent(Agent):
         @param bootstrap_rounds: int: The number of rounds until which gradients are to be accumulated before
             performing calling optimizer step. Gradients are mean reduced for bootstrap_rounds > 1. Default: 1.
         @param device: str: The device on which models are run. Default: "cpu".
+        @param dtype: str: The datatype for model parameters. Default: "float32"
         @param prioritization_params: Optional[Dict[str, Any]]: The parameters for prioritization in prioritized
             memory: or relay buffer). Default: None.
         @param force_terminal_state_selection_prob: float: The probability for forcefully selecting a terminal state
@@ -121,7 +124,7 @@ class DqnAgent(Agent):
         @param dim_for_norm: int: The dimension across which normalization is to be performed. Default: 0.
         @param max_grad_norm: Optional[float]: The max norm for gradients for gradient clipping. Default: None
         @param grad_norm_p: Optional[float]: The p-value for p-normalization of gradients. Default: 2.0.
-
+        @param clip_grad_value: Optional[float]: The gradient value for clipping gradients by value. Default: None
 
 
         **Notes**
@@ -145,13 +148,20 @@ class DqnAgent(Agent):
 
         If a valid `max_norm_grad` is passed, then gradient clipping takes place else gradient clipping step is
         skipped. If `max_norm_grad` value was invalid, error will be raised from PyTorch.
+
+        If a valid `clip_grad_value` is passed, then gradients will be clipped by value. If `clip_grad_value` value
+        was invalid, error will be raised from PyTorch.
         """
         super(DqnAgent, self).__init__()
         setup = InternalCodeSetup()
         ## The input target model. This model's parameters are frozen. @I{# noqa: E266}
-        self.target_model = target_model.to(device)
+        self.target_model = target_model.to(
+            device=pytorch.device(device=device), dtype=setup.get_torch_dtype(dtype)
+        )
         ## The input policy model. @I{# noqa: E266}
-        self.policy_model = policy_model.to(device)
+        self.policy_model = policy_model.to(
+            device=pytorch.device(device=device), dtype=setup.get_torch_dtype(dtype)
+        )
         ## The input optimizer wrapped with policy_model parameters. @I{# noqa: E266}
         self.optimizer = optimizer
         ## The input optional LR Scheduler (this can be None). @I{# noqa: E266}
@@ -230,6 +240,8 @@ class DqnAgent(Agent):
         self.max_grad_norm = max_grad_norm
         ## The input `grad_norm_p`; indicating the p-value for p-normalisation for gradient clippings. @I{# noqa: E266}
         self.grad_norm_p = grad_norm_p
+        ## The input `clip_grad_value`; indicating the clipping range for gradients. @I{# noqa: E266}
+        self.clip_grad_value = clip_grad_value
         ## The step counter; counting the total timesteps done so far up to @ref memory_buffer_size. @I{# noqa: E266}
         self.step_counter = 0
         ## The instance of @ref rlpack._C.memory.Memory used for Replay buffer. @I{# noqa: E266}
@@ -510,6 +522,11 @@ class DqnAgent(Agent):
                 self.policy_model.parameters(),
                 max_norm=self.max_grad_norm,
                 norm_type=self.grad_norm_p,
+            )
+        # Clip gradients by value if requested.
+        if self.clip_grad_value is not None:
+            pytorch.nn.utils.clip_grad_value_(
+                self.policy_model.parameters(), clip_value=self.clip_grad_value
             )
         # Call the optimizer step and LR Scheduler step.
         self.optimizer.step()

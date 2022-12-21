@@ -39,6 +39,7 @@ class A3C(A2C):
         save_path: str,
         bootstrap_rounds: int = 1,
         device: str = "cpu",
+        dtype: str = "float32",
         apply_norm: Union[int, str] = -1,
         apply_norm_to: Union[int, List[str]] = -1,
         eps_for_norm: float = 5e-12,
@@ -46,7 +47,8 @@ class A3C(A2C):
         dim_for_norm: int = 0,
         max_grad_norm: Optional[float] = None,
         grad_norm_p: float = 2.0,
-        variance: Optional[Tuple[float, Callable[[float, int], int]]] = None,
+        clip_grad_value: Optional[float] = None,
+        variance: Optional[Tuple[float, Callable[[float, bool, int], float]]] = None,
     ):
         """!
         @param policy_model: *pytorch.nn.Module*: The policy model to be used. Policy model must return a tuple of
@@ -72,6 +74,7 @@ class A3C(A2C):
         @param bootstrap_rounds: int: The number of rounds until which gradients are to be accumulated before
             performing calling optimizer step. Gradients are mean reduced for bootstrap_rounds > 1. Default: 1.
         @param device: str: The device on which models are run. Default: "cpu".
+        @param dtype: str: The datatype for model parameters. Default: "float32"
         @param apply_norm: Union[int, str]: The code to select the normalization procedure to be applied on
             selected quantities; selected by `apply_norm_to`: see below)). Direct string can also be
             passed as per accepted keys. Refer below in Notes to see the accepted values. Default: -1
@@ -84,6 +87,7 @@ class A3C(A2C):
         @param dim_for_norm: int: The dimension across which normalization is to be performed. Default: 0.
         @param max_grad_norm: Optional[float]: The max norm for gradients for gradient clipping. Default: None
         @param grad_norm_p: float: The p-value for p-normalization of gradients. Default: 2.0
+        @param clip_grad_value: Optional[float]: The gradient value for clipping gradients by value. Default: None
         @param variance: Optional[Tuple[float, Callable[[float, bool, int], float]]]: The tuple of variance to be used
             to sample actions for continuous action space and a method to be used to decay it. The passed method have
             the signature Callable[[float, int], float]. The first argument would be the variance value and
@@ -129,6 +133,7 @@ class A3C(A2C):
             save_path,
             bootstrap_rounds,
             device,
+            dtype,
             apply_norm,
             apply_norm_to,
             eps_for_norm,
@@ -136,10 +141,14 @@ class A3C(A2C):
             dim_for_norm,
             max_grad_norm,
             grad_norm_p,
+            clip_grad_value,
             variance,
         )
 
     def _call_to_save(self) -> None:
+        """
+        Method calling the save method when required. Only saved from first process (process with rank 0).
+        """
         if (
             (self.step_counter + 1) % self.backup_frequency == 0
         ) and dist.get_rank() == 0:

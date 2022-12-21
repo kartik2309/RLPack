@@ -17,7 +17,7 @@ Currently following classes have been implemented:
 """
 
 
-from typing import Any, Callable, Dict, Optional, Union
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from rlpack import pytorch
 from rlpack.dqn.dqn_agent import DqnAgent
@@ -59,16 +59,18 @@ class Dqn:
         save_path: str,
         bootstrap_rounds: int = 1,
         device: str = "cpu",
+        dtype: str = "float32",
         prioritization_params: Optional[Dict[str, Any]] = None,
         force_terminal_state_selection_prob: float = 0.0,
         tau: float = 1.0,
-        apply_norm: int = -1,
-        apply_norm_to: int = -1,
+        apply_norm: Union[int, str] = -1,
+        apply_norm_to: Union[int, List[str]] = -1,
         eps_for_norm: float = 5e-12,
         p_for_norm: int = 2,
         dim_for_norm: int = 0,
         max_grad_norm: Optional[float] = None,
         grad_norm_p: float = 2.0,
+        clip_grad_value: Optional[float] = None,
     ):
         """
         @param target_model: nn.Module: The target network for DQN model. This the network which has
@@ -99,13 +101,14 @@ class Dqn:
         @param bootstrap_rounds: int: The number of rounds until which gradients are to be accumulated before
             performing calling optimizer step. Gradients are mean reduced for bootstrap_rounds > 1. Default: 1.
         @param device: str: The device on which models are run. Default: "cpu".
+        @param dtype: str: The datatype for model parameters. Default: "float32"
         @param prioritization_params: Optional[Dict[str, Any]]: The parameters for prioritization in prioritized
             memory: or relay buffer). Default: None.
         @param force_terminal_state_selection_prob: float: The probability for forcefully selecting a terminal state
             in a batch. Default: 0.0.
         @param tau: float: The weighted update of weights from policy_model to target_model. This is done by formula
             target_weight = tau * policy_weight +: 1 - tau) * target_weight/. Default: -1.
-         @param apply_norm: Union[int, str]: The code to select the normalization procedure to be applied on
+        @param apply_norm: Union[int, str]: The code to select the normalization procedure to be applied on
             selected quantities; selected by `apply_norm_to`: see below)). Direct string can also be
             passed as per accepted keys. Refer below in Notes to see the accepted values. Default: -1
         @param apply_norm_to: Union[int, List[str]]: The code to select the quantity to which normalization is
@@ -116,8 +119,8 @@ class Dqn:
         @param p_for_norm: int: The p value for p-normalization. Default: 2: L2 Norm.
         @param dim_for_norm: int: The dimension across which normalization is to be performed. Default: 0.
         @param max_grad_norm: Optional[float]: The max norm for gradients for gradient clipping. Default: None
-        @param grad_norm_p: Optional[float]: The p-value for p-normalization of gradients. Default: 2.0
-
+        @param grad_norm_p: Optional[float]: The p-value for p-normalization of gradients. Default: 2.0.
+        @param clip_grad_value: Optional[float]: The gradient value for clipping gradients by value. Default: None
 
 
         **Notes**
@@ -152,6 +155,9 @@ class Dqn:
 
         If a valid `max_norm_grad` is passed, then gradient clipping takes place else gradient clipping step is
         skipped. If `max_norm_grad` value was invalid, error will be raised from PyTorch.
+
+        If a valid `clip_grad_value` is passed, then gradients will be clipped by value. If `clip_grad_value` value
+        was invalid, error will be raised from PyTorch.
         """
         if prioritization_params is None:
             prioritization_params = dict()
@@ -190,6 +196,7 @@ class Dqn:
             save_path,
             bootstrap_rounds,
             device,
+            dtype,
             prioritization_params,
             force_terminal_state_selection_prob,
             tau,
@@ -200,6 +207,7 @@ class Dqn:
             dim_for_norm,
             max_grad_norm,
             grad_norm_p,
+            clip_grad_value,
         )
         # Select the appropriate DQN variant.
         if prioritization_strategy_code == 0:
