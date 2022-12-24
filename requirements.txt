@@ -7,3 +7,4 @@ pygame==2.1.2
 box2d-py==2.3.8
 pybind11==2.10.2
 mujoco==2.3.1
+tensorboard==2.11.0
