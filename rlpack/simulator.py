@@ -6,12 +6,14 @@ been optimized with C++ backend.
 
 
 import os
+from pathlib import Path
 from typing import Any, Dict, List
 
+import gym
 import yaml
 
-from rlpack import pytorch
-from rlpack.environments.environments import Environments
+from rlpack import SummaryWriter, pytorch
+from rlpack.trainer.trainer import Trainer
 from rlpack.utils.base.agent import Agent
 from rlpack.utils.sanity_check import SanityCheck
 from rlpack.utils.setup import Setup
@@ -59,8 +61,22 @@ class Simulator:
         # Setup agent and initialize environment.
         ## The agent object requested via config. @I{# noqa: E266}
         self.agent = self.setup_agent()
+        env = self.setup_environment()
+        summary_writer = self.setup_summary_writer(save_path)
         ## The environment object requested via config or passed via config. @I{# noqa: E266}
-        self.env = Environments(agent=self.agent, config=self.config)
+        self.trainer = Trainer(
+            mode=self.config["mode"],
+            agent=self.agent,
+            env=env,
+            save_path=save_path,
+            num_episodes=self.config["num_episodes"],
+            max_timesteps=self.config.get("max_timesteps"),
+            custom_suffix=self.config.get("custom_suffix"),
+            reshape_func=self.config.get("reshape_func"),
+            new_shape=self.config.get("new_shape"),
+            summary_writer=summary_writer,
+            is_distributed=is_child_process,
+        )
         ## The flag indicating if the model is custom or not, i.e. does not use [in-built](@ref models/index.md) models. @I{# noqa: E266}
         self.is_custom_model = False
         self.agent_model_args = list()
@@ -188,23 +204,51 @@ class Simulator:
             ]
         return models
 
+    def setup_environment(self):
+        if self.config.get("env") is None:
+            assert self.config.get("env_name") is not None, (
+                "Either `env` (for gym environment) or `env_name` (for env name registered with gym)"
+                " must be passed in config"
+            )
+            env_name = self.config["env_name"]
+            env_args = self.config.get("env_args", dict())
+            env = gym.make(env_name, **env_args)
+        else:
+            env = self.config["env"]
+        return env
+
+    @staticmethod
+    def setup_summary_writer(save_path: str):
+        path = Path(save_path)
+        if not path.exists():
+            raise NotADirectoryError(
+                "Given path is not a valid directory or a valid path to a file name"
+            )
+        if path.is_dir():
+            save_path = os.path.join(save_path, "tensorboard_logs")
+            os.makedirs(save_path, exist_ok=True)
+            summary_writer = SummaryWriter(log_dir=save_path)
+        else:
+            save_path = os.path.join(str(path.parent), "tensorboard_logs")
+            os.makedirs(save_path, exist_ok=True)
+            summary_writer = SummaryWriter(log_dir=save_path)
+        return summary_writer
+
     def run(self, **kwargs) -> None:
         """
         This method runs the simulator.
         @param kwargs: Additional keyword arguments for the training run.
         """
-        if self.env.is_train():
-            self.env.train_agent(
+        if self.trainer.is_train():
+            self.trainer.train_agent(
+                metrics_logging_frequency=kwargs.get(
+                    "reward_logging_frequency", self.config["reward_logging_frequency"]
+                ),
                 render=kwargs.get("render", self.config.get("render", False)),
                 load=kwargs.get("load", self.config.get("load", False)),
-                plot=kwargs.get("plot", self.config.get("plot", False)),
-                verbose=kwargs.get("plot", self.config.get("verbose", -1)),
-                distributed_mode=kwargs.get(
-                    "distributed_mode", self.config.get("distributed_mode", False)
-                ),
             )
-        elif self.env.is_eval():
-            self.env.evaluate_agent()
+        elif self.trainer.is_eval():
+            self.trainer.evaluate_agent()
         else:
             raise ValueError("Invalid mode passed! Must be in `train` or `eval`")
         return
