@@ -1,11 +1,10 @@
 var searchData=
 [
-  ['load_0',['load',['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af0b97082eda91653d7a2511c3325b70f',1,'rlpack.actor_critic.a2c.A2C.load()'],['../classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#adfd9b38d7e3b4f55eb7f857b0285ae0c',1,'rlpack.dqn.dqn_agent.DqnAgent.load()'],['../classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#ac493d40ce8bd5562822a01aba0265181',1,'rlpack.utils.base.agent.Agent.load()']]],
-  ['log_5fagent_5finfo_5fwith_5fpy_5flogger_1',['log_agent_info_with_py_logger',['../classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#ad724c9186152c8a2d4337735331717c0',1,'rlpack::utils::base::trainer_base::TrainerBase']]],
-  ['log_5fagent_5finfo_5fwith_5fsummary_5fwriter_2',['log_agent_info_with_summary_writer',['../classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a8596a49aaeb959da9cf98ef5a2f9e54d',1,'rlpack::utils::base::trainer_base::TrainerBase']]],
-  ['log_5fcumulative_5frewards_5fwith_5fpy_5flogger_3',['log_cumulative_rewards_with_py_logger',['../classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#affe535cd605182a720785e1420f756dd',1,'rlpack::utils::base::trainer_base::TrainerBase']]],
-  ['log_5fcumulative_5frewards_5fwith_5fsummary_5fwriter_4',['log_cumulative_rewards_with_summary_writer',['../classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a9c27ff05e21a144e84b37bc618918597',1,'rlpack::utils::base::trainer_base::TrainerBase']]],
-  ['log_5freturns_5fwith_5fpy_5flogger_5',['log_returns_with_py_logger',['../classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a325e8f399892693eee0e1195e41668a5',1,'rlpack::utils::base::trainer_base::TrainerBase']]],
-  ['log_5freturns_5fwith_5fsummary_5fwriter_6',['log_returns_with_summary_writer',['../classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a21d0de415b5446f414a968691c367b6e',1,'rlpack::utils::base::trainer_base::TrainerBase']]],
-  ['log_5freward_5fwith_5fsummary_5fwriter_7',['log_reward_with_summary_writer',['../classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#addf41db69b20404858b74cf67de2c48f',1,'rlpack::utils::base::trainer_base::TrainerBase']]]
+  ['init_5fprocess_0',['init_process',['../classrlpack_1_1simulator__distributed_1_1_simulator_distributed.html#a0655924015158c90aedb9b672bac1d66',1,'rlpack::simulator_distributed::SimulatorDistributed']]],
+  ['initialize_1',['initialize',['../classrlpack_1_1___c_1_1memory_1_1_memory.html#a05868f1c95b791df02e6a801e689659f',1,'rlpack._C.memory.Memory.initialize()'],['../class_c___memory.html#a94ebf72f884215d7bb75b94f7904655f',1,'C_Memory::initialize()']]],
+  ['insert_2',['insert',['../classrlpack_1_1___c_1_1memory_1_1_memory.html#aab563541fe4901f5cdfab4b763f270e1',1,'rlpack._C.memory.Memory.insert()'],['../class_c___memory.html#abedf463c4b4bcd17c77547891cbd4527',1,'C_Memory::insert()']]],
+  ['is_5feval_3',['is_eval',['../classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a3041f06fe93603e8b6c8ed7077ce1c7c',1,'rlpack::utils::base::trainer_base::TrainerBase']]],
+  ['is_5fhead_4',['is_head',['../class_sum_tree_node.html#a4f540818f4be8ca0f7d823ed141b50db',1,'SumTreeNode']]],
+  ['is_5fleaf_5',['is_leaf',['../class_sum_tree_node.html#adac36e25e89f0e0c2d61ba0cafca82b0',1,'SumTreeNode']]],
+  ['is_5ftrain_6',['is_train',['../classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#af496f618a13b7cc287d8f3c2f4b8db43',1,'rlpack::utils::base::trainer_base::TrainerBase']]]
 ];

@@ -5,7 +5,7 @@ var classrlpack_1_1simulator_1_1_simulator =
     [ "setup_agent", "classrlpack_1_1simulator_1_1_simulator.html#ac43b3463ffb17c3513850ae47bcb3697", null ],
     [ "setup_environment", "classrlpack_1_1simulator_1_1_simulator.html#afc9d5bf745b4f269291dbc25ba403405", null ],
     [ "setup_models", "classrlpack_1_1simulator_1_1_simulator.html#ac150766d6cf866400dd54bcd1b1f35dd", null ],
-    [ "setup_summary_writer", "classrlpack_1_1simulator_1_1_simulator.html#ac7d62e078c1d092aabc6c68802b352c3", null ],
+    [ "setup_summary_writer", "classrlpack_1_1simulator_1_1_simulator.html#af423215df4fe00e1443b00460980e68b", null ],
     [ "agent", "classrlpack_1_1simulator_1_1_simulator.html#accc4dd7ad9d64eb72c18148f3c4ea7eb", null ],
     [ "agent_model_args", "classrlpack_1_1simulator_1_1_simulator.html#a9f3aa79430b1b011f71da46b8c7bf30c", null ],
     [ "config", "classrlpack_1_1simulator_1_1_simulator.html#abbf70c408771986dc48057032837700a", null ],

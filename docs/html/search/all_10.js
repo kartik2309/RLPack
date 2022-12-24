@@ -33,7 +33,7 @@ var searchData=
   ['setup_5fagent_30',['setup_agent',['../classrlpack_1_1simulator_1_1_simulator.html#ac43b3463ffb17c3513850ae47bcb3697',1,'rlpack::simulator::Simulator']]],
   ['setup_5fenvironment_31',['setup_environment',['../classrlpack_1_1simulator_1_1_simulator.html#afc9d5bf745b4f269291dbc25ba403405',1,'rlpack::simulator::Simulator']]],
   ['setup_5fmodels_32',['setup_models',['../classrlpack_1_1simulator_1_1_simulator.html#ac150766d6cf866400dd54bcd1b1f35dd',1,'rlpack::simulator::Simulator']]],
-  ['setup_5fsummary_5fwriter_33',['setup_summary_writer',['../classrlpack_1_1simulator_1_1_simulator.html#ac7d62e078c1d092aabc6c68802b352c3',1,'rlpack::simulator::Simulator']]],
+  ['setup_5fsummary_5fwriter_33',['setup_summary_writer',['../classrlpack_1_1simulator_1_1_simulator.html#af423215df4fe00e1443b00460980e68b',1,'rlpack::simulator::Simulator']]],
   ['share_5fnetwork_34',['share_network',['../classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aecf9f6171326ea4e102b94f500ec83bc',1,'rlpack::models::actor_critic_mlp_policy::ActorCriticMlpPolicy']]],
   ['shuffle_35',['shuffle',['../class_offload.html#ad53d1d4ff220de676ed53d9b9e9a2193',1,'Offload']]],
   ['simulator_36',['Simulator',['../classrlpack_1_1simulator_1_1_simulator.html',1,'rlpack::simulator']]],

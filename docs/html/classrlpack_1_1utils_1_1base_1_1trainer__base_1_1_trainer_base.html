@@ -141,9 +141,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a90cfba63858a47b1691a5eaba7e330b9"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a90cfba63858a47b1691a5eaba7e330b9">clear_rewards</a> (self)</td></tr>
 <tr class="memdesc:a90cfba63858a47b1691a5eaba7e330b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear the rewards accumulated so far.  <a href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a90cfba63858a47b1691a5eaba7e330b9">More...</a><br /></td></tr>
 <tr class="separator:a90cfba63858a47b1691a5eaba7e330b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab3539071aa52793566c7e4fc2270cc73"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#ab3539071aa52793566c7e4fc2270cc73">closing_line</a> (self)</td></tr>
-<tr class="memdesc:ab3539071aa52793566c7e4fc2270cc73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs closing line for block separation.  <a href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#ab3539071aa52793566c7e4fc2270cc73">More...</a><br /></td></tr>
-<tr class="separator:ab3539071aa52793566c7e4fc2270cc73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33d4c8fa96801786dde41b07f3f1e6bd"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a33d4c8fa96801786dde41b07f3f1e6bd">fill_cumulative_reward</a> (self)</td></tr>
 <tr class="memdesc:a33d4c8fa96801786dde41b07f3f1e6bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populates the cumulative rewards (<a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#aa2861dce3797eb0a549686c2822bf2ec" title="The cumulative rewards after each episode.">TrainerBase.cumulative_rewards</a>) list by computing cumulative rewards at the moment.  <a href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a33d4c8fa96801786dde41b07f3f1e6bd">More...</a><br /></td></tr>
 <tr class="separator:a33d4c8fa96801786dde41b07f3f1e6bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -159,6 +156,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aaab14bc54e479e59183195c82df860d8"><td class="memItemLeft" align="right" valign="top">Dict[str, Union[int, float, List[float]]]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#aaab14bc54e479e59183195c82df860d8">get_loggable_quantities_by_current_value</a> (self)</td></tr>
 <tr class="memdesc:aaab14bc54e479e59183195c82df860d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obtains the current value of loggable quantities from agent.  <a href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#aaab14bc54e479e59183195c82df860d8">More...</a><br /></td></tr>
 <tr class="separator:aaab14bc54e479e59183195c82df860d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76434f05150ab479cd0eadb7b0cceb7a"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a76434f05150ab479cd0eadb7b0cceb7a">header_line</a> (self)</td></tr>
+<tr class="memdesc:a76434f05150ab479cd0eadb7b0cceb7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs header line for block separation.  <a href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a76434f05150ab479cd0eadb7b0cceb7a">More...</a><br /></td></tr>
+<tr class="separator:a76434f05150ab479cd0eadb7b0cceb7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3041f06fe93603e8b6c8ed7077ce1c7c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a3041f06fe93603e8b6c8ed7077ce1c7c">is_eval</a> (self)</td></tr>
 <tr class="memdesc:a3041f06fe93603e8b6c8ed7077ce1c7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if environment is to be run in evaluation mode or not.  <a href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a3041f06fe93603e8b6c8ed7077ce1c7c">More...</a><br /></td></tr>
 <tr class="separator:a3041f06fe93603e8b6c8ed7077ce1c7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -704,26 +704,6 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ab3539071aa52793566c7e4fc2270cc73" name="ab3539071aa52793566c7e4fc2270cc73"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab3539071aa52793566c7e4fc2270cc73">&#9670;&#160;</a></span>closing_line()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"> None rlpack.utils.base.trainer_base.TrainerBase.closing_line </td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>self</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Logs closing line for block separation. </p>
-
-</div>
-</div>
 <a id="a33d4c8fa96801786dde41b07f3f1e6bd" name="a33d4c8fa96801786dde41b07f3f1e6bd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a33d4c8fa96801786dde41b07f3f1e6bd">&#9670;&#160;</a></span>fill_cumulative_reward()</h2>
 
@@ -826,6 +806,26 @@ Private Attributes</h2></td></tr>
 
 <p>Obtains the current value of loggable quantities from agent. </p>
 <dl class="section return"><dt>Returns</dt><dd>Dict[str, Union[int, float, List[float]]]: The dictionary of current values for each loggable quantity. </dd></dl>
+
+</div>
+</div>
+<a id="a76434f05150ab479cd0eadb7b0cceb7a" name="a76434f05150ab479cd0eadb7b0cceb7a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a76434f05150ab479cd0eadb7b0cceb7a">&#9670;&#160;</a></span>header_line()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> None rlpack.utils.base.trainer_base.TrainerBase.header_line </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Logs header line for block separation. </p>
 
 </div>
 </div>
@@ -1114,7 +1114,8 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">int
+    &#160;</td>
           <td class="paramname"><em>timestep</em>&#160;</td>
         </tr>
         <tr>

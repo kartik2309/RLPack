@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['update_0',['update',['../class_sum_tree.html#a21084e7f717839a48f1383864d8b088f',1,'SumTree']]],
-  ['update_5fpriorities_1',['update_priorities',['../classrlpack_1_1___c_1_1memory_1_1_memory.html#a1cb47a453e323559d67108e209f930de',1,'rlpack._C.memory.Memory.update_priorities()'],['../class_c___memory.html#a340f9b69d073d6324cfe4f7a0e3404c2',1,'C_Memory::update_priorities()']]]
+  ['train_0',['train',['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aa44993731efa92e7820bb3a56fc28bbb',1,'rlpack.actor_critic.a2c.A2C.train()'],['../classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#ab70a7ecba4b187924c1886fc1060a341',1,'rlpack.dqn.dqn_agent.DqnAgent.train()'],['../classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a38c313422ef6c713efd5ef9301b35111',1,'rlpack.utils.base.agent.Agent.train()']]],
+  ['train_5fagent_1',['train_agent',['../classrlpack_1_1trainer_1_1trainer_1_1_trainer.html#abe3cdf0295d4775cf165e4ce050f4112',1,'rlpack::trainer::trainer::Trainer']]],
+  ['traverse_2',['traverse',['../class_sum_tree.html#a1ee25c1093009cadbbb80b129cc9fe12',1,'SumTree']]],
+  ['tree_5fheight_3',['tree_height',['../classrlpack_1_1___c_1_1memory_1_1_memory.html#a195e5f54ce28d0c2d7b6ea0ddf5f15ff',1,'rlpack._C.memory.Memory.tree_height()'],['../class_c___memory.html#aa1133000c1062a6b25fa450e717aafd0',1,'C_Memory::tree_height()']]]
 ];

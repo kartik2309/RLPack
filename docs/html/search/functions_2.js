@@ -18,9 +18,8 @@ var searchData=
   ['clear_15',['clear',['../classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html#aeb0009d5af07526a1e5a6e99cbbc6120',1,'rlpack._C.grad_accumulator.GradAccumulator.clear()'],['../classrlpack_1_1___c_1_1memory_1_1_memory.html#abaf783f61b1be01a149bf9dc3d7ac90f',1,'rlpack._C.memory.Memory.clear()'],['../class_c___grad_accumulator.html#a2b3b3befbbf516dadbea8676bbcaf52f',1,'C_GradAccumulator::clear()'],['../class_c___memory.html#a78aa519d41cec4c6a1c0a9c476976160',1,'C_Memory::clear()']]],
   ['clear_5fcumulative_5frewards_16',['clear_cumulative_rewards',['../classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a9e28d5f69a84fe0c17c4cddb8ad6ac2e',1,'rlpack::utils::base::trainer_base::TrainerBase']]],
   ['clear_5frewards_17',['clear_rewards',['../classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a90cfba63858a47b1691a5eaba7e330b9',1,'rlpack::utils::base::trainer_base::TrainerBase']]],
-  ['closing_5fline_18',['closing_line',['../classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#ab3539071aa52793566c7e4fc2270cc73',1,'rlpack::utils::base::trainer_base::TrainerBase']]],
-  ['compute_5fimportant_5fsampling_5fweights_19',['compute_important_sampling_weights',['../class_c___memory.html#a7fe7f0858461b4961598f005d91dac10',1,'C_Memory']]],
-  ['compute_5fprobabilities_20',['compute_probabilities',['../class_c___memory.html#aa2f05d80edd827d39d6fad1e030dd432',1,'C_Memory']]],
-  ['create_5ftree_21',['create_tree',['../class_sum_tree.html#a3b590b778343705f65554c133cd51453',1,'SumTree']]],
-  ['cumulative_5fsum_22',['cumulative_sum',['../class_offload.html#a24140ba1a808376bf6f2fba97f923545',1,'Offload']]]
+  ['compute_5fimportant_5fsampling_5fweights_18',['compute_important_sampling_weights',['../class_c___memory.html#a7fe7f0858461b4961598f005d91dac10',1,'C_Memory']]],
+  ['compute_5fprobabilities_19',['compute_probabilities',['../class_c___memory.html#aa2f05d80edd827d39d6fad1e030dd432',1,'C_Memory']]],
+  ['create_5ftree_20',['create_tree',['../class_sum_tree.html#a3b590b778343705f65554c133cd51453',1,'SumTree']]],
+  ['cumulative_5fsum_21',['cumulative_sum',['../class_offload.html#a24140ba1a808376bf6f2fba97f923545',1,'Offload']]]
 ];
