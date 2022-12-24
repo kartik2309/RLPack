@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['get_5fstarted_2emd_0',['get_started.md',['../get__started_8md.html',1,'']]],
-  ['grad_5faccumulator_2epy_1',['grad_accumulator.py',['../grad__accumulator_8py.html',1,'']]]
+  ['hostoffload_2etpp_0',['HostOffload.tpp',['../_host_offload_8tpp.html',1,'']]]
 ];

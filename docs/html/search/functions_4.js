@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['evaluate_5fagent_0',['evaluate_agent',['../classrlpack_1_1environments_1_1environments_1_1_environments.html#adba4141e658f1c9e104f3582e964b21c',1,'rlpack::environments::environments::Environments']]]
+  ['evaluate_5fagent_0',['evaluate_agent',['../classrlpack_1_1trainer_1_1trainer_1_1_trainer.html#ae5922ccbd57c96bfc34c1ca0896976e6',1,'rlpack::trainer::trainer::Trainer']]]
 ];

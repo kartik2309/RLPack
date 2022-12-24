@@ -14,6 +14,7 @@ var classrlpack_1_1utils_1_1base_1_1agent_1_1_agent =
     [ "_reward_norm_codes", "classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#acd1fdd611f925bf4ea7834a54fa1849f", null ],
     [ "_state_norm_codes", "classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a5ae6867b9e07f0419f08d9646d6f142e", null ],
     [ "_td_norm_codes", "classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#ae23803298a22178209253ffb03eba240", null ],
+    [ "gamma", "classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a4104e76aed3a37b4df4ef1069383aee8", null ],
     [ "loss", "classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#ab3ce395269c69c095865fee40818db2e", null ],
     [ "save_path", "classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a4779a7186807d901e8ffc8cc8951527a", null ]
 ];

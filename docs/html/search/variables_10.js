@@ -20,6 +20,7 @@ var searchData=
   ['statesnext_5f_17',['statesNext_',['../class_c___memory.html#aa380df50f9bd1d9aca52062a0862e43c',1,'C_Memory']]],
   ['step_5fcounter_18',['step_counter',['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aa40ba92a0c825186f61c04e9ac713a55',1,'rlpack.actor_critic.a2c.A2C.step_counter()'],['../classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a1ba7d14eb2a55b43b904c7f89ff37148',1,'rlpack.dqn.dqn_agent.DqnAgent.step_counter()']]],
   ['stepcounter_5f_19',['stepCounter_',['../class_c___memory.html#acd130832d6caa8902956b6cb0395117f',1,'C_Memory']]],
-  ['sumtree_5f_20',['sumTree_',['../class_sum_tree.html#ab9654f67332bd176faaec853dcc5950f',1,'SumTree']]],
-  ['sumtreesharedptr_5f_21',['sumTreeSharedPtr_',['../class_c___memory.html#a6723072d72e59879282b7792a89a2e8a',1,'C_Memory']]]
+  ['summary_5fwriter_20',['summary_writer',['../classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a0c06e22415be29579b2f71c2481df926',1,'rlpack::utils::base::trainer_base::TrainerBase']]],
+  ['sumtree_5f_21',['sumTree_',['../class_sum_tree.html#ab9654f67332bd176faaec853dcc5950f',1,'SumTree']]],
+  ['sumtreesharedptr_5f_22',['sumTreeSharedPtr_',['../class_c___memory.html#a6723072d72e59879282b7792a89a2e8a',1,'C_Memory']]]
 ];

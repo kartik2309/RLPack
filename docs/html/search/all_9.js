@@ -15,9 +15,10 @@ var searchData=
   ['internalcodesetup_12',['InternalCodeSetup',['../classrlpack_1_1utils_1_1internal__code__setup_1_1_internal_code_setup.html',1,'rlpack::utils::internal_code_setup']]],
   ['is_5fcontinuous_5faction_5fspace_13',['is_continuous_action_space',['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a0959df6d9aaba07b171fa0bc30d9c306',1,'rlpack::actor_critic::a2c::A2C']]],
   ['is_5fcustom_5fmodel_14',['is_custom_model',['../classrlpack_1_1simulator_1_1_simulator.html#a3cdffd7cb075ab6fc2f56a5087b428fc',1,'rlpack::simulator::Simulator']]],
-  ['is_5feval_15',['is_eval',['../classrlpack_1_1environments_1_1environments_1_1_environments.html#a45c51e766cc7da0cde054988358a0798',1,'rlpack::environments::environments::Environments']]],
-  ['is_5fhead_16',['is_head',['../class_sum_tree_node.html#a4f540818f4be8ca0f7d823ed141b50db',1,'SumTreeNode']]],
-  ['is_5fleaf_17',['is_leaf',['../class_sum_tree_node.html#adac36e25e89f0e0c2d61ba0cafca82b0',1,'SumTreeNode']]],
-  ['is_5ftrain_18',['is_train',['../classrlpack_1_1environments_1_1environments_1_1_environments.html#a4f3c98aefd7d29d8ffa4de4d19ed9830',1,'rlpack::environments::environments::Environments']]],
-  ['isleaf_5f_19',['isLeaf_',['../class_sum_tree_node.html#a319773f8decd580b8d81cfbdb98cd6fc',1,'SumTreeNode']]]
+  ['is_5fdistributed_15',['is_distributed',['../classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a089dcf82de62b1dc6b0a25d4e2f69e18',1,'rlpack::utils::base::trainer_base::TrainerBase']]],
+  ['is_5feval_16',['is_eval',['../classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a3041f06fe93603e8b6c8ed7077ce1c7c',1,'rlpack::utils::base::trainer_base::TrainerBase']]],
+  ['is_5fhead_17',['is_head',['../class_sum_tree_node.html#a4f540818f4be8ca0f7d823ed141b50db',1,'SumTreeNode']]],
+  ['is_5fleaf_18',['is_leaf',['../class_sum_tree_node.html#adac36e25e89f0e0c2d61ba0cafca82b0',1,'SumTreeNode']]],
+  ['is_5ftrain_19',['is_train',['../classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#af496f618a13b7cc287d8f3c2f4b8db43',1,'rlpack::utils::base::trainer_base::TrainerBase']]],
+  ['isleaf_5f_20',['isLeaf_',['../class_sum_tree_node.html#a319773f8decd580b8d81cfbdb98cd6fc',1,'SumTreeNode']]]
 ];

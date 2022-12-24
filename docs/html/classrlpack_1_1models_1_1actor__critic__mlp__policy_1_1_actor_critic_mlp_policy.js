@@ -2,7 +2,7 @@ var classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_pol
 [
     [ "__init__", "classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a1724d3929f1f8ff24afce5735bf292ee", null ],
     [ "_process_action_space", "classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a30304f5d8d09ef4581f2c772f7f9f7d0", null ],
-    [ "_process_activation", "classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a076fd8667055342bdabc1d80a12a6790", null ],
+    [ "_process_activation", "classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a62fa35a012b235a7e79b79108529902b", null ],
     [ "_run_non_shared_forward", "classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a6778ff44fc25d10be2f3d50b16f39b10", null ],
     [ "_run_shared_forward", "classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a86a2e5b65f8dfc162037380d1d4e1805", null ],
     [ "_set_non_shared_network_attributes", "classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a0d73c1241a8599dcb513e380c350f86e", null ],

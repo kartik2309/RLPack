@@ -6,8 +6,9 @@ var searchData=
   ['terminalindicesreference_5f_3',['terminalIndicesReference_',['../struct_c___memory_1_1_c___memory_data.html#aaf03f1e830eee5efc0468a4964acec58',1,'C_Memory::C_MemoryData']]],
   ['terminalstateindices_5f_4',['terminalStateIndices_',['../class_c___memory.html#a80e8a7f049e8717e3f82511ee5d13bd7',1,'C_Memory']]],
   ['toshufflevector_5f_5',['toShuffleVector_',['../class_offload.html#a87daa92d02380464014f3b690b96531b',1,'Offload']]],
-  ['transitioninformationreference_5f_6',['transitionInformationReference_',['../struct_c___memory_1_1_c___memory_data.html#ae53ff5844a1b4adf2fb581688e38f2af',1,'C_Memory::C_MemoryData']]],
-  ['treeheight_5f_7',['treeHeight_',['../class_sum_tree.html#a760297b0da7e5767bdca72536157b3d5',1,'SumTree']]],
-  ['treeindex_5f_8',['treeIndex_',['../class_sum_tree_node.html#a4661823ded682bbed6883b4464cbd86e',1,'SumTreeNode']]],
-  ['treelevel_5f_9',['treeLevel_',['../class_sum_tree_node.html#ab0d99d7abe73768386a37e3349fa283b',1,'SumTreeNode']]]
+  ['trainer_6',['trainer',['../classrlpack_1_1simulator_1_1_simulator.html#ae57fe23a8217e6bb3879e593603260d8',1,'rlpack::simulator::Simulator']]],
+  ['transitioninformationreference_5f_7',['transitionInformationReference_',['../struct_c___memory_1_1_c___memory_data.html#ae53ff5844a1b4adf2fb581688e38f2af',1,'C_Memory::C_MemoryData']]],
+  ['treeheight_5f_8',['treeHeight_',['../class_sum_tree.html#a760297b0da7e5767bdca72536157b3d5',1,'SumTree']]],
+  ['treeindex_5f_9',['treeIndex_',['../class_sum_tree_node.html#a4661823ded682bbed6883b4464cbd86e',1,'SumTreeNode']]],
+  ['treelevel_5f_10',['treeLevel_',['../class_sum_tree_node.html#ab0d99d7abe73768386a37e3349fa283b',1,'SumTreeNode']]]
 ];
