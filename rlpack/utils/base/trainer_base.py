@@ -213,7 +213,7 @@ class TrainerBase:
         @param episode: int:  The current episode for which logging is being done.
         """
         mean_reward = self._list_mean(self.cumulative_rewards)
-        self.py_logger.info(f"Mean Reward at episode {episode}: {mean_reward}")
+        self.py_logger.info(f"Mean Cumulative reward at episode {episode}: {mean_reward}")
 
     def log_reward_with_summary_writer(
         self, reward: float, episode: int, timestep: int

@@ -152,7 +152,6 @@ class Trainer(TrainerBase):
                 self.save_agent_with_custom_suffix(self.custom_suffix)
                 self.closing_line()
                 self.log_cumulative_rewards_with_py_logger(ep)
-                self.log_returns_with_py_logger(ep)
                 self.log_agent_info_with_py_logger(ep)
                 self.clear_cumulative_rewards()
         self.env.close()
@@ -187,12 +186,11 @@ class Trainer(TrainerBase):
                 if terminated or truncated:
                     break
             self.fill_cumulative_reward()
+            self.closing_line()
             self.log_cumulative_rewards_with_summary_writer(episode=ep)
             self.log_returns_with_summary_writer(episode=ep)
             self.log_agent_info_with_summary_writer(episode=ep)
-            self.clear_rewards()
-            # Log the rewards observed.
-            self.closing_line()
-            self.log_cumulative_rewards_with_py_logger(ep)
             self.log_returns_with_py_logger(ep)
+            self.log_cumulative_rewards_with_py_logger(ep)
+            self.clear_rewards()
         self.env.close()
