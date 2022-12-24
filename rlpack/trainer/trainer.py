@@ -99,7 +99,8 @@ class Trainer(TrainerBase):
         load: bool = False,
     ) -> None:
         """
-        Method to train the agent in the specified environment.
+        Method to train the agent in the specified environment. `mode` must be set as mode='train' to run evaluation
+        during class initialization.
         @param metrics_logging_frequency: int: The logging frequency for rewards.
         @param render: bool: Indicates if we wish to render the environment (in animation). Default: False.
         @param load: bool: Indicates weather to load a previously saved model or train a new one. If set true,
@@ -124,11 +125,11 @@ class Trainer(TrainerBase):
                 )
                 if terminated or truncated:
                     done = True
+                state_current = self.reshape_func(observation_current, self.new_shape)
+                state_next = self.reshape_func(observation_next, self.new_shape)
                 action = self.agent.train(
-                    state_current=self.reshape_func(
-                        observation_current, self.new_shape
-                    ),
-                    state_next=self.reshape_func(observation_next, self.new_shape),
+                    state_current=state_current,
+                    state_next=state_next,
                     action=action,
                     reward=reward,
                     done=done,
@@ -150,7 +151,7 @@ class Trainer(TrainerBase):
                 # If mean reward obtained is higher than moving average of rewards so far, save the agent with
                 # custom suffix. If no custom suffix is present, save with the suffix `_best`.
                 self.save_agent_with_custom_suffix(self.custom_suffix)
-                self.closing_line()
+                self.header_line()
                 self.log_cumulative_rewards_with_py_logger(ep)
                 self.log_agent_info_with_py_logger(ep)
                 self.clear_cumulative_rewards()
@@ -160,7 +161,7 @@ class Trainer(TrainerBase):
         """
         Method to evaluate a trained model. This method renders the environment and loads the model from
             `save_path`.
-        config must have set mode='eval' to run evaluation.
+        `mode` must be set as mode='eval' to run evaluation during class initialization.
         """
         if not self.is_eval():
             logging.warning("Currently operating in Training Mode")
@@ -170,23 +171,25 @@ class Trainer(TrainerBase):
         # Start episodes.
         for ep in range(1, self.num_episodes + 1):
             observation, _ = self.env.reset()
+            done = False
             # Start episodic loop
             for timestep in range(1, self.max_timesteps + 1):
                 self.env.render()
-                action = self.agent.policy(
-                    self.reshape_func(observation, self.new_shape)
-                )
+                observation = self.reshape_func(observation, self.new_shape)
+                action = self.agent.policy(observation)
                 observation_next, reward, terminated, truncated, info = self.env.step(
                     action=action
                 )
+                if terminated or truncated:
+                    done = True
                 self.log_reward_with_summary_writer(
                     reward=reward, episode=ep, timestep=timestep
                 )
                 self.append_reward(reward)
-                if terminated or truncated:
+                if done:
                     break
             self.fill_cumulative_reward()
-            self.closing_line()
+            self.header_line()
             self.log_cumulative_rewards_with_summary_writer(episode=ep)
             self.log_returns_with_summary_writer(episode=ep)
             self.log_agent_info_with_summary_writer(episode=ep)

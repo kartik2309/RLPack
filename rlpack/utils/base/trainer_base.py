@@ -213,7 +213,9 @@ class TrainerBase:
         @param episode: int:  The current episode for which logging is being done.
         """
         mean_reward = self._list_mean(self.cumulative_rewards)
-        self.py_logger.info(f"Mean Cumulative reward at episode {episode}: {mean_reward}")
+        self.py_logger.info(
+            f"Mean Cumulative reward at episode {episode}: {mean_reward}"
+        )
 
     def log_reward_with_summary_writer(
         self, reward: float, episode: int, timestep: int
@@ -266,11 +268,11 @@ class TrainerBase:
             tag=f"{self.mode}/returns", scalar_value=mean_returns, global_step=episode
         )
 
-    def closing_line(self) -> None:
+    def header_line(self) -> None:
         """
-        Logs closing line for block separation.
+        Logs header line for block separation.
         """
-        self.py_logger.info("~" * 60)
+        self.py_logger.info(f"\n{'~' * 60}")
 
     def append_reward(self, reward: float) -> None:
         """

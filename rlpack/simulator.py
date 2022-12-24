@@ -218,7 +218,14 @@ class Simulator:
         return env
 
     @staticmethod
-    def setup_summary_writer(save_path: str):
+    def setup_summary_writer(save_path: str) -> SummaryWriter:
+        """
+        Sets up summary writer for Tensorboard logger.
+        @param save_path: str: The save path for agents. A new directory "tensorboard_logs" is created is save_path
+            is a directory. If path for agent file is passed, "tensorboard_logs" directory is created in the parent
+            directory.
+        @return SummaryWriter: The instance of summary writer for Tensorboard logging.
+        """
         path = Path(save_path)
         if not path.exists():
             raise NotADirectoryError(
@@ -240,10 +247,16 @@ class Simulator:
         @param kwargs: Additional keyword arguments for the training run.
         """
         if self.trainer.is_train():
+            metrics_logging_frequency = kwargs.get(
+                "metrics_logging_frequency",
+                self.config.get("metrics_logging_frequency"),
+            )
+            if metrics_logging_frequency is None:
+                raise RuntimeError(
+                    "Did not receive `metrics_logging_frequency` argument for training."
+                )
             self.trainer.train_agent(
-                metrics_logging_frequency=kwargs.get(
-                    "reward_logging_frequency", self.config["reward_logging_frequency"]
-                ),
+                metrics_logging_frequency=metrics_logging_frequency,
                 render=kwargs.get("render", self.config.get("render", False)),
                 load=kwargs.get("load", self.config.get("load", False)),
             )
