@@ -58,7 +58,6 @@ class Simulator:
             )
         # Set save path in config.
         self.config["agent_args"]["save_path"] = save_path
-        # Setup agent and initialize environment.
         ## The agent object requested via config. @I{# noqa: E266}
         self.agent = self.setup_agent()
         env = self.setup_environment()

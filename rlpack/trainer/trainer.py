@@ -23,7 +23,7 @@ from rlpack.utils.base.trainer_base import TrainerBase
 class Trainer(TrainerBase):
     """
     This class is a generic class to train or evaluate any agent in any environment. This class provides necessary
-    framework to perform experimentation and analyse the results.
+    framework to perform experimentation and analyse the results. It inherits from rlpack.utils.base.TrainerBase.
     """
 
     def __init__(
