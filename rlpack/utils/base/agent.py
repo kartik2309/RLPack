@@ -5,6 +5,7 @@
 
 Currently following base classes have been implemented:
     - `Agent`: Base class for all agents, implemented as rlpack.utils.base.agent.Agent.
+    - `TrainerBase`: BAse class for all trainers, implemented as rlpack.utils.base.trainer.Trainer.
     - `Register`: Register of information of all in-built models and agents implemented as
         rlpack.utils.base.register.Register.
     - `InternalCodeRegister`: Register for information on codes to be used internally in RLPack; implemented as
@@ -28,6 +29,8 @@ class Agent(object):
         """
         The class initializer. Defines basic variables useful for all agents.
         """
+        ## The default discounting factor for agents. @I{# noqa: E266}
+        self.gamma = 0.99
         ## The state normalisation codes; indicating the codes to normalise states. @I{# noqa: E266}
         self._state_norm_codes = (0, 3, 4)
         ## The reward normalisation codes; indicating the codes to normalise rewards. @I{# noqa: E266}

@@ -89,7 +89,7 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
                 sequence_length, hidden_sizes, activation, dropout
             )
         # Process `activation`
-        activation = self._process_activation(activation)
+        activation = self._process_activation(activation, use_actor_projection)
         # Process `action_space`
         out_features = self._process_action_space(action_space)
         ## The final head for actor; creates logits/parameters for actions. @I{# noqa: E266}
@@ -135,12 +135,14 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         if self._apply_actor_activation:
             if self.use_actor_projection:
                 action_outputs = [
-                    self.actor_activation(action_output)
-                    for action_output in action_outputs
+                    actor_activation(action_output)
+                    for action_output, actor_activation in zip(
+                        action_outputs, self.actor_activation
+                    )
                 ]
                 action_outputs[-1] = pytorch.diag_embed(action_outputs[-1])
             else:
-                action_outputs = self.actor_activation(action_outputs)
+                action_outputs = self.actor_activation[0](action_outputs)
         if self._apply_critic_activation:
             state_value = self.value_activation(state_value)
         return action_outputs, state_value
@@ -284,7 +286,7 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
 
     @staticmethod
     def _process_activation(
-        activation: Union[Activation, List[Activation]]
+        activation: Union[Activation, List[Activation]], use_actor_projection: bool
     ) -> List[Activation]:
         """
         Processes `activation` for use by the model.
@@ -292,13 +294,29 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
             Must be an initialized activation object from PyTorch's nn (torch.nn) module. If a list is passed, List
             must be of length [1, 3], first activation for feature extractor, second for actor head and third for
             critic head.
+        @param use_actor_projection: bool: Flag indicating whether to use projection for actor. Projection is applied
+            to output of feature extractor of actor model.
         """
         if isinstance(activation, list):
-            if not 0 < len(activation) <= 3:
+            if not 0 < len(activation) <= 3 and not use_actor_projection:
                 raise ValueError(
                     "Activation must be a list of either one, two or three activation; "
                     "first for feature extractor; second for actor head; third for critic head"
                 )
+            if not 0 < len(activation) <= 4 and not use_actor_projection:
+                raise ValueError(
+                    "Activation must be a list of either one, two three or four activation; "
+                    "first for feature extractor; second for actor head's first projection; "
+                    "third for actor's second projection; fourth for critic head"
+                )
+            if len(activation) > 1 and use_actor_projection:
+                if len(activation) == 2:
+                    activation[1] = [activation[1], pytorch.nn.Identity()]
+                elif len(activation) == 3:
+                    activation[1] = [activation[1], activation[2]]
+                    del activation[2]
+                elif len(activation) == 4:
+                    activation[1] = [activation[1], activation[2]]
         elif isinstance(activation, pytorch.nn.Module):
             activation = [activation]
         else:
