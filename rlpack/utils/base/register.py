@@ -36,7 +36,6 @@ class Register:
             "agent_name",
             "num_episodes",
             "max_timesteps",
-            "reward_logging_frequency",
             "agent_args",
         )
         ## The model initialization arguments when using [in-built](@ref models/index.md) models. @I{# noqa: E266}
