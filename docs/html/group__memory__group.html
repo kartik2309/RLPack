@@ -104,7 +104,7 @@ $(document).ready(function(){initNavTree('group__memory__group.html',''); initRe
 </div><!--header-->
 <div class="contents">
 
-<p>Memory module is the C++ backend for <a class="el" href="classrlpack_1_1___c_1_1memory_1_1_memory.html" title="This class provides the python interface to C_Memory, the C++ class which performs heavier workloads.">rlpack._C.memory.Memory</a> class. Heavier workloads have been optimized with multithreading with OpenMP and CUDA (if CUDA compatible device is found).  
+<p>Memory module is the C++ backend for <a class="el" href="classrlpack_1_1___c_1_1memory_1_1_memory.html" title="This class provides the python interface to C_ReplayBuffer, the C++ class which performs heavier workloads.">rlpack._C.memory.Memory</a> class. Heavier workloads have been optimized with multithreading with OpenMP and CUDA (if CUDA compatible device is found).
 <a href="#details">More...</a></p>
 <div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Collaboration diagram for memory:</div>
@@ -127,8 +127,8 @@ Modules</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___memory.html">C_Memory</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The class <a class="el" href="class_c___memory.html" title="The class C_Memory is the C++ backend for memory-buffer used in algorithms that stores transitions in...">C_Memory</a> is the C++ backend for memory-buffer used in algorithms that stores transitions in a buffer. This class contains optimized routines to support Python front-end of <a class="el" href="classrlpack_1_1___c_1_1memory_1_1_memory.html" title="This class provides the python interface to C_Memory, the C++ class which performs heavier workloads.">rlpack._C.memory.Memory</a> class.  <a href="class_c___memory.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___memory.html">C_ReplayBuffer</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The class <a class="el" href="class_c___memory.html" title="The class C_ReplayBuffer is the C++ backend for memory-buffer used in algorithms that stores transitions in...">C_ReplayBuffer</a> is the C++ backend for memory-buffer used in algorithms that stores transitions in a buffer. This class contains optimized routines to support Python front-end of <a class="el" href="classrlpack_1_1___c_1_1memory_1_1_memory.html" title="This class provides the python interface to C_ReplayBuffer, the C++ class which performs heavier workloads.">rlpack._C.memory.Memory</a> class.  <a href="class_c___memory.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_sum_tree.html">SumTree</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The class <a class="el" href="class_sum_tree.html" title="The class SumTree is a class which represents the Sum-Tree which is used in proportional prioritizati...">SumTree</a> is a class which represents the Sum-Tree which is used in proportional prioritization. It implements all the methods necessary to create the Sum-Tree and sample from it.  <a href="class_sum_tree.html#details">More...</a><br /></td></tr>
@@ -139,11 +139,11 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga928a5a8e698b6e34d86df1e225a97c13"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__memory__group.html#ga928a5a8e698b6e34d86df1e225a97c13">PYBIND11_MODULE</a> (<a class="el" href="class_c___memory.html">C_Memory</a>, m)</td></tr>
+<tr class="memitem:ga928a5a8e698b6e34d86df1e225a97c13"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__memory__group.html#ga928a5a8e698b6e34d86df1e225a97c13">PYBIND11_MODULE</a> (<a class="el" href="class_c___memory.html">C_ReplayBuffer</a>, m)</td></tr>
 <tr class="separator:ga928a5a8e698b6e34d86df1e225a97c13"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p >Memory module is the C++ backend for <a class="el" href="classrlpack_1_1___c_1_1memory_1_1_memory.html" title="This class provides the python interface to C_Memory, the C++ class which performs heavier workloads.">rlpack._C.memory.Memory</a> class. Heavier workloads have been optimized with multithreading with OpenMP and CUDA (if CUDA compatible device is found). </p>
+<p >Memory module is the C++ backend for <a class="el" href="classrlpack_1_1___c_1_1memory_1_1_memory.html" title="This class provides the python interface to C_ReplayBuffer, the C++ class which performs heavier workloads.">rlpack._C.memory.Memory</a> class. Heavier workloads have been optimized with multithreading with OpenMP and CUDA (if CUDA compatible device is found). </p>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="ga928a5a8e698b6e34d86df1e225a97c13" name="ga928a5a8e698b6e34d86df1e225a97c13"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga928a5a8e698b6e34d86df1e225a97c13">&#9670;&#160;</a></span>PYBIND11_MODULE()</h2>
@@ -154,7 +154,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">PYBIND11_MODULE </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="class_c___memory.html">C_Memory</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="class_c___memory.html">C_ReplayBuffer</a>&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
@@ -170,7 +170,7 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Python bindings for <a class="el" href="class_c___memory.html" title="The class C_Memory is the C++ backend for memory-buffer used in algorithms that stores transitions in...">C_Memory</a>, C_MemoryData and all the opaque objects. All bindings are pickleable. Python binding for <a class="el" href="class_c___memory.html" title="The class C_Memory is the C++ backend for memory-buffer used in algorithms that stores transitions in...">C_Memory</a> class. Only relevant methods are exposed to Python</p>
+<p >Python bindings for <a class="el" href="class_c___memory.html" title="The class C_ReplayBuffer is the C++ backend for memory-buffer used in algorithms that stores transitions in...">C_ReplayBuffer</a>, C_ReplayBufferData and all the opaque objects. All bindings are pickleable. Python binding for <a class="el" href="class_c___memory.html" title="The class C_ReplayBuffer is the C++ backend for memory-buffer used in algorithms that stores transitions in...">C_ReplayBuffer</a> class. Only relevant methods are exposed to Python</p>
 
 </div>
 </div>

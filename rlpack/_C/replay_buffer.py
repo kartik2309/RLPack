@@ -4,7 +4,7 @@
 
 
 Currently following classes have been implemented:
-    - `Memory`: Implemented as rlpack._C.memory.Memory, this class is responsible for using Optimized C_Memory class
+    - `Memory`: Implemented as rlpack._C.memory.Memory, this class is responsible for using Optimized C_ReplayBuffer class
         implemented in C++ and providing simple Python methods to access it.
     - `GradAccumulator`: Implemented as rlpack._C.grad_accumulator.GradAccumulator, this class is responsible for
         using optimized GradAccumulator class implemented in C++ and providing simple python methods to access it.
@@ -16,12 +16,12 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 
-from rlpack import C_Memory, pytorch
+from rlpack import C_ReplayBuffer, pytorch
 
 
-class Memory(object):
+class ReplayBuffer(object):
     """
-    This class provides the python interface to C_Memory, the C++ class which performs heavier workloads. This class
+    This class provides the python interface to C_ReplayBuffer, the C++ class which performs heavier workloads. This class
     is used as a container to store tensors and sample from that container as per desired strategy (for DQN). This is
     equivalent to Experience Buffer, Replay Buffer etc.
     """
@@ -40,8 +40,8 @@ class Memory(object):
         @param prioritization_strategy_code: int: Indicates code for prioritization strategy. Default: 0.
         @param batch_size: int: The batch size to be used for training cycle. Default: 32
         """
-        ## The instance of C_Memory; the C++ backend of Memory class. @I{# noqa: E266}
-        self.c_memory = C_Memory.C_Memory(
+        ## The instance of C_ReplayBuffer; the C++ backend of Memory class. @I{# noqa: E266}
+        self.c_replay_buffer = C_ReplayBuffer.c_replay_buffer(
             buffer_size, device, prioritization_strategy_code, batch_size
         )
         ## The input buffer size. @I{# noqa: E266}
@@ -80,7 +80,7 @@ class Memory(object):
         @param weight: Optional[Union[pytorch.Tensor, np.ndarray, float]]: The important sampling weight
             of the transition: for priority relay memory). Default: 1.0.
         """
-        self.c_memory.insert(
+        self.c_replay_buffer.insert(
             *self.__prepare_inputs_c_memory_(
                 state_current,
                 state_next,
@@ -133,7 +133,7 @@ class Memory(object):
             ]: The tuple of tensors as: (states_current, states_next, rewards, actions, dones, priorities,
             probabilities, weights, random_indices).
         """
-        samples = self.c_memory.sample(
+        samples = self.c_replay_buffer.sample(
             force_terminal_state_probability,
             parallelism_size_threshold,
             alpha,
@@ -164,28 +164,28 @@ class Memory(object):
             indices are used to update the corresponding values. Must be a 1-D PyTorch Tensor.
         @param new_priorities: pytorch.Tensor: The list of new priorities corresponding to `random_indices` passed.
         """
-        self.c_memory.update_priorities(random_indices, new_priorities)
+        self.c_replay_buffer.update_priorities(random_indices, new_priorities)
 
     def clear(self) -> None:
         """
         This method clear the memory and renders it empty
         """
-        self.c_memory.clear()
+        self.c_replay_buffer.clear()
 
-    def view(self) -> C_Memory.C_MemoryData:
+    def view(self) -> C_ReplayBuffer.C_ReplayBufferData:
         """
         This method returns the view of Memory, i.e. the data stored in the memory.
-        @return (C_Memory.C_MemoryData): The C_MemoryData object which packages the current memory information.
+        @return (C_ReplayBuffer.C_ReplayBufferData): The C_ReplayBufferData object which packages the current memory information.
             This object is pickleable and data can also be accessed via attributes.
         """
-        return self.c_memory.view()
+        return self.c_replay_buffer.view()
 
-    def initialize(self, memory_data: C_Memory.C_MemoryData) -> None:
+    def initialize(self, memory_data: C_ReplayBuffer.C_ReplayBufferData) -> None:
         """
-        This loads the memory from the provided C_MemoryData instance.
-        @param memory_data: C_Memory.C_MemoryData: The C_MemoryData instance to load the memory form.
+        This loads the memory from the provided C_ReplayBufferData instance.
+        @param memory_data: C_ReplayBuffer.C_ReplayBufferData: The C_ReplayBufferData instance to load the memory form.
         """
-        self.c_memory.initialize(memory_data)
+        self.c_replay_buffer.initialize(memory_data)
 
     def get_terminal_state_indices(self) -> List[int]:
         """
@@ -194,7 +194,7 @@ class Memory(object):
         """
         return [
             v
-            for v in self.c_memory.view().terminal_state_indices()[
+            for v in self.c_replay_buffer.view().terminal_state_indices()[
                 "terminal_state_indices"
             ]
         ]
@@ -204,7 +204,7 @@ class Memory(object):
         This retrieves all the transitions accumulated so far.
         @return Dict[str, pytorch.Tensor]: A dictionary with all transition information.
         """
-        return {k: v for k, v in self.c_memory.view().transition_information().items()}
+        return {k: v for k, v in self.c_replay_buffer.view().transition_information().items()}
 
     def get_states_current(self) -> List[pytorch.Tensor]:
         """
@@ -212,7 +212,7 @@ class Memory(object):
         @return List[pytorch.Tensor]: A list of tensors with current state values.
         """
         return [
-            v for v in self.c_memory.view().transition_information()["states_current"]
+            v for v in self.c_replay_buffer.view().transition_information()["states_current"]
         ]
 
     def get_states_next(self) -> List[pytorch.Tensor]:
@@ -220,42 +220,42 @@ class Memory(object):
         This retrieves all the next states from transitions accumulated so far.
         @return List[pytorch.Tensor]: A list of tensors with next state values.
         """
-        return [v for v in self.c_memory.view().transition_information()["states_next"]]
+        return [v for v in self.c_replay_buffer.view().transition_information()["states_next"]]
 
     def get_rewards(self) -> List[pytorch.Tensor]:
         """
         This retrieves all the rewards from transitions accumulated so far.
         @return List[pytorch.Tensor]: A list of tensors with reward values.
         """
-        return [v for v in self.c_memory.view().transition_information()["rewards"]]
+        return [v for v in self.c_replay_buffer.view().transition_information()["rewards"]]
 
     def get_actions(self) -> List[pytorch.Tensor]:
         """
         This retrieves all the actions from transitions accumulated so far.
         @return List[pytorch.Tensor]: A list of tensors with action values.
         """
-        return [v for v in self.c_memory.view().transition_information()["actions"]]
+        return [v for v in self.c_replay_buffer.view().transition_information()["actions"]]
 
     def get_dones(self) -> List[pytorch.Tensor]:
         """
         This retrieves all the dones from transitions accumulated so far.
         @return List[pytorch.Tensor]: A list of tensors with done values.
         """
-        return [v for v in self.c_memory.view().transition_information()()["dones"]]
+        return [v for v in self.c_replay_buffer.view().transition_information()()["dones"]]
 
     def get_priorities(self) -> List[float]:
         """
         This retrieves all the priorities for all the transitions, ordered by index.
         @return List[float]: A list of priorities ordered by index.
         """
-        return [v for v in self.c_memory.view().priorities()["priorities"]]
+        return [v for v in self.c_replay_buffer.view().priorities()["priorities"]]
 
     def num_terminal_states(self) -> int:
         """
         Returns the number of terminal states.
         @return int: Num of terminal states.
         """
-        return self.c_memory.num_terminal_states()
+        return self.c_replay_buffer.num_terminal_states()
 
     def tree_height(self) -> int:
         """
@@ -265,7 +265,7 @@ class Memory(object):
         @return int: The height of the tree.
         """
         if self.prioritization_strategy_code == 1:
-            return self.c_memory.tree_height()
+            return self.c_replay_buffer.tree_height()
         logging.warning("Tree height cannot be accessed for un-prioritized memory!")
         return 0
 
@@ -445,7 +445,7 @@ class Memory(object):
         @param index: int: The index at which we want to obtain the memory data.
         @return List[pytorch.Tensor]: The transition as tensors from the memory.
         """
-        return self.c_memory.get_item(index)
+        return self.c_replay_buffer.get_item(index)
 
     def __setitem__(
         self,
@@ -476,7 +476,7 @@ class Memory(object):
             ]: The transition tuple in the order: state_current, state_next, reward, action, done,
              priority, probability, weight).
         """
-        self.c_memory.set_item(
+        self.c_replay_buffer.set_item(
             index,
             *self.__prepare_inputs_c_memory_(
                 transition[0],
@@ -496,14 +496,14 @@ class Memory(object):
         @param index: int: Index at which we want to delete an item.
         Note that this operation can be expensive depending on the size of memory; O(n).
         """
-        self.c_memory.delete_item(index)
+        self.c_replay_buffer.delete_item(index)
 
     def __len__(self) -> int:
         """
         Length method for memory.
         @return int: The size of the memory.
         """
-        return self.c_memory.size()
+        return self.c_replay_buffer.size()
 
     def __getstate__(self) -> Dict[str, Any]:
         """
@@ -541,7 +541,7 @@ class Memory(object):
         Repr method for memory.
         @return str: String with object's memory location.
         """
-        return f"<Python object for {repr(self.c_memory)} at {hex(id(self))}>"
+        return f"<Python object for {repr(self.c_replay_buffer)} at {hex(id(self))}>"
 
     def __str__(self) -> str:
         """

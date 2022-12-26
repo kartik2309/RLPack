@@ -27,7 +27,7 @@ from numpy import ndarray
 
 from rlpack import pytorch
 from rlpack._C.grad_accumulator import GradAccumulator
-from rlpack._C.memory import Memory
+from rlpack._C.replay_buffer import ReplayBuffer
 from rlpack.utils import LossFunction, LRScheduler
 from rlpack.utils.base.agent import Agent
 from rlpack.utils.internal_code_setup import InternalCodeSetup
@@ -245,7 +245,7 @@ class DqnAgent(Agent):
         ## The step counter; counting the total timesteps done so far up to @ref memory_buffer_size. @I{# noqa: E266}
         self.step_counter = 0
         ## The instance of @ref rlpack._C.memory.Memory used for Replay buffer. @I{# noqa: E266}
-        self.memory = Memory(
+        self.memory = ReplayBuffer(
             buffer_size=memory_buffer_size,
             device=device,
             prioritization_strategy_code=self.__prioritization_strategy_code,

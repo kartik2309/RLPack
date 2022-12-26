@@ -51,7 +51,11 @@ class BuildExternal(build_ext):
         build_temp.mkdir(parents=True, exist_ok=True)
         external_dir = Path(self.get_ext_fullpath(ext.name))
         external_dir.mkdir(parents=True, exist_ok=True)
-        lib_directories = ["binaries/memory", "binaries/grad_accumulator"]
+        lib_directories = [
+            "binaries/replay_buffer",
+            "binaries/grad_accumulator",
+            "binaries/rollout_buffer",
+        ]
 
         config = "Debug" if self.debug else "Release"
         cmake_args = [

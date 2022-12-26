@@ -104,7 +104,7 @@ $(document).ready(function(){initNavTree('classrlpack_1_1___c_1_1memory_1_1_memo
 </div><!--header-->
 <div class="contents">
 
-<p>This class provides the python interface to <a class="el" href="class_c___memory.html" title="The class C_Memory is the C++ backend for memory-buffer used in algorithms that stores transitions in...">C_Memory</a>, the C++ class which performs heavier workloads.  
+<p>This class provides the python interface to <a class="el" href="class_c___memory.html" title="The class C_ReplayBuffer is the C++ backend for memory-buffer used in algorithms that stores transitions in...">C_ReplayBuffer</a>, the C++ class which performs heavier workloads.
  <a href="classrlpack_1_1___c_1_1memory_1_1_memory.html#details">More...</a></p>
 <div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Inheritance diagram for rlpack._C.memory.Memory:</div>
@@ -113,7 +113,7 @@ $(document).ready(function(){initNavTree('classrlpack_1_1___c_1_1memory_1_1_memo
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="classrlpack_1_1___c_1_1memory_1_1_memory__inherit__graph.png" border="0" usemap="#arlpack_8___c_8memory_8_memory_inherit__map" alt="Inheritance graph"/></div>
 <map name="arlpack_8___c_8memory_8_memory_inherit__map" id="arlpack_8___c_8memory_8_memory_inherit__map">
-<area shape="rect" title="This class provides the python interface to C_Memory, the C++ class which performs heavier workloads." alt="" coords="5,79,184,104"/>
+<area shape="rect" title="This class provides the python interface to C_ReplayBuffer, the C++ class which performs heavier workloads." alt="" coords="5,79,184,104"/>
 <area shape="rect" title=" " alt="" coords="66,5,123,31"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
@@ -124,7 +124,7 @@ $(document).ready(function(){initNavTree('classrlpack_1_1___c_1_1memory_1_1_memo
 <div id="dynsection-1-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="classrlpack_1_1___c_1_1memory_1_1_memory__coll__graph.png" border="0" usemap="#arlpack_8___c_8memory_8_memory_coll__map" alt="Collaboration graph"/></div>
 <map name="arlpack_8___c_8memory_8_memory_coll__map" id="arlpack_8___c_8memory_8_memory_coll__map">
-<area shape="rect" title="This class provides the python interface to C_Memory, the C++ class which performs heavier workloads." alt="" coords="5,79,184,104"/>
+<area shape="rect" title="This class provides the python interface to C_ReplayBuffer, the C++ class which performs heavier workloads." alt="" coords="5,79,184,104"/>
 <area shape="rect" title=" " alt="" coords="66,5,123,31"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
@@ -190,8 +190,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad3a7f91902d5de7853c3f1c0061ef522"><td class="memItemLeft" align="right" valign="top">Dict[str, pytorch.Tensor]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1memory_1_1_memory.html#ad3a7f91902d5de7853c3f1c0061ef522">get_transitions</a> (self)</td></tr>
 <tr class="memdesc:ad3a7f91902d5de7853c3f1c0061ef522"><td class="mdescLeft">&#160;</td><td class="mdescRight">This retrieves all the transitions accumulated so far.  <a href="classrlpack_1_1___c_1_1memory_1_1_memory.html#ad3a7f91902d5de7853c3f1c0061ef522">More...</a><br /></td></tr>
 <tr class="separator:ad3a7f91902d5de7853c3f1c0061ef522"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a05868f1c95b791df02e6a801e689659f"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1memory_1_1_memory.html#a05868f1c95b791df02e6a801e689659f">initialize</a> (self, <a class="el" href="struct_c___memory_1_1_c___memory_data.html">C_Memory.C_MemoryData</a> memory_data)</td></tr>
-<tr class="memdesc:a05868f1c95b791df02e6a801e689659f"><td class="mdescLeft">&#160;</td><td class="mdescRight">This loads the memory from the provided C_MemoryData instance.  <a href="classrlpack_1_1___c_1_1memory_1_1_memory.html#a05868f1c95b791df02e6a801e689659f">More...</a><br /></td></tr>
+<tr class="memitem:a05868f1c95b791df02e6a801e689659f"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1memory_1_1_memory.html#a05868f1c95b791df02e6a801e689659f">initialize</a> (self, <a class="el" href="struct_c___memory_1_1_c___memory_data.html">C_ReplayBuffer.C_ReplayBufferData</a> memory_data)</td></tr>
+<tr class="memdesc:a05868f1c95b791df02e6a801e689659f"><td class="mdescLeft">&#160;</td><td class="mdescRight">This loads the memory from the provided C_ReplayBufferData instance.  <a href="classrlpack_1_1___c_1_1memory_1_1_memory.html#a05868f1c95b791df02e6a801e689659f">More...</a><br /></td></tr>
 <tr class="separator:a05868f1c95b791df02e6a801e689659f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab563541fe4901f5cdfab4b763f270e1"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1memory_1_1_memory.html#aab563541fe4901f5cdfab4b763f270e1">insert</a> (self, Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]] state_current, Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]] state_next, Union[np.ndarray, float] reward, Union[np.ndarray, float] action, Union[bool, int] done, Optional[Union[pytorch.Tensor, np.ndarray, float]] priority=1.0, Optional[Union[pytorch.Tensor, np.ndarray, float]] probability=1.0, Optional[Union[pytorch.Tensor, np.ndarray, float]] weight=1.0)</td></tr>
 <tr class="memdesc:aab563541fe4901f5cdfab4b763f270e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method performs insertion to the memory.  <a href="classrlpack_1_1___c_1_1memory_1_1_memory.html#aab563541fe4901f5cdfab4b763f270e1">More...</a><br /></td></tr>
@@ -208,8 +208,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1cb47a453e323559d67108e209f930de"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1memory_1_1_memory.html#a1cb47a453e323559d67108e209f930de">update_priorities</a> (self, pytorch.Tensor random_indices, pytorch.Tensor new_priorities)</td></tr>
 <tr class="memdesc:a1cb47a453e323559d67108e209f930de"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method updates the priorities when prioritized memory is used.  <a href="classrlpack_1_1___c_1_1memory_1_1_memory.html#a1cb47a453e323559d67108e209f930de">More...</a><br /></td></tr>
 <tr class="separator:a1cb47a453e323559d67108e209f930de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a95d6fb2acaa293da125fefe9f4c14859"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_c___memory_1_1_c___memory_data.html">C_Memory.C_MemoryData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1memory_1_1_memory.html#a95d6fb2acaa293da125fefe9f4c14859">view</a> (self)</td></tr>
-<tr class="memdesc:a95d6fb2acaa293da125fefe9f4c14859"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method returns the view of <a class="el" href="classrlpack_1_1___c_1_1memory_1_1_memory.html" title="This class provides the python interface to C_Memory, the C++ class which performs heavier workloads.">Memory</a>, i.e.  <a href="classrlpack_1_1___c_1_1memory_1_1_memory.html#a95d6fb2acaa293da125fefe9f4c14859">More...</a><br /></td></tr>
+<tr class="memitem:a95d6fb2acaa293da125fefe9f4c14859"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_c___memory_1_1_c___memory_data.html">C_ReplayBuffer.C_ReplayBufferData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1memory_1_1_memory.html#a95d6fb2acaa293da125fefe9f4c14859">view</a> (self)</td></tr>
+<tr class="memdesc:a95d6fb2acaa293da125fefe9f4c14859"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method returns the view of <a class="el" href="classrlpack_1_1___c_1_1memory_1_1_memory.html" title="This class provides the python interface to C_ReplayBuffer, the C++ class which performs heavier workloads.">Memory</a>, i.e.  <a href="classrlpack_1_1___c_1_1memory_1_1_memory.html#a95d6fb2acaa293da125fefe9f4c14859">More...</a><br /></td></tr>
 <tr class="separator:a95d6fb2acaa293da125fefe9f4c14859"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
@@ -218,7 +218,7 @@ Data Fields</h2></td></tr>
 <tr class="memdesc:a22d35108cb7dd3c186fe79ddc369aad9"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input buffer size.  <a href="classrlpack_1_1___c_1_1memory_1_1_memory.html#a22d35108cb7dd3c186fe79ddc369aad9">More...</a><br /></td></tr>
 <tr class="separator:a22d35108cb7dd3c186fe79ddc369aad9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae0f415e9920c3628e9bb5d6ffd0673ab"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1memory_1_1_memory.html#ae0f415e9920c3628e9bb5d6ffd0673ab">c_memory</a></td></tr>
-<tr class="memdesc:ae0f415e9920c3628e9bb5d6ffd0673ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">The instance of <a class="el" href="class_c___memory.html" title="The class C_Memory is the C++ backend for memory-buffer used in algorithms that stores transitions in...">C_Memory</a>; the C++ backend of <a class="el" href="classrlpack_1_1___c_1_1memory_1_1_memory.html" title="This class provides the python interface to C_Memory, the C++ class which performs heavier workloads.">Memory</a> class.  <a href="classrlpack_1_1___c_1_1memory_1_1_memory.html#ae0f415e9920c3628e9bb5d6ffd0673ab">More...</a><br /></td></tr>
+<tr class="memdesc:ae0f415e9920c3628e9bb5d6ffd0673ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">The instance of <a class="el" href="class_c___memory.html" title="The class C_ReplayBuffer is the C++ backend for memory-buffer used in algorithms that stores transitions in...">C_ReplayBuffer</a>; the C++ backend of <a class="el" href="classrlpack_1_1___c_1_1memory_1_1_memory.html" title="This class provides the python interface to C_ReplayBuffer, the C++ class which performs heavier workloads.">Memory</a> class.  <a href="classrlpack_1_1___c_1_1memory_1_1_memory.html#ae0f415e9920c3628e9bb5d6ffd0673ab">More...</a><br /></td></tr>
 <tr class="separator:ae0f415e9920c3628e9bb5d6ffd0673ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac7670dc2d5a5f6cf6cedd5d840310d04"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1memory_1_1_memory.html#ac7670dc2d5a5f6cf6cedd5d840310d04">device</a></td></tr>
 <tr class="memdesc:ac7670dc2d5a5f6cf6cedd5d840310d04"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>device</code> argument; indicating the device name.  <a href="classrlpack_1_1___c_1_1memory_1_1_memory.html#ac7670dc2d5a5f6cf6cedd5d840310d04">More...</a><br /></td></tr>
@@ -234,7 +234,7 @@ Static Private Member Functions</h2></td></tr>
 <tr class="separator:a62da4039247bd7d808c1c98a9c8216db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p >This class provides the python interface to <a class="el" href="class_c___memory.html" title="The class C_Memory is the C++ backend for memory-buffer used in algorithms that stores transitions in...">C_Memory</a>, the C++ class which performs heavier workloads. </p>
+<div class="textblock"><p >This class provides the python interface to <a class="el" href="class_c___memory.html" title="The class C_ReplayBuffer is the C++ backend for memory-buffer used in algorithms that stores transitions in...">C_ReplayBuffer</a>, the C++ class which performs heavier workloads. </p>
 <p >This class is used as a container to store tensors and sample from that container as per desired strategy (for DQN). This is equivalent to Experience Buffer, Replay Buffer etc. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aae1b564e1db43263e61fc17a4b9c31af" name="aae1b564e1db43263e61fc17a4b9c31af"></a>
@@ -420,7 +420,7 @@ Static Private Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Get state method for memory. </p>
-<p >This makes this <a class="el" href="classrlpack_1_1___c_1_1memory_1_1_memory.html" title="This class provides the python interface to C_Memory, the C++ class which performs heavier workloads.">Memory</a> class pickleable. </p><dl class="section return"><dt>Returns</dt><dd>Dict[str, Any]: The state of the memory. </dd></dl>
+<p >This makes this <a class="el" href="classrlpack_1_1___c_1_1memory_1_1_memory.html" title="This class provides the python interface to C_ReplayBuffer, the C++ class which performs heavier workloads.">Memory</a> class pickleable. </p><dl class="section return"><dt>Returns</dt><dd>Dict[str, Any]: The state of the memory. </dd></dl>
 
 </div>
 </div>
@@ -688,7 +688,7 @@ Static Private Member Functions</h2></td></tr>
 <p>Set state method for the memory. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">state</td><td>Dict[str, Any]: This method loads the states back to memory instance. This helps unpickle the <a class="el" href="classrlpack_1_1___c_1_1memory_1_1_memory.html" title="This class provides the python interface to C_Memory, the C++ class which performs heavier workloads.">Memory</a>. </td></tr>
+    <tr><td class="paramname">state</td><td>Dict[str, Any]: This method loads the states back to memory instance. This helps unpickle the <a class="el" href="classrlpack_1_1___c_1_1memory_1_1_memory.html" title="This class provides the python interface to C_ReplayBuffer, the C++ class which performs heavier workloads.">Memory</a>. </td></tr>
   </table>
   </dd>
 </dl>
@@ -919,7 +919,7 @@ Static Private Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="struct_c___memory_1_1_c___memory_data.html">C_Memory.C_MemoryData</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="struct_c___memory_1_1_c___memory_data.html">C_ReplayBuffer.C_ReplayBufferData</a>&#160;</td>
           <td class="paramname"><em>memory_data</em>&#160;</td>
         </tr>
         <tr>
@@ -930,10 +930,10 @@ Static Private Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>This loads the memory from the provided C_MemoryData instance. </p>
+<p>This loads the memory from the provided C_ReplayBufferData instance. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">memory_data</td><td><a class="el" href="struct_c___memory_1_1_c___memory_data.html" title="The class C_MemoryData keeps the references to data that is associated with C_Memory....">C_Memory.C_MemoryData</a>: The C_MemoryData instance to load the memory form. </td></tr>
+    <tr><td class="paramname">memory_data</td><td><a class="el" href="struct_c___memory_1_1_c___memory_data.html" title="The class C_ReplayBufferData keeps the references to data that is associated with C_ReplayBuffer....">C_ReplayBuffer.C_ReplayBufferData</a>: The C_ReplayBufferData instance to load the memory form. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1192,7 +1192,7 @@ Static Private Member Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"> <a class="el" href="struct_c___memory_1_1_c___memory_data.html">C_Memory.C_MemoryData</a> rlpack._C.memory.Memory.view </td>
+          <td class="memname"> <a class="el" href="struct_c___memory_1_1_c___memory_data.html">C_ReplayBuffer.C_ReplayBufferData</a> rlpack._C.memory.Memory.view </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><em>self</em></td><td>)</td>
@@ -1201,8 +1201,8 @@ Static Private Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>This method returns the view of <a class="el" href="classrlpack_1_1___c_1_1memory_1_1_memory.html" title="This class provides the python interface to C_Memory, the C++ class which performs heavier workloads.">Memory</a>, i.e. </p>
-<p >the data stored in the memory. </p><dl class="section return"><dt>Returns</dt><dd>(<a class="el" href="struct_c___memory_1_1_c___memory_data.html" title="The class C_MemoryData keeps the references to data that is associated with C_Memory....">C_Memory.C_MemoryData</a>): The C_MemoryData object which packages the current memory information. This object is pickleable and data can also be accessed via attributes. </dd></dl>
+<p>This method returns the view of <a class="el" href="classrlpack_1_1___c_1_1memory_1_1_memory.html" title="This class provides the python interface to C_ReplayBuffer, the C++ class which performs heavier workloads.">Memory</a>, i.e. </p>
+<p >the data stored in the memory. </p><dl class="section return"><dt>Returns</dt><dd>(<a class="el" href="struct_c___memory_1_1_c___memory_data.html" title="The class C_ReplayBufferData keeps the references to data that is associated with C_ReplayBuffer....">C_ReplayBuffer.C_ReplayBufferData</a>): The C_ReplayBufferData object which packages the current memory information. This object is pickleable and data can also be accessed via attributes. </dd></dl>
 
 </div>
 </div>
@@ -1235,7 +1235,7 @@ Static Private Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>The instance of <a class="el" href="class_c___memory.html" title="The class C_Memory is the C++ backend for memory-buffer used in algorithms that stores transitions in...">C_Memory</a>; the C++ backend of <a class="el" href="classrlpack_1_1___c_1_1memory_1_1_memory.html" title="This class provides the python interface to C_Memory, the C++ class which performs heavier workloads.">Memory</a> class. </p>
+<p>The instance of <a class="el" href="class_c___memory.html" title="The class C_ReplayBuffer is the C++ backend for memory-buffer used in algorithms that stores transitions in...">C_ReplayBuffer</a>; the C++ backend of <a class="el" href="classrlpack_1_1___c_1_1memory_1_1_memory.html" title="This class provides the python interface to C_ReplayBuffer, the C++ class which performs heavier workloads.">Memory</a> class. </p>
 
 </div>
 </div>

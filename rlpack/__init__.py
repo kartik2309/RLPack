@@ -12,4 +12,4 @@ import torch.multiprocessing as mp
 from torch.utils.tensorboard import SummaryWriter
 
 # Import CPP Backend
-from rlpack.lib import C_GradAccumulator, C_Memory
+from rlpack.lib import C_GradAccumulator, C_ReplayBuffer, C_RolloutBuffer

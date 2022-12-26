@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(C_Memory CXX)
+project(C_ReplayBuffer CXX)
 # ----------------------------------- Includes for CMAKE ----------------------------------- #
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
@@ -25,7 +25,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 find_package(CUDAToolkit QUIET)
 if (NOT CUDAToolkit_FOUND)
     message("-- CUDA was not found.")
-    set_source_files_properties(C_Memory.cu PROPERTIES LANGUAGE CXX)
+    set_source_files_properties(C_ReplayBuffer.cu PROPERTIES LANGUAGE CXX)
     set_source_files_properties(Binding.cu PROPERTIES LANGUAGE CXX)
 else ()
     add_compile_definitions(__CUDA_AVAILABLE__)
@@ -53,42 +53,44 @@ set(TORCH_USE_RTLD_GLOBAL YES)
 # ----------------------------------------- Linking ---------------------------------------- #
 
 pybind11_add_module(
-        C_Memory
+        C_ReplayBuffer
         sumtree_node/SumTreeNode.cpp
         sumtree_node/SumTreeNode.h
         sumtree/SumTree.cpp
         sumtree/SumTree.h
         ${CMAKE_SOURCE_DIR}/binaries/utils/ops/arg_mergesort.cuh
+        ${CMAKE_SOURCE_DIR}/binaries/utils/maps.h
         utils/CudaOffload.cuh
         utils/HostOffload.tpp
         utils/Utils.h
-        C_Memory.cu
-        C_Memory.cuh
+        C_ReplayBuffer.cu
+        C_ReplayBuffer.cuh
+
         Binding.cu
 )
 
-add_dependencies(C_Memory pybind11::headers)
-target_link_libraries(C_Memory PRIVATE Python::Python)
-target_link_libraries(C_Memory PRIVATE OpenMP::OpenMP_CXX)
-target_link_libraries(C_Memory PRIVATE "${TORCH_LIBRARIES}")
-target_link_libraries(C_Memory PRIVATE "${TORCH_PYTHON_LIBRARY}")
+add_dependencies(C_ReplayBuffer pybind11::headers)
+target_link_libraries(C_ReplayBuffer PRIVATE Python::Python)
+target_link_libraries(C_ReplayBuffer PRIVATE OpenMP::OpenMP_CXX)
+target_link_libraries(C_ReplayBuffer PRIVATE "${TORCH_LIBRARIES}")
+target_link_libraries(C_ReplayBuffer PRIVATE "${TORCH_PYTHON_LIBRARY}")
 if (CUDAToolkit_FOUND)
-    target_link_libraries(C_Memory PRIVATE ${CUDA_LIBRARIES})
-    target_link_libraries(C_Memory PRIVATE ${CMAKE_CUDA_RUNTIME_LIBRARY})
-    target_include_directories(C_Memory PRIVATE ${CUDAToolkit_INCLUDE_DIRS})
-    target_link_directories(C_Memory PRIVATE ${CUDAToolkit_LIBRARY_DIR})
-    target_compile_options(C_Memory PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:
+    target_link_libraries(C_ReplayBuffer PRIVATE ${CUDA_LIBRARIES})
+    target_link_libraries(C_ReplayBuffer PRIVATE ${CMAKE_CUDA_RUNTIME_LIBRARY})
+    target_include_directories(C_ReplayBuffer PRIVATE ${CUDAToolkit_INCLUDE_DIRS})
+    target_link_directories(C_ReplayBuffer PRIVATE ${CUDAToolkit_LIBRARY_DIR})
+    target_compile_options(C_ReplayBuffer PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:
             -Xcompiler "${CMAKE_CXX_FLAGS} ${CMAKE_C_FLAGS}" -Xptxas -v,
             --use_fast_math
             >)
 else ()
-    set_target_properties(C_Memory PROPERTIES LINKER_LANGUAGE CXX)
+    set_target_properties(C_ReplayBuffer PROPERTIES LINKER_LANGUAGE CXX)
 endif ()
 
 # --------------------------------------- Installation --------------------------------------- #
 install(
-        TARGETS C_Memory
-        EXPORT C_Memory
+        TARGETS C_ReplayBuffer
+        EXPORT C_ReplayBuffer
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -103,7 +105,7 @@ else ()
 endif ()
 
 set_target_properties(
-        C_Memory PROPERTIES
+        C_ReplayBuffer PROPERTIES
         INTERPROCEDURAL_OPTIMIZATION TRUE
         CXX_VISIBILITY_PRESET default
         VISIBILITY_INLINES_HIDDEN TRUE

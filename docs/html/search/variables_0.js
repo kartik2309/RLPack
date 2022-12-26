@@ -17,6 +17,7 @@ var searchData=
   ['_5fpossible_5feval_5fnames_14',['_possible_eval_names',['../classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a08111795fe2c48a2d00a3e5308636ac5',1,'rlpack::utils::base::trainer_base::TrainerBase']]],
   ['_5fpossible_5ftrain_5fnames_15',['_possible_train_names',['../classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a99bb42fde041c8f76d59d965f455f3ce',1,'rlpack::utils::base::trainer_base::TrainerBase']]],
   ['_5freward_5fnorm_5fcodes_16',['_reward_norm_codes',['../classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#acd1fdd611f925bf4ea7834a54fa1849f',1,'rlpack::utils::base::agent::Agent']]],
-  ['_5fstate_5fnorm_5fcodes_17',['_state_norm_codes',['../classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a5ae6867b9e07f0419f08d9646d6f142e',1,'rlpack::utils::base::agent::Agent']]],
-  ['_5ftd_5fnorm_5fcodes_18',['_td_norm_codes',['../classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#ae23803298a22178209253ffb03eba240',1,'rlpack::utils::base::agent::Agent']]]
+  ['_5frollout_5fbuffer_17',['_rollout_buffer',['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#abaa86e1deeb5201d6541f1baef6f5408',1,'rlpack::actor_critic::a2c::A2C']]],
+  ['_5fstate_5fnorm_5fcodes_18',['_state_norm_codes',['../classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a5ae6867b9e07f0419f08d9646d6f142e',1,'rlpack::utils::base::agent::Agent']]],
+  ['_5ftd_5fnorm_5fcodes_19',['_td_norm_codes',['../classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#ae23803298a22178209253ffb03eba240',1,'rlpack::utils::base::agent::Agent']]]
 ];

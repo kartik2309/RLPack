@@ -1,6 +1,6 @@
 
-#ifndef RLPACK_BINARIES_MEMORY_UTILS_HOSTOFFLOAD_TPP_
-#define RLPACK_BINARIES_MEMORY_UTILS_HOSTOFFLOAD_TPP_
+#ifndef RLPACK_BINARIES_REPLAY_BUFFER_UTILS_HOSTOFFLOAD_TPP_
+#define RLPACK_BINARIES_REPLAY_BUFFER_UTILS_HOSTOFFLOAD_TPP_
 
 #ifndef __CUDA_AVAILABLE__
 
@@ -19,8 +19,8 @@
  * @brief Binaries Module consists of C++ backend exposed via pybind11 to rlpack via rlpack._C. These modules are
  * optimized to perform heavier workloads.
  * @{
- * @addtogroup memory_group memory
- * @brief Memory module is the C++ backend for rlpack._C.memory.Memory class. Heavier workloads have been optimized
+ * @addtogroup replay_buffer_group replay_buffer
+ * @brief Memory module is the C++ backend for rlpack._C.replay_buffer.ReplayBuffer class. Heavier workloads have been optimized
  * with multithreading with OpenMP and CUDA (if CUDA compatible device is found).
  * @{
  * @addtogroup offload_group offload
@@ -283,4 +283,4 @@ void Offload<DType>::reset() {
 }
 
 #endif//__CUDA_AVAILABLE__
-#endif//RLPACK_BINARIES_MEMORY_UTILS_HOSTOFFLOAD_TPP_
+#endif//RLPACK_BINARIES_REPLAY_BUFFER_UTILS_HOSTOFFLOAD_TPP_

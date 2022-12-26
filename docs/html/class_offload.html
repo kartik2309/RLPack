@@ -100,7 +100,7 @@ $(document).ready(function(){initNavTree('class_offload.html',''); initResizable
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Data Fields</a> &#124;
 <a href="#pri-attribs">Private Attributes</a>  </div>
-  <div class="headertitle"><div class="title">Offload&lt; DType &gt; Class Template Reference<div class="ingroups"><a class="el" href="group__binaries__group.html">binaries</a> &raquo; <a class="el" href="group__memory__group.html">memory</a> &raquo; <a class="el" href="group__offload__group.html">offload</a> &raquo; <a class="el" href="group__cpu__group.html">cpu</a></div></div></div>
+  <div class="headertitle"><div class="title">Offload&lt; DType &gt; Class Template Reference<div class="ingroups"><a class="el" href="group__binaries__group.html">binaries</a> &raquo; <a class="el" href="group__replay__buffer__group.html">replay_buffer</a> &raquo; <a class="el" href="group__offload__group.html">offload</a> &raquo; <a class="el" href="group__cpu__group.html">cpu</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -332,7 +332,7 @@ template&lt;typename DType &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >This method generates the priority seeds. This is used by <a class="el" href="class_c___memory.html#af7c7609e6fc1050881d2ff477278dbb9">C_Memory::sample</a> when using proportional prioritization strategy. This method generates seeds between arguments startPoint and cumulativeSum. Results are flushed into <a class="el" href="class_offload.html#a1fd1822644e458927a984982c58ddbb5" title="The vector to store final results.">Offload::result</a>.</p>
+<p >This method generates the priority seeds. This is used by C_Memory::sample when using proportional prioritization strategy. This method generates seeds between arguments startPoint and cumulativeSum. Results are flushed into <a class="el" href="class_offload.html#a1fd1822644e458927a984982c58ddbb5" title="The vector to store final results.">Offload::result</a>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">cumulativeSum</td><td>: The cumulative sum upto which the seeds are to be generated. </td></tr>

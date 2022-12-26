@@ -10,5 +10,5 @@ var searchData=
   ['num_5factions_7',['num_actions',['../classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a5a6cabaa890c0f28fbedbce96869a500',1,'rlpack::dqn::dqn_agent::DqnAgent']]],
   ['num_5fblocks_8',['num_blocks',['../classrlpack_1_1models_1_1__mlp__feature__extractor_1_1___mlp_feature_extractor.html#a648d32d681c5d3412a9caa9b6d65e470',1,'rlpack::models::_mlp_feature_extractor::_MlpFeatureExtractor']]],
   ['num_5fepisodes_9',['num_episodes',['../classrlpack_1_1trainer_1_1trainer_1_1_trainer.html#a6514da007f020cba166bf00196a7dc5a',1,'rlpack::trainer::trainer::Trainer']]],
-  ['num_5fterminal_5fstates_10',['num_terminal_states',['../classrlpack_1_1___c_1_1memory_1_1_memory.html#a1cfd56ab54b01a3d2ecc0c0b7a3f3f91',1,'rlpack._C.memory.Memory.num_terminal_states()'],['../class_c___memory.html#af3395a878740a4f715171370d29f4716',1,'C_Memory::num_terminal_states()']]]
+  ['num_5fterminal_5fstates_10',['num_terminal_states',['../classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#afb81ecaff6c691efc4a13e64d6ffe353',1,'rlpack._C.replay_buffer.ReplayBuffer.num_terminal_states()'],['../class_c___replay_buffer.html#ac61bf719da43d8fd0848049490f134f2',1,'C_ReplayBuffer::num_terminal_states()']]]
 ];

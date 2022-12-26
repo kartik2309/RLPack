@@ -1,3 +1,10 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$class_offload.html" title=" " alt="" coords="5,5,129,31"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,45,63,70"/>
+<area shape="rect" id="node2" href="$classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html" title="This class provides the python interface to C_ReplayBuffer, the C++ class which performs heavier work..." alt="" coords="111,5,271,45"/>
+<area shape="rect" id="node3" href="$classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html" title="The base class for all agents." alt="" coords="112,69,269,109"/>
+<area shape="rect" id="node4" href="$classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html" title="The A2C class implements the synchronous Actor&#45;Critic method." alt="" coords="319,45,499,70"/>
+<area shape="rect" id="node6" href="$classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html" title="This class implements the basic DQN methodology, i.e." alt="" coords="321,97,496,137"/>
+<area shape="rect" id="node5" href="$classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html" title="The A2C class implements the synchronous Actor&#45;Critic method." alt="" coords="588,41,768,66"/>
+<area shape="rect" id="node7" href="$classrlpack_1_1dqn_1_1dqn__proportional__prioritization__agent_1_1_dqn_proportional_prioritization_agent.html" title="This class implements the DQN with Proportional prioritization strategy." alt="" coords="561,90,795,145"/>
+<area shape="rect" id="node8" href="$classrlpack_1_1dqn_1_1dqn__rank__based__prioritization__agent_1_1_dqn_rank_based_prioritization_agent.html" title="This class implements the DQN with Rank&#45;Based prioritization strategy." alt="" coords="547,169,809,223"/>
 </map>

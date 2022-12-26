@@ -1,12 +1,11 @@
 var classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c =
 [
-    [ "__init__", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a24148402d58bd7ec446d253d4cbcf491", null ],
+    [ "__init__", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a9f9276c2f02c9d46a253ba2ce4201937", null ],
     [ "_call_to_save", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a487c58b125fb7cd2e14972552bdf5ea6", null ],
     [ "_call_to_train_policy_model", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aad43ca7f87560723e0c6e448723e9512", null ],
     [ "_clear", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a77355981bba89741f7b8a15e76cf02f8", null ],
     [ "_compute_advantage", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aeb6b2e6aa1311b4c7850ef224a27f373", null ],
     [ "_compute_loss", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a3c4782c1085d9741f74a5dfc0488e480", null ],
-    [ "_compute_returns", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ae6f84e2eed2d807cda9fa3f9334d81a8", null ],
     [ "_create_action_distribution", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aea486273432607ba825838aa11740a4b", null ],
     [ "_get_action_sample_shape_for_continuous", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a93ed2514d90a493dfab11ff37db6ad0c", null ],
     [ "_grad_mean_reduction", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a93e3f2cd3bef82ef0eb36667c27c13af", null ],
@@ -18,6 +17,7 @@ var classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c =
     [ "_grad_accumulator", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af21943ec874f47fba4ea44ade7f02a5f", null ],
     [ "_normalization", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a297c096e4155c3ac4815f7ce95ca6767", null ],
     [ "_operate_with_variance", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a35562483f002903358c95096accfec89", null ],
+    [ "_rollout_buffer", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#abaa86e1deeb5201d6541f1baef6f5408", null ],
     [ "action_log_probabilities", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a989698a1260432ca0fcbd1668fe9c7ac", null ],
     [ "action_space", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a4d1c1b160e9cd0cf5ae5a21ace351b56", null ],
     [ "apply_norm", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a57416c3545397ddaaa31ee69142e67da", null ],

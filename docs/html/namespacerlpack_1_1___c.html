@@ -109,13 +109,19 @@ $(document).ready(function(){initNavTree('namespacerlpack_1_1___c.html',''); ini
 Namespaces</h2></td></tr>
 <tr class="memitem:namespacerlpack_1_1___c_1_1grad__accumulator"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacerlpack_1_1___c_1_1grad__accumulator.html">grad_accumulator</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespacerlpack_1_1___c_1_1memory"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacerlpack_1_1___c_1_1memory.html">memory</a></td></tr>
+<tr class="memitem:namespacerlpack_1_1___c_1_1replay__buffer"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacerlpack_1_1___c_1_1replay__buffer.html">replay_buffer</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespacerlpack_1_1___c_1_1rollout__buffer"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacerlpack_1_1___c_1_1rollout__buffer.html">rollout_buffer</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >This package implements the classes to interface between C++ and Python. </p>
 <p >Currently following classes have been implemented:</p><ul>
-<li><code>Memory</code>: Implemented as <a class="el" href="classrlpack_1_1___c_1_1memory_1_1_memory.html" title="This class provides the python interface to C_Memory, the C++ class which performs heavier workloads.">rlpack._C.memory.Memory</a>, this class is responsible for using Optimized <a class="el" href="class_c___memory.html" title="The class C_Memory is the C++ backend for memory-buffer used in algorithms that stores transitions in...">C_Memory</a> class implemented in C++ and providing simple Python methods to access it.</li>
+<li><code>Memory</code>: Implemented as rlpack._C.memory.Memory, this class is responsible for using Optimized C_Memory class implemented in C++ and providing simple Python methods to access it.</li>
+<li><code>GradAccumulator</code>: Implemented as <a class="el" href="classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html" title="This class provides the python interface to C_GradAccumulator, the C++ class which performs heavier w...">rlpack._C.grad_accumulator.GradAccumulator</a>, this class is responsible for using optimized GradAccumulator class implemented in C++ and providing simple python methods to access it.</li>
+</ul>
+<p >Currently following classes have been implemented:</p><ul>
+<li><code>Memory</code>: Implemented as rlpack._C.memory.Memory, this class is responsible for using Optimized <a class="el" href="class_c___replay_buffer.html" title="The class C_ReplayBuffer is the C++ backend for replay buffer-buffer used in algorithms that stores t...">C_ReplayBuffer</a> class implemented in C++ and providing simple Python methods to access it.</li>
 <li><code>GradAccumulator</code>: Implemented as <a class="el" href="classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html" title="This class provides the python interface to C_GradAccumulator, the C++ class which performs heavier w...">rlpack._C.grad_accumulator.GradAccumulator</a>, this class is responsible for using optimized GradAccumulator class implemented in C++ and providing simple python methods to access it. </li>
 </ul>
 </div></div><!-- contents -->

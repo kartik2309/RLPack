@@ -1,6 +1,7 @@
 var searchData=
 [
   ['c_5fgradaccumulator_0',['C_GradAccumulator',['../class_c___grad_accumulator.html',1,'']]],
-  ['c_5fmemory_1',['C_Memory',['../class_c___memory.html',1,'']]],
-  ['c_5fmemorydata_2',['C_MemoryData',['../struct_c___memory_1_1_c___memory_data.html',1,'C_Memory']]]
+  ['c_5freplaybuffer_1',['C_ReplayBuffer',['../class_c___replay_buffer.html',1,'']]],
+  ['c_5freplaybufferdata_2',['C_ReplayBufferData',['../struct_c___replay_buffer_1_1_c___replay_buffer_data.html',1,'C_ReplayBuffer']]],
+  ['c_5frolloutbuffer_3',['C_RolloutBuffer',['../class_c___rollout_buffer.html',1,'']]]
 ];

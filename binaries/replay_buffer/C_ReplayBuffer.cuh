@@ -1,6 +1,6 @@
 
-#ifndef RLPACK_BINARIES_MEMORY_C_MEMORY_CUH
-#define RLPACK_BINARIES_MEMORY_C_MEMORY_CUH
+#ifndef RLPACK_BINARIES_REPLAY_BUFFER_C_REPLAY_BUFFER_CUH
+#define RLPACK_BINARIES_REPLAY_BUFFER_C_REPLAY_BUFFER_CUH
 
 #include <omp.h>
 #include <pybind11/pybind11.h>
@@ -13,42 +13,43 @@
 
 #include "sumtree/SumTree.h"
 #include "utils/Utils.h"
+#include "../utils/maps.h"
 
 /*!
  * @addtogroup binaries_group binaries
  * @brief Binaries Module consists of C++ backend exposed via pybind11 to rlpack via rlpack._C. These modules are
  * optimized to perform heavier workloads.
  * @{
- * @addtogroup memory_group memory
- * @brief Memory module is the C++ backend for rlpack._C.memory.Memory class. Heavier workloads have been optimized
+ * @addtogroup replay_buffer_group replay_buffer
+ * @brief Memory module is the C++ backend for rlpack._C.replay_buffer.ReplayBuffer class. Heavier workloads have been optimized
  * with multithreading with OpenMP and CUDA (if CUDA compatible device is found).
  * @{
  */
-/*! @brief The class C_Memory is the C++ backend for memory-buffer used in algorithms that stores transitions in a buffer.
- * This class contains optimized routines to support Python front-end of rlpack._C.memory.Memory class.
+/*! @brief The class C_ReplayBuffer is the C++ backend for replay buffer-buffer used in algorithms that stores transitions in a buffer.
+ * This class contains optimized routines to support Python front-end of rlpack._C.replay_buffer.ReplayBuffer class.
  *
- * A `memory` index refers to an index that yields a transition from C_Memory. This works by indexing the following variables and grouping them together:
- *  - states_current: C_Memory::statesCurrent_;
- *  - states_next: C_Memory::statesNext_;
- *  - rewards: C_Memory::rewards_;
- *  - actions: C_Memory::actions_;
- *  - dones: C_Memory::dones_;
- *  - priorities: C_Memory::priorities_;
- *  - probabilities: C_Memory::probabilities_;
- *  - weights: C_Memory::weights_;
+ * A `replay_buffer` index refers to an index that yields a transition from C_ReplayBuffer. This works by indexing the following variables and grouping them together:
+ *  - states_current: C_ReplayBuffer::statesCurrent_;
+ *  - states_next: C_ReplayBuffer::statesNext_;
+ *  - rewards: C_ReplayBuffer::rewards_;
+ *  - actions: C_ReplayBuffer::actions_;
+ *  - dones: C_ReplayBuffer::dones_;
+ *  - priorities: C_ReplayBuffer::priorities_;
+ *  - probabilities: C_ReplayBuffer::probabilities_;
+ *  - weights: C_ReplayBuffer::weights_;
  *  Given index is hence applied to all the tensors.
  */
-class C_Memory {
+class C_ReplayBuffer {
 
 public:
-    C_Memory();
+    C_ReplayBuffer();
     /*!
-     * @brief The class C_MemoryData keeps the references to data that is associated with C_Memory. This class
-     * implements the functions necessary to retrieve the data by de-referencing the data associated with C_Memory.
+     * @brief The class C_MemoryData keeps the references to data that is associated with C_ReplayBuffer. This class
+     * implements the functions necessary to retrieve the data by de-referencing the data associated with C_ReplayBuffer.
      */
-    struct C_MemoryData {
-        C_MemoryData();
-        ~C_MemoryData();
+    struct C_ReplayBufferData {
+        C_ReplayBufferData();
+        ~C_ReplayBufferData();
 
     public:
         std::map<std::string, std::deque<torch::Tensor>> dereference_transition_information();
@@ -71,29 +72,29 @@ public:
         /*!
          * The map to store references to each deque that stores each quantity from transitions. This map stores the
          * references to following containers:
-         *  - states_current: C_Memory::statesCurrent_;
-         *  - states_next: C_Memory::statesNext_;
-         *  - rewards: C_Memory::rewards_;
-         *  - actions: C_Memory::actions_;
-         *  - dones: C_Memory::dones_;
-         *  - priorities: C_Memory::priorities_;
-         *  - probabilities: C_Memory::probabilities_;
-         *  - weights: C_Memory::weights_;
+         *  - states_current: C_ReplayBuffer::statesCurrent_;
+         *  - states_next: C_ReplayBuffer::statesNext_;
+         *  - rewards: C_ReplayBuffer::rewards_;
+         *  - actions: C_ReplayBuffer::actions_;
+         *  - dones: C_ReplayBuffer::dones_;
+         *  - priorities: C_ReplayBuffer::priorities_;
+         *  - probabilities: C_ReplayBuffer::probabilities_;
+         *  - weights: C_ReplayBuffer::weights_;
          */
         std::map<std::string, std::deque<torch::Tensor> *> transitionInformationReference_;
-        //! The reference to deque that stores terminal state indices; C_Memory::terminalStateIndices_.
+        //! The reference to deque that stores terminal state indices; C_ReplayBuffer::terminalStateIndices_.
         std::deque<int64_t> *terminalIndicesReference_ = nullptr;
-        //! The reference to deque that stores priorities float; C_Memory::prioritiesFloat_.
+        //! The reference to deque that stores priorities float; C_ReplayBuffer::prioritiesFloat_.
         std::deque<float_t> *prioritiesFloatReference_ = nullptr;
     };
-    //! Shared Pointer to C_Memory::C_MemoryData.
-    std::shared_ptr<C_MemoryData> cMemoryData;
+    //! Shared Pointer to C_ReplayBuffer::C_MemoryData.
+    std::shared_ptr<C_ReplayBufferData> cMemoryData;
 
-    explicit C_Memory(int64_t bufferSize,
+    explicit C_ReplayBuffer(int64_t bufferSize,
                       const std::string &device,
                       const int32_t &prioritizationStrategyCode,
                       const int32_t &batchSize);
-    ~C_Memory();
+    ~C_ReplayBuffer();
 
     void insert(torch::Tensor &stateCurrent,
                 torch::Tensor &stateNext,
@@ -123,8 +124,8 @@ public:
                                                 int64_t numSegments = 0);
     void update_priorities(torch::Tensor &randomIndices,
                            torch::Tensor &newPriorities);
-    [[nodiscard]] C_MemoryData view() const;
-    void initialize(C_MemoryData &viewC_Memory);
+    [[nodiscard]] C_ReplayBufferData view() const;
+    void initialize(C_ReplayBufferData &viewC_Memory);
     void clear();
     size_t size();
     int64_t num_terminal_states();
@@ -149,9 +150,9 @@ private:
     std::deque<torch::Tensor> weights_;
     //! Deque of integers indicating the indices of terminal states.
     std::deque<int64_t> terminalStateIndices_;
-    //! Deque of float indicating the priorities in C++ float. Values are obtained from C_Memory::priorities_.
+    //! Deque of float indicating the priorities in C++ float. Values are obtained from C_ReplayBuffer::priorities_.
     std::deque<float_t> prioritiesFloat_;
-    //! Vector of loaded indices. This indicates the indices that have been loaded out of total capacity of the memory.
+    //! Vector of loaded indices. This indicates the indices that have been loaded out of total capacity of the replay buffer.
     std::vector<int64_t> loadedIndices_;
     //! Shared Pointer to SumTree class object.
     std::shared_ptr<SumTree> sumTreeSharedPtr_;
@@ -159,7 +160,7 @@ private:
     torch::Device device_ = torch::kCPU;
     //! Buffer size passed during the class initialisation. Defaults to 32768.
     int64_t bufferSize_ = 32768;
-    //! The counter variable the tracks the loaded indices in sync with total timesteps. Once memory reaches the buffer size, this will not update.
+    //! The counter variable the tracks the loaded indices in sync with total timesteps. Once replay buffer reaches the buffer size, this will not update.
     int64_t stepCounter_ = 0;
     //! The prioritization strategy code that is being. This determines the sampling technique that is employed. Refer rlpack.dqn.dqn.Dqn.get_prioritization_code.
     int32_t prioritizationStrategyCode_ = 0;
@@ -174,25 +175,25 @@ private:
     Offload<float_t> *offloadFloat_;
     //! Offload class initialised with int64 template.
     Offload<int64_t> *offloadInt64_;
-    //! The loaded indices slice; the slice of indices that is sampled during sampling process. In each sampling size its size is equal to C_Memory::batchSize_.
+    //! The loaded indices slice; the slice of indices that is sampled during sampling process. In each sampling size its size is equal to C_ReplayBuffer::batchSize_.
     std::vector<int64_t> loadedIndicesSlice_;
     //! The Quantile segment indices sampled when rank-based prioritization is used.
     std::vector<int64_t> segmentQuantileIndices_;
     //! The seed values generated during each sampling cycle for proportional based prioritization.
     std::vector<float_t> seedValues_;
-    //! The sampled current state tensors from C_Memory::statesCurrent_.
+    //! The sampled current state tensors from C_ReplayBuffer::statesCurrent_.
     std::vector<torch::Tensor> sampledStateCurrent_;
-    //! The sampled next state tensors from C_Memory::statesNext_.
+    //! The sampled next state tensors from C_ReplayBuffer::statesNext_.
     std::vector<torch::Tensor> sampledStateNext_;
-    //! The sampled reward tensors from C_Memory::rewards_.
+    //! The sampled reward tensors from C_ReplayBuffer::rewards_.
     std::vector<torch::Tensor> sampledRewards_;
-    //! The sampled action tensors from C_Memory::actions_.
+    //! The sampled action tensors from C_ReplayBuffer::actions_.
     std::vector<torch::Tensor> sampledActions_;
-    //! The done tensors from C_Memory::dones_.
+    //! The done tensors from C_ReplayBuffer::dones_.
     std::vector<torch::Tensor> sampledDones_;
-    //! The sampled priority tensors from C_Memory::priorities.
+    //! The sampled priority tensors from C_ReplayBuffer::priorities.
     std::vector<torch::Tensor> sampledPriorities_;
-    //! The sampled indices as tensors from C_Memory::loadedIndices_.
+    //! The sampled indices as tensors from C_ReplayBuffer::loadedIndices_.
     std::vector<torch::Tensor> sampledIndices_;
 
     static torch::Tensor compute_probabilities(torch::Tensor &priorities, float_t alpha);
@@ -206,4 +207,4 @@ private:
  */
 
 
-#endif//RLPACK_BINARIES_MEMORY_C_MEMORY_CUH
+#endif//RLPACK_BINARIES_REPLAY_BUFFER_C_REPLAY_BUFFER_CUH
