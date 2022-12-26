@@ -41,7 +41,7 @@ class ReplayBuffer(object):
         @param batch_size: int: The batch size to be used for training cycle. Default: 32
         """
         ## The instance of C_ReplayBuffer; the C++ backend of Memory class. @I{# noqa: E266}
-        self.c_replay_buffer = C_ReplayBuffer.c_replay_buffer(
+        self.c_replay_buffer = C_ReplayBuffer.C_ReplayBuffer(
             buffer_size, device, prioritization_strategy_code, batch_size
         )
         ## The input buffer size. @I{# noqa: E266}
@@ -204,7 +204,10 @@ class ReplayBuffer(object):
         This retrieves all the transitions accumulated so far.
         @return Dict[str, pytorch.Tensor]: A dictionary with all transition information.
         """
-        return {k: v for k, v in self.c_replay_buffer.view().transition_information().items()}
+        return {
+            k: v
+            for k, v in self.c_replay_buffer.view().transition_information().items()
+        }
 
     def get_states_current(self) -> List[pytorch.Tensor]:
         """
@@ -212,7 +215,10 @@ class ReplayBuffer(object):
         @return List[pytorch.Tensor]: A list of tensors with current state values.
         """
         return [
-            v for v in self.c_replay_buffer.view().transition_information()["states_current"]
+            v
+            for v in self.c_replay_buffer.view().transition_information()[
+                "states_current"
+            ]
         ]
 
     def get_states_next(self) -> List[pytorch.Tensor]:
@@ -220,28 +226,37 @@ class ReplayBuffer(object):
         This retrieves all the next states from transitions accumulated so far.
         @return List[pytorch.Tensor]: A list of tensors with next state values.
         """
-        return [v for v in self.c_replay_buffer.view().transition_information()["states_next"]]
+        return [
+            v
+            for v in self.c_replay_buffer.view().transition_information()["states_next"]
+        ]
 
     def get_rewards(self) -> List[pytorch.Tensor]:
         """
         This retrieves all the rewards from transitions accumulated so far.
         @return List[pytorch.Tensor]: A list of tensors with reward values.
         """
-        return [v for v in self.c_replay_buffer.view().transition_information()["rewards"]]
+        return [
+            v for v in self.c_replay_buffer.view().transition_information()["rewards"]
+        ]
 
     def get_actions(self) -> List[pytorch.Tensor]:
         """
         This retrieves all the actions from transitions accumulated so far.
         @return List[pytorch.Tensor]: A list of tensors with action values.
         """
-        return [v for v in self.c_replay_buffer.view().transition_information()["actions"]]
+        return [
+            v for v in self.c_replay_buffer.view().transition_information()["actions"]
+        ]
 
     def get_dones(self) -> List[pytorch.Tensor]:
         """
         This retrieves all the dones from transitions accumulated so far.
         @return List[pytorch.Tensor]: A list of tensors with done values.
         """
-        return [v for v in self.c_replay_buffer.view().transition_information()()["dones"]]
+        return [
+            v for v in self.c_replay_buffer.view().transition_information()()["dones"]
+        ]
 
     def get_priorities(self) -> List[float]:
         """
