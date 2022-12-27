@@ -33,7 +33,19 @@ from typing import Any, Dict, Protocol
 
 from rlpack import pytorch
 
-LRScheduler = TypeError("LRScheduler")
+
+class LRScheduler(pytorch.optim.lr_scheduler._LRScheduler):
+    """
+    The Typing variable for LR Schedulers.
+    """
+
+    def __init__(self, *args, **kwargs):
+        """
+        __init__ method to define the initialization parameters of Loss Function.
+        @param *args: Positional arguments for the initialization.
+        @param **kwargs: Keyword arguments for the initialization
+        """
+        super().__init__(*args, **kwargs)
 
 
 class LossFunction(pytorch.nn.Module):

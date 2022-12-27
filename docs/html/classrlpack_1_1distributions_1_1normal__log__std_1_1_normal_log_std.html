@@ -101,6 +101,9 @@ $(document).ready(function(){initNavTree('classrlpack_1_1distributions_1_1normal
   <div class="headertitle"><div class="title">rlpack.distributions.normal_log_std.NormalLogStd Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>This class implements a variant of Normal distribution where input standard deviation (scale) is assumed to be of form log(scale); hence is raise to the power <code>e</code> (Napier's constant).  
+ <a href="classrlpack_1_1distributions_1_1normal__log__std_1_1_normal_log_std.html#details">More...</a></p>
 <div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Inheritance diagram for rlpack.distributions.normal_log_std.NormalLogStd:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
@@ -108,8 +111,9 @@ $(document).ready(function(){initNavTree('classrlpack_1_1distributions_1_1normal
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="classrlpack_1_1distributions_1_1normal__log__std_1_1_normal_log_std__inherit__graph.png" border="0" usemap="#arlpack_8distributions_8normal__log__std_8_normal_log_std_inherit__map" alt="Inheritance graph"/></div>
 <map name="arlpack_8distributions_8normal__log__std_8_normal_log_std_inherit__map" id="arlpack_8distributions_8normal__log__std_8_normal_log_std_inherit__map">
-<area shape="rect" title=" " alt="" coords="5,93,180,133"/>
-<area shape="rect" title=" " alt="" coords="21,5,164,45"/>
+<area shape="rect" title="This class implements a variant of Normal distribution where input standard deviation (scale) is assu..." alt="" coords="49,93,224,133"/>
+<area shape="rect" title=" " alt="" coords="5,5,148,45"/>
+<area shape="rect" title=" " alt="" coords="173,13,223,38"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -119,17 +123,22 @@ $(document).ready(function(){initNavTree('classrlpack_1_1distributions_1_1normal
 <div id="dynsection-1-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="classrlpack_1_1distributions_1_1normal__log__std_1_1_normal_log_std__coll__graph.png" border="0" usemap="#arlpack_8distributions_8normal__log__std_8_normal_log_std_coll__map" alt="Collaboration graph"/></div>
 <map name="arlpack_8distributions_8normal__log__std_8_normal_log_std_coll__map" id="arlpack_8distributions_8normal__log__std_8_normal_log_std_coll__map">
-<area shape="rect" title=" " alt="" coords="5,93,180,133"/>
-<area shape="rect" title=" " alt="" coords="21,5,164,45"/>
+<area shape="rect" title="This class implements a variant of Normal distribution where input standard deviation (scale) is assu..." alt="" coords="49,93,224,133"/>
+<area shape="rect" title=" " alt="" coords="5,5,148,45"/>
+<area shape="rect" title=" " alt="" coords="173,13,223,38"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:acc81488c5d6037e67fc088ce4b345829"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1distributions_1_1normal__log__std_1_1_normal_log_std.html#acc81488c5d6037e67fc088ce4b345829">__init__</a> (self, Union[float, pytorch.Tensor] loc, Union[float, pytorch.Tensor] scale, Any validate_args=None)</td></tr>
+<tr class="memdesc:acc81488c5d6037e67fc088ce4b345829"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialization method for <a class="el" href="classrlpack_1_1distributions_1_1normal__log__std_1_1_normal_log_std.html" title="This class implements a variant of Normal distribution where input standard deviation (scale) is assu...">NormalLogStd</a>.  <a href="classrlpack_1_1distributions_1_1normal__log__std_1_1_normal_log_std.html#acc81488c5d6037e67fc088ce4b345829">More...</a><br /></td></tr>
 <tr class="separator:acc81488c5d6037e67fc088ce4b345829"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >This class implements a variant of Normal distribution where input standard deviation (scale) is assumed to be of form log(scale); hence is raise to the power <code>e</code> (Napier's constant). </p>
+<p >This class inherits from PyTorch's Normal class. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="acc81488c5d6037e67fc088ce4b345829" name="acc81488c5d6037e67fc088ce4b345829"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acc81488c5d6037e67fc088ce4b345829">&#9670;&#160;</a></span>__init__()</h2>
 
@@ -167,6 +176,16 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Initialization method for <a class="el" href="classrlpack_1_1distributions_1_1normal__log__std_1_1_normal_log_std.html" title="This class implements a variant of Normal distribution where input standard deviation (scale) is assu...">NormalLogStd</a>. </p>
+<p >This method raise scale to the power and initializes the super class. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>Union[float, pytorch.Tensor]: The <code>loc</code> parameter for Normal distribution; the mean. Also called <code>mu</code>. </td></tr>
+    <tr><td class="paramname">scale</td><td>Union[float, pytorch.Tensor]: The <code>scale</code> parameter for Normal distribution; the standard deviation. Also called <code>sigma</code>. </td></tr>
+    <tr><td class="paramname">validate_args</td><td>Any: Internal argument for PyTorch. Default: None </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

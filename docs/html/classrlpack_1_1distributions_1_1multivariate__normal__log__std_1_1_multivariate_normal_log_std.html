@@ -102,6 +102,9 @@ $(document).ready(function(){initNavTree('classrlpack_1_1distributions_1_1multiv
   <div class="headertitle"><div class="title">rlpack.distributions.multivariate_normal_log_std.MultivariateNormalLogStd Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>This class implements a variant of MultivariateNormal distribution where input scale matrix is assumed to be of form log(scale); hence is raise to the power <code>e</code> (Napier's constant).  
+ <a href="classrlpack_1_1distributions_1_1multivariate__normal__log__std_1_1_multivariate_normal_log_std.html#details">More...</a></p>
 <div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Inheritance diagram for rlpack.distributions.multivariate_normal_log_std.MultivariateNormalLogStd:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
@@ -109,8 +112,9 @@ $(document).ready(function(){initNavTree('classrlpack_1_1distributions_1_1multiv
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="classrlpack_1_1distributions_1_1multivariate__normal__log__std_1_1_multivariate_normal_log_std__inherit__graph.png" border="0" usemap="#arlpack_8distributions_8multivariate__normal__log__std_8_multivariate_normal_log_std_inherit__map" alt="Inheritance graph"/></div>
 <map name="arlpack_8distributions_8multivariate__normal__log__std_8_multivariate_normal_log_std_inherit__map" id="arlpack_8distributions_8multivariate__normal__log__std_8_multivariate_normal_log_std_inherit__map">
-<area shape="rect" title=" " alt="" coords="5,93,276,133"/>
-<area shape="rect" title=" " alt="" coords="69,5,212,45"/>
+<area shape="rect" title="This class implements a variant of MultivariateNormal distribution where input scale matrix is assume..." alt="" coords="5,93,276,133"/>
+<area shape="rect" title=" " alt="" coords="9,5,152,45"/>
+<area shape="rect" title=" " alt="" coords="177,13,227,38"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -120,22 +124,27 @@ $(document).ready(function(){initNavTree('classrlpack_1_1distributions_1_1multiv
 <div id="dynsection-1-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="classrlpack_1_1distributions_1_1multivariate__normal__log__std_1_1_multivariate_normal_log_std__coll__graph.png" border="0" usemap="#arlpack_8distributions_8multivariate__normal__log__std_8_multivariate_normal_log_std_coll__map" alt="Collaboration graph"/></div>
 <map name="arlpack_8distributions_8multivariate__normal__log__std_8_multivariate_normal_log_std_coll__map" id="arlpack_8distributions_8multivariate__normal__log__std_8_multivariate_normal_log_std_coll__map">
-<area shape="rect" title=" " alt="" coords="5,93,276,133"/>
-<area shape="rect" title=" " alt="" coords="69,5,212,45"/>
+<area shape="rect" title="This class implements a variant of MultivariateNormal distribution where input scale matrix is assume..." alt="" coords="5,93,276,133"/>
+<area shape="rect" title=" " alt="" coords="9,5,152,45"/>
+<area shape="rect" title=" " alt="" coords="177,13,227,38"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a6f4f3c2876d55226b96747b67b6edaa8"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1distributions_1_1multivariate__normal__log__std_1_1_multivariate_normal_log_std.html#a6f4f3c2876d55226b96747b67b6edaa8">__init__</a> (self, pytorch.Tensor loc, pytorch.Tensor covariance_matrix=None, pytorch.Tensor precision_matrix=None, pytorch.Tensor scale_tril=None, Any validate_args=None)</td></tr>
+<tr class="memdesc:a6f4f3c2876d55226b96747b67b6edaa8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialization method for NormalLogStd.  <a href="classrlpack_1_1distributions_1_1multivariate__normal__log__std_1_1_multivariate_normal_log_std.html#a6f4f3c2876d55226b96747b67b6edaa8">More...</a><br /></td></tr>
 <tr class="separator:a6f4f3c2876d55226b96747b67b6edaa8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-methods" name="pri-static-methods"></a>
 Static Private Member Functions</h2></td></tr>
 <tr class="memitem:a76fb6a74debcef4a1b50feb767501c3f"><td class="memItemLeft" align="right" valign="top">pytorch.Tensor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1distributions_1_1multivariate__normal__log__std_1_1_multivariate_normal_log_std.html#a76fb6a74debcef4a1b50feb767501c3f">_raise_to_exp</a> (pytorch.Tensor scale_tensor)</td></tr>
+<tr class="memdesc:a76fb6a74debcef4a1b50feb767501c3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to raise power on given scale tensor.  <a href="classrlpack_1_1distributions_1_1multivariate__normal__log__std_1_1_multivariate_normal_log_std.html#a76fb6a74debcef4a1b50feb767501c3f">More...</a><br /></td></tr>
 <tr class="separator:a76fb6a74debcef4a1b50feb767501c3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >This class implements a variant of MultivariateNormal distribution where input scale matrix is assumed to be of form log(scale); hence is raise to the power <code>e</code> (Napier's constant). </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a6f4f3c2876d55226b96747b67b6edaa8" name="a6f4f3c2876d55226b96747b67b6edaa8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6f4f3c2876d55226b96747b67b6edaa8">&#9670;&#160;</a></span>__init__()</h2>
 
@@ -186,6 +195,18 @@ Static Private Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Initialization method for NormalLogStd. </p>
+<p >This method raise scale to the power and initializes the super class. Either one of covariance_matrix or precision_matrix or scale_tril must be passed. If all passed <code>scale_tril</code> is considered. Power is raised on diagonal elements of the matrix and diagonal embedding is used to create the new matrix. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>pytorch.Tensor: The <code>loc</code> parameter for MultivariateNormal distribution; the mean. Also called <code>mu</code>. </td></tr>
+    <tr><td class="paramname">covariance_matrix</td><td>pytorch.Tensor: The positive-definite covariance matrix. </td></tr>
+    <tr><td class="paramname">precision_matrix</td><td>pytorch.Tensor: The positive-definite precision matrix. </td></tr>
+    <tr><td class="paramname">scale_tril</td><td>pytorch.Tensor: The lower-triangular factor of covariance, with positive-valued diagonal. </td></tr>
+    <tr><td class="paramname">validate_args</td><td>Any: Internal argument for PyTorch. Default: None </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
@@ -212,6 +233,15 @@ Static Private Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Function to raise power on given scale tensor. </p>
+<p >Power is raised on diagonal elements of the matrix and diagonal embedding is used to create the new matrix. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">scale_tensor</td><td>The input scale tensor on which power is to be raised. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>: pytorch.Tensor: The power raised tensor. </dd></dl>
 
 </div>
 </div>

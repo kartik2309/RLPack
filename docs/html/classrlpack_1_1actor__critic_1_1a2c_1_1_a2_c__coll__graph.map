@@ -2,5 +2,6 @@
 <area shape="rect" id="node1" title="The A2C class implements the synchronous Actor&#45;Critic method." alt="" coords="13,255,193,280"/>
 <area shape="rect" id="node2" href="$classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html" title="The ActorCriticAgent is the base class for actor&#45;critic methods." alt="" coords="5,167,201,207"/>
 <area shape="rect" id="node3" href="$classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html" title="The base class for all agents." alt="" coords="25,79,182,119"/>
-<area shape="rect" id="node4" title=" " alt="" coords="75,5,132,31"/>
+<area shape="rect" id="node4" title=" " alt="" coords="36,5,93,31"/>
+<area shape="rect" id="node5" title=" " alt="" coords="118,5,169,31"/>
 </map>

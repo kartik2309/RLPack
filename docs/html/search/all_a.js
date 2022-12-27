@@ -25,5 +25,5 @@ var searchData=
   ['lr_5fscheduler_5fmap_22',['lr_scheduler_map',['../classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a51a30d4eb116951e6d9f85e06d724664',1,'rlpack::utils::base::registers::register::Register']]],
   ['lr_5fschedulers_2emd_23',['lr_schedulers.md',['../lr__schedulers_8md.html',1,'']]],
   ['lr_5fthreshold_24',['lr_threshold',['../classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a2238587b60c04bf2a7e83e497a030b1e',1,'rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent.lr_threshold()'],['../classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#aa010b4a32b74d1ce622a3e6a25ac2ddc',1,'rlpack.dqn.utils.dqn_agent.DqnAgent.lr_threshold()']]],
-  ['lrscheduler_25',['LRScheduler',['../namespacerlpack_1_1utils_1_1typing__hints.html#aafcfcc11254b79d72a7315439f06aa6c',1,'rlpack::utils::typing_hints']]]
+  ['lrscheduler_25',['LRScheduler',['../classrlpack_1_1utils_1_1typing__hints_1_1_l_r_scheduler.html',1,'rlpack::utils::typing_hints']]]
 ];

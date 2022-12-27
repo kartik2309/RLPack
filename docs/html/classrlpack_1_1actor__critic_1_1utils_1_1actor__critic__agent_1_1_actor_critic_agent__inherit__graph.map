@@ -1,7 +1,8 @@
 <map id="rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent" name="rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent">
 <area shape="rect" id="node1" title="The ActorCriticAgent is the base class for actor&#45;critic methods." alt="" coords="99,167,295,207"/>
-<area shape="rect" id="node4" href="$classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html" title="The A2C class implements the synchronous Actor&#45;Critic method." alt="" coords="5,255,185,280"/>
-<area shape="rect" id="node5" href="$classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html" title="The A3C class implements the asynchronous Actor&#45;Critic method." alt="" coords="209,255,389,280"/>
+<area shape="rect" id="node5" href="$classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html" title="The A2C class implements the synchronous Actor&#45;Critic method." alt="" coords="5,255,185,280"/>
+<area shape="rect" id="node6" href="$classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html" title="The A3C class implements the asynchronous Actor&#45;Critic method." alt="" coords="209,255,389,280"/>
 <area shape="rect" id="node2" href="$classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html" title="The base class for all agents." alt="" coords="118,79,275,119"/>
-<area shape="rect" id="node3" title=" " alt="" coords="168,5,225,31"/>
+<area shape="rect" id="node3" title=" " alt="" coords="129,5,187,31"/>
+<area shape="rect" id="node4" title=" " alt="" coords="211,5,262,31"/>
 </map>

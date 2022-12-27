@@ -12,6 +12,7 @@ Following packages are part of utils:
 """
 
 
+from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Tuple, Union
 
 import numpy as np
@@ -19,7 +20,7 @@ import numpy as np
 from rlpack import pytorch
 
 
-class Agent(object):
+class Agent(object, ABC):
     """
     The base class for all agents.
     """
@@ -43,6 +44,7 @@ class Agent(object):
         ## The path to save agent states and models. @I{# noqa: E266}
         self.save_path = str()
 
+    @abstractmethod
     def train(self, *args, **kwargs) -> Any:
         """
         Training method for the agent. This class needs to be overriden for every agent that inherits it.
@@ -52,6 +54,7 @@ class Agent(object):
         """
         pass
 
+    @abstractmethod
     def policy(self, *args, **kwargs) -> Any:
         """
         Policy method for the agent. This class needs to be overriden for every agent that inherits it
@@ -61,6 +64,7 @@ class Agent(object):
         """
         pass
 
+    @abstractmethod
     def save(self, *args, **kwargs) -> None:
         """
         Save method for the agent. This class needs to be overriden for every agent that inherits it.
@@ -71,6 +75,7 @@ class Agent(object):
         """
         pass
 
+    @abstractmethod
     def load(self, *args, **kwargs) -> None:
         """
         Load method for the agent. This class needs to be overriden for every agent that inherits it.
