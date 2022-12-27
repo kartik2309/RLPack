@@ -22,7 +22,7 @@ Currently following classes have been implemented:
         rlpack.utils.typing_hints.GenericFuncSignature.
 
 Following packages are part of utils:
-    - `base`: A package for base class, implemented as utils.base
+    - `base`: A package for base class, implemented as rlpack.utils.base
 
 Following TypeVars have been defined:
     - `LRScheduler`: The Typing variable for LR Schedulers.
@@ -33,7 +33,7 @@ import logging
 import re
 from typing import Any, Dict, List
 
-from rlpack.utils.base.register import Register
+from rlpack.utils.base.registers.register import Register
 
 
 class SanityCheck(Register):

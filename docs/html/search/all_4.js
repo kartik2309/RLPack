@@ -12,7 +12,7 @@ var searchData=
   ['dim_9',['dim',['../classrlpack_1_1utils_1_1normalization_1_1_normalization.html#a7db1fd84cfcf5900c6bc00b55684e000',1,'rlpack::utils::normalization::Normalization']]],
   ['dim_5ffor_5fnorm_10',['dim_for_norm',['../classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a1db6c1588e7f4d11b3a723825809411a',1,'rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent.dim_for_norm()'],['../classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#abc1a1a17922ce6b2fa6eb83a58b1ab7c',1,'rlpack.dqn.utils.dqn_agent.DqnAgent.dim_for_norm()']]],
   ['distribution_11',['distribution',['../classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a9244a2ba98485e2bedf6cee830ca1a22',1,'rlpack::actor_critic::utils::actor_critic_agent::ActorCriticAgent']]],
-  ['distributions_5fmap_12',['distributions_map',['../classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#a4a4f01f371201400fe35f2c17bb08e3c',1,'rlpack::utils::base::register::Register']]],
+  ['distributions_5fmap_12',['distributions_map',['../classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#af8516a4cbd5ce628d1b9a4dc58c6f592',1,'rlpack::utils::base::registers::register::Register']]],
   ['dones_5f_13',['dones_',['../class_c___replay_buffer.html#ab8897d65d99edd1ed59c6b8eacc17458',1,'C_ReplayBuffer']]],
   ['dqn_14',['Dqn',['../classrlpack_1_1dqn_1_1dqn_1_1_dqn.html',1,'rlpack::dqn::dqn']]],
   ['dqn_2emd_15',['dqn.md',['../dqn_8md.html',1,'']]],

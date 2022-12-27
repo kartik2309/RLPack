@@ -13,7 +13,7 @@ var searchData=
   ['prioritiesfloatreference_5f_10',['prioritiesFloatReference_',['../struct_c___replay_buffer_1_1_c___replay_buffer_data.html#ab626e2a99dcac75b58d4fc3dffdc1804',1,'C_ReplayBuffer::C_ReplayBufferData']]],
   ['prioritization_5fparams_11',['prioritization_params',['../classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#ae9f8b7d27bfb19c9c7aebf14c239fc0b',1,'rlpack::dqn::utils::dqn_agent::DqnAgent']]],
   ['prioritization_5fstrategy_5fcode_12',['prioritization_strategy_code',['../classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#af7e7cac234b74a310ef1878c334ad2cf',1,'rlpack::_C::replay_buffer::ReplayBuffer']]],
-  ['prioritization_5fstrategy_5fcodes_13',['prioritization_strategy_codes',['../classrlpack_1_1utils_1_1base_1_1internal__code__register_1_1_internal_code_register.html#ad0ecebadf507e35b4958970e0c38d385',1,'rlpack::utils::base::internal_code_register::InternalCodeRegister']]],
+  ['prioritization_5fstrategy_5fcodes_13',['prioritization_strategy_codes',['../classrlpack_1_1utils_1_1base_1_1registers_1_1internal__code__register_1_1_internal_code_register.html#a2187098a7bb5e6a72118f2adf7eb8a66',1,'rlpack::utils::base::registers::internal_code_register::InternalCodeRegister']]],
   ['prioritizationstrategycode_5f_14',['prioritizationStrategyCode_',['../class_c___replay_buffer.html#af0845111ca0caa4eb62625d20bd02404',1,'C_ReplayBuffer']]],
   ['priorityfrequencies_5f_15',['priorityFrequencies_',['../class_offload.html#a5e7be56fe3c2f531fab7577bc9019d58',1,'Offload']]],
   ['probabilities_5f_16',['probabilities_',['../class_c___replay_buffer.html#aea23167e40c71c2de4d8ff4728bcfd41',1,'C_ReplayBuffer']]],
@@ -22,5 +22,5 @@ var searchData=
   ['propagate_5fchanges_5fupwards_19',['propagate_changes_upwards',['../class_sum_tree.html#ae13c3c8793a5dbbb5badd8e69da9b99f',1,'SumTree']]],
   ['py_5flogger_20',['py_logger',['../classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a91d5a6165951e90a574d398f102b9d70',1,'rlpack::utils::base::trainer_base::TrainerBase']]],
   ['pybind11_5fmodule_21',['PYBIND11_MODULE',['../group__grad__accumulator__group.html#ga6c6f30d5d2df9f96f907debc36b7a701',1,'PYBIND11_MODULE(C_GradAccumulator, m):&#160;Binding.cpp'],['../group__replay__buffer__group.html#gab7a2d7704a45b7c6ed915a40c23a26eb',1,'PYBIND11_MODULE(C_ReplayBuffer, m):&#160;Binding.cu'],['../rollout__buffer_2_binding_8cpp.html#a8c282983e2778c94389d17db8e795395',1,'PYBIND11_MODULE(C_RolloutBuffer, m):&#160;Binding.cpp']]],
-  ['pytorch_5fdtype_5fmap_22',['pytorch_dtype_map',['../classrlpack_1_1utils_1_1base_1_1internal__code__register_1_1_internal_code_register.html#a5dd9f2de54e163a5b11145c411e89b88',1,'rlpack::utils::base::internal_code_register::InternalCodeRegister']]]
+  ['pytorch_5fdtype_5fmap_22',['pytorch_dtype_map',['../classrlpack_1_1utils_1_1base_1_1registers_1_1internal__code__register_1_1_internal_code_register.html#a283b7a4edf854a3d53cfa4e86f49dd71',1,'rlpack::utils::base::registers::internal_code_register::InternalCodeRegister']]]
 ];

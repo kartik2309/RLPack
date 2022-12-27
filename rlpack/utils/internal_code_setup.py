@@ -22,7 +22,7 @@ Currently following classes have been implemented:
         rlpack.utils.typing_hints.GenericFuncSignature.
 
 Following packages are part of utils:
-    - `base`: A package for base class, implemented as utils.base
+    - `base`: A package for base class, implemented as rlpack.utils.base
 
 Following TypeVars have been defined:
     - `LRScheduler`: The Typing variable for LR Schedulers.
@@ -32,7 +32,7 @@ Following TypeVars have been defined:
 from typing import List, Tuple, Union
 
 from rlpack import pytorch
-from rlpack.utils.base.internal_code_register import InternalCodeRegister
+from rlpack.utils.base.registers.internal_code_register import InternalCodeRegister
 
 
 class InternalCodeSetup(InternalCodeRegister):

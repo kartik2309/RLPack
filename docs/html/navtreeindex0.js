@@ -244,10 +244,10 @@ var NAVTREEINDEX0 =
 "classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#afef85f43b81e3743e774ca8b47265b72":[2,0,0,1,2,0,0,9],
 "classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#aff3d0599e56caa4b5b0b36cccbf684b1":[2,0,0,1,2,0,0,21],
 "classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#affc2a52ddeb68b4c0a6c05793fa58261":[2,0,0,1,2,0,0,30],
-"classrlpack_1_1dqn_1_1dqn_1_1_dqn.html":[2,0,0,2,0,0],
-"classrlpack_1_1dqn_1_1dqn_1_1_dqn.html#a704e8805e6f55ccae621d424d02d3a22":[2,0,0,2,0,0,0],
-"classrlpack_1_1dqn_1_1dqn__proportional__agent_1_1_dqn_proportional_agent.html":[2,0,0,2,1,0],
-"classrlpack_1_1dqn_1_1dqn__proportional__agent_1_1_dqn_proportional_agent.html#a1e2422b91ea55244859b58c1a713b9a1":[2,0,0,2,1,0,1],
-"classrlpack_1_1dqn_1_1dqn__proportional__agent_1_1_dqn_proportional_agent.html#a648b7f06008904201e3f16cbaea4d3a1":[2,0,0,2,1,0,0],
-"classrlpack_1_1dqn_1_1dqn__proportional__agent_1_1_dqn_proportional_agent.html#a7c3275348395ce3bb480c62dc2975bcb":[2,0,0,2,1,0,2]
+"classrlpack_1_1distributions_1_1multivariate__normal__log__std_1_1_multivariate_normal_log_std.html":[2,0,0,2,0,0],
+"classrlpack_1_1distributions_1_1multivariate__normal__log__std_1_1_multivariate_normal_log_std.html#a6f4f3c2876d55226b96747b67b6edaa8":[2,0,0,2,0,0,0],
+"classrlpack_1_1distributions_1_1multivariate__normal__log__std_1_1_multivariate_normal_log_std.html#a76fb6a74debcef4a1b50feb767501c3f":[2,0,0,2,0,0,1],
+"classrlpack_1_1distributions_1_1normal__log__std_1_1_normal_log_std.html":[2,0,0,2,1,0],
+"classrlpack_1_1distributions_1_1normal__log__std_1_1_normal_log_std.html#acc81488c5d6037e67fc088ce4b345829":[2,0,0,2,1,0,0],
+"classrlpack_1_1dqn_1_1dqn_1_1_dqn.html":[2,0,0,3,0,0]
 };

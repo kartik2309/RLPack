@@ -1,15 +1,13 @@
 """!
-@package rlpack.utils.base
-@brief This package implements the base classes to be used across rlpack
+@package rlpack.utils.base.registers
+@brief This package implements the base classes for registers to be used across rlpack
 
 
 Currently following base classes have been implemented:
-    - `Agent`: Base class for all agents, implemented as rlpack.utils.base.agent.Agent.
-    - `TrainerBase`: BAse class for all trainers, implemented as rlpack.utils.base.trainer.Trainer.
     - `Register`: Register of information of all in-built models and agents implemented as
-        rlpack.utils.base.register.Register.
+        rlpack.utils.base.registers.register.Register.
     - `InternalCodeRegister`: Register for information on codes to be used internally in RLPack; implemented as
-        rlpack.utils.base.internal_code_register.InternalCodeRegister
+        rlpack.utils.base.registers.internal_code_register.InternalCodeRegister
 """
 
 
@@ -18,6 +16,7 @@ from site import getsitepackages
 from rlpack import pytorch, pytorch_distributions
 from rlpack.actor_critic.a2c import A2C
 from rlpack.actor_critic.a3c import A3C
+from rlpack.distributions import MultivariateNormalLogStd, NormalLogStd
 from rlpack.dqn import Dqn
 from rlpack.models.actor_critic_mlp_policy import ActorCriticMlpPolicy
 from rlpack.models.mlp import Mlp
@@ -86,6 +85,8 @@ class Register:
             "normal": pytorch_distributions.Normal,
             "log_normal": pytorch_distributions.LogNormal,
             "multivariate_normal": pytorch_distributions.MultivariateNormal,
+            "normal_log_std": NormalLogStd,
+            "multivariate_normal_log_std": MultivariateNormalLogStd,
         }
         ## The mapping between given keyword and [in-built](@ref models/index.md) models. @I{# noqa: E266}
         self.models = {"mlp": Mlp, "actor_critic_mlp_policy": ActorCriticMlpPolicy}

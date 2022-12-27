@@ -28,7 +28,7 @@ var searchData=
   ['get_5fmodels_25',['get_models',['../classrlpack_1_1utils_1_1setup_1_1_setup.html#ae8bbccfa5f70d4162a59af6a9fdb7370',1,'rlpack::utils::setup::Setup']]],
   ['get_5foptimizer_26',['get_optimizer',['../classrlpack_1_1utils_1_1setup_1_1_setup.html#ac5b236ba7fac5045d9dcc94ac74f1458',1,'rlpack::utils::setup::Setup']]],
   ['get_5fparent_27',['get_parent',['../class_sum_tree_node.html#ae973d7624ea1607036e57539faf8c4b4',1,'SumTreeNode']]],
-  ['get_5fprefix_5fpath_28',['get_prefix_path',['../classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#a43eb7575eb00bc5dbe455bd1c899ae05',1,'rlpack::utils::base::register::Register']]],
+  ['get_5fprefix_5fpath_28',['get_prefix_path',['../classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#aaa254b6f4e748ce57ce450b3b70978bb',1,'rlpack::utils::base::registers::register::Register']]],
   ['get_5fpriorities_29',['get_priorities',['../classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a879eaac39bff3b995e9408581ea4c00b',1,'rlpack::_C::replay_buffer::ReplayBuffer']]],
   ['get_5fprioritization_5fcode_30',['get_prioritization_code',['../classrlpack_1_1utils_1_1internal__code__setup_1_1_internal_code_setup.html#a05e4c5ecf10c1e14c505be533f26801c',1,'rlpack::utils::internal_code_setup::InternalCodeSetup']]],
   ['get_5fprioritization_5fstrategy_31',['get_prioritization_strategy',['../classrlpack_1_1dqn_1_1utils_1_1process__prioritization__params_1_1_process_prioritization_params.html#a7a0e8d40c3f548d1cac360cdfcb2e618',1,'rlpack::dqn::utils::process_prioritization_params::ProcessPrioritizationParams']]],
