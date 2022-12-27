@@ -2,7 +2,6 @@
 // Created by Kartik Rajeshwaran on 2022-12-14.
 //
 
-#include <pybind11/functional.h>
 #include <pybind11/stl.h>
 #include <pybind11/stl_bind.h>
 

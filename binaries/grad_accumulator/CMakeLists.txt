@@ -62,7 +62,7 @@ else ()
 endif ()
 
 set_target_properties(
-        C_Memory PROPERTIES
+        C_GradAccumulator PROPERTIES
         INTERPROCEDURAL_OPTIMIZATION TRUE
         CXX_VISIBILITY_PRESET default
         VISIBILITY_INLINES_HIDDEN TRUE
