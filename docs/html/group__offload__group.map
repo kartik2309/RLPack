@@ -1,5 +1,0 @@
-<map id="offload" name="offload">
-<area shape="rect" id="node1" href="$group__cpu__group.html" title="CPU optimized implementation for Offload." alt="" coords="260,5,303,31"/>
-<area shape="rect" id="node2" title="Template class to offload some heavier computation to specialised hardware. Functions will be execute..." alt="" coords="151,5,212,31"/>
-<area shape="rect" id="node3" href="$group__replay__buffer__group.html" title="Memory module is the C++ backend for rlpack._C.replay_buffer.ReplayBuffer class. Heavier workloads ha..." alt="" coords="5,5,103,31"/>
-</map>

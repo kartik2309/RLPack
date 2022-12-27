@@ -18,21 +18,19 @@ Currently following classes have been implemented:
 from typing import Any, Dict, List, Optional, Union
 
 from rlpack import pytorch
-from rlpack.dqn.dqn_proportional_agent import DqnProportionalAgent
-from rlpack.dqn.dqn_rank_based_agent import DqnRankBasedAgent
-from rlpack.dqn.dqn_uniform_agent import DqnUniformAgent
-from rlpack.dqn.utils.process_prioritization_params import ProcessPrioritizationParams
+from rlpack.dqn.utils.dqn_agent import DqnAgent
 from rlpack.utils import LossFunction, LRScheduler
 
 
-class Dqn:
+class DqnUniformAgent(DqnAgent):
     """
-    This is a helper class that selects the correct the variant of DQN implementations based on prioritization
-    strategy determined by the argument `prioritization_params`.
+    This class implements the basic DQN methodology, i.e. DQN without prioritization. This class also acts as a base
+    class for other DQN variants all of which override the method `__apply_prioritization_strategy` to implement
+    their prioritization strategy.
     """
 
-    def __new__(
-        cls,
+    def __init__(
+        self,
         target_model: pytorch.nn.Module,
         policy_model: pytorch.nn.Module,
         optimizer: pytorch.optim.Optimizer,
@@ -120,17 +118,6 @@ class Dqn:
         **Notes**
 
 
-        For prioritization_params, when None: the default is passed, prioritized memory is not used. To use
-            prioritized memory, pass a dictionary with keys `alpha` and `beta`. You can also pass `alpha_decay_rate`
-            and `beta_decay_rate` additionally.
-
-
-        The code for prioritization strategies are:
-            - Uniform: 0; `uniform`
-            - Proportional: 1; `proportional`
-            - Rank-Based: 2; `rank-based`
-
-
         The codes for `apply_norm` are given as follows: -
             - No Normalization: -1; (`"none"`)
             - Min-Max Normalization: 0; (`"min_max"`)
@@ -153,17 +140,7 @@ class Dqn:
         If a valid `clip_grad_value` is passed, then gradients will be clipped by value. If `clip_grad_value` value
         was invalid, error will be raised from PyTorch.
         """
-        process_prioritization_params = ProcessPrioritizationParams(
-            prioritization_params=prioritization_params
-        )
-        prioritization_strategy_code = (
-            process_prioritization_params.get_prioritization_strategy_code()
-        )
-        prioritization_strategy = (
-            process_prioritization_params.get_prioritization_strategy()
-        )
-        prioritization_params = process_prioritization_params(batch_size=batch_size)
-        args_ = (
+        super(DqnUniformAgent, self).__init__(
             target_model,
             policy_model,
             optimizer,
@@ -198,15 +175,14 @@ class Dqn:
             clip_grad_value,
         )
 
-        # Select the appropriate DQN variant.
-        if prioritization_strategy_code == 0:
-            dqn = DqnUniformAgent(*args_)
-        elif prioritization_strategy_code == 1:
-            dqn = DqnProportionalAgent(*args_)
-        elif prioritization_strategy_code == 2:
-            dqn = DqnRankBasedAgent(*args_)
-        else:
-            raise NotImplementedError(
-                f"The provided prioritization strategy {prioritization_strategy} is not supported or is invalid!"
-            )
-        return dqn
+    def _apply_prioritization_strategy(
+        self,
+        td_value: pytorch.Tensor,
+        random_indices: pytorch.Tensor,
+    ) -> None:
+        """
+        Void protected method that applies the relevant prioritization strategy for the DQN.
+        @param td_value: pytorch.Tensor: The computed TD value.
+        @param random_indices: The indices of randomly sampled transitions.
+        """
+        return

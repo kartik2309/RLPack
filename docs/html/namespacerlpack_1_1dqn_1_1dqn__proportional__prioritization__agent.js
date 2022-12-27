@@ -1,4 +1,0 @@
-var namespacerlpack_1_1dqn_1_1dqn__proportional__prioritization__agent =
-[
-    [ "DqnProportionalPrioritizationAgent", "classrlpack_1_1dqn_1_1dqn__proportional__prioritization__agent_1_1_dqn_proportional_prioritization_agent.html", "classrlpack_1_1dqn_1_1dqn__proportional__prioritization__agent_1_1_dqn_proportional_prioritization_agent" ]
-];

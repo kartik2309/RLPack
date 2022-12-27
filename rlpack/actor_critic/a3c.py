@@ -11,18 +11,19 @@ Currently following methods are implemented:
 """
 
 
-from typing import Callable, List, Optional, Tuple, Union
+from typing import Callable, List, Optional, Tuple, Type, Union
 
 import numpy as np
 
-from rlpack import dist, pytorch
-from rlpack.actor_critic.a2c import A2C
-from rlpack.utils import Distribution, LossFunction, LRScheduler
+from rlpack import pytorch, pytorch_distributed, pytorch_distributions
+from rlpack.actor_critic.utils.actor_critic_agent import ActorCriticAgent
+from rlpack.utils import LossFunction, LRScheduler
 
 
-class A3C(A2C):
+class A3C(ActorCriticAgent):
     """
-    The A2C class implements the synchronous Actor-Critic method.
+    The A3C class implements the asynchronous Actor-Critic method. This uses PyTorch's multiprocessing for
+    gradient all-reduce operations.
     """
 
     def __init__(
@@ -31,7 +32,7 @@ class A3C(A2C):
         optimizer: pytorch.optim.Optimizer,
         lr_scheduler: Union[LRScheduler, None],
         loss_function: LossFunction,
-        distribution: Distribution,
+        distribution: Type[pytorch_distributions.Distribution],
         gamma: float,
         entropy_coefficient: float,
         state_value_coefficient: float,
@@ -40,6 +41,7 @@ class A3C(A2C):
         backup_frequency: int,
         save_path: str,
         bootstrap_rounds: int = 1,
+        add_gaussian_noise: bool = False,
         device: str = "cpu",
         dtype: str = "float32",
         apply_norm: Union[int, str] = -1,
@@ -56,6 +58,7 @@ class A3C(A2C):
                 Callable[[Union[float, np.ndarray, pytorch.Tensor], bool, int], float],
             ]
         ] = None,
+        max_timesteps: int = 1000,
     ):
         """!
         @param policy_model: *pytorch.nn.Module*: The policy model to be used. Policy model must return a tuple of
@@ -65,8 +68,8 @@ class A3C(A2C):
         @param lr_scheduler: Union[LRScheduler, None]: The LR Scheduler to be used to decay the learning rate.
             LR Scheduler must be initialized and wrapped with passed optimizer.
         @param loss_function: LossFunction: A PyTorch loss function.
-        @param distribution : dist_math.distribution.Distribution: The distribution of PyTorch to be used to sampled
-            actions in action space. (See `action_space`).
+        @param distribution : Type[pytorch_distributions.Distribution]: The distribution of PyTorch to be used to
+            sampled actions in action space. (See `action_space`).
         @param gamma: float: The discounting factor for rewards.
         @param entropy_coefficient: float: The coefficient to be used for entropy in policy loss computation.
         @param state_value_coefficient: float: The coefficient to be used for state value in final loss computation.
@@ -78,6 +81,8 @@ class A3C(A2C):
             element can be an empty list or None, if you wish to sample the default no. of samples.
         @param backup_frequency: int: The timesteps after which policy model, optimizer states and lr
             scheduler states are backed up.
+        @param add_gaussian_noise: bool: Parameter indicating whether to add gaussian noise from standard normal
+            distribution; N(0, 1) is used. Default: False.
         @param save_path: str: The path where policy model, optimizer states and lr scheduler states are to be saved.
         @param bootstrap_rounds: int: The number of rounds until which gradients are to be accumulated before
             performing calling optimizer step. Gradients are mean reduced for bootstrap_rounds > 1. Default: 1.
@@ -103,7 +108,8 @@ class A3C(A2C):
             be used to decay it. The passed method have the signature Callable[[float, int], float]. The first
             argument would be the variance value and second value be the boolean, done flag indicating if the state
             is terminal or not and third will be the timestep; returning the updated variance value. Default: None
-
+        @param max_timesteps: int: The maximum timesteps the environment will run for. This is used for memory
+            preemptive allocation for improved efficiency.
 
 
         **Notes**
@@ -144,6 +150,7 @@ class A3C(A2C):
             backup_frequency,
             save_path,
             bootstrap_rounds,
+            add_gaussian_noise,
             device,
             dtype,
             apply_norm,
@@ -155,6 +162,7 @@ class A3C(A2C):
             grad_norm_p,
             clip_grad_value,
             variance,
+            max_timesteps,
         )
 
     def _call_to_save(self) -> None:
@@ -163,7 +171,7 @@ class A3C(A2C):
         """
         if (
             (self.step_counter + 1) % self.backup_frequency == 0
-        ) and dist.get_rank() == 0:
+        ) and pytorch_distributed.get_rank() == 0:
             self.save()
 
     def _run_optimizer(self, loss) -> None:
@@ -217,13 +225,15 @@ class A3C(A2C):
             self.lr_scheduler.step()
 
     @pytorch.no_grad()
-    def _async_gradients(self):
+    def _async_gradients(self) -> None:
         """
         Asynchronously averages the gradients across the world_size (number of processes) using non-blocking
         all-reduce method.
         """
-        world_size = dist.get_world_size()
+        world_size = pytorch_distributed.get_world_size()
         for param in self.policy_model.parameters():
             if param.requires_grad:
-                dist.all_reduce(param.grad, op=dist.ReduceOp.SUM)
+                pytorch_distributed.all_reduce(
+                    param.grad, op=pytorch_distributed.ReduceOp.SUM
+                )
                 param.grad /= world_size
