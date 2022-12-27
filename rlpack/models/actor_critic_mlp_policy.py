@@ -9,15 +9,13 @@ Currently following models have been implemented:
     - `ActorCriticMlpPolicy`: MLP based Policy model for Actor-Critic Methods implemented as
         rlpack.models.actor_critic_mlp_policy.ActorCriticMlpPolicy. More information can be found
         [here](@ref models/in_built/actor_critic_mlp_policy.md).
-    - `_MlpFeatureExtractor`: MLP based feature extraction model implemented as
-        rlpack.models._mlp_feature_extractor._MlpFeatureExtractor. Only to be used internally.
 """
 
 
 from typing import List, Tuple, Union
 
 from rlpack import pytorch
-from rlpack.models._mlp_feature_extractor import _MlpFeatureExtractor
+from rlpack.models.utils._mlp_feature_extractor import _MlpFeatureExtractor
 from rlpack.utils import Activation
 
 
@@ -140,7 +138,6 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
                         action_outputs, self.actor_activation
                     )
                 ]
-                action_outputs[-1] = pytorch.diag_embed(action_outputs[-1])
             else:
                 action_outputs = self.actor_activation[0](action_outputs)
         if self._apply_critic_activation:
@@ -168,6 +165,7 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         state_value = self.critic_head(features)
         if self.use_actor_projection:
             action_projection = self.action_projector(features)
+            action_projection = pytorch.diag_embed(action_projection)
             action_outputs = [action_outputs, action_projection]
         return action_outputs, state_value
 
@@ -195,6 +193,7 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         state_value = self.critic_head(state_value_features)
         if self.use_actor_projection:
             action_projection = self.action_projector(action_features)
+            action_projection = pytorch.diag_embed(action_projection)
             action_outputs = [action_outputs, action_projection]
         return action_outputs, state_value
 
@@ -287,7 +286,7 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
     @staticmethod
     def _process_activation(
         activation: Union[Activation, List[Activation]], use_actor_projection: bool
-    ) -> List[Activation]:
+    ) -> List[Union[Activation, List[Activation]]]:
         """
         Processes `activation` for use by the model.
         @param activation: Union[Activation, List[Activation]]: The activation function class(es) for the model.
@@ -303,20 +302,23 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
                     "Activation must be a list of either one, two or three activation; "
                     "first for feature extractor; second for actor head; third for critic head"
                 )
-            if not 0 < len(activation) <= 4 and not use_actor_projection:
+            if not 0 < len(activation) <= 4 and use_actor_projection:
                 raise ValueError(
                     "Activation must be a list of either one, two three or four activation; "
                     "first for feature extractor; second for actor head's first projection; "
                     "third for actor's second projection; fourth for critic head"
                 )
-            if len(activation) > 1 and use_actor_projection:
-                if len(activation) == 2:
-                    activation[1] = [activation[1], pytorch.nn.Identity()]
-                elif len(activation) == 3:
-                    activation[1] = [activation[1], activation[2]]
-                    del activation[2]
-                elif len(activation) == 4:
-                    activation[1] = [activation[1], activation[2]]
+            if len(activation) > 1:
+                if use_actor_projection:
+                    if len(activation) == 2:
+                        activation[1] = [activation[1], pytorch.nn.Identity()]
+                    elif len(activation) == 3:
+                        activation[1] = [activation[1], activation[2]]
+                        del activation[2]
+                    elif len(activation) == 4:
+                        activation[1] = [activation[1], activation[2]]
+                else:
+                    activation[1] = [activation[1]]
         elif isinstance(activation, pytorch.nn.Module):
             activation = [activation]
         else:
