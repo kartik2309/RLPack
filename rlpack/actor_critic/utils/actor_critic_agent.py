@@ -11,6 +11,7 @@ Currently following methods are implemented:
 
 import math
 import os
+from abc import abstractmethod
 from typing import Callable, List, Optional, Tuple, Type, Union
 
 import numpy as np
@@ -389,6 +390,7 @@ class ActorCriticAgent(Agent):
             self._operate_with_variance = True
         return
 
+    @abstractmethod
     def _call_to_save(self) -> None:
         """
         Method calling the save method when required. This method is to be overriden.
@@ -460,6 +462,7 @@ class ActorCriticAgent(Agent):
         loss = policy_loss + value_loss
         return loss
 
+    @abstractmethod
     def _run_optimizer(self, loss) -> None:
         """
         Protected void method to train the model or accumulate the gradients for training. This method is to be
