@@ -15,7 +15,6 @@ from abc import abstractmethod
 from typing import Callable, List, Optional, Tuple, Type, Union
 
 import numpy as np
-import torch
 
 from rlpack import pytorch, pytorch_distributions
 from rlpack._C.grad_accumulator import GradAccumulator
@@ -280,7 +279,7 @@ class ActorCriticAgent(Agent):
             action = action + self.gaussian_noise.sample(sample_shape=action.size())
         # Accumulate quantities.
         self._rollout_buffer.insert(
-            reward=torch.tensor(reward, device=self.device, dtype=self.dtype),
+            reward=pytorch.tensor(reward, device=self.device, dtype=self.dtype),
             action_log_probability=distribution.log_prob(action),
             state_current_value=state_current_value,
             entropy=distribution.entropy().mean(),
@@ -291,7 +290,7 @@ class ActorCriticAgent(Agent):
         self._call_to_save()
         # Increment `step_counter` and use policy model to get next action.
         self.step_counter += 1
-        with torch.no_grad():
+        with pytorch.no_grad():
             action = action.cpu().numpy()
         return action
 
