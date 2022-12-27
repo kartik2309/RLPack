@@ -20,7 +20,7 @@ import numpy as np
 from rlpack import pytorch
 
 
-class Agent(object, ABC):
+class Agent(ABC):
     """
     The base class for all agents.
     """
