@@ -1,0 +1,13 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" title=" " alt="" coords="5,85,63,110"/>
+<area shape="rect" id="node2" href="$classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html" title="This class provides the python interface to C_ReplayBuffer, the C++ class which performs heavier work..." alt="" coords="131,5,291,45"/>
+<area shape="rect" id="node3" href="$classrlpack_1_1dqn_1_1utils_1_1process__prioritization__params_1_1_process_prioritization_params.html" title="Class to process prioritization parameters from input for DQN." alt="" coords="111,70,312,125"/>
+<area shape="rect" id="node4" href="$classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html" title="The base class for all agents." alt="" coords="133,149,290,189"/>
+<area shape="rect" id="node5" href="$classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html" title="The ActorCriticAgent is the base class for actor&#45;critic methods." alt="" coords="360,89,556,129"/>
+<area shape="rect" id="node8" href="$classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html" title="The DqnAgent is the base class for DQN methods." alt="" coords="391,181,525,221"/>
+<area shape="rect" id="node6" href="$classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html" title="The A2C class implements the synchronous Actor&#45;Critic method." alt="" coords="631,47,811,73"/>
+<area shape="rect" id="node7" href="$classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html" title="The A3C class implements the asynchronous Actor&#45;Critic method." alt="" coords="631,97,811,122"/>
+<area shape="rect" id="node9" href="$classrlpack_1_1dqn_1_1dqn__proportional__agent_1_1_dqn_proportional_agent.html" title="This class implements the DQN with Proportional prioritization strategy." alt="" coords="625,147,817,187"/>
+<area shape="rect" id="node10" href="$classrlpack_1_1dqn_1_1dqn__rank__based__agent_1_1_dqn_rank_based_agent.html" title="This class implements the DQN with Rank&#45;Based prioritization strategy." alt="" coords="604,211,837,251"/>
+<area shape="rect" id="node11" href="$classrlpack_1_1dqn_1_1dqn__uniform__agent_1_1_dqn_uniform_agent.html" title="This class implements the basic DQN methodology, i.e." alt="" coords="636,275,805,315"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="cpu" name="cpu">
+<area shape="rect" id="node1" title="CPU optimized implementation for Offload." alt="" coords="115,5,157,31"/>
+<area shape="rect" id="node2" href="$group__offload__group.html" title="Template class to offload some heavier computation to specialised hardware. Functions will be execute..." alt="" coords="5,5,67,31"/>
+</map>
