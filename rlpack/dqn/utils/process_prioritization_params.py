@@ -29,11 +29,14 @@ class ProcessPrioritizationParams(object):
         """
         if prioritization_params is None:
             prioritization_params = dict()
+        ## The input prioritization parameters from `prioritization_params`. @I{# noqa: E266}
         self._prioritization_params = prioritization_params
+        ## The retrieved prioritization strategy. @I{# noqa: E266}
         self._prioritization_strategy = prioritization_params.get(
             "prioritization_strategy", "uniform"
         )
         setup = InternalCodeSetup()
+        ## The retrieved prioritization strategy code. @I{# noqa: E266}
         self._prioritization_strategy_code = setup.get_prioritization_code(
             prioritization_strategy=self._prioritization_strategy
         )

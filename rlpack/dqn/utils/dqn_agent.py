@@ -12,6 +12,7 @@ Currently following classes have been implemented:
 
 import os
 import random
+from abc import abstractmethod
 from collections import OrderedDict
 from typing import Any, Dict, List, Optional, Union
 
@@ -529,6 +530,7 @@ class DqnAgent(Agent):
         ):
             self.lr_scheduler.step()
 
+    @abstractmethod
     def _apply_prioritization_strategy(
         self,
         td_value: pytorch.Tensor,
