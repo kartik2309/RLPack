@@ -1,0 +1,4 @@
+var namespacerlpack_1_1distributions_1_1multivariate__normal__log__std =
+[
+    [ "MultivariateNormalLogStd", "classrlpack_1_1distributions_1_1multivariate__normal__log__std_1_1_multivariate_normal_log_std.html", "classrlpack_1_1distributions_1_1multivariate__normal__log__std_1_1_multivariate_normal_log_std" ]
+];
