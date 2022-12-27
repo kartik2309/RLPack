@@ -138,6 +138,7 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
                         action_outputs, self.actor_activation
                     )
                 ]
+                action_outputs[1] = pytorch.diag_embed(action_outputs[1])
             else:
                 action_outputs = self.actor_activation[0](action_outputs)
         if self._apply_critic_activation:
@@ -165,7 +166,6 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         state_value = self.critic_head(features)
         if self.use_actor_projection:
             action_projection = self.action_projector(features)
-            action_projection = pytorch.diag_embed(action_projection)
             action_outputs = [action_outputs, action_projection]
         return action_outputs, state_value
 
@@ -193,7 +193,6 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         state_value = self.critic_head(state_value_features)
         if self.use_actor_projection:
             action_projection = self.action_projector(action_features)
-            action_projection = pytorch.diag_embed(action_projection)
             action_outputs = [action_outputs, action_projection]
         return action_outputs, state_value
 
