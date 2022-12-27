@@ -155,6 +155,7 @@ class Trainer(TrainerBase):
                 self.log_cumulative_rewards_with_py_logger(ep)
                 self.log_agent_info_with_py_logger(ep)
                 self.clear_cumulative_rewards()
+                self.clear_agent_loss()
         self.env.close()
 
     def evaluate_agent(self) -> None:

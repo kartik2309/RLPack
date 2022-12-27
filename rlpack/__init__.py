@@ -6,9 +6,9 @@ been optimized with C++ backend.
 
 # Import pytorch packages
 import torch as pytorch
-import torch.distributed as dist
-import torch.distributions as distributions_math
-import torch.multiprocessing as mp
+import torch.distributed as pytorch_distributed
+import torch.distributions as pytorch_distributions
+import torch.multiprocessing as pytorch_multiprocessing
 from torch.utils.tensorboard import SummaryWriter
 
 # Import CPP Backend
