@@ -4,10 +4,12 @@
 
 
 Currently following classes have been implemented:
-    - `Memory`: Implemented as rlpack._C.memory.Memory, this class is responsible for using Optimized C_ReplayBuffer class
-        implemented in C++ and providing simple Python methods to access it.
+    - `ReplayBuffer`: Implemented as rlpack._C.replay_buffer.ReplayBuffer, this class is responsible for using
+        Optimized C_ReplayBuffer class implemented in C++ and providing simple Python methods to access it.
     - `GradAccumulator`: Implemented as rlpack._C.grad_accumulator.GradAccumulator, this class is responsible for
-        using optimized GradAccumulator class implemented in C++ and providing simple python methods to access it.
+        using optimized C_GradAccumulator class implemented in C++ and providing simple python methods to access it.
+    - `RolloutBuffer`: Implemented as rlpack._C.rollout_buffer.RolloutBuffer, this class is responsible for using
+        C_RolloutBuffer class implemented in C++ and providing simple python methods to access it.
 """
 
 
@@ -80,18 +82,17 @@ class ReplayBuffer(object):
         @param weight: Optional[Union[pytorch.Tensor, np.ndarray, float]]: The important sampling weight
             of the transition: for priority relay memory). Default: 1.0.
         """
-        self.c_replay_buffer.insert(
-            *self.__prepare_inputs_c_memory_(
-                state_current,
-                state_next,
-                reward,
-                action,
-                done,
-                priority,
-                probability,
-                weight,
-            )
+        transitions, is_terminal_state = self.__prepare_inputs_c_memory_(
+            state_current,
+            state_next,
+            reward,
+            action,
+            done,
+            priority,
+            probability,
+            weight,
         )
+        self.c_replay_buffer.insert(*transitions, is_terminal_state)
 
     def sample(
         self,
@@ -100,17 +101,7 @@ class ReplayBuffer(object):
         alpha: float = 0.0,
         beta: float = 0.0,
         num_segments: int = 1,
-    ) -> Tuple[
-        pytorch.Tensor,
-        pytorch.Tensor,
-        pytorch.Tensor,
-        pytorch.Tensor,
-        pytorch.Tensor,
-        pytorch.Tensor,
-        pytorch.Tensor,
-        pytorch.Tensor,
-        pytorch.Tensor,
-    ]:
+    ) -> List[pytorch.Tensor]:
         """
         Load random samples from memory for a given batch.
         @param force_terminal_state_probability: float: The probability for forcefully selecting a terminal state
@@ -120,18 +111,8 @@ class ReplayBuffer(object):
         @param alpha: float: The alpha value for computation of probabilities. Default: 0.0.
         @param beta: float: The beta value for computation of important sampling weights. Default: 0.0.
         @param num_segments: int: The number of segments to use to uniformly sample for rank-based prioritization.
-        @return : Tuple[
-                pytorch.Tensor,
-                pytorch.Tensor,
-                pytorch.Tensor,
-                pytorch.Tensor,
-                pytorch.Tensor,
-                pytorch.Tensor,
-                pytorch.Tensor,
-                pytorch.Tensor,
-                pytorch.Tensor,
-            ]: The tuple of tensors as: (states_current, states_next, rewards, actions, dones, priorities,
-            probabilities, weights, random_indices).
+        @return : List[pytorch.Tensor]: The list of tensors as:
+            [states_current, states_next, rewards, actions, dones, priorities, probabilities, weights, random_indices].
         """
         samples = self.c_replay_buffer.sample(
             force_terminal_state_probability,
@@ -140,7 +121,7 @@ class ReplayBuffer(object):
             beta,
             num_segments,
         )
-        return (
+        return [
             samples["states_current"],
             samples["states_next"],
             samples["rewards"],
@@ -150,7 +131,7 @@ class ReplayBuffer(object):
             samples["probabilities"],
             samples["weights"],
             samples["random_indices"],
-        )
+        ]
 
     def update_priorities(
         self,
@@ -175,8 +156,8 @@ class ReplayBuffer(object):
     def view(self) -> C_ReplayBuffer.C_ReplayBufferData:
         """
         This method returns the view of Memory, i.e. the data stored in the memory.
-        @return (C_ReplayBuffer.C_ReplayBufferData): The C_ReplayBufferData object which packages the current memory information.
-            This object is pickleable and data can also be accessed via attributes.
+        @return (C_ReplayBuffer.C_ReplayBufferData): The C_ReplayBufferData object which packages the current memory
+         information. This object is pickleable and data can also be accessed via attributes.
         """
         return self.c_replay_buffer.view()
 
@@ -294,17 +275,7 @@ class ReplayBuffer(object):
         priority: Union[pytorch.Tensor, np.ndarray, float],
         probability: Union[pytorch.Tensor, np.ndarray, float],
         weight: Union[pytorch.Tensor, np.ndarray, float],
-    ) -> Tuple[
-        pytorch.Tensor,
-        pytorch.Tensor,
-        pytorch.Tensor,
-        pytorch.Tensor,
-        pytorch.Tensor,
-        pytorch.Tensor,
-        pytorch.Tensor,
-        pytorch.Tensor,
-        bool,
-    ]:
+    ) -> Tuple[List[pytorch.Tensor], bool]:
         """
         Prepares inputs to be sent to C++ backend.
         @param state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]: The current
@@ -321,18 +292,8 @@ class ReplayBuffer(object):
            : for priority relay memory). Default: None.
         @param weight: Union[pytorch.Tensor, np.ndarray, float]): The important sampling weight
             of the transition: for priority relay memory). Default: None.
-        @return Tuple[
-                pytorch.Tensor,
-                pytorch.Tensor,
-                pytorch.Tensor,
-                pytorch.Tensor,
-                pytorch.Tensor,
-                pytorch.Tensor,
-                pytorch.Tensor,
-                pytorch.Tensor,
-                bool
-            ]):  The tuple of in order of: state_current, state_next, reward, action, done, priority,
-             probability, weight, is_terminal_state).
+        @return Tuple[List[pytorch.Tensor], bool]:  The tuple of in order of:
+            List[state_current, state_next, reward, action, done, priority, probability, weight], is_terminal_state.
              `is_terminal_state` indicates if the state is terminal state or not: corresponds to done).
             All the input values associated with transition tuple are type-casted to PyTorch Tensors.
         """
@@ -442,7 +403,7 @@ class ReplayBuffer(object):
                 f"Expected argument `weight` to be of type {pytorch.Tensor}, {np.ndarray} or {float} "
                 f"but got type {type(weight)}"
             )
-        return (
+        return [
             state_current,
             state_next,
             reward,
@@ -451,8 +412,7 @@ class ReplayBuffer(object):
             priority,
             probability,
             weight,
-            is_terminal_state,
-        )
+        ], is_terminal_state
 
     def __getitem__(self, index: int) -> List[pytorch.Tensor]:
         """
@@ -491,19 +451,8 @@ class ReplayBuffer(object):
             ]: The transition tuple in the order: state_current, state_next, reward, action, done,
              priority, probability, weight).
         """
-        self.c_replay_buffer.set_item(
-            index,
-            *self.__prepare_inputs_c_memory_(
-                transition[0],
-                transition[1],
-                transition[2],
-                transition[3],
-                transition[4],
-                transition[5],
-                transition[6],
-                transition[7],
-            ),
-        )
+        transitions, is_terminal_state = self.__prepare_inputs_c_memory_(*transition)
+        self.c_replay_buffer.set_item(index, *transitions, is_terminal_state)
 
     def __delitem__(self, index: int) -> None:
         """
