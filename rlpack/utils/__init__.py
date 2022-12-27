@@ -11,24 +11,27 @@ Currently following classes have been implemented:
     - `Setup`: Sets up the simulator to run the agent with environment. Implemented as rlpack.utils.setup.Setup.
     - `InternalCodeSetup`: For internal use to check/validate arguments and to retrieve codes for internal use.
         Implemented as rlpack.utils.internal_code_setup.InternalCodeSetup.
+    - `LossFunction`: Typing hint for loss functions for RLPack. Implemented as
+        rlpack.utils.typing_hints.LossFunction.
+    - `Activation`: Typing hint for activation functions for RLPack. Implemented as
+        rlpack.utils.typing_hints.Activation.
+    - `RunFuncSignature`: Typing hint for function signatures to be launched in
+        rlpack.simulator_distributed.SimulatedDistributed in distributed mode. Implemented as
+        rlpack.utils.typing_hints.RunFuncSignature.
+    - `GenericFuncSignature`: Typing hint for generic void function signatures. Implemented as
+        rlpack.utils.typing_hints.GenericFuncSignature.
 
 Following packages are part of utils:
     - `base`: A package for base class, implemented as utils.base
 
 Following TypeVars have been defined:
     - `LRScheduler`: The Typing variable for LR Schedulers.
-    - `LossFunction`: The Typing variable for Loss Functions.
-    - `Activation`: The Typing variable for Activations.
 """
 
-
-from typing import TypeVar
-
-## The Typing variable for LR Schedulers. @I{# noqa: E266}
-LRScheduler = TypeVar("LRScheduler")
-## The Typing variable for Loss Functions. @I{# noqa: E266}
-LossFunction = TypeVar("LossFunction")
-## The Typing variable for Activations. @I{# noqa: E266}
-Activation = TypeVar("Activation")
-## The Typing variable for Distribution. @I{# noqa: E266}
-Distribution = TypeVar("Distribution")
+from rlpack.utils.typing_hints import (
+    Activation,
+    GenericFuncSignature,
+    LossFunction,
+    LRScheduler,
+    RunFuncSignature,
+)

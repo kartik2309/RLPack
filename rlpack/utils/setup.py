@@ -11,22 +11,29 @@ Currently following classes have been implemented:
     - `Setup`: Sets up the simulator to run the agent with environment. Implemented as rlpack.utils.setup.Setup.
     - `InternalCodeSetup`: For internal use to check/validate arguments and to retrieve codes for internal use.
         Implemented as rlpack.utils.internal_code_setup.InternalCodeSetup.
+    - `LossFunction`: Typing hint for loss functions for RLPack. Implemented as
+        rlpack.utils.typing_hints.LossFunction.
+    - `Activation`: Typing hint for activation functions for RLPack. Implemented as
+        rlpack.utils.typing_hints.Activation.
+    - `RunFuncSignature`: Typing hint for function signatures to be launched in
+        rlpack.simulator_distributed.SimulatedDistributed in distributed mode. Implemented as
+        rlpack.utils.typing_hints.RunFuncSignature.
+    - `GenericFuncSignature`: Typing hint for generic void function signatures. Implemented as
+        rlpack.utils.typing_hints.GenericFuncSignature.
 
 Following packages are part of utils:
     - `base`: A package for base class, implemented as utils.base
 
 Following TypeVars have been defined:
     - `LRScheduler`: The Typing variable for LR Schedulers.
-    - `LossFunction`: The Typing variable for Loss Functions.
-    - `Activation`: The Typing variable for Activations.
 """
 
 
 import re
 from typing import Any, Dict, List, Optional, Union
 
-from rlpack import pytorch
-from rlpack.utils import Activation, Distribution, LossFunction, LRScheduler
+from rlpack import pytorch, pytorch_distributions
+from rlpack.utils import Activation, LossFunction, LRScheduler
 from rlpack.utils.base.agent import Agent
 from rlpack.utils.base.internal_code_register import InternalCodeRegister
 from rlpack.utils.base.register import Register
@@ -158,5 +165,7 @@ class Setup(Register, InternalCodeRegister):
         loss_function = self.loss_function_map[loss_function_name](**loss_function_args)
         return loss_function
 
-    def get_distribution_class(self, distribution: str) -> Distribution:
+    def get_distribution_class(
+        self, distribution: str
+    ) -> pytorch_distributions.Distribution:
         return self.distributions_map[distribution]

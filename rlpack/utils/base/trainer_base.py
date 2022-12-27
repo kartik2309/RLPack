@@ -15,12 +15,13 @@ Currently following base classes have been implemented:
 
 import logging
 import os
-from typing import Dict, List, Optional, Protocol, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 import gym
 import numpy as np
 
-from rlpack import SummaryWriter, dist
+from rlpack import SummaryWriter, pytorch_distributed
+from rlpack.utils import GenericFuncSignature
 from rlpack.utils.base.agent import Agent
 
 
@@ -29,19 +30,6 @@ class TrainerBase:
     This class is the base class of all trainer classes which implements methods to train an agent. This class
     implements basic utilities useful for all trainer classes.
     """
-
-    class GenericFuncSignature(Protocol):
-        """
-        Typing hint for a generic function.
-        """
-
-        def __call__(self, *args, **kwargs) -> None:
-            """
-            __call__ method to define the signature for the callable.
-            *args: Positional arguments for the callable.
-            **kwargs: Keyword arguments for the callable
-            """
-            return
 
     def __init__(
         self,
@@ -302,6 +290,12 @@ class TrainerBase:
         """
         self.cumulative_rewards.clear()
 
+    def clear_agent_loss(self) -> None:
+        """
+        Clears the agent's loss accumulated so far
+        """
+        self.agent.loss.clear()
+
     def save_agent_with_custom_suffix(self, custom_suffix: str) -> None:
         """
         Saves the agent with given custom suffix if obtained cumulative reward of the agent is found to be best so
@@ -373,7 +367,7 @@ class TrainerBase:
         @param kwargs: Other keyword arguments for `fund`.
         """
         if is_distributed:
-            process_rank = dist.get_rank()
+            process_rank = pytorch_distributed.get_rank()
             if process_rank == proc:
                 func(*args, **kwargs)
         else:

@@ -15,7 +15,7 @@ Currently following base classes have been implemented:
 
 from site import getsitepackages
 
-from rlpack import pytorch
+from rlpack import pytorch, pytorch_distributions
 from rlpack.actor_critic.a2c import A2C
 from rlpack.actor_critic.a3c import A3C
 from rlpack.dqn import Dqn
@@ -63,6 +63,7 @@ class Register:
         }
         ## The mapping between given keyword and PyTorch activation function class. @I{# noqa: E266}
         self.activation_map = {
+            "identity": pytorch.nn.Identity,
             "relu": pytorch.nn.ReLU,
             "leaky_relu": pytorch.nn.LeakyReLU,
             "tanh": pytorch.nn.Tanh,
@@ -79,12 +80,12 @@ class Register:
         }
         ## The mapping between given keyword and PyTorch Distribution class. @I{# noqa: E266}
         self.distributions_map = {
-            "categorical": pytorch.distributions.Categorical,
-            "bernoulli": pytorch.distributions.Bernoulli,
-            "binomial": pytorch.distributions.Binomial,
-            "normal": pytorch.distributions.Normal,
-            "log_normal": pytorch.distributions.LogNormal,
-            "multivariate_normal": pytorch.distributions.MultivariateNormal,
+            "categorical": pytorch_distributions.Categorical,
+            "bernoulli": pytorch_distributions.Bernoulli,
+            "binomial": pytorch_distributions.Binomial,
+            "normal": pytorch_distributions.Normal,
+            "log_normal": pytorch_distributions.LogNormal,
+            "multivariate_normal": pytorch_distributions.MultivariateNormal,
         }
         ## The mapping between given keyword and [in-built](@ref models/index.md) models. @I{# noqa: E266}
         self.models = {"mlp": Mlp, "actor_critic_mlp_policy": ActorCriticMlpPolicy}
@@ -133,6 +134,7 @@ class Register:
                 "clip_grad_value",
             ),
             "a2c": (
+                "add_gaussian_noise",
                 "bootstrap_rounds",
                 "device",
                 "dtype",
@@ -145,8 +147,10 @@ class Register:
                 "grad_norm_p",
                 "clip_grad_value",
                 "variance",
+                "max_timesteps",
             ),
             "a3c": (
+                "add_gaussian_noise",
                 "bootstrap_rounds",
                 "device",
                 "dtype",
@@ -159,6 +163,7 @@ class Register:
                 "grad_norm_p",
                 "clip_grad_value",
                 "variance",
+                "max_timesteps",
             ),
         }
         ## The mapping between given keyword and [agent](@ref agents/index.md) agents' arguments. @I{# noqa: E266}
