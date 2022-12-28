@@ -156,7 +156,7 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
 <tr class="memitem:a20fae1990b8cf818ef74171996f45254"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="class_c___replay_buffer_data.html">C_ReplayBufferData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___replay_buffer.html#a20fae1990b8cf818ef74171996f45254">cMemoryData</a></td></tr>
-<tr class="memdesc:a20fae1990b8cf818ef74171996f45254"><td class="mdescLeft">&#160;</td><td class="mdescRight">The class C_MemoryData keeps the references to data that is associated with <a class="el" href="class_c___replay_buffer.html" title="The class C_ReplayBuffer is the C++ backend for replay buffer-buffer used in algorithms that stores t...">C_ReplayBuffer</a>. This class implements the functions necessary to retrieve the data by de-referencing the data associated with <a class="el" href="class_c___replay_buffer.html" title="The class C_ReplayBuffer is the C++ backend for replay buffer-buffer used in algorithms that stores t...">C_ReplayBuffer</a>.  <a href="class_c___replay_buffer.html#a20fae1990b8cf818ef74171996f45254">More...</a><br /></td></tr>
+<tr class="memdesc:a20fae1990b8cf818ef74171996f45254"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shared Pointer to C_ReplayBuffer::C_MemoryData.  <a href="class_c___replay_buffer.html#a20fae1990b8cf818ef74171996f45254">More...</a><br /></td></tr>
 <tr class="separator:a20fae1990b8cf818ef74171996f45254"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-methods" name="pri-static-methods"></a>
@@ -559,10 +559,10 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Initialize method for <a class="el" href="class_c___replay_buffer.html" title="The class C_ReplayBuffer is the C++ backend for replay buffer-buffer used in algorithms that stores t...">C_ReplayBuffer</a> for initializing all the data from an object of <a class="el" href="class_c___replay_buffer_data.html">C_ReplayBufferData</a>. This is the C++ backend of <a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#ace7fcf40c2ab074e36eaccce12494a02" title="This loads the memory from the provided C_ReplayBufferData instance.">rlpack._C.replay_buffer.ReplayBuffer.initialize</a> method</p>
+<p >Initialize method for <a class="el" href="class_c___replay_buffer.html" title="The class C_ReplayBuffer is the C++ backend for replay buffer-buffer used in algorithms that stores t...">C_ReplayBuffer</a> for initializing all the data from an object of <a class="el" href="class_c___replay_buffer_data.html" title="The class C_ReplayBuffer keeps the references to data that is associated with C_ReplayBuffer....">C_ReplayBufferData</a>. This is the C++ backend of <a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#ace7fcf40c2ab074e36eaccce12494a02" title="This loads the memory from the provided C_ReplayBufferData instance.">rlpack._C.replay_buffer.ReplayBuffer.initialize</a> method</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">viewC_MemoryData</td><td>: An object of <a class="el" href="class_c___replay_buffer_data.html">C_ReplayBufferData</a> from which <a class="el" href="class_c___replay_buffer.html" title="The class C_ReplayBuffer is the C++ backend for replay buffer-buffer used in algorithms that stores t...">C_ReplayBuffer</a> has to be initialized.</td></tr>
+    <tr><td class="paramname">viewC_MemoryData</td><td>: An object of <a class="el" href="class_c___replay_buffer_data.html" title="The class C_ReplayBuffer keeps the references to data that is associated with C_ReplayBuffer....">C_ReplayBufferData</a> from which <a class="el" href="class_c___replay_buffer.html" title="The class C_ReplayBuffer is the C++ backend for replay buffer-buffer used in algorithms that stores t...">C_ReplayBuffer</a> has to be initialized.</td></tr>
   </table>
   </dd>
 </dl>
@@ -921,7 +921,7 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >The pointer to <a class="el" href="class_c___replay_buffer_data.html">C_ReplayBufferData</a> object. This will contain references of data in <a class="el" href="class_c___replay_buffer.html" title="The class C_ReplayBuffer is the C++ backend for replay buffer-buffer used in algorithms that stores t...">C_ReplayBuffer</a> and provides an easy data view. This is the C++ backend of <a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a4433d31f72d81fb384a0d206fa9af2d8" title="This method returns the view of Memory, i.e.">rlpack._C.replay_buffer.ReplayBuffer.view</a> method.</p>
+<p >The pointer to <a class="el" href="class_c___replay_buffer_data.html" title="The class C_ReplayBuffer keeps the references to data that is associated with C_ReplayBuffer....">C_ReplayBufferData</a> object. This will contain references of data in <a class="el" href="class_c___replay_buffer.html" title="The class C_ReplayBuffer is the C++ backend for replay buffer-buffer used in algorithms that stores t...">C_ReplayBuffer</a> and provides an easy data view. This is the C++ backend of <a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a4433d31f72d81fb384a0d206fa9af2d8" title="This method returns the view of Memory, i.e.">rlpack._C.replay_buffer.ReplayBuffer.view</a> method.</p>
 
 </div>
 </div>
@@ -1010,8 +1010,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>The class C_MemoryData keeps the references to data that is associated with <a class="el" href="class_c___replay_buffer.html" title="The class C_ReplayBuffer is the C++ backend for replay buffer-buffer used in algorithms that stores t...">C_ReplayBuffer</a>. This class implements the functions necessary to retrieve the data by de-referencing the data associated with <a class="el" href="class_c___replay_buffer.html" title="The class C_ReplayBuffer is the C++ backend for replay buffer-buffer used in algorithms that stores t...">C_ReplayBuffer</a>. </p>
-<p >Shared Pointer to C_ReplayBuffer::C_MemoryData. </p>
+<p>Shared Pointer to C_ReplayBuffer::C_MemoryData. </p>
 
 </div>
 </div>

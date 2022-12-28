@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>RLPack: grad_accumulator</title>
+<title>RLPack: rollout_buffer</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,7 +70,7 @@ var searchBox = new SearchBox("searchBox", "search/",'.html');
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('group__grad__accumulator__group.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('group__rollout__buffer__group.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -97,69 +97,33 @@ $(document).ready(function(){initNavTree('group__grad__accumulator__group.html',
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Data Structures</a> &#124;
-<a href="#func-members">Functions</a>  </div>
-  <div class="headertitle"><div class="title">grad_accumulator<div class="ingroups"><a class="el" href="group__binaries__group.html">binaries</a></div></div></div>
+<a href="#nested-classes">Data Structures</a>  </div>
+  <div class="headertitle"><div class="title">rollout_buffer<div class="ingroups"><a class="el" href="group__binaries__group.html">binaries</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Grad accumulator module is the C++ backend for <a class="el" href="classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html" title="This class provides the python interface to C_GradAccumulator, the C++ class which performs heavier w...">rlpack._C.grad_accumulator.GradAccumulator</a> class.  
+<p>Rollout Buffer is the C++ backend for the class <a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html">rlpack._C.rollout_buffer.RolloutBuffer</a>. This module implements necessary classes to provide necessary functionalities and bindings to provide exposure to Python.  
 <a href="#details">More...</a></p>
 <div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Collaboration diagram for grad_accumulator:</div>
+  <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Collaboration diagram for rollout_buffer:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><img src="group__grad__accumulator__group.png" border="0" usemap="#agroup____grad____accumulator____group" alt=""/></div>
-<map name="agroup____grad____accumulator____group" id="agroup____grad____accumulator____group">
+<div class="center"><img src="group__rollout__buffer__group.png" border="0" usemap="#agroup____rollout____buffer____group" alt=""/></div>
+<map name="agroup____rollout____buffer____group" id="agroup____rollout____buffer____group">
 <area shape="rect" href="group__binaries__group.html" title="Binaries Module consists of C++ backend exposed via pybind11 to rlpack via rlpack...." alt="" coords="5,5,72,31"/>
-<area shape="rect" title="Grad accumulator module is the C++ backend for rlpack._C.grad_accumulator.GradAccumulator class." alt="" coords="120,5,245,31"/>
+<area shape="rect" title="Rollout Buffer is the C++ backend for the class rlpack._C.rollout_buffer.RolloutBuffer...." alt="" coords="120,5,217,31"/>
 </map>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___grad_accumulator.html">C_GradAccumulator</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The class <a class="el" href="class_c___grad_accumulator.html" title="The class C_GradAccumulator Accumulates the gradients from model parameters. The binding is done via ...">C_GradAccumulator</a> Accumulates the gradients from model parameters. The binding is done via opaquing the PyTorch Tensors with std::map and hence tensors are moved by references, making the storage efficient. This class is exposed to Python as <a class="el" href="classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html" title="This class provides the python interface to C_GradAccumulator, the C++ class which performs heavier w...">rlpack._C.grad_accumulator.GradAccumulator</a>.  <a href="class_c___grad_accumulator.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html">C_RolloutBuffer</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The class <a class="el" href="class_c___rollout_buffer.html" title="The class C_RolloutBuffer is the class that implements the C++ backend for Rollout Buffer....">C_RolloutBuffer</a> is the class that implements the C++ backend for Rollout Buffer. Tensors are moved to C++ backend via PyBind11 and are kept opaque with std::map, hence, tensors are moved between Python and C++ only by references. <code><a class="el" href="class_c___rollout_buffer.html" title="The class C_RolloutBuffer is the class that implements the C++ backend for Rollout Buffer....">C_RolloutBuffer</a></code> is hence autograd safe.  <a href="class_c___rollout_buffer.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:ga6c6f30d5d2df9f96f907debc36b7a701"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__grad__accumulator__group.html#ga6c6f30d5d2df9f96f907debc36b7a701">PYBIND11_MODULE</a> (<a class="el" href="class_c___grad_accumulator.html">C_GradAccumulator</a>, m)</td></tr>
-<tr class="separator:ga6c6f30d5d2df9f96f907debc36b7a701"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p >Grad accumulator module is the C++ backend for <a class="el" href="classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html" title="This class provides the python interface to C_GradAccumulator, the C++ class which performs heavier w...">rlpack._C.grad_accumulator.GradAccumulator</a> class. </p>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="ga6c6f30d5d2df9f96f907debc36b7a701" name="ga6c6f30d5d2df9f96f907debc36b7a701"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga6c6f30d5d2df9f96f907debc36b7a701">&#9670;&#160;</a></span>PYBIND11_MODULE()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">PYBIND11_MODULE </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_c___grad_accumulator.html">C_GradAccumulator</a>&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">m&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >Python bindings for <a class="el" href="class_c___grad_accumulator.html" title="The class C_GradAccumulator Accumulates the gradients from model parameters. The binding is done via ...">C_GradAccumulator</a>. Only relevant public methods are exposed to Python.</p>
-
-</div>
-</div>
+<p >Rollout Buffer is the C++ backend for the class <a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html">rlpack._C.rollout_buffer.RolloutBuffer</a>. This module implements necessary classes to provide necessary functionalities and bindings to provide exposure to Python. </p>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

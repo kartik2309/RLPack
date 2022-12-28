@@ -48,7 +48,7 @@ var searchData=
   ['rlpack_5fbinaries_5freplay_5fbuffer_5futils_5fcudaoffload_5fcuh_5f_45',['RLPACK_BINARIES_REPLAY_BUFFER_UTILS_CUDAOFFLOAD_CUH_',['../_cuda_offload_8cuh.html#a9e87e950c329cc163fbba24e03e846ef',1,'CudaOffload.cuh']]],
   ['rlpack_5fbinaries_5freplay_5fbuffer_5futils_5fhostoffload_5ftpp_5f_46',['RLPACK_BINARIES_REPLAY_BUFFER_UTILS_HOSTOFFLOAD_TPP_',['../_host_offload_8tpp.html#a50bf0c1c175f6a318324f03311b351b7',1,'HostOffload.tpp']]],
   ['rlpack_5fbinaries_5futils_5fops_5farg_5fmergesort_5fcuh_5f_47',['RLPACK_BINARIES_UTILS_OPS_ARG_MERGESORT_CUH_',['../arg__mergesort_8cuh.html#a0ab8bce8755f1b9be96ae7fa0f14c977',1,'arg_mergesort.cuh']]],
-  ['rollout_5fbuffer_48',['rollout_buffer',['../namespacerlpack_1_1___c_1_1rollout__buffer.html',1,'rlpack::_C']]],
+  ['rollout_5fbuffer_48',['rollout_buffer',['../namespacerlpack_1_1___c_1_1rollout__buffer.html',1,'rlpack._C.rollout_buffer'],['../group__rollout__buffer__group.html',1,'(Global Namespace)']]],
   ['rollout_5fbuffer_2epy_49',['rollout_buffer.py',['../rollout__buffer_8py.html',1,'']]],
   ['rolloutbuffer_50',['RolloutBuffer',['../classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html',1,'rlpack::_C::rollout_buffer']]],
   ['run_51',['run',['../classrlpack_1_1simulator_1_1_simulator.html#ab900dc528c641be010262487361bcb97',1,'rlpack.simulator.Simulator.run()'],['../classrlpack_1_1simulator__distributed_1_1_simulator_distributed.html#a763fb34e298ccedcc98d0af597b78792',1,'rlpack.simulator_distributed.SimulatorDistributed.run(self, **kwargs)']]],

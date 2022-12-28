@@ -51,6 +51,20 @@ var group__replay__buffer__group =
       [ "terminalStateIndices_", "class_c___replay_buffer.html#a728efa9047425de422212917625d69d9", null ],
       [ "weights_", "class_c___replay_buffer.html#a874ae8397cfe9838a9df054ee6753ad6", null ]
     ] ],
+    [ "C_ReplayBufferData", "class_c___replay_buffer_data.html", [
+      [ "C_ReplayBufferData", "class_c___replay_buffer_data.html#a9fc8294c83ba091d2ab595f77b70d659", null ],
+      [ "~C_ReplayBufferData", "class_c___replay_buffer_data.html#a363cf02cba6256f6100d8dcc31df79bc", null ],
+      [ "dereference_priorities", "class_c___replay_buffer_data.html#a76f67712cc812030dfce897262021253", null ],
+      [ "dereference_terminal_state_indices", "class_c___replay_buffer_data.html#a8b75ed1bc4adb241d0c7f1b888a9ebec", null ],
+      [ "dereference_transition_information", "class_c___replay_buffer_data.html#a80ed81c6f9315b2783b420055d57ddad", null ],
+      [ "set_priorities_reference", "class_c___replay_buffer_data.html#aefce0a29683086eed6dca8620d57423b", null ],
+      [ "set_terminal_state_indices_reference", "class_c___replay_buffer_data.html#a79b41acbb663aa1c31f992daec3b1339", null ],
+      [ "set_transition_information_references", "class_c___replay_buffer_data.html#a1d3ed17ecc3ef53da07b4be631a74f7e", null ],
+      [ "set_transition_information_references", "class_c___replay_buffer_data.html#ad72647c68c3ba8dec6b977c6330a1eb4", null ],
+      [ "prioritiesFloatReference_", "class_c___replay_buffer_data.html#aa40e92b508f4e3b3f28359a60b419871", null ],
+      [ "terminalIndicesReference_", "class_c___replay_buffer_data.html#a16b1efd537117501db0a0f4bd2b86993", null ],
+      [ "transitionInformationReference_", "class_c___replay_buffer_data.html#aa334641d4b9ec1a54e0e71c217dcf4ed", null ]
+    ] ],
     [ "SumTree", "class_sum_tree.html", [
       [ "SumTree", "class_sum_tree.html#ab82aca8168e803c8b16c9437aa48bf2f", null ],
       [ "SumTree", "class_sum_tree.html#aabf380616b5397f6d741449e3680cfc9", null ],

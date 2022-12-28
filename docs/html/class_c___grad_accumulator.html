@@ -103,6 +103,9 @@ $(document).ready(function(){initNavTree('class_c___grad_accumulator.html',''); 
 </div><!--header-->
 <div class="contents">
 
+<p>The class <a class="el" href="class_c___grad_accumulator.html" title="The class C_GradAccumulator Accumulates the gradients from model parameters. The binding is done via ...">C_GradAccumulator</a> Accumulates the gradients from model parameters. The binding is done via opaquing the PyTorch Tensors with std::map and hence tensors are moved by references, making the storage efficient. This class is exposed to Python as <a class="el" href="classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html" title="This class provides the python interface to C_GradAccumulator, the C++ class which performs heavier w...">rlpack._C.grad_accumulator.GradAccumulator</a>.  
+ <a href="class_c___grad_accumulator.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="_c___grad_accumulator_8h_source.html">C_GradAccumulator.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -143,7 +146,9 @@ Private Attributes</h2></td></tr>
 <tr class="memdesc:a40fc92c6e784f843e631d23844507bd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The map to store final results of reduced parameters.  <a href="class_c___grad_accumulator.html#a40fc92c6e784f843e631d23844507bd0">More...</a><br /></td></tr>
 <tr class="separator:a40fc92c6e784f843e631d23844507bd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >The class <a class="el" href="class_c___grad_accumulator.html" title="The class C_GradAccumulator Accumulates the gradients from model parameters. The binding is done via ...">C_GradAccumulator</a> Accumulates the gradients from model parameters. The binding is done via opaquing the PyTorch Tensors with std::map and hence tensors are moved by references, making the storage efficient. This class is exposed to Python as <a class="el" href="classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html" title="This class provides the python interface to C_GradAccumulator, the C++ class which performs heavier w...">rlpack._C.grad_accumulator.GradAccumulator</a>. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="abe04783b053cdaa87a490377faac89d8" name="abe04783b053cdaa87a490377faac89d8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abe04783b053cdaa87a490377faac89d8">&#9670;&#160;</a></span>C_GradAccumulator()</h2>
 
@@ -169,7 +174,7 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Class constructor for <a class="el" href="class_c___grad_accumulator.html">C_GradAccumulator</a>. This class reserves the memory for namedParametersGrads_ for gradient accumulation. This is C++ backend equivalent to <a class="el" href="classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html#aa9efa4c6f18763846177f16d5b7f52ce">rlpack._C.grad_accumulator.GradAccumulator.__init__</a>. </p><dl class="params"><dt>Parameters</dt><dd>
+<p >Class constructor for <a class="el" href="class_c___grad_accumulator.html" title="The class C_GradAccumulator Accumulates the gradients from model parameters. The binding is done via ...">C_GradAccumulator</a>. This class reserves the memory for namedParametersGrads_ for gradient accumulation. This is C++ backend equivalent to <a class="el" href="classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html#aa9efa4c6f18763846177f16d5b7f52ce">rlpack._C.grad_accumulator.GradAccumulator.__init__</a>. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">parameterKeys</td><td>: parameter keys for the model for which gradient accumulation is being done. </td></tr>
     <tr><td class="paramname">boostStrapRounds</td><td>: The number of boostrap rounds over which accumulation and reduction is to take place.</td></tr>
@@ -201,7 +206,7 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p >Default constructor <a class="el" href="class_c___grad_accumulator.html">C_GradAccumulator</a> </p>
+<p >Default destructor <a class="el" href="class_c___grad_accumulator.html" title="The class C_GradAccumulator Accumulates the gradients from model parameters. The binding is done via ...">C_GradAccumulator</a> </p>
 
 </div>
 </div>
