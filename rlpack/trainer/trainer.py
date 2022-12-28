@@ -144,7 +144,6 @@ class Trainer(TrainerBase):
                     break
             self.fill_cumulative_reward()
             self.log_cumulative_rewards_with_summary_writer(episode=ep)
-            self.log_returns_with_summary_writer(episode=ep)
             self.log_agent_info_with_summary_writer(episode=ep)
             self.clear_rewards()
             if ep % metrics_logging_frequency == 0:
@@ -152,8 +151,8 @@ class Trainer(TrainerBase):
                 # custom suffix. If no custom suffix is present, save with the suffix `_best`.
                 self.save_agent_with_custom_suffix(self.custom_suffix)
                 self.header_line()
-                self.log_cumulative_rewards_with_py_logger(ep)
-                self.log_agent_info_with_py_logger(ep)
+                self.log_cumulative_rewards_with_py_logger(episode=ep)
+                self.log_agent_info_with_py_logger(episode=ep)
                 self.clear_cumulative_rewards()
                 self.clear_agent_loss()
         self.env.close()
