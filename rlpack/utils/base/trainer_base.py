@@ -166,11 +166,13 @@ class TrainerBase:
             **self.get_loggable_prioritization_quantities_by_current_value(),
         }
         for key, value in loggable_by_value.items():
+            message = f"{key} at episode {episode}: "
             if isinstance(value, list):
                 value = self._list_mean(value)
+                message = f"Mean {message}"
             if value is None:
                 continue
-            self.py_logger.info(f"{key} at episode {episode}: {value}")
+            self.py_logger.info(f"{message}{value}")
         return
 
     def log_agent_info_with_summary_writer(self, episode: int) -> None:
