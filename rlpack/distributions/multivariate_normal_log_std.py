@@ -67,13 +67,10 @@ class MultivariateNormalLogStd(pytorch_distributions.MultivariateNormal, ABC):
         @param scale_tensor: The input scale tensor on which power is to be raised.
         @return: pytorch.Tensor: The power raised tensor.
         """
-        mask_tensor = pytorch.eye(
+        scale_tensor = pytorch.exp(scale_tensor) * pytorch.eye(
             *scale_tensor.size(),
-            dtype=scale_tensor.dtype,
             device=scale_tensor.device,
-            requires_grad=False
-        ).bool()
-        scale_tensor.masked_scatter_(
-            mask_tensor, pytorch.exp(pytorch.diagonal(scale_tensor, dim1=-2, dim2=-1))
+            dtype=scale_tensor.dtype,
+            requires_grad=False,
         )
         return scale_tensor
