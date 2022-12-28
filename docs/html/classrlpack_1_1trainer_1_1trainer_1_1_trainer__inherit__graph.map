@@ -1,4 +1,0 @@
-<map id="rlpack.trainer.trainer.Trainer" name="rlpack.trainer.trainer.Trainer">
-<area shape="rect" id="node1" title="This class is a generic class to train or evaluate any agent in any environment." alt="" coords="5,93,184,119"/>
-<area shape="rect" id="node2" href="$classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html" title="This class is the base class of all trainer classes which implements methods to train an agent." alt="" coords="16,5,173,45"/>
-</map>

@@ -1,4 +1,0 @@
-<map id="rollout_buffer" name="rollout_buffer">
-<area shape="rect" id="node1" href="$group__binaries__group.html" title="Binaries Module consists of C++ backend exposed via pybind11 to rlpack via rlpack...." alt="" coords="5,5,72,31"/>
-<area shape="rect" id="node2" title="Rollout Buffer is the C++ backend for the class rlpack._C.rollout_buffer.RolloutBuffer...." alt="" coords="120,5,217,31"/>
-</map>
