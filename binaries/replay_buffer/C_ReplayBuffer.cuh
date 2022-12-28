@@ -11,8 +11,9 @@
 #include <random>
 #include <vector>
 
+#include "replay_buffer_data/C_ReplayBufferData.h"
 #include "sumtree/SumTree.h"
-#include "utils/Utils.h"
+#include "offload/Offload.h"
 #include "../utils/maps.h"
 
 /*!
@@ -42,54 +43,15 @@
 class C_ReplayBuffer {
 
 public:
-    C_ReplayBuffer();
     /*!
      * @brief The class C_MemoryData keeps the references to data that is associated with C_ReplayBuffer. This class
      * implements the functions necessary to retrieve the data by de-referencing the data associated with C_ReplayBuffer.
      */
-    struct C_ReplayBufferData {
-        C_ReplayBufferData();
-        ~C_ReplayBufferData();
 
-    public:
-        std::map<std::string, std::deque<torch::Tensor>> dereference_transition_information();
-        [[nodiscard]] std::map<std::string, std::deque<int64_t>> dereference_terminal_state_indices() const;
-        [[nodiscard]] std::map<std::string, std::deque<float_t>> dereference_priorities() const;
-        void set_transition_information_references(std::deque<torch::Tensor> *&statesCurrent,
-                                                   std::deque<torch::Tensor> *&statesNext,
-                                                   std::deque<torch::Tensor> *&rewards,
-                                                   std::deque<torch::Tensor> *&actions,
-                                                   std::deque<torch::Tensor> *&dones,
-                                                   std::deque<torch::Tensor> *&priorities,
-                                                   std::deque<torch::Tensor> *&probabilities,
-                                                   std::deque<torch::Tensor> *&weights);
-        void set_transition_information_references(std::string &key,
-                                                   std::deque<torch::Tensor> *&reference);
-        void set_terminal_state_indices_reference(std::deque<int64_t> *&terminalStateIndicesReference);
-        void set_priorities_reference(std::deque<float_t> *&prioritiesFloatReference);
-
-    private:
-        /*!
-         * The map to store references to each deque that stores each quantity from transitions. This map stores the
-         * references to following containers:
-         *  - states_current: C_ReplayBuffer::statesCurrent_;
-         *  - states_next: C_ReplayBuffer::statesNext_;
-         *  - rewards: C_ReplayBuffer::rewards_;
-         *  - actions: C_ReplayBuffer::actions_;
-         *  - dones: C_ReplayBuffer::dones_;
-         *  - priorities: C_ReplayBuffer::priorities_;
-         *  - probabilities: C_ReplayBuffer::probabilities_;
-         *  - weights: C_ReplayBuffer::weights_;
-         */
-        std::map<std::string, std::deque<torch::Tensor> *> transitionInformationReference_;
-        //! The reference to deque that stores terminal state indices; C_ReplayBuffer::terminalStateIndices_.
-        std::deque<int64_t> *terminalIndicesReference_ = nullptr;
-        //! The reference to deque that stores priorities float; C_ReplayBuffer::prioritiesFloat_.
-        std::deque<float_t> *prioritiesFloatReference_ = nullptr;
-    };
     //! Shared Pointer to C_ReplayBuffer::C_MemoryData.
     std::shared_ptr<C_ReplayBufferData> cMemoryData;
 
+    C_ReplayBuffer();
     explicit C_ReplayBuffer(int64_t bufferSize,
                       const std::string &device,
                       const int32_t &prioritizationStrategyCode,
@@ -125,7 +87,7 @@ public:
     void update_priorities(torch::Tensor &randomIndices,
                            torch::Tensor &newPriorities);
     [[nodiscard]] C_ReplayBufferData view() const;
-    void initialize(C_ReplayBufferData &viewC_Memory);
+    void initialize(C_ReplayBufferData &viewC_MemoryData);
     void clear();
     size_t size();
     int64_t num_terminal_states();

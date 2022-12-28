@@ -1,6 +1,5 @@
 <map id="rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent" name="rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent">
 <area shape="rect" id="node1" title="The ActorCriticAgent is the base class for actor&#45;critic methods." alt="" coords="5,167,201,207"/>
 <area shape="rect" id="node2" href="$classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html" title="The base class for all agents." alt="" coords="25,79,182,119"/>
-<area shape="rect" id="node3" title=" " alt="" coords="36,5,93,31"/>
-<area shape="rect" id="node4" title=" " alt="" coords="118,5,169,31"/>
+<area shape="rect" id="node3" title=" " alt="" coords="78,5,129,31"/>
 </map>

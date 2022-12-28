@@ -97,7 +97,6 @@ $(document).ready(function(){initNavTree('class_c___replay_buffer.html',''); ini
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Data Structures</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Data Fields</a> &#124;
 <a href="#pri-static-methods">Static Private Member Functions</a> &#124;
@@ -121,12 +120,6 @@ $(document).ready(function(){initNavTree('class_c___replay_buffer.html',''); ini
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Data Structures</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_c___replay_buffer_1_1_c___replay_buffer_data.html">C_ReplayBufferData</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The class C_MemoryData keeps the references to data that is associated with <a class="el" href="class_c___replay_buffer.html" title="The class C_ReplayBuffer is the C++ backend for replay buffer-buffer used in algorithms that stores t...">C_ReplayBuffer</a>. This class implements the functions necessary to retrieve the data by de-referencing the data associated with <a class="el" href="class_c___replay_buffer.html" title="The class C_ReplayBuffer is the C++ backend for replay buffer-buffer used in algorithms that stores t...">C_ReplayBuffer</a>.  <a href="struct_c___replay_buffer_1_1_c___replay_buffer_data.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a2c7c71cbd7dc177b319a8fc6c5d23862"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___replay_buffer.html#a2c7c71cbd7dc177b319a8fc6c5d23862">C_ReplayBuffer</a> ()</td></tr>
@@ -139,8 +132,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a79d153530e88175167c90dc03afc8017"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a512b1b927a3de28762a03c27e5510034"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___replay_buffer.html#a512b1b927a3de28762a03c27e5510034">get_item</a> (int64_t index)</td></tr>
 <tr class="separator:a512b1b927a3de28762a03c27e5510034"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee073519d549e4f840cd0626cdd5f758"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___replay_buffer.html#aee073519d549e4f840cd0626cdd5f758">initialize</a> (<a class="el" href="struct_c___replay_buffer_1_1_c___replay_buffer_data.html">C_ReplayBufferData</a> &amp;viewC_Memory)</td></tr>
-<tr class="separator:aee073519d549e4f840cd0626cdd5f758"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e21c6e57cb9b7bdf86cb9e9199b7921"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___replay_buffer.html#a6e21c6e57cb9b7bdf86cb9e9199b7921">initialize</a> (<a class="el" href="class_c___replay_buffer_data.html">C_ReplayBufferData</a> &amp;viewC_MemoryData)</td></tr>
+<tr class="separator:a6e21c6e57cb9b7bdf86cb9e9199b7921"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9fdc034a066f3eb01e0f105fc245057"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___replay_buffer.html#aa9fdc034a066f3eb01e0f105fc245057">insert</a> (torch::Tensor &amp;stateCurrent, torch::Tensor &amp;stateNext, torch::Tensor &amp;reward, torch::Tensor &amp;action, torch::Tensor &amp;done, torch::Tensor &amp;priority, torch::Tensor &amp;probability, torch::Tensor &amp;weight, bool isTerminalState)</td></tr>
 <tr class="separator:aa9fdc034a066f3eb01e0f105fc245057"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac61bf719da43d8fd0848049490f134f2"><td class="memItemLeft" align="right" valign="top">int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___replay_buffer.html#ac61bf719da43d8fd0848049490f134f2">num_terminal_states</a> ()</td></tr>
@@ -155,15 +148,15 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:adeb8563d0832e7f2a831e1c83b07d0c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf887194e4f1897179d1c7ddd9b82b66"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___replay_buffer.html#abf887194e4f1897179d1c7ddd9b82b66">update_priorities</a> (torch::Tensor &amp;randomIndices, torch::Tensor &amp;newPriorities)</td></tr>
 <tr class="separator:abf887194e4f1897179d1c7ddd9b82b66"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c6d229135cdf13974455a0950bdb0c5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_c___replay_buffer_1_1_c___replay_buffer_data.html">C_ReplayBufferData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___replay_buffer.html#a4c6d229135cdf13974455a0950bdb0c5">view</a> () const</td></tr>
-<tr class="separator:a4c6d229135cdf13974455a0950bdb0c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f4ecc3634be1c897d8283468bcb0058"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c___replay_buffer_data.html">C_ReplayBufferData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___replay_buffer.html#a2f4ecc3634be1c897d8283468bcb0058">view</a> () const</td></tr>
+<tr class="separator:a2f4ecc3634be1c897d8283468bcb0058"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a80e6b40b1c0dd7cbc60c9cee63e0cd78"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___replay_buffer.html#a80e6b40b1c0dd7cbc60c9cee63e0cd78">~C_ReplayBuffer</a> ()</td></tr>
 <tr class="separator:a80e6b40b1c0dd7cbc60c9cee63e0cd78"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a20fae1990b8cf818ef74171996f45254"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="struct_c___replay_buffer_1_1_c___replay_buffer_data.html">C_ReplayBufferData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___replay_buffer.html#a20fae1990b8cf818ef74171996f45254">cMemoryData</a></td></tr>
-<tr class="memdesc:a20fae1990b8cf818ef74171996f45254"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shared Pointer to C_ReplayBuffer::C_MemoryData.  <a href="class_c___replay_buffer.html#a20fae1990b8cf818ef74171996f45254">More...</a><br /></td></tr>
+<tr class="memitem:a20fae1990b8cf818ef74171996f45254"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="class_c___replay_buffer_data.html">C_ReplayBufferData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___replay_buffer.html#a20fae1990b8cf818ef74171996f45254">cMemoryData</a></td></tr>
+<tr class="memdesc:a20fae1990b8cf818ef74171996f45254"><td class="mdescLeft">&#160;</td><td class="mdescRight">The class C_MemoryData keeps the references to data that is associated with <a class="el" href="class_c___replay_buffer.html" title="The class C_ReplayBuffer is the C++ backend for replay buffer-buffer used in algorithms that stores t...">C_ReplayBuffer</a>. This class implements the functions necessary to retrieve the data by de-referencing the data associated with <a class="el" href="class_c___replay_buffer.html" title="The class C_ReplayBuffer is the C++ backend for replay buffer-buffer used in algorithms that stores t...">C_ReplayBuffer</a>.  <a href="class_c___replay_buffer.html#a20fae1990b8cf818ef74171996f45254">More...</a><br /></td></tr>
 <tr class="separator:a20fae1990b8cf818ef74171996f45254"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-methods" name="pri-static-methods"></a>
@@ -551,8 +544,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aee073519d549e4f840cd0626cdd5f758" name="aee073519d549e4f840cd0626cdd5f758"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aee073519d549e4f840cd0626cdd5f758">&#9670;&#160;</a></span>initialize()</h2>
+<a id="a6e21c6e57cb9b7bdf86cb9e9199b7921" name="a6e21c6e57cb9b7bdf86cb9e9199b7921"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e21c6e57cb9b7bdf86cb9e9199b7921">&#9670;&#160;</a></span>initialize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -560,16 +553,16 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="memname">void C_ReplayBuffer::initialize </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_c___replay_buffer_1_1_c___replay_buffer_data.html">C_ReplayBuffer::C_ReplayBufferData</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="class_c___replay_buffer_data.html">C_ReplayBufferData</a> &amp;&#160;</td>
           <td class="paramname"><em>viewC_MemoryData</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Initialize method for <a class="el" href="class_c___replay_buffer.html" title="The class C_ReplayBuffer is the C++ backend for replay buffer-buffer used in algorithms that stores t...">C_ReplayBuffer</a> for initializing all the data from an object of C_ReplayBuffer::C_MemoryData. This is the C++ backend of <a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#ace7fcf40c2ab074e36eaccce12494a02" title="This loads the memory from the provided C_ReplayBufferData instance.">rlpack._C.replay_buffer.ReplayBuffer.initialize</a> method</p>
+<p >Initialize method for <a class="el" href="class_c___replay_buffer.html" title="The class C_ReplayBuffer is the C++ backend for replay buffer-buffer used in algorithms that stores t...">C_ReplayBuffer</a> for initializing all the data from an object of <a class="el" href="class_c___replay_buffer_data.html">C_ReplayBufferData</a>. This is the C++ backend of <a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#ace7fcf40c2ab074e36eaccce12494a02" title="This loads the memory from the provided C_ReplayBufferData instance.">rlpack._C.replay_buffer.ReplayBuffer.initialize</a> method</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">viewC_MemoryData</td><td>: An object of C_ReplayBuffer::C_MemoryData.</td></tr>
+    <tr><td class="paramname">viewC_MemoryData</td><td>: An object of <a class="el" href="class_c___replay_buffer_data.html">C_ReplayBufferData</a> from which <a class="el" href="class_c___replay_buffer.html" title="The class C_ReplayBuffer is the C++ backend for replay buffer-buffer used in algorithms that stores t...">C_ReplayBuffer</a> has to be initialized.</td></tr>
   </table>
   </dd>
 </dl>
@@ -914,21 +907,21 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a4c6d229135cdf13974455a0950bdb0c5" name="a4c6d229135cdf13974455a0950bdb0c5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4c6d229135cdf13974455a0950bdb0c5">&#9670;&#160;</a></span>view()</h2>
+<a id="a2f4ecc3634be1c897d8283468bcb0058" name="a2f4ecc3634be1c897d8283468bcb0058"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f4ecc3634be1c897d8283468bcb0058">&#9670;&#160;</a></span>view()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="struct_c___replay_buffer_1_1_c___replay_buffer_data.html">C_ReplayBuffer::C_ReplayBufferData</a> C_ReplayBuffer::view </td>
+          <td class="memname"><a class="el" href="class_c___replay_buffer_data.html">C_ReplayBufferData</a> C_ReplayBuffer::view </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >The pointer to C_ReplayBuffer::C_MemoryData object. This will contain references of data in <a class="el" href="class_c___replay_buffer.html" title="The class C_ReplayBuffer is the C++ backend for replay buffer-buffer used in algorithms that stores t...">C_ReplayBuffer</a> and provides an easy data view. This is the C++ backend of <a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a4433d31f72d81fb384a0d206fa9af2d8" title="This method returns the view of Memory, i.e.">rlpack._C.replay_buffer.ReplayBuffer.view</a> method.</p>
+<p >The pointer to <a class="el" href="class_c___replay_buffer_data.html">C_ReplayBufferData</a> object. This will contain references of data in <a class="el" href="class_c___replay_buffer.html" title="The class C_ReplayBuffer is the C++ backend for replay buffer-buffer used in algorithms that stores t...">C_ReplayBuffer</a> and provides an easy data view. This is the C++ backend of <a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a4433d31f72d81fb384a0d206fa9af2d8" title="This method returns the view of Memory, i.e.">rlpack._C.replay_buffer.ReplayBuffer.view</a> method.</p>
 
 </div>
 </div>
@@ -1012,12 +1005,13 @@ Private Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::shared_ptr&lt;<a class="el" href="struct_c___replay_buffer_1_1_c___replay_buffer_data.html">C_ReplayBufferData</a>&gt; C_ReplayBuffer::cMemoryData</td>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="class_c___replay_buffer_data.html">C_ReplayBufferData</a>&gt; C_ReplayBuffer::cMemoryData</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Shared Pointer to C_ReplayBuffer::C_MemoryData. </p>
+<p>The class C_MemoryData keeps the references to data that is associated with <a class="el" href="class_c___replay_buffer.html" title="The class C_ReplayBuffer is the C++ backend for replay buffer-buffer used in algorithms that stores t...">C_ReplayBuffer</a>. This class implements the functions necessary to retrieve the data by de-referencing the data associated with <a class="el" href="class_c___replay_buffer.html" title="The class C_ReplayBuffer is the C++ backend for replay buffer-buffer used in algorithms that stores t...">C_ReplayBuffer</a>. </p>
+<p >Shared Pointer to C_ReplayBuffer::C_MemoryData. </p>
 
 </div>
 </div>

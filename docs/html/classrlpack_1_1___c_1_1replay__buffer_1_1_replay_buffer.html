@@ -190,8 +190,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a06d05f5f25e812495d77cc3efe156c39"><td class="memItemLeft" align="right" valign="top">Dict[str, pytorch.Tensor]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a06d05f5f25e812495d77cc3efe156c39">get_transitions</a> (self)</td></tr>
 <tr class="memdesc:a06d05f5f25e812495d77cc3efe156c39"><td class="mdescLeft">&#160;</td><td class="mdescRight">This retrieves all the transitions accumulated so far.  <a href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a06d05f5f25e812495d77cc3efe156c39">More...</a><br /></td></tr>
 <tr class="separator:a06d05f5f25e812495d77cc3efe156c39"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ace7fcf40c2ab074e36eaccce12494a02"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#ace7fcf40c2ab074e36eaccce12494a02">initialize</a> (self, <a class="el" href="struct_c___replay_buffer_1_1_c___replay_buffer_data.html">C_ReplayBuffer.C_ReplayBufferData</a> memory_data)</td></tr>
-<tr class="memdesc:ace7fcf40c2ab074e36eaccce12494a02"><td class="mdescLeft">&#160;</td><td class="mdescRight">This loads the memory from the provided C_ReplayBufferData instance.  <a href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#ace7fcf40c2ab074e36eaccce12494a02">More...</a><br /></td></tr>
+<tr class="memitem:ace7fcf40c2ab074e36eaccce12494a02"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#ace7fcf40c2ab074e36eaccce12494a02">initialize</a> (self, C_ReplayBuffer.C_ReplayBufferData memory_data)</td></tr>
+<tr class="memdesc:ace7fcf40c2ab074e36eaccce12494a02"><td class="mdescLeft">&#160;</td><td class="mdescRight">This loads the memory from the provided <a class="el" href="class_c___replay_buffer_data.html">C_ReplayBufferData</a> instance.  <a href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#ace7fcf40c2ab074e36eaccce12494a02">More...</a><br /></td></tr>
 <tr class="separator:ace7fcf40c2ab074e36eaccce12494a02"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa189acab06c9eb491be7663b559f0f34"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#aa189acab06c9eb491be7663b559f0f34">insert</a> (self, Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]] state_current, Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]] state_next, Union[np.ndarray, float] reward, Union[np.ndarray, float] action, Union[bool, int] done, Optional[Union[pytorch.Tensor, np.ndarray, float]] priority=1.0, Optional[Union[pytorch.Tensor, np.ndarray, float]] probability=1.0, Optional[Union[pytorch.Tensor, np.ndarray, float]] weight=1.0)</td></tr>
 <tr class="memdesc:aa189acab06c9eb491be7663b559f0f34"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method performs insertion to the memory.  <a href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#aa189acab06c9eb491be7663b559f0f34">More...</a><br /></td></tr>
@@ -208,7 +208,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4646a733b77a10315ea0f101ea62424e"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a4646a733b77a10315ea0f101ea62424e">update_priorities</a> (self, pytorch.Tensor random_indices, pytorch.Tensor new_priorities)</td></tr>
 <tr class="memdesc:a4646a733b77a10315ea0f101ea62424e"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method updates the priorities when prioritized memory is used.  <a href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a4646a733b77a10315ea0f101ea62424e">More...</a><br /></td></tr>
 <tr class="separator:a4646a733b77a10315ea0f101ea62424e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4433d31f72d81fb384a0d206fa9af2d8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_c___replay_buffer_1_1_c___replay_buffer_data.html">C_ReplayBuffer.C_ReplayBufferData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a4433d31f72d81fb384a0d206fa9af2d8">view</a> (self)</td></tr>
+<tr class="memitem:a4433d31f72d81fb384a0d206fa9af2d8"><td class="memItemLeft" align="right" valign="top">C_ReplayBuffer.C_ReplayBufferData&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a4433d31f72d81fb384a0d206fa9af2d8">view</a> (self)</td></tr>
 <tr class="memdesc:a4433d31f72d81fb384a0d206fa9af2d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method returns the view of Memory, i.e.  <a href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a4433d31f72d81fb384a0d206fa9af2d8">More...</a><br /></td></tr>
 <tr class="separator:a4433d31f72d81fb384a0d206fa9af2d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -909,7 +909,7 @@ Static Private Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="struct_c___replay_buffer_1_1_c___replay_buffer_data.html">C_ReplayBuffer.C_ReplayBufferData</a>&#160;</td>
+          <td class="paramtype">C_ReplayBuffer.C_ReplayBufferData&#160;</td>
           <td class="paramname"><em>memory_data</em>&#160;</td>
         </tr>
         <tr>
@@ -920,10 +920,10 @@ Static Private Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>This loads the memory from the provided C_ReplayBufferData instance. </p>
+<p>This loads the memory from the provided <a class="el" href="class_c___replay_buffer_data.html">C_ReplayBufferData</a> instance. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">memory_data</td><td><a class="el" href="struct_c___replay_buffer_1_1_c___replay_buffer_data.html" title="The class C_MemoryData keeps the references to data that is associated with C_ReplayBuffer....">C_ReplayBuffer.C_ReplayBufferData</a>: The C_ReplayBufferData instance to load the memory form. </td></tr>
+    <tr><td class="paramname">memory_data</td><td>C_ReplayBuffer.C_ReplayBufferData: The <a class="el" href="class_c___replay_buffer_data.html">C_ReplayBufferData</a> instance to load the memory form. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1172,7 +1172,7 @@ Static Private Member Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"> <a class="el" href="struct_c___replay_buffer_1_1_c___replay_buffer_data.html">C_ReplayBuffer.C_ReplayBufferData</a> rlpack._C.replay_buffer.ReplayBuffer.view </td>
+          <td class="memname"> C_ReplayBuffer.C_ReplayBufferData rlpack._C.replay_buffer.ReplayBuffer.view </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><em>self</em></td><td>)</td>
@@ -1182,7 +1182,7 @@ Static Private Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>This method returns the view of Memory, i.e. </p>
-<p >the data stored in the memory. </p><dl class="section return"><dt>Returns</dt><dd>(<a class="el" href="struct_c___replay_buffer_1_1_c___replay_buffer_data.html" title="The class C_MemoryData keeps the references to data that is associated with C_ReplayBuffer....">C_ReplayBuffer.C_ReplayBufferData</a>): The C_ReplayBufferData object which packages the current memory information. This object is pickleable and data can also be accessed via attributes. </dd></dl>
+<p >the data stored in the memory. </p><dl class="section return"><dt>Returns</dt><dd>(C_ReplayBuffer.C_ReplayBufferData): The <a class="el" href="class_c___replay_buffer_data.html">C_ReplayBufferData</a> object which packages the current memory information. This object is pickleable and data can also be accessed via attributes. </dd></dl>
 
 </div>
 </div>

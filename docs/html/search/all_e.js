@@ -10,7 +10,7 @@ var searchData=
   ['policy_5fmodel_5fupdate_5frate_7',['policy_model_update_rate',['../classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#a0a09fff80f52f0550f9431c9c025a797',1,'rlpack::dqn::utils::dqn_agent::DqnAgent']]],
   ['priorities_5f_8',['priorities_',['../class_c___replay_buffer.html#a6fff9071499ed1415f293c56d88cc5cc',1,'C_ReplayBuffer']]],
   ['prioritiesfloat_5f_9',['prioritiesFloat_',['../class_c___replay_buffer.html#a4865d8755086628c1b7dc983a130c56a',1,'C_ReplayBuffer']]],
-  ['prioritiesfloatreference_5f_10',['prioritiesFloatReference_',['../struct_c___replay_buffer_1_1_c___replay_buffer_data.html#ab626e2a99dcac75b58d4fc3dffdc1804',1,'C_ReplayBuffer::C_ReplayBufferData']]],
+  ['prioritiesfloatreference_5f_10',['prioritiesFloatReference_',['../class_c___replay_buffer_data.html#aa40e92b508f4e3b3f28359a60b419871',1,'C_ReplayBufferData']]],
   ['prioritization_5fparams_11',['prioritization_params',['../classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#ae9f8b7d27bfb19c9c7aebf14c239fc0b',1,'rlpack::dqn::utils::dqn_agent::DqnAgent']]],
   ['prioritization_5fstrategy_5fcode_12',['prioritization_strategy_code',['../classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#af7e7cac234b74a310ef1878c334ad2cf',1,'rlpack::_C::replay_buffer::ReplayBuffer']]],
   ['prioritization_5fstrategy_5fcodes_13',['prioritization_strategy_codes',['../classrlpack_1_1utils_1_1base_1_1registers_1_1internal__code__register_1_1_internal_code_register.html#a2187098a7bb5e6a72118f2adf7eb8a66',1,'rlpack::utils::base::registers::internal_code_register::InternalCodeRegister']]],

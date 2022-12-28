@@ -3,127 +3,11 @@
 #pragma ide diagnostic ignored "misc-no-recursion"
 #include "C_ReplayBuffer.cuh"
 
-/*!
- * The default constructor for C_ReplayBuffer::C_MemoryData
- */
-C_ReplayBuffer::C_ReplayBufferData::C_ReplayBufferData() = default;
-
-/*!
- * The default destructor for C_ReplayBuffer::C_MemoryData
- */
-C_ReplayBuffer::C_ReplayBufferData::~C_ReplayBufferData() = default;
-
-std::map<std::string, std::deque<torch::Tensor>> C_ReplayBuffer::C_ReplayBufferData::dereference_transition_information() {
-    /*!
-     * The function to dereference the pointers from C_ReplayBuffer::C_MemoryData::transitionInformationReference_.
-     *
-     * @return Map of string indicating the transition quantity name and the corresponding deque.
-     */
-    std::map<std::string, std::deque<torch::Tensor>> dereferencedTransitionInformation = {
-            {"states_current", *transitionInformationReference_["states_current"]},
-            {"states_next", *transitionInformationReference_["states_next"]},
-            {"rewards", *transitionInformationReference_["rewards"]},
-            {"actions", *transitionInformationReference_["actions"]},
-            {"dones", *transitionInformationReference_["dones"]},
-            {"priorities", *transitionInformationReference_["priorities"]},
-            {"probabilities", *transitionInformationReference_["probabilities"]},
-            {"weights", *transitionInformationReference_["weights"]},
-    };
-
-    return dereferencedTransitionInformation;
-}
-
-std::map<std::string, std::deque<int64_t>> C_ReplayBuffer::C_ReplayBufferData::dereference_terminal_state_indices() const {
-    /*!
-     * The function to dereference the pointers from C_ReplayBuffer::C_MemoryData::terminalIndicesReference_.
-     *
-     * @return The map between terminal state indices and the corresponding deque. Always returns the map with
-     * key `terminal_state_indices`.
-     */
-    std::map<std::string, std::deque<int64_t>> dereferencedTerminalStates = {
-            {"terminal_state_indices", *terminalIndicesReference_}};
-    return dereferencedTerminalStates;
-}
-
-std::map<std::string, std::deque<float_t>> C_ReplayBuffer::C_ReplayBufferData::dereference_priorities() const {
-    /*!
-     * The function to dereference the pointers from C_ReplayBuffer::C_MemoryData::prioritiesFloatReference_.
-     *
-     * @return The map between float priorities and the corresponding deque. Always returns the map with
-     * key `priorities`.
-     */
-    std::map<std::string, std::deque<float_t>> dereferencedPriorities = {
-            {"priorities", *prioritiesFloatReference_}};
-    return dereferencedPriorities;
-}
-
-void C_ReplayBuffer::C_ReplayBufferData::set_transition_information_references(
-        std::deque<torch::Tensor> *&statesCurrent,
-        std::deque<torch::Tensor> *&statesNext,
-        std::deque<torch::Tensor> *&rewards,
-        std::deque<torch::Tensor> *&actions,
-        std::deque<torch::Tensor> *&dones,
-        std::deque<torch::Tensor> *&priorities,
-        std::deque<torch::Tensor> *&probabilities,
-        std::deque<torch::Tensor> *&weights) {
-    /*!
-     * Function to set the references to C_ReplayBuffer::C_MemoryData::transitionInformationReference_.
-     *
-     * @param statesCurrent : The pointer to deque of current states; C_ReplayBuffer::statesCurrent_.
-     * @param statesNext : The pointer to deque of next states; C_ReplayBuffer::statesNext_.
-     * @param rewards : The pointer to deque of rewards; C_ReplayBuffer::rewards_.
-     * @param actions : The pointer to deque of actions; C_ReplayBuffer::actions.
-     * @param dones : The pointer to deque of dones; C_ReplayBuffer::dones_.
-     * @param priorities : The pointer to deque of priorities; C_ReplayBuffer::priorities_.
-     * @param probabilities : The pointer to deque of probabilities; C_ReplayBuffer::probabilities_.
-     * @param weights : The pointer to deque of weights; C_ReplayBuffer::weights_.
-     */
-    transitionInformationReference_["states_current"] = statesCurrent;
-    transitionInformationReference_["states_next"] = statesNext;
-    transitionInformationReference_["rewards"] = rewards;
-    transitionInformationReference_["actions"] = actions;
-    transitionInformationReference_["dones"] = dones;
-    transitionInformationReference_["priorities"] = priorities;
-    transitionInformationReference_["probabilities"] = probabilities;
-    transitionInformationReference_["weights"] = weights;
-}
-
-void C_ReplayBuffer::C_ReplayBufferData::set_transition_information_references(
-        std::string &key,
-        std::deque<torch::Tensor> *&reference) {
-    /*!
-     * Function to set the references to C_ReplayBuffer::C_MemoryData::transitionInformationReference_ for a single key.
-     *
-     * @param key : The key on which reference is to be set.
-     * @param *reference : The reference pointer.
-     */
-    transitionInformationReference_[key] = reference;
-}
-
-void C_ReplayBuffer::C_ReplayBufferData::set_terminal_state_indices_reference(
-        std::deque<int64_t> *&terminalStateIndicesReference) {
-    /*!
-     * Function to set the references to C_ReplayBuffer::C_MemoryData::transitionInformationReference_.
-     *
-     * @param *terminalStateIndicesReference: The reference to C_ReplayBuffer::terminalStateIndices_.
-     */
-    terminalIndicesReference_ = terminalStateIndicesReference;
-}
-
-void C_ReplayBuffer::C_ReplayBufferData::set_priorities_reference(
-        std::deque<float_t> *&prioritiesFloatReference) {
-    /*!
-     * Function to set the references to C_ReplayBuffer::C_MemoryData::prioritiesFloatReference_.
-     *
-     * @param prioritiesFloatReference: The reference to C_ReplayBuffer:prioritiesFloat_.
-     */
-    prioritiesFloatReference_ = prioritiesFloatReference;
-}
 
 C_ReplayBuffer::C_ReplayBuffer(int64_t bufferSize,
-                   const std::string &device,
-                   const int32_t &prioritizationStrategyCode,
-                   const int32_t &batchSize) {
+                               const std::string &device,
+                               const int32_t &prioritizationStrategyCode,
+                               const int32_t &batchSize) {
     /*!
      * The class constructor for C_ReplayBuffer. This constructor initialised the C_ReplayBuffer class and allocates the
      * required memory as per input arguments. This initialises the rlpack._C.replay_buffer.ReplayBuffer.C_ReplayBuffer and is
@@ -137,7 +21,7 @@ C_ReplayBuffer::C_ReplayBuffer(int64_t bufferSize,
      *
      */
     bufferSize_ = bufferSize;
-    device_ = deviceMap_[device];
+    device_ = Maps::deviceMap[device];
     prioritizationStrategyCode_ = prioritizationStrategyCode;
     batchSize_ = batchSize;
     cMemoryData = std::make_shared<C_ReplayBufferData>();
@@ -240,14 +124,14 @@ C_ReplayBuffer::~C_ReplayBuffer() {
 }
 
 void C_ReplayBuffer::insert(torch::Tensor &stateCurrent,
-                      torch::Tensor &stateNext,
-                      torch::Tensor &reward,
-                      torch::Tensor &action,
-                      torch::Tensor &done,
-                      torch::Tensor &priority,
-                      torch::Tensor &probability,
-                      torch::Tensor &weight,
-                      bool isTerminalState) {
+                            torch::Tensor &stateNext,
+                            torch::Tensor &reward,
+                            torch::Tensor &action,
+                            torch::Tensor &done,
+                            torch::Tensor &priority,
+                            torch::Tensor &probability,
+                            torch::Tensor &weight,
+                            bool isTerminalState) {
     /*!
      * Insertion method for C_ReplayBuffer. This is the C++ backend of rlpack._C.replay_buffer.ReplayBuffer.insert method.
      *
@@ -315,15 +199,15 @@ std::map<std::string, torch::Tensor> C_ReplayBuffer::get_item(int64_t index) {
 }
 
 void C_ReplayBuffer::set_item(int64_t index,
-                        torch::Tensor &stateCurrent,
-                        torch::Tensor &stateNext,
-                        torch::Tensor &reward,
-                        torch::Tensor &action,
-                        torch::Tensor &done,
-                        torch::Tensor &priority,
-                        torch::Tensor &probability,
-                        torch::Tensor &weight,
-                        bool isTerminalState) {
+                              torch::Tensor &stateCurrent,
+                              torch::Tensor &stateNext,
+                              torch::Tensor &reward,
+                              torch::Tensor &action,
+                              torch::Tensor &done,
+                              torch::Tensor &priority,
+                              torch::Tensor &probability,
+                              torch::Tensor &weight,
+                              bool isTerminalState) {
     /*!
      * Setter method for C_ReplayBuffer. This is the C++ backend of rlpack._C.replay_buffer.ReplayBuffer.__setitem__ method so can be
      * accessed by simple indexing operation (with operator []; memory[index] = index) from Python side.
@@ -420,10 +304,10 @@ void C_ReplayBuffer::delete_item(int64_t index) {
 }
 
 std::map<std::string, torch::Tensor> C_ReplayBuffer::sample(float_t forceTerminalStateProbability,
-                                                      int64_t parallelismSizeThreshold,
-                                                      float_t alpha,
-                                                      float_t beta,
-                                                      int64_t numSegments) {
+                                                            int64_t parallelismSizeThreshold,
+                                                            float_t alpha,
+                                                            float_t beta,
+                                                            int64_t numSegments) {
     /*!
      * The sampling method for C_ReplayBuffer. This is the C++ backend of rlpack._C.replay_buffer.ReplayBuffer.sample. Sampling is done
      * as per the prioritization strategy specified during initialisation of C_ReplayBuffer.
@@ -552,6 +436,7 @@ std::map<std::string, torch::Tensor> C_ReplayBuffer::sample(float_t forceTermina
         sampledDones_[index] = dones_[loadedIndex];
         sampledPriorities_[index] = priorities_[loadedIndex];
         sampledIndices_[index] = torch::full({}, loadedIndex);
+        sampledIndices_[index] = torch::full({}, loadedIndex);
         index++;
     }
     auto floatTensorOptions = torch::TensorOptions().device(device_).dtype(torch::kFloat32);
@@ -587,7 +472,7 @@ std::map<std::string, torch::Tensor> C_ReplayBuffer::sample(float_t forceTermina
 }
 
 void C_ReplayBuffer::update_priorities(torch::Tensor &randomIndices,
-                                 torch::Tensor &newPriorities) {
+                                       torch::Tensor &newPriorities) {
     /*!
      * The method to update priorities as per new values computed by agent as per the prioritization strategy. This
      * is the C++ backend of rlpack._C.replay_buffer.ReplayBuffer.update_priorities method.
@@ -609,20 +494,20 @@ void C_ReplayBuffer::update_priorities(torch::Tensor &randomIndices,
     }
 }
 
-C_ReplayBuffer::C_ReplayBufferData C_ReplayBuffer::view() const {
+C_ReplayBufferData C_ReplayBuffer::view() const {
     /*!
-     * The pointer to C_ReplayBuffer::C_MemoryData object. This will contain references of data in C_ReplayBuffer and provides
+     * The pointer to C_ReplayBufferData object. This will contain references of data in C_ReplayBuffer and provides
      * an easy data view. This is the C++ backend of rlpack._C.replay_buffer.ReplayBuffer.view method.
      */
     return *cMemoryData;
 }
 
-void C_ReplayBuffer::initialize(C_ReplayBuffer::C_ReplayBufferData &viewC_MemoryData) {
+void C_ReplayBuffer::initialize(C_ReplayBufferData &viewC_MemoryData) {
     /*!
-     * Initialize method for C_ReplayBuffer for initializing all the data from an object of C_ReplayBuffer::C_MemoryData. This is
+     * Initialize method for C_ReplayBuffer for initializing all the data from an object of C_ReplayBufferData. This is
      * the C++ backend of rlpack._C.replay_buffer.ReplayBuffer.initialize method
      *
-     * @param viewC_MemoryData : An object of C_ReplayBuffer::C_MemoryData.
+     * @param viewC_MemoryData : An object of C_ReplayBufferData from which C_ReplayBuffer has to be initialized.
      */
     cMemoryData = std::make_shared<C_ReplayBufferData>(viewC_MemoryData);
     auto transitionInformation = cMemoryData->dereference_transition_information();
@@ -657,7 +542,7 @@ void C_ReplayBuffer::clear() {
     priorities_.clear();
     probabilities_.clear();
     weights_.clear();
-    if(sumTreeSharedPtr_ != nullptr){
+    if (sumTreeSharedPtr_ != nullptr) {
         sumTreeSharedPtr_->reset();
     }
 }
@@ -690,8 +575,8 @@ int64_t C_ReplayBuffer::tree_height() {
      *
      * @return The tree height of the tree built.
      */
-     // sumTreeSharedPtr_ is set to nullptr by default and only changes when using proportional prioritization strategy.
-    if(sumTreeSharedPtr_ == nullptr){
+    // sumTreeSharedPtr_ is set to nullptr by default and only changes when using proportional prioritization strategy.
+    if (sumTreeSharedPtr_ == nullptr) {
         throw std::runtime_error("Accessing `tree_height` method when not using proportional prioritization strategy");
     }
     return sumTreeSharedPtr_->get_tree_height();
@@ -711,8 +596,8 @@ torch::Tensor C_ReplayBuffer::compute_probabilities(torch::Tensor &priorities, f
 }
 
 torch::Tensor C_ReplayBuffer::compute_important_sampling_weights(torch::Tensor &probabilities,
-                                                           int64_t currentSize,
-                                                           float_t beta) {
+                                                                 int64_t currentSize,
+                                                                 float_t beta) {
     /*!
      * Method to compute the important sampling weights for each probabilities.
      *

@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$class_offload.html" title="Template Offload class for CPU with CPU optimized OpenMP routines." alt="" coords="5,5,132,31"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,49,63,74"/>
+<area shape="rect" id="node2" href="$classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html" title="This class provides the python interface to C_ReplayBuffer, the C++ class which performs heavier work..." alt="" coords="131,5,291,45"/>
+<area shape="rect" id="node3" href="$classrlpack_1_1dqn_1_1utils_1_1process__prioritization__params_1_1_process_prioritization_params.html" title="Class to process prioritization parameters from input for DQN." alt="" coords="111,70,312,125"/>
 </map>

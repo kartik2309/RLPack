@@ -2,9 +2,9 @@ var searchData=
 [
   ['deep_20q_2dnetworks_0',['Deep Q-Networks',['../dqn.html',1,'']]],
   ['delete_5fitem_1',['delete_item',['../class_c___replay_buffer.html#a79d153530e88175167c90dc03afc8017',1,'C_ReplayBuffer::delete_item()'],['../class_c___grad_accumulator.html#aacc8717c9c742cfbe88a747c8df51854',1,'C_GradAccumulator::delete_item()']]],
-  ['dereference_5fpriorities_2',['dereference_priorities',['../struct_c___replay_buffer_1_1_c___replay_buffer_data.html#a96d2bb6f60907de3a8ac78d072ad50f2',1,'C_ReplayBuffer::C_ReplayBufferData']]],
-  ['dereference_5fterminal_5fstate_5findices_3',['dereference_terminal_state_indices',['../struct_c___replay_buffer_1_1_c___replay_buffer_data.html#a4ae176c61da39910f34f962f8d076902',1,'C_ReplayBuffer::C_ReplayBufferData']]],
-  ['dereference_5ftransition_5finformation_4',['dereference_transition_information',['../struct_c___replay_buffer_1_1_c___replay_buffer_data.html#aba0df7ad45aa34a9db3029e6a803144f',1,'C_ReplayBuffer::C_ReplayBufferData']]],
+  ['dereference_5fpriorities_2',['dereference_priorities',['../class_c___replay_buffer_data.html#a76f67712cc812030dfce897262021253',1,'C_ReplayBufferData']]],
+  ['dereference_5fterminal_5fstate_5findices_3',['dereference_terminal_state_indices',['../class_c___replay_buffer_data.html#a8b75ed1bc4adb241d0c7f1b888a9ebec',1,'C_ReplayBufferData']]],
+  ['dereference_5ftransition_5finformation_4',['dereference_transition_information',['../class_c___replay_buffer_data.html#a80ed81c6f9315b2783b420055d57ddad',1,'C_ReplayBufferData']]],
   ['device_5',['device',['../classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a05e8b2d000bd94f5fb854516c84200e5',1,'rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent.device()'],['../classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a288f640a25684e3d7f30c22f0f0a5c39',1,'rlpack._C.replay_buffer.ReplayBuffer.device()'],['../classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#afe7c028c868812f954e364a624fbba8c',1,'rlpack.dqn.utils.dqn_agent.DqnAgent.device()']]],
   ['device_5f_6',['device_',['../class_c___replay_buffer.html#a54f6468d839381cd123f21a751ef643a',1,'C_ReplayBuffer::device_()'],['../class_c___rollout_buffer.html#a199bba23efd9f47c37194558a60f80f2',1,'C_RolloutBuffer::device_()']]],
   ['devicemap_7',['deviceMap',['../class_maps.html#a6549405b43cee13c49f2c44e5beddf96',1,'Maps']]],

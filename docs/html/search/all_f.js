@@ -35,7 +35,7 @@ var searchData=
   ['replay_5fbuffer_32',['replay_buffer',['../group__replay__buffer__group.html',1,'(Global Namespace)'],['../namespacerlpack_1_1___c_1_1replay__buffer.html',1,'rlpack._C.replay_buffer']]],
   ['replay_5fbuffer_2epy_33',['replay_buffer.py',['../replay__buffer_8py.html',1,'']]],
   ['replaybuffer_34',['ReplayBuffer',['../classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html',1,'rlpack::_C::replay_buffer']]],
-  ['reset_35',['reset',['../class_offload.html#aef50f7451201849f42e5f9eadcd978cf',1,'Offload::reset()'],['../class_sum_tree.html#ab091f9a2ad55e5e76f04a3484b3a4039',1,'SumTree::reset()']]],
+  ['reset_35',['reset',['../class_sum_tree.html#ab091f9a2ad55e5e76f04a3484b3a4039',1,'SumTree::reset()'],['../class_offload.html#aef50f7451201849f42e5f9eadcd978cf',1,'Offload::reset()']]],
   ['reshape_5ffunc_36',['reshape_func',['../classrlpack_1_1trainer_1_1trainer_1_1_trainer.html#a0f221900fd693eec71cb269bf5c32dd2',1,'rlpack::trainer::trainer::Trainer']]],
   ['result_37',['result',['../class_offload.html#a1fd1822644e458927a984982c58ddbb5',1,'Offload']]],
   ['rewards_38',['rewards',['../classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a35a730cd69a9f25ef0557aaa8e624f2b',1,'rlpack::utils::base::trainer_base::TrainerBase']]],

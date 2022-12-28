@@ -98,7 +98,7 @@ PYBIND11_MODULE(C_ReplayBuffer, m) {
                         return reprString;
                     },
                     pybind11::return_value_policy::reference)
-            .def(pybind11::pickle([](C_ReplayBuffer &cReplayBuffer) { return cReplayBuffer.view(); }, [](C_ReplayBuffer::C_ReplayBufferData &init) {
+            .def(pybind11::pickle([](C_ReplayBuffer &cReplayBuffer) { return cReplayBuffer.view(); }, [](C_ReplayBufferData &init) {
                  auto cReplayBuffer = new C_ReplayBuffer();
                  cReplayBuffer->initialize(init);
                  return *cReplayBuffer; }), "Pickle method for C_ReplayBuffer.", pybind11::return_value_policy::reference);
@@ -106,8 +106,8 @@ PYBIND11_MODULE(C_ReplayBuffer, m) {
      * Python binding for C_MemoryData class. Only relevant methods are exposed to Python.
      * This will be available only via C_ReplayBuffer object.
      */
-    pybind11::class_<C_ReplayBuffer::C_ReplayBufferData>(m, "C_ReplayBufferData")
-            .def("__repr__", [](C_ReplayBuffer::C_ReplayBufferData &cReplayBufferData) {
+    pybind11::class_<C_ReplayBufferData>(m, "C_ReplayBufferData")
+            .def("__repr__", [](C_ReplayBufferData &cReplayBufferData) {
                 std::string reprString;
                 std::stringstream ss;
                 ss << &cReplayBufferData;
@@ -115,27 +115,27 @@ PYBIND11_MODULE(C_ReplayBuffer, m) {
                 return reprString;
             })
             .def(
-                    "transition_information", [](C_ReplayBuffer::C_ReplayBufferData &cReplayBufferData) {
+                    "transition_information", [](C_ReplayBufferData &cReplayBufferData) {
                         return cReplayBufferData.dereference_transition_information();
                     },
                     pybind11::return_value_policy::reference)
             .def(
-                    "terminal_state_indices", [](C_ReplayBuffer::C_ReplayBufferData &cReplayBufferData) {
+                    "terminal_state_indices", [](C_ReplayBufferData &cReplayBufferData) {
                         return cReplayBufferData.dereference_terminal_state_indices();
                     },
                     pybind11::return_value_policy::reference)
             .def(
-                    "priorities", [](C_ReplayBuffer::C_ReplayBufferData &cReplayBufferData) {
+                    "priorities", [](C_ReplayBufferData &cReplayBufferData) {
                         return cReplayBufferData.dereference_priorities();
                     },
                     pybind11::return_value_policy::reference)
-            .def(pybind11::pickle([](C_ReplayBuffer::C_ReplayBufferData &cReplayBufferData) {
+            .def(pybind11::pickle([](C_ReplayBufferData &cReplayBufferData) {
                  pybind11::dict cMemoryDataDict;
                  cMemoryDataDict["transition_information"] = cReplayBufferData.dereference_transition_information();
                  cMemoryDataDict["terminal_state_indices"] = cReplayBufferData.dereference_terminal_state_indices();
                  cMemoryDataDict["priorities"] = cReplayBufferData.dereference_priorities();
                  return cMemoryDataDict; }, [](pybind11::dict &init) {
-                 auto *cReplayBufferData = new C_ReplayBuffer::C_ReplayBufferData();
+                 auto *cReplayBufferData = new C_ReplayBufferData();
                  auto transitionInformation = init["transition_information"]
                      .cast<std::map<std::string, std::deque<torch::Tensor>>>();
                  for (auto &pair : transitionInformation) {

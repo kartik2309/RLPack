@@ -2,20 +2,6 @@ var group__replay__buffer__group =
 [
     [ "offload", "group__offload__group.html", "group__offload__group" ],
     [ "C_ReplayBuffer", "class_c___replay_buffer.html", [
-      [ "C_ReplayBufferData", "struct_c___replay_buffer_1_1_c___replay_buffer_data.html", [
-        [ "C_ReplayBufferData", "struct_c___replay_buffer_1_1_c___replay_buffer_data.html#a79c73dedafed5c63855fdbb6ba903db7", null ],
-        [ "~C_ReplayBufferData", "struct_c___replay_buffer_1_1_c___replay_buffer_data.html#aae13dfa98220bcac5d729aff71776e97", null ],
-        [ "dereference_priorities", "struct_c___replay_buffer_1_1_c___replay_buffer_data.html#a96d2bb6f60907de3a8ac78d072ad50f2", null ],
-        [ "dereference_terminal_state_indices", "struct_c___replay_buffer_1_1_c___replay_buffer_data.html#a4ae176c61da39910f34f962f8d076902", null ],
-        [ "dereference_transition_information", "struct_c___replay_buffer_1_1_c___replay_buffer_data.html#aba0df7ad45aa34a9db3029e6a803144f", null ],
-        [ "set_priorities_reference", "struct_c___replay_buffer_1_1_c___replay_buffer_data.html#a37bfafc65986c3a59e41d74ed636894a", null ],
-        [ "set_terminal_state_indices_reference", "struct_c___replay_buffer_1_1_c___replay_buffer_data.html#a20081f690cc0f76e431cd95ea05240b1", null ],
-        [ "set_transition_information_references", "struct_c___replay_buffer_1_1_c___replay_buffer_data.html#ac3915a510e3f8b671d1036c63153bf92", null ],
-        [ "set_transition_information_references", "struct_c___replay_buffer_1_1_c___replay_buffer_data.html#a4b47a209b4d54e3c966854534df94b3e", null ],
-        [ "prioritiesFloatReference_", "struct_c___replay_buffer_1_1_c___replay_buffer_data.html#ab626e2a99dcac75b58d4fc3dffdc1804", null ],
-        [ "terminalIndicesReference_", "struct_c___replay_buffer_1_1_c___replay_buffer_data.html#a821e78bcd32670f5de9427499c697a0d", null ],
-        [ "transitionInformationReference_", "struct_c___replay_buffer_1_1_c___replay_buffer_data.html#aa5129c0860cf4f9741a74c7edea55bc2", null ]
-      ] ],
       [ "C_ReplayBuffer", "class_c___replay_buffer.html#a2c7c71cbd7dc177b319a8fc6c5d23862", null ],
       [ "C_ReplayBuffer", "class_c___replay_buffer.html#a19e1b9e38aeeb77a186f996b856d93e4", null ],
       [ "~C_ReplayBuffer", "class_c___replay_buffer.html#a80e6b40b1c0dd7cbc60c9cee63e0cd78", null ],
@@ -24,7 +10,7 @@ var group__replay__buffer__group =
       [ "compute_probabilities", "class_c___replay_buffer.html#aa60ef7d54c2cd8cbad5893378763b263", null ],
       [ "delete_item", "class_c___replay_buffer.html#a79d153530e88175167c90dc03afc8017", null ],
       [ "get_item", "class_c___replay_buffer.html#a512b1b927a3de28762a03c27e5510034", null ],
-      [ "initialize", "class_c___replay_buffer.html#aee073519d549e4f840cd0626cdd5f758", null ],
+      [ "initialize", "class_c___replay_buffer.html#a6e21c6e57cb9b7bdf86cb9e9199b7921", null ],
       [ "insert", "class_c___replay_buffer.html#aa9fdc034a066f3eb01e0f105fc245057", null ],
       [ "num_terminal_states", "class_c___replay_buffer.html#ac61bf719da43d8fd0848049490f134f2", null ],
       [ "sample", "class_c___replay_buffer.html#a5e9a8cc182ac0021b160c2a2ffb430b4", null ],
@@ -32,7 +18,7 @@ var group__replay__buffer__group =
       [ "size", "class_c___replay_buffer.html#a6cb7394a612f44cba8ba47e35a0f3638", null ],
       [ "tree_height", "class_c___replay_buffer.html#adeb8563d0832e7f2a831e1c83b07d0c7", null ],
       [ "update_priorities", "class_c___replay_buffer.html#abf887194e4f1897179d1c7ddd9b82b66", null ],
-      [ "view", "class_c___replay_buffer.html#a4c6d229135cdf13974455a0950bdb0c5", null ],
+      [ "view", "class_c___replay_buffer.html#a2f4ecc3634be1c897d8283468bcb0058", null ],
       [ "actions_", "class_c___replay_buffer.html#ab25ac33a16fcd6ad717d652ca19ec4cb", null ],
       [ "batchSize_", "class_c___replay_buffer.html#a0bd37c8bf1f4513a5e939c83247ce5f3", null ],
       [ "bufferSize_", "class_c___replay_buffer.html#a61c6c080f5dd0f9e9b5ed29a1e3f9141", null ],

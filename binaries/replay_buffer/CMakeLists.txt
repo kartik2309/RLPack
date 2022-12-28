@@ -60,12 +60,13 @@ pybind11_add_module(
         sumtree/SumTree.h
         ${CMAKE_SOURCE_DIR}/binaries/utils/ops/arg_mergesort.cuh
         ${CMAKE_SOURCE_DIR}/binaries/utils/maps.h
-        utils/CudaOffload.cuh
-        utils/HostOffload.tpp
-        utils/Utils.h
+        offload/CudaOffload.cuh
+        offload/HostOffload.tpp
+        offload/Offload.h
+        replay_buffer_data/C_ReplayBufferData.cpp
+        replay_buffer_data/C_ReplayBufferData.h
         C_ReplayBuffer.cu
         C_ReplayBuffer.cuh
-
         Binding.cu
 )
 

@@ -2,6 +2,5 @@
 <area shape="rect" id="node1" title="This class implements the basic DQN methodology, i.e." alt="" coords="5,255,175,295"/>
 <area shape="rect" id="node2" href="$classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html" title="The DqnAgent is the base class for DQN methods." alt="" coords="23,167,157,207"/>
 <area shape="rect" id="node3" href="$classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html" title="The base class for all agents." alt="" coords="11,79,169,119"/>
-<area shape="rect" id="node4" title=" " alt="" coords="23,5,80,31"/>
-<area shape="rect" id="node5" title=" " alt="" coords="105,5,155,31"/>
+<area shape="rect" id="node4" title=" " alt="" coords="65,5,115,31"/>
 </map>
