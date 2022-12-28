@@ -72,9 +72,9 @@ class RolloutBuffer:
     def get_stacked_action_log_probabilities(self) -> pytorch.Tensor:
         """
         Gets the stacked log probabilities of action in the given distribution accumulated so far.
-        @return: pytorch.Tensor: The tensor of rewards log probabilities of action.
+        @return: pytorch.Tensor: The tensor of log of action probabilities of action.
         """
-        return self.c_rollout_buffer.get_stacked_action_probabilities()[
+        return self.c_rollout_buffer.get_stacked_action_log_probabilities()[
             "action_log_probabilities"
         ]
 
