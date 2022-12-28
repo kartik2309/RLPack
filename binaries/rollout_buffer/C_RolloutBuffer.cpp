@@ -24,7 +24,7 @@ C_RolloutBuffer::C_RolloutBuffer(int64_t bufferSize, std::string &device, std::s
 }
 
 /*!
- * Default destructor C_GradAccumulator
+ * Default destructor C_RolloutBuffer
  */
 C_RolloutBuffer::~C_RolloutBuffer() = default;
 
