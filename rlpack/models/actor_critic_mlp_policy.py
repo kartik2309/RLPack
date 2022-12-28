@@ -70,7 +70,7 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         ## The feature extractor for critic model. This will always be None if network is shared. @I{# noqa: E266}
         self.critic_feature_extractor = None
         ## The projection vector for actor. This will be None if `use_actor_projection` is False. @I{# noqa: E266}
-        self.action_projector = None
+        self.actor_projector = None
         ## The core activation function to be used. This will be used in feature extractor @I{# noqa: E266}
         ## and between feature extractor and heads. @I{# noqa: E266}
         self.activation_core = activation[0]
@@ -80,11 +80,11 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         self.value_activation = None
         if not share_network:
             self._set_non_shared_network_attributes(
-                sequence_length, hidden_sizes, activation, dropout
+                sequence_length, hidden_sizes, activation
             )
         else:
             self._set_shared_network_attributes(
-                sequence_length, hidden_sizes, activation, dropout
+                sequence_length, hidden_sizes, activation
             )
         # Process `activation`
         activation = self._process_activation(activation, use_actor_projection)
@@ -96,7 +96,7 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
             out_features=out_features,
         )
         if use_actor_projection:
-            self.action_projector = pytorch.nn.Linear(
+            self.actor_projector = pytorch.nn.Linear(
                 in_features=hidden_sizes[-1], out_features=out_features
             )
         ## The final head for critic; creates the state value. @I{# noqa: E266}
@@ -111,6 +111,8 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
             self._apply_critic_activation = True
         ## The object to flatten the output fo feature extractor. @I{# noqa: E266}
         self.flatten = pytorch.nn.Flatten(start_dim=1, end_dim=-1)
+        ## The input dropout probability. @I{# noqa: E266}
+        self.dropout = pytorch.nn.Dropout(dropout)
 
     def forward(
         self, x: pytorch.Tensor
@@ -159,14 +161,21 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
             Tuple[pytorch.Tensor, pytorch.Tensor],
         ]: The tuple of actor and critic outputs.
         """
+        # Extract features from input.
         features = self.mlp_feature_extractor(x)
         features = self.activation_core(features)
+        # Apply dropout on features.
+        features = self.dropout(features)
+        # Pass the features through the respective heads.
         action_outputs = self.actor_head(features)
-        action_outputs = self.flatten(action_outputs)
         state_value = self.critic_head(features)
+        # Flatten action and state outputs
+        action_outputs = self.flatten(action_outputs)
         state_value = self.flatten(state_value)
         if self.use_actor_projection:
-            action_projection = self.action_projector(features)
+            # When actor projection is to be used, pass through actor_projector.
+            action_projection = self.actor_projector(features)
+            # Flatten action and action projections.
             action_projection = self.flatten(action_projection)
             action_outputs = [action_outputs, action_projection]
         return action_outputs, state_value
@@ -185,16 +194,22 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
             Tuple[pytorch.Tensor, pytorch.Tensor],
         ]: The tuple of actor and critic outputs.
         """
+        # Extract features from input.
         action_features = self.actor_feature_extractor(x)
         state_value_features = self.critic_feature_extractor(x)
-        action_features = self.activation_core(action_features)
-        state_value_features = self.activation_core(state_value_features)
+        # Apply dropout on features.
+        action_features = self.dropout(action_features)
+        state_value_features = self.dropout(state_value_features)
+        # Pass the features through the respective heads.
         action_outputs = self.actor_head(action_features)
         state_value = self.critic_head(state_value_features)
-        state_value = self.flatten(state_value)
+        # Flatten action and state outputs.
         action_outputs = self.flatten(action_outputs)
+        state_value = self.flatten(state_value)
         if self.use_actor_projection:
-            action_projection = self.action_projector(action_features)
+            # When actor projection is to be used, pass through actor_projector.
+            action_projection = self.actor_projector(action_features)
+            # Flatten action and action projections.
             action_projection = self.flatten(action_projection)
             action_outputs = [action_outputs, action_projection]
         return action_outputs, state_value
@@ -204,20 +219,17 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         sequence_length: int,
         hidden_sizes: List[int],
         activation: List[Activation],
-        dropout: float = 0.5,
     ) -> None:
         """
         Sets appropriate attributes to create shared network.
         @param sequence_length: int: The sequence length of the expected tensor.
         @param hidden_sizes: List[int]: The list of hidden sizes for each layer.
         @param activation: List[Activation]: List of activations to be used.
-        @param dropout: float: The dropout to be used in the final Linear (FC) layer.
         """
         self.mlp_feature_extractor = _MlpFeatureExtractor(
             sequence_length=sequence_length,
             hidden_sizes=hidden_sizes,
             activation=activation[0],
-            dropout=dropout,
         )
 
     def _set_non_shared_network_attributes(
@@ -225,26 +237,22 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         sequence_length: int,
         hidden_sizes: List[int],
         activation: List[Activation],
-        dropout: float = 0.5,
     ) -> None:
         """
         Sets appropriate attributes to create non-shared network.
         @param sequence_length: int: The sequence length of the expected tensor.
         @param hidden_sizes: List[int]: The list of hidden sizes for each layer.
         @param activation: List[Activation]: List of activations to be used.
-        @param dropout: float: The dropout to be used in the final Linear (FC) layer.
         """
         self.actor_feature_extractor = _MlpFeatureExtractor(
             sequence_length=sequence_length,
             hidden_sizes=hidden_sizes,
             activation=activation[0],
-            dropout=dropout,
         )
         self.critic_feature_extractor = _MlpFeatureExtractor(
             sequence_length=sequence_length,
             hidden_sizes=hidden_sizes,
             activation=activation[0],
-            dropout=dropout,
         )
 
     @staticmethod

@@ -25,7 +25,6 @@ class _MlpFeatureExtractor(pytorch.nn.Module):
         sequence_length: int,
         hidden_sizes: List[int],
         activation: Activation = pytorch.nn.ReLU(),
-        dropout: float = 0.5,
     ):
         """
         Initialize MlpFeatureExtractor model.
@@ -33,7 +32,6 @@ class _MlpFeatureExtractor(pytorch.nn.Module):
         @param hidden_sizes: List[int]: The list of hidden sizes for each layer.
         @param activation: Activation: The activation function class for the model. Must be an initialized
             activation object from PyTorch's nn (torch.nn) module.
-        @param dropout: float: The dropout to be used in the final Linear (FC) layer.
         """
         super(_MlpFeatureExtractor, self).__init__()
         ## The input sequence length of expected tensor. @I{# noqa: E266}
@@ -42,8 +40,6 @@ class _MlpFeatureExtractor(pytorch.nn.Module):
         self.hidden_sizes = hidden_sizes.copy()
         ## The input activation function. @I{# noqa: E266}
         self.activation = activation
-        ## The input dropout probability. @I{# noqa: E266}
-        self.dropout = pytorch.nn.Dropout(dropout)
         ## The number of layers/blocks of MLP. @I{# noqa: E266}
         self.num_blocks = len(self.hidden_sizes) - 1
         ## The ModuleDict of Linear Layers. @I{# noqa: E266}
@@ -67,5 +63,4 @@ class _MlpFeatureExtractor(pytorch.nn.Module):
             name, layer = layer_info
             x = layer(x)
             x = self.activation(x)
-        x = self.dropout(x)
         return x

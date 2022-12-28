@@ -49,6 +49,8 @@ class Mlp(pytorch.nn.Module):
             activation=activation,
             dropout=dropout,
         )
+        ## The input dropout probability. @I{# noqa: E266}
+        self.dropout = pytorch.nn.Dropout(dropout)
         ## The object to flatten the output fo feature extractor. @I{# noqa: E266}
         self.flatten = pytorch.nn.Flatten(start_dim=1, end_dim=-1)
         ## The final head to produce logits for given action. @I{# noqa: E266}
@@ -63,6 +65,7 @@ class Mlp(pytorch.nn.Module):
         @return pytorch.Tensor: The model output (logits).
         """
         x = self.mlp_feature_extractor(x)
-        x = self.flatten(x)
+        x = self.dropout(x)
         x = self.final_head(x)
+        x = self.flatten(x)
         return x
