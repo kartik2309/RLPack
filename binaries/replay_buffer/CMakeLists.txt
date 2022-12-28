@@ -6,9 +6,9 @@ include(CMakePackageConfigHelpers)
 
 # ----------------------------- Set Global Variables for CMAKE ----------------------------- #
 set(CMAKE_CXX_STANDARD 17)
-if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 8.0)
+if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.0)
     message("${CMAKE_CXX_COMPILER_VERSION}")
-    message(FATAL_ERROR "Old Version of GCC was found. Please nstall GCC 9 or above")
+    message(FATAL_ERROR "Old Version of GCC was found. Please install GCC 9 or above")
 endif ()
 set(Python_VIRTUALENV FIRST)
 if (NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
@@ -35,7 +35,7 @@ else ()
 endif ()
 if (NOT EXISTS "${Torch_PACKAGE_DIR}/kineto/")
     execute_process(
-            COMMAND sh "${CMAKE_SOURCE_DIR}/binaries/requirements/install_kineto.sh"
+            COMMAND sh "${CMAKE_SOURCE_DIR}/install_cpp_requirements.sh"
             "${Torch_PACKAGE_DIR}" "${CUDAToolkit_TARGET_DIR}"
             WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/"
             COMMAND_ECHO STDOUT
