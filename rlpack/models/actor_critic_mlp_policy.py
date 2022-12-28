@@ -160,12 +160,14 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         ]: The tuple of actor and critic outputs.
         """
         features = self.mlp_feature_extractor(x)
-        features = self.flatten(features)
         features = self.activation_core(features)
         action_outputs = self.actor_head(features)
+        action_outputs = self.flatten(action_outputs)
         state_value = self.critic_head(features)
+        state_value = self.flatten(state_value)
         if self.use_actor_projection:
             action_projection = self.action_projector(features)
+            action_projection = self.flatten(action_projection)
             action_outputs = [action_outputs, action_projection]
         return action_outputs, state_value
 
@@ -185,14 +187,15 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         """
         action_features = self.actor_feature_extractor(x)
         state_value_features = self.critic_feature_extractor(x)
-        action_features = self.flatten(action_features)
-        state_value_features = self.flatten(state_value_features)
         action_features = self.activation_core(action_features)
         state_value_features = self.activation_core(state_value_features)
         action_outputs = self.actor_head(action_features)
         state_value = self.critic_head(state_value_features)
+        state_value = self.flatten(state_value)
+        action_outputs = self.flatten(action_outputs)
         if self.use_actor_projection:
             action_projection = self.action_projector(action_features)
+            action_projection = self.flatten(action_projection)
             action_outputs = [action_outputs, action_projection]
         return action_outputs, state_value
 
