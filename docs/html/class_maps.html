@@ -98,20 +98,27 @@ $(document).ready(function(){initNavTree('class_maps.html',''); initResizable();
 <div class="header">
   <div class="summary">
 <a href="#pub-static-attribs">Static Public Attributes</a>  </div>
-  <div class="headertitle"><div class="title">Maps Class Reference</div></div>
+  <div class="headertitle"><div class="title">Maps Class Reference<div class="ingroups"><a class="el" href="group__binaries__group.html">binaries</a> &raquo; <a class="el" href="group__utils__group.html">utils</a></div></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><a class="el" href="class_maps.html" title="Maps class provides generic utility mappings for strings with various objects.">Maps</a> class provides generic utility mappings for strings with various objects.  
+ <a href="class_maps.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="maps_8h_source.html">maps.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
 <tr class="memitem:a6549405b43cee13c49f2c44e5beddf96"><td class="memItemLeft" align="right" valign="top">static std::map&lt; std::string, torch::DeviceType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_maps.html#a6549405b43cee13c49f2c44e5beddf96">deviceMap</a></td></tr>
+<tr class="memdesc:a6549405b43cee13c49f2c44e5beddf96"><td class="mdescLeft">&#160;</td><td class="mdescRight">The map between std::string and torch::DeviceType; mapping the device name in string to DeviceType.  <a href="class_maps.html#a6549405b43cee13c49f2c44e5beddf96">More...</a><br /></td></tr>
 <tr class="separator:a6549405b43cee13c49f2c44e5beddf96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ca35f3527ce4f3f77e385ce81339eda"><td class="memItemLeft" align="right" valign="top">static std::map&lt; std::string, torch::Dtype &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_maps.html#a7ca35f3527ce4f3f77e385ce81339eda">dTypeMap</a></td></tr>
+<tr class="memdesc:a7ca35f3527ce4f3f77e385ce81339eda"><td class="mdescLeft">&#160;</td><td class="mdescRight">The map between std::string and torch::Dtype; mapping the device name in string to DataType.  <a href="class_maps.html#a7ca35f3527ce4f3f77e385ce81339eda">More...</a><br /></td></tr>
 <tr class="separator:a7ca35f3527ce4f3f77e385ce81339eda"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Field Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p ><a class="el" href="class_maps.html" title="Maps class provides generic utility mappings for strings with various objects.">Maps</a> class provides generic utility mappings for strings with various objects. </p>
+</div><h2 class="groupheader">Field Documentation</h2>
 <a id="a6549405b43cee13c49f2c44e5beddf96" name="a6549405b43cee13c49f2c44e5beddf96"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6549405b43cee13c49f2c44e5beddf96">&#9670;&#160;</a></span>deviceMap</h2>
 
@@ -136,6 +143,8 @@ Static Public Attributes</h2></td></tr>
 <div class="line">            {<span class="stringliteral">&quot;cuda&quot;</span>, torch::kCUDA},</div>
 <div class="line">            {<span class="stringliteral">&quot;mps&quot;</span>, torch::kMPS}}</div>
 </div><!-- fragment -->
+<p>The map between std::string and torch::DeviceType; mapping the device name in string to DeviceType. </p>
+
 </div>
 </div>
 <a id="a7ca35f3527ce4f3f77e385ce81339eda" name="a7ca35f3527ce4f3f77e385ce81339eda"></a>
@@ -162,6 +171,8 @@ Static Public Attributes</h2></td></tr>
 <div class="line">            {<span class="stringliteral">&quot;float64&quot;</span>, torch::kFloat64},</div>
 <div class="line">    }</div>
 </div><!-- fragment -->
+<p>The map between std::string and torch::Dtype; mapping the device name in string to DataType. </p>
+
 </div>
 </div>
 </div><!-- contents -->

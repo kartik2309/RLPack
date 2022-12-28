@@ -26,6 +26,7 @@ var classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent =
     [ "clip_grad_value", "classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#a6ba570f7e0914c9da2f3c2bfe00426e1", null ],
     [ "device", "classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#afe7c028c868812f954e364a624fbba8c", null ],
     [ "dim_for_norm", "classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#abc1a1a17922ce6b2fa6eb83a58b1ab7c", null ],
+    [ "dtype", "classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#ab9b704a3e825fbee8fb62028b1608289", null ],
     [ "eps_for_norm", "classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#a48f5bd522e9c2949c8946f068d9c6494", null ],
     [ "epsilon", "classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#af0810aea28b0f30171e12a1910d70a5b", null ],
     [ "epsilon_decay_frequency", "classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#af3efdd7264b62fdc212096763225e487", null ],

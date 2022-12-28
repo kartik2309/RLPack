@@ -124,8 +124,8 @@ $(document).ready(function(){initNavTree('class_c___replay_buffer.html',''); ini
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a2c7c71cbd7dc177b319a8fc6c5d23862"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___replay_buffer.html#a2c7c71cbd7dc177b319a8fc6c5d23862">C_ReplayBuffer</a> ()</td></tr>
 <tr class="separator:a2c7c71cbd7dc177b319a8fc6c5d23862"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a19e1b9e38aeeb77a186f996b856d93e4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___replay_buffer.html#a19e1b9e38aeeb77a186f996b856d93e4">C_ReplayBuffer</a> (int64_t bufferSize, const std::string &amp;device, const int32_t &amp;prioritizationStrategyCode, const int32_t &amp;batchSize)</td></tr>
-<tr class="separator:a19e1b9e38aeeb77a186f996b856d93e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3e7aca7bd5d948551695780412753a0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___replay_buffer.html#af3e7aca7bd5d948551695780412753a0">C_ReplayBuffer</a> (int64_t bufferSize, const std::string &amp;device, const std::string &amp;dtype, const int32_t &amp;prioritizationStrategyCode, const int32_t &amp;batchSize)</td></tr>
+<tr class="separator:af3e7aca7bd5d948551695780412753a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4a9f7f35bf7601969b30cc97dd98551b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___replay_buffer.html#a4a9f7f35bf7601969b30cc97dd98551b">clear</a> ()</td></tr>
 <tr class="separator:a4a9f7f35bf7601969b30cc97dd98551b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a79d153530e88175167c90dc03afc8017"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___replay_buffer.html#a79d153530e88175167c90dc03afc8017">delete_item</a> (int64_t index)</td></tr>
@@ -181,11 +181,13 @@ Private Attributes</h2></td></tr>
 <tr class="memdesc:a54f6468d839381cd123f21a751ef643a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Torch device passed during class initialisation. Defaults to CPU.  <a href="class_c___replay_buffer.html#a54f6468d839381cd123f21a751ef643a">More...</a><br /></td></tr>
 <tr class="separator:a54f6468d839381cd123f21a751ef643a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a26e1eb2898a60eced4af23a99b53a46a"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, torch::DeviceType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___replay_buffer.html#a26e1eb2898a60eced4af23a99b53a46a">deviceMap_</a></td></tr>
-<tr class="memdesc:a26e1eb2898a60eced4af23a99b53a46a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The map between std::string and torch::DeviceType; mapping the device name in string to DeviceType.  <a href="class_c___replay_buffer.html#a26e1eb2898a60eced4af23a99b53a46a">More...</a><br /></td></tr>
 <tr class="separator:a26e1eb2898a60eced4af23a99b53a46a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab8897d65d99edd1ed59c6b8eacc17458"><td class="memItemLeft" align="right" valign="top">std::deque&lt; torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___replay_buffer.html#ab8897d65d99edd1ed59c6b8eacc17458">dones_</a></td></tr>
 <tr class="memdesc:ab8897d65d99edd1ed59c6b8eacc17458"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deque of torch tensors for dones.  <a href="class_c___replay_buffer.html#ab8897d65d99edd1ed59c6b8eacc17458">More...</a><br /></td></tr>
 <tr class="separator:ab8897d65d99edd1ed59c6b8eacc17458"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71efcf934489d61354ec94fb5e980f21"><td class="memItemLeft" align="right" valign="top">torch::Dtype&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___replay_buffer.html#a71efcf934489d61354ec94fb5e980f21">dtype_</a> = torch::kFloat32</td></tr>
+<tr class="memdesc:a71efcf934489d61354ec94fb5e980f21"><td class="mdescLeft">&#160;</td><td class="mdescRight">Torch datatype passed during class initialisation. Defaults to CPU.  <a href="class_c___replay_buffer.html#a71efcf934489d61354ec94fb5e980f21">More...</a><br /></td></tr>
+<tr class="separator:a71efcf934489d61354ec94fb5e980f21"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afb188995909af81e5c6159088610ed1d"><td class="memItemLeft" align="right" valign="top">std::vector&lt; int64_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___replay_buffer.html#afb188995909af81e5c6159088610ed1d">loadedIndices_</a></td></tr>
 <tr class="memdesc:afb188995909af81e5c6159088610ed1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vector of loaded indices. This indicates the indices that have been loaded out of total capacity of the replay buffer.  <a href="class_c___replay_buffer.html#afb188995909af81e5c6159088610ed1d">More...</a><br /></td></tr>
 <tr class="separator:afb188995909af81e5c6159088610ed1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -286,12 +288,12 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >The default non-parameterised constructor. This constructor allocates memory as per default initialised variables. This initialises the rlpack._C.replay_buffer.ReplayBuffer.C_ReplayBuffer and is equivalent to <a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a3416df8813282f487bdcebd46a3f1ce5">rlpack._C.replay_buffer.ReplayBuffer.__init__</a>.</p>
+<p >The default non-parameterised constructor. This constructor allocates memory as per default initialised variables. This initialises the rlpack._C.replay_buffer.ReplayBuffer.C_ReplayBuffer and is equivalent to <a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a1c16b271df2d03e10e6da351b69a2fe8">rlpack._C.replay_buffer.ReplayBuffer.__init__</a>.</p>
 
 </div>
 </div>
-<a id="a19e1b9e38aeeb77a186f996b856d93e4" name="a19e1b9e38aeeb77a186f996b856d93e4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a19e1b9e38aeeb77a186f996b856d93e4">&#9670;&#160;</a></span>C_ReplayBuffer() <span class="overload">[2/2]</span></h2>
+<a id="af3e7aca7bd5d948551695780412753a0" name="af3e7aca7bd5d948551695780412753a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3e7aca7bd5d948551695780412753a0">&#9670;&#160;</a></span>C_ReplayBuffer() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -310,6 +312,12 @@ Private Attributes</h2></td></tr>
           <td></td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>device</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>dtype</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -335,11 +343,12 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p >The class constructor for <a class="el" href="class_c___replay_buffer.html" title="The class C_ReplayBuffer is the C++ backend for replay buffer-buffer used in algorithms that stores t...">C_ReplayBuffer</a>. This constructor initialised the <a class="el" href="class_c___replay_buffer.html" title="The class C_ReplayBuffer is the C++ backend for replay buffer-buffer used in algorithms that stores t...">C_ReplayBuffer</a> class and allocates the required memory as per input arguments. This initialises the rlpack._C.replay_buffer.ReplayBuffer.C_ReplayBuffer and is equivalent to <a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a3416df8813282f487bdcebd46a3f1ce5">rlpack._C.replay_buffer.ReplayBuffer.__init__</a>.</p>
+<p >The class constructor for <a class="el" href="class_c___replay_buffer.html" title="The class C_ReplayBuffer is the C++ backend for replay buffer-buffer used in algorithms that stores t...">C_ReplayBuffer</a>. This constructor initialised the <a class="el" href="class_c___replay_buffer.html" title="The class C_ReplayBuffer is the C++ backend for replay buffer-buffer used in algorithms that stores t...">C_ReplayBuffer</a> class and allocates the required memory as per input arguments. This initialises the rlpack._C.replay_buffer.ReplayBuffer.C_ReplayBuffer and is equivalent to <a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a1c16b271df2d03e10e6da351b69a2fe8">rlpack._C.replay_buffer.ReplayBuffer.__init__</a>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">bufferSize</td><td>: The buffer size to be used and allocated for the memory. </td></tr>
-    <tr><td class="paramname">device</td><td>: The device transfer relevant tensors to. </td></tr>
+    <tr><td class="paramname">device</td><td>: The device to which relevant tensors are to be moved. </td></tr>
+    <tr><td class="paramname">dtype</td><td>: The datatype to which relevant tensors to be casted if necessary. </td></tr>
     <tr><td class="paramname">prioritizationStrategyCode</td><td>: The prioritization strategy code. Refer rlpack.dqn.dqn.Dqn.get_prioritization_code. </td></tr>
     <tr><td class="paramname">batchSize</td><td>: The batch size to be used for sampling.</td></tr>
   </table>
@@ -1062,8 +1071,6 @@ Private Attributes</h2></td></tr>
 <div class="line">            {<span class="stringliteral">&quot;cuda&quot;</span>, torch::kCUDA},</div>
 <div class="line">            {<span class="stringliteral">&quot;mps&quot;</span>, torch::kMPS}}</div>
 </div><!-- fragment -->
-<p>The map between std::string and torch::DeviceType; mapping the device name in string to DeviceType. </p>
-
 </div>
 </div>
 <a id="ab8897d65d99edd1ed59c6b8eacc17458" name="ab8897d65d99edd1ed59c6b8eacc17458"></a>
@@ -1087,6 +1094,30 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Deque of torch tensors for dones. </p>
+
+</div>
+</div>
+<a id="a71efcf934489d61354ec94fb5e980f21" name="a71efcf934489d61354ec94fb5e980f21"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71efcf934489d61354ec94fb5e980f21">&#9670;&#160;</a></span>dtype_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">torch::Dtype C_ReplayBuffer::dtype_ = torch::kFloat32</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Torch datatype passed during class initialisation. Defaults to CPU. </p>
 
 </div>
 </div>

@@ -143,8 +143,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1b7a920cf6b4db8c476aa6772c18df09"><td class="memItemLeft" align="right" valign="top">Dict[str, Any]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a1b7a920cf6b4db8c476aa6772c18df09">__getstate__</a> (self)</td></tr>
 <tr class="memdesc:a1b7a920cf6b4db8c476aa6772c18df09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get state method for memory.  <a href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a1b7a920cf6b4db8c476aa6772c18df09">More...</a><br /></td></tr>
 <tr class="separator:a1b7a920cf6b4db8c476aa6772c18df09"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3416df8813282f487bdcebd46a3f1ce5"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a3416df8813282f487bdcebd46a3f1ce5">__init__</a> (self, Optional[int] <a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#aa8c11c59b86c804c63f80a616824e55b">buffer_size</a>=32768, Optional[str] <a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a288f640a25684e3d7f30c22f0f0a5c39">device</a>=&quot;cpu&quot;, int <a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#af7e7cac234b74a310ef1878c334ad2cf">prioritization_strategy_code</a>=0, int batch_size=32)</td></tr>
-<tr class="separator:a3416df8813282f487bdcebd46a3f1ce5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c16b271df2d03e10e6da351b69a2fe8"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a1c16b271df2d03e10e6da351b69a2fe8">__init__</a> (self, Optional[int] <a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#aa8c11c59b86c804c63f80a616824e55b">buffer_size</a>=32768, Optional[str] <a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a288f640a25684e3d7f30c22f0f0a5c39">device</a>=&quot;cpu&quot;, Optional[str] <a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a4a18734ba48f313979a23e0f835a0acb">dtype</a>=&quot;float32&quot;, int <a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#af7e7cac234b74a310ef1878c334ad2cf">prioritization_strategy_code</a>=0, int batch_size=32)</td></tr>
+<tr class="separator:a1c16b271df2d03e10e6da351b69a2fe8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41f6f9586e2e518acf97755549dce3fa"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a41f6f9586e2e518acf97755549dce3fa">__len__</a> (self)</td></tr>
 <tr class="memdesc:a41f6f9586e2e518acf97755549dce3fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Length method for memory.  <a href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a41f6f9586e2e518acf97755549dce3fa">More...</a><br /></td></tr>
 <tr class="separator:a41f6f9586e2e518acf97755549dce3fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -223,6 +223,9 @@ Data Fields</h2></td></tr>
 <tr class="memitem:a288f640a25684e3d7f30c22f0f0a5c39"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a288f640a25684e3d7f30c22f0f0a5c39">device</a></td></tr>
 <tr class="memdesc:a288f640a25684e3d7f30c22f0f0a5c39"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>device</code> argument; indicating the device name.  <a href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a288f640a25684e3d7f30c22f0f0a5c39">More...</a><br /></td></tr>
 <tr class="separator:a288f640a25684e3d7f30c22f0f0a5c39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a18734ba48f313979a23e0f835a0acb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a4a18734ba48f313979a23e0f835a0acb">dtype</a></td></tr>
+<tr class="memdesc:a4a18734ba48f313979a23e0f835a0acb"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>dtype</code>; indicating the datatype.  <a href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a4a18734ba48f313979a23e0f835a0acb">More...</a><br /></td></tr>
+<tr class="separator:a4a18734ba48f313979a23e0f835a0acb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af7e7cac234b74a310ef1878c334ad2cf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#af7e7cac234b74a310ef1878c334ad2cf">prioritization_strategy_code</a></td></tr>
 <tr class="memdesc:af7e7cac234b74a310ef1878c334ad2cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input prioritization_strategy_code.  <a href="classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#af7e7cac234b74a310ef1878c334ad2cf">More...</a><br /></td></tr>
 <tr class="separator:af7e7cac234b74a310ef1878c334ad2cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -237,8 +240,8 @@ Static Private Member Functions</h2></td></tr>
 <div class="textblock"><p >This class provides the python interface to <a class="el" href="class_c___replay_buffer.html" title="The class C_ReplayBuffer is the C++ backend for replay buffer-buffer used in algorithms that stores t...">C_ReplayBuffer</a>, the C++ class which performs heavier workloads. </p>
 <p >This class is used as a container to store tensors and sample from that container as per desired strategy (for DQN). This is equivalent to Experience Buffer, Replay Buffer etc. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a3416df8813282f487bdcebd46a3f1ce5" name="a3416df8813282f487bdcebd46a3f1ce5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3416df8813282f487bdcebd46a3f1ce5">&#9670;&#160;</a></span>__init__()</h2>
+<a id="a1c16b271df2d03e10e6da351b69a2fe8" name="a1c16b271df2d03e10e6da351b69a2fe8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c16b271df2d03e10e6da351b69a2fe8">&#9670;&#160;</a></span>__init__()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -264,6 +267,12 @@ Static Private Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">Optional[str] &#160;</td>
+          <td class="paramname"><em>dtype</em> = <code>&quot;float32&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">int &#160;</td>
           <td class="paramname"><em>prioritization_strategy_code</em> = <code>0</code>, </td>
         </tr>
@@ -283,7 +292,8 @@ Static Private Member Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">buffer_size</td><td>Optional[int]: The buffer size of the memory. No more than specified buffer elements are stored in the memory. Default: 32768 </td></tr>
-    <tr><td class="paramname">device</td><td>str: The cuda on which models are currently running. Default: "cpu". </td></tr>
+    <tr><td class="paramname">device</td><td>str: The device on which models are currently running. Default: "cpu". </td></tr>
+    <tr><td class="paramname">dtype</td><td>str: The datatype for model parameters. Default: "float32". </td></tr>
     <tr><td class="paramname">prioritization_strategy_code</td><td>int: Indicates code for prioritization strategy. Default: 0. </td></tr>
     <tr><td class="paramname">batch_size</td><td>int: The batch size to be used for training cycle. Default: 32 </td></tr>
   </table>
@@ -1232,6 +1242,22 @@ Static Private Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The input <code>device</code> argument; indicating the device name. </p>
+
+</div>
+</div>
+<a id="a4a18734ba48f313979a23e0f835a0acb" name="a4a18734ba48f313979a23e0f835a0acb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a18734ba48f313979a23e0f835a0acb">&#9670;&#160;</a></span>dtype</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">rlpack._C.replay_buffer.ReplayBuffer.dtype</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The input <code>dtype</code>; indicating the datatype. </p>
 
 </div>
 </div>

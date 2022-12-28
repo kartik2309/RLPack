@@ -1,6 +1,6 @@
 var classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer =
 [
-    [ "__init__", "classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a3416df8813282f487bdcebd46a3f1ce5", null ],
+    [ "__init__", "classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a1c16b271df2d03e10e6da351b69a2fe8", null ],
     [ "__delitem__", "classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#af762b8baeaa29c35a2cf6c489d4afc0a", null ],
     [ "__getattr__", "classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a37b307e4ea9d0165707c74118634163e", null ],
     [ "__getitem__", "classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a122ac799f9bf0e17c7f49498d16d533b", null ],
@@ -31,5 +31,6 @@ var classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer =
     [ "buffer_size", "classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#aa8c11c59b86c804c63f80a616824e55b", null ],
     [ "c_replay_buffer", "classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a8a8bb3fb36c00663c8046670e3dc452c", null ],
     [ "device", "classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a288f640a25684e3d7f30c22f0f0a5c39", null ],
+    [ "dtype", "classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a4a18734ba48f313979a23e0f835a0acb", null ],
     [ "prioritization_strategy_code", "classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#af7e7cac234b74a310ef1878c334ad2cf", null ]
 ];

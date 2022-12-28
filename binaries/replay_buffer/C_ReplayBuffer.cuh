@@ -11,10 +11,10 @@
 #include <random>
 #include <vector>
 
+#include "../utils/maps.h"
+#include "offload/Offload.h"
 #include "replay_buffer_data/C_ReplayBufferData.h"
 #include "sumtree/SumTree.h"
-#include "offload/Offload.h"
-#include "../utils/maps.h"
 
 /*!
  * @addtogroup binaries_group binaries
@@ -48,9 +48,10 @@ public:
 
     C_ReplayBuffer();
     explicit C_ReplayBuffer(int64_t bufferSize,
-                      const std::string &device,
-                      const int32_t &prioritizationStrategyCode,
-                      const int32_t &batchSize);
+                            const std::string &device,
+                            const std::string &dtype,
+                            const int32_t &prioritizationStrategyCode,
+                            const int32_t &batchSize);
     ~C_ReplayBuffer();
 
     void insert(torch::Tensor &stateCurrent,
@@ -115,6 +116,8 @@ private:
     std::shared_ptr<SumTree> sumTreeSharedPtr_;
     //! Torch device passed during class initialisation. Defaults to CPU.
     torch::Device device_ = torch::kCPU;
+    //! Torch datatype passed during class initialisation. Defaults to CPU.
+    torch::Dtype dtype_ = torch::kFloat32;
     //! Buffer size passed during the class initialisation. Defaults to 32768.
     int64_t bufferSize_ = 32768;
     //! The counter variable the tracks the loaded indices in sync with total timesteps. Once replay buffer reaches the buffer size, this will not update.
@@ -123,7 +126,7 @@ private:
     int32_t prioritizationStrategyCode_ = 0;
     //! The batch size that is set during class initialisation. Number of samples equivalent to this are selected during sampling.
     int32_t batchSize_ = 32;
-    //! The map between std::string and torch::DeviceType; mapping the device name in string to DeviceType.
+
     std::map<std::string, torch::DeviceType> deviceMap_{
             {"cpu", torch::kCPU},
             {"cuda", torch::kCUDA},

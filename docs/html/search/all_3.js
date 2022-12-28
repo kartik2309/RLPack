@@ -5,7 +5,7 @@ var searchData=
   ['c_5fgradaccumulator_2ecpp_2',['C_GradAccumulator.cpp',['../_c___grad_accumulator_8cpp.html',1,'']]],
   ['c_5fgradaccumulator_2eh_3',['C_GradAccumulator.h',['../_c___grad_accumulator_8h.html',1,'']]],
   ['c_5freplay_5fbuffer_4',['c_replay_buffer',['../classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a8a8bb3fb36c00663c8046670e3dc452c',1,'rlpack::_C::replay_buffer::ReplayBuffer']]],
-  ['c_5freplaybuffer_5',['C_ReplayBuffer',['../class_c___replay_buffer.html',1,'C_ReplayBuffer'],['../class_c___replay_buffer.html#a2c7c71cbd7dc177b319a8fc6c5d23862',1,'C_ReplayBuffer::C_ReplayBuffer()'],['../class_c___replay_buffer.html#a19e1b9e38aeeb77a186f996b856d93e4',1,'C_ReplayBuffer::C_ReplayBuffer(int64_t bufferSize, const std::string &amp;device, const int32_t &amp;prioritizationStrategyCode, const int32_t &amp;batchSize)']]],
+  ['c_5freplaybuffer_5',['C_ReplayBuffer',['../class_c___replay_buffer.html',1,'C_ReplayBuffer'],['../class_c___replay_buffer.html#a2c7c71cbd7dc177b319a8fc6c5d23862',1,'C_ReplayBuffer::C_ReplayBuffer()'],['../class_c___replay_buffer.html#af3e7aca7bd5d948551695780412753a0',1,'C_ReplayBuffer::C_ReplayBuffer(int64_t bufferSize, const std::string &amp;device, const std::string &amp;dtype, const int32_t &amp;prioritizationStrategyCode, const int32_t &amp;batchSize)']]],
   ['c_5freplaybuffer_2ecu_6',['C_ReplayBuffer.cu',['../_c___replay_buffer_8cu.html',1,'']]],
   ['c_5freplaybuffer_2ecuh_7',['C_ReplayBuffer.cuh',['../_c___replay_buffer_8cuh.html',1,'']]],
   ['c_5freplaybufferdata_8',['C_ReplayBufferData',['../class_c___replay_buffer_data.html',1,'C_ReplayBufferData'],['../class_c___replay_buffer_data.html#a9fc8294c83ba091d2ab595f77b70d659',1,'C_ReplayBufferData::C_ReplayBufferData()']]],

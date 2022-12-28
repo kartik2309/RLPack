@@ -3,7 +3,7 @@ var group__replay__buffer__group =
     [ "offload", "group__offload__group.html", "group__offload__group" ],
     [ "C_ReplayBuffer", "class_c___replay_buffer.html", [
       [ "C_ReplayBuffer", "class_c___replay_buffer.html#a2c7c71cbd7dc177b319a8fc6c5d23862", null ],
-      [ "C_ReplayBuffer", "class_c___replay_buffer.html#a19e1b9e38aeeb77a186f996b856d93e4", null ],
+      [ "C_ReplayBuffer", "class_c___replay_buffer.html#af3e7aca7bd5d948551695780412753a0", null ],
       [ "~C_ReplayBuffer", "class_c___replay_buffer.html#a80e6b40b1c0dd7cbc60c9cee63e0cd78", null ],
       [ "clear", "class_c___replay_buffer.html#a4a9f7f35bf7601969b30cc97dd98551b", null ],
       [ "compute_important_sampling_weights", "class_c___replay_buffer.html#a292f1df1ca5c8c7a6da91b44d6c01466", null ],
@@ -26,6 +26,7 @@ var group__replay__buffer__group =
       [ "device_", "class_c___replay_buffer.html#a54f6468d839381cd123f21a751ef643a", null ],
       [ "deviceMap_", "class_c___replay_buffer.html#a26e1eb2898a60eced4af23a99b53a46a", null ],
       [ "dones_", "class_c___replay_buffer.html#ab8897d65d99edd1ed59c6b8eacc17458", null ],
+      [ "dtype_", "class_c___replay_buffer.html#a71efcf934489d61354ec94fb5e980f21", null ],
       [ "loadedIndices_", "class_c___replay_buffer.html#afb188995909af81e5c6159088610ed1d", null ],
       [ "loadedIndicesSlice_", "class_c___replay_buffer.html#a8412eac15be5d9cf7d784d8b77b90d58", null ],
       [ "offloadFloat_", "class_c___replay_buffer.html#af9d26f995bf0ce86b62d9a565c69d6a0", null ],

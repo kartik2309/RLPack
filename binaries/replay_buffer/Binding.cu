@@ -24,10 +24,11 @@ PYBIND11_MODULE(C_ReplayBuffer, m) {
      */
     m.doc() = "Module to provide Python binding for C_ReplayBuffer class";
     pybind11::class_<C_ReplayBuffer>(m, "C_ReplayBuffer")
-            .def(pybind11::init<int64_t, std::string &, int32_t, int32_t>(),
+            .def(pybind11::init<int64_t, std::string &, std::string &, int32_t, int32_t>(),
                  "Class constructor for C_ReplayBuffer",
                  pybind11::arg("buffer_size"),
                  pybind11::arg("device"),
+                 pybind11::arg("dtype"),
                  pybind11::arg("prioritization_strategy_code"),
                  pybind11::arg("batch_size"))
             .def("insert", &C_ReplayBuffer::insert,

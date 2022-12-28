@@ -133,7 +133,7 @@ $(document).ready(function(){initNavTree('classrlpack_1_1models_1_1actor__critic
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a1724d3929f1f8ff24afce5735bf292ee"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a1724d3929f1f8ff24afce5735bf292ee">__init__</a> (self, int sequence_length, List[int] hidden_sizes, Union[int, Tuple[int, Union[List[int], None]]] action_space, Union[<a class="el" href="classrlpack_1_1utils_1_1typing__hints_1_1_activation.html">Activation</a>, List[<a class="el" href="classrlpack_1_1utils_1_1typing__hints_1_1_activation.html">Activation</a>]] activation=pytorch.nn.ReLU(), float dropout=0.5, bool <a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aecf9f6171326ea4e102b94f500ec83bc">share_network</a>=False, bool <a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#acc3d0c82767c3101f50c0dd71b9a6e42">use_actor_projection</a>=False)</td></tr>
+<tr class="memitem:a1724d3929f1f8ff24afce5735bf292ee"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a1724d3929f1f8ff24afce5735bf292ee">__init__</a> (self, int sequence_length, List[int] hidden_sizes, Union[int, Tuple[int, Union[List[int], None]]] action_space, Union[<a class="el" href="classrlpack_1_1utils_1_1typing__hints_1_1_activation.html">Activation</a>, List[<a class="el" href="classrlpack_1_1utils_1_1typing__hints_1_1_activation.html">Activation</a>]] activation=pytorch.nn.ReLU(), float <a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a815a4185be1c351bf7f0e40b26c01749">dropout</a>=0.5, bool <a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aecf9f6171326ea4e102b94f500ec83bc">share_network</a>=False, bool <a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#acc3d0c82767c3101f50c0dd71b9a6e42">use_actor_projection</a>=False)</td></tr>
 <tr class="memdesc:a1724d3929f1f8ff24afce5735bf292ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize <a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html" title="This class is a PyTorch Model implementing the MLP based Actor-Critic Policy.">ActorCriticMlpPolicy</a> model.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a1724d3929f1f8ff24afce5735bf292ee">More...</a><br /></td></tr>
 <tr class="separator:a1724d3929f1f8ff24afce5735bf292ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a80306f9557f50f930ca86426af1bd922"><td class="memItemLeft" align="right" valign="top">Union[ Tuple[List[pytorch.Tensor], pytorch.Tensor], Tuple[pytorch.Tensor, pytorch.Tensor],]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a80306f9557f50f930ca86426af1bd922">forward</a> (self, pytorch.Tensor x)</td></tr>
@@ -142,9 +142,6 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a4712950de35d18d8d03c690c677ea3fb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a4712950de35d18d8d03c690c677ea3fb">action_projector</a></td></tr>
-<tr class="memdesc:a4712950de35d18d8d03c690c677ea3fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">The projection vector for actor.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a4712950de35d18d8d03c690c677ea3fb">More...</a><br /></td></tr>
-<tr class="separator:a4712950de35d18d8d03c690c677ea3fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a72f824bdfbbed6b7392003193f29526d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a72f824bdfbbed6b7392003193f29526d">activation_core</a></td></tr>
 <tr class="memdesc:a72f824bdfbbed6b7392003193f29526d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The core activation function to be used.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a72f824bdfbbed6b7392003193f29526d">More...</a><br /></td></tr>
 <tr class="separator:a72f824bdfbbed6b7392003193f29526d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -157,12 +154,18 @@ Data Fields</h2></td></tr>
 <tr class="memitem:aeccac34c455d3068c34a4cde629e7d85"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aeccac34c455d3068c34a4cde629e7d85">actor_head</a></td></tr>
 <tr class="memdesc:aeccac34c455d3068c34a4cde629e7d85"><td class="mdescLeft">&#160;</td><td class="mdescRight">The final head for actor; creates logits/parameters for actions.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aeccac34c455d3068c34a4cde629e7d85">More...</a><br /></td></tr>
 <tr class="separator:aeccac34c455d3068c34a4cde629e7d85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a077ad80c1325b346324d336ac836cc81"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a077ad80c1325b346324d336ac836cc81">actor_projector</a></td></tr>
+<tr class="memdesc:a077ad80c1325b346324d336ac836cc81"><td class="mdescLeft">&#160;</td><td class="mdescRight">The projection vector for actor.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a077ad80c1325b346324d336ac836cc81">More...</a><br /></td></tr>
+<tr class="separator:a077ad80c1325b346324d336ac836cc81"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa41057f745afd80c3c64913d4a7e9806"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aa41057f745afd80c3c64913d4a7e9806">critic_feature_extractor</a></td></tr>
 <tr class="memdesc:aa41057f745afd80c3c64913d4a7e9806"><td class="mdescLeft">&#160;</td><td class="mdescRight">The feature extractor for critic model.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aa41057f745afd80c3c64913d4a7e9806">More...</a><br /></td></tr>
 <tr class="separator:aa41057f745afd80c3c64913d4a7e9806"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a20b1b9443191489e94af5b586d6fae8f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a20b1b9443191489e94af5b586d6fae8f">critic_head</a></td></tr>
 <tr class="memdesc:a20b1b9443191489e94af5b586d6fae8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The final head for critic; creates the state value.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a20b1b9443191489e94af5b586d6fae8f">More...</a><br /></td></tr>
 <tr class="separator:a20b1b9443191489e94af5b586d6fae8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a815a4185be1c351bf7f0e40b26c01749"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a815a4185be1c351bf7f0e40b26c01749">dropout</a></td></tr>
+<tr class="memdesc:a815a4185be1c351bf7f0e40b26c01749"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input dropout probability.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a815a4185be1c351bf7f0e40b26c01749">More...</a><br /></td></tr>
+<tr class="separator:a815a4185be1c351bf7f0e40b26c01749"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc989aeb5a2c083821bf19604501f507"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#abc989aeb5a2c083821bf19604501f507">flatten</a></td></tr>
 <tr class="memdesc:abc989aeb5a2c083821bf19604501f507"><td class="mdescLeft">&#160;</td><td class="mdescRight">The object to flatten the output fo feature extractor.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#abc989aeb5a2c083821bf19604501f507">More...</a><br /></td></tr>
 <tr class="separator:abc989aeb5a2c083821bf19604501f507"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -187,12 +190,12 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a86a2e5b65f8dfc162037380d1d4e1805"><td class="memItemLeft" align="right" valign="top">Union[ Tuple[List[pytorch.Tensor], pytorch.Tensor], Tuple[pytorch.Tensor, pytorch.Tensor],]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a86a2e5b65f8dfc162037380d1d4e1805">_run_shared_forward</a> (self, pytorch.Tensor x)</td></tr>
 <tr class="memdesc:a86a2e5b65f8dfc162037380d1d4e1805"><td class="mdescLeft">&#160;</td><td class="mdescRight">The forwards method of the nn.Module when actor and critic share network.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a86a2e5b65f8dfc162037380d1d4e1805">More...</a><br /></td></tr>
 <tr class="separator:a86a2e5b65f8dfc162037380d1d4e1805"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d73c1241a8599dcb513e380c350f86e"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a0d73c1241a8599dcb513e380c350f86e">_set_non_shared_network_attributes</a> (self, int sequence_length, List[int] hidden_sizes, List[<a class="el" href="classrlpack_1_1utils_1_1typing__hints_1_1_activation.html">Activation</a>] activation, float dropout=0.5)</td></tr>
-<tr class="memdesc:a0d73c1241a8599dcb513e380c350f86e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets appropriate attributes to create non-shared network.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a0d73c1241a8599dcb513e380c350f86e">More...</a><br /></td></tr>
-<tr class="separator:a0d73c1241a8599dcb513e380c350f86e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea64146a1c5ff9db574c2024b201ec1d"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aea64146a1c5ff9db574c2024b201ec1d">_set_shared_network_attributes</a> (self, int sequence_length, List[int] hidden_sizes, List[<a class="el" href="classrlpack_1_1utils_1_1typing__hints_1_1_activation.html">Activation</a>] activation, float dropout=0.5)</td></tr>
-<tr class="memdesc:aea64146a1c5ff9db574c2024b201ec1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets appropriate attributes to create shared network.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aea64146a1c5ff9db574c2024b201ec1d">More...</a><br /></td></tr>
-<tr class="separator:aea64146a1c5ff9db574c2024b201ec1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee12333712e55e47dbabf9d6fd463f39"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aee12333712e55e47dbabf9d6fd463f39">_set_non_shared_network_attributes</a> (self, int sequence_length, List[int] hidden_sizes, List[<a class="el" href="classrlpack_1_1utils_1_1typing__hints_1_1_activation.html">Activation</a>] activation)</td></tr>
+<tr class="memdesc:aee12333712e55e47dbabf9d6fd463f39"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets appropriate attributes to create non-shared network.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aee12333712e55e47dbabf9d6fd463f39">More...</a><br /></td></tr>
+<tr class="separator:aee12333712e55e47dbabf9d6fd463f39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d9d76361c3730a7038c4b46d91ba222"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a1d9d76361c3730a7038c4b46d91ba222">_set_shared_network_attributes</a> (self, int sequence_length, List[int] hidden_sizes, List[<a class="el" href="classrlpack_1_1utils_1_1typing__hints_1_1_activation.html">Activation</a>] activation)</td></tr>
+<tr class="memdesc:a1d9d76361c3730a7038c4b46d91ba222"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets appropriate attributes to create shared network.  <a href="classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a1d9d76361c3730a7038c4b46d91ba222">More...</a><br /></td></tr>
+<tr class="separator:a1d9d76361c3730a7038c4b46d91ba222"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-methods" name="pri-static-methods"></a>
 Static Private Member Functions</h2></td></tr>
@@ -477,8 +480,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a0d73c1241a8599dcb513e380c350f86e" name="a0d73c1241a8599dcb513e380c350f86e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0d73c1241a8599dcb513e380c350f86e">&#9670;&#160;</a></span>_set_non_shared_network_attributes()</h2>
+<a id="aee12333712e55e47dbabf9d6fd463f39" name="aee12333712e55e47dbabf9d6fd463f39"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee12333712e55e47dbabf9d6fd463f39">&#9670;&#160;</a></span>_set_non_shared_network_attributes()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -508,13 +511,7 @@ Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">List[<a class="el" href="classrlpack_1_1utils_1_1typing__hints_1_1_activation.html">Activation</a>]&#160;</td>
-          <td class="paramname"><em>activation</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float &#160;</td>
-          <td class="paramname"><em>dropout</em> = <code>0.5</code>&#160;</td>
+          <td class="paramname"><em>activation</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -535,15 +532,14 @@ Private Attributes</h2></td></tr>
     <tr><td class="paramname">sequence_length</td><td>int: The sequence length of the expected tensor. </td></tr>
     <tr><td class="paramname">hidden_sizes</td><td>List[int]: The list of hidden sizes for each layer. </td></tr>
     <tr><td class="paramname">activation</td><td>List[Activation]: List of activations to be used. </td></tr>
-    <tr><td class="paramname">dropout</td><td>float: The dropout to be used in the final Linear (FC) layer. </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="aea64146a1c5ff9db574c2024b201ec1d" name="aea64146a1c5ff9db574c2024b201ec1d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aea64146a1c5ff9db574c2024b201ec1d">&#9670;&#160;</a></span>_set_shared_network_attributes()</h2>
+<a id="a1d9d76361c3730a7038c4b46d91ba222" name="a1d9d76361c3730a7038c4b46d91ba222"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d9d76361c3730a7038c4b46d91ba222">&#9670;&#160;</a></span>_set_shared_network_attributes()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -573,13 +569,7 @@ Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">List[<a class="el" href="classrlpack_1_1utils_1_1typing__hints_1_1_activation.html">Activation</a>]&#160;</td>
-          <td class="paramname"><em>activation</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float &#160;</td>
-          <td class="paramname"><em>dropout</em> = <code>0.5</code>&#160;</td>
+          <td class="paramname"><em>activation</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -600,7 +590,6 @@ Private Attributes</h2></td></tr>
     <tr><td class="paramname">sequence_length</td><td>int: The sequence length of the expected tensor. </td></tr>
     <tr><td class="paramname">hidden_sizes</td><td>List[int]: The list of hidden sizes for each layer. </td></tr>
     <tr><td class="paramname">activation</td><td>List[Activation]: List of activations to be used. </td></tr>
-    <tr><td class="paramname">dropout</td><td>float: The dropout to be used in the final Linear (FC) layer. </td></tr>
   </table>
   </dd>
 </dl>
@@ -697,23 +686,6 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a4712950de35d18d8d03c690c677ea3fb" name="a4712950de35d18d8d03c690c677ea3fb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4712950de35d18d8d03c690c677ea3fb">&#9670;&#160;</a></span>action_projector</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">rlpack.models.actor_critic_mlp_policy.ActorCriticMlpPolicy.action_projector</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>The projection vector for actor. </p>
-<p >This will be None if <code>use_actor_projection</code> is False. </p>
-
-</div>
-</div>
 <a id="a72f824bdfbbed6b7392003193f29526d" name="a72f824bdfbbed6b7392003193f29526d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a72f824bdfbbed6b7392003193f29526d">&#9670;&#160;</a></span>activation_core</h2>
 
@@ -780,6 +752,23 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a077ad80c1325b346324d336ac836cc81" name="a077ad80c1325b346324d336ac836cc81"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a077ad80c1325b346324d336ac836cc81">&#9670;&#160;</a></span>actor_projector</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">rlpack.models.actor_critic_mlp_policy.ActorCriticMlpPolicy.actor_projector</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The projection vector for actor. </p>
+<p >This will be None if <code>use_actor_projection</code> is False. </p>
+
+</div>
+</div>
 <a id="aa41057f745afd80c3c64913d4a7e9806" name="aa41057f745afd80c3c64913d4a7e9806"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa41057f745afd80c3c64913d4a7e9806">&#9670;&#160;</a></span>critic_feature_extractor</h2>
 
@@ -810,6 +799,22 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The final head for critic; creates the state value. </p>
+
+</div>
+</div>
+<a id="a815a4185be1c351bf7f0e40b26c01749" name="a815a4185be1c351bf7f0e40b26c01749"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a815a4185be1c351bf7f0e40b26c01749">&#9670;&#160;</a></span>dropout</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">rlpack.models.actor_critic_mlp_policy.ActorCriticMlpPolicy.dropout</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The input dropout probability. </p>
 
 </div>
 </div>

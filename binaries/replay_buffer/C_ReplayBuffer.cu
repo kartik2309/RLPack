@@ -6,15 +6,17 @@
 
 C_ReplayBuffer::C_ReplayBuffer(int64_t bufferSize,
                                const std::string &device,
+                               const std::string &dtype,
                                const int32_t &prioritizationStrategyCode,
-                               const int32_t &batchSize) {
+                               const int32_t &batchSize) : C_ReplayBuffer() {
     /*!
      * The class constructor for C_ReplayBuffer. This constructor initialised the C_ReplayBuffer class and allocates the
      * required memory as per input arguments. This initialises the rlpack._C.replay_buffer.ReplayBuffer.C_ReplayBuffer and is
      * equivalent to rlpack._C.replay_buffer.ReplayBuffer.__init__.
      *
      * @param bufferSize : The buffer size to be used and allocated for the memory.
-     * @param device : The device transfer relevant tensors to.
+     * @param device : The device to which relevant tensors are to be moved.
+     * @param dtype : The datatype to which relevant tensors to be casted if necessary.
      * @param prioritizationStrategyCode : The prioritization strategy code. Refer
      *  rlpack.dqn.dqn.Dqn.get_prioritization_code.
      * @param batchSize : The batch size to be used for sampling.
@@ -22,52 +24,9 @@ C_ReplayBuffer::C_ReplayBuffer(int64_t bufferSize,
      */
     bufferSize_ = bufferSize;
     device_ = Maps::deviceMap[device];
+    dtype_ = Maps::dTypeMap[dtype];
     prioritizationStrategyCode_ = prioritizationStrategyCode;
     batchSize_ = batchSize;
-    cMemoryData = std::make_shared<C_ReplayBufferData>();
-    auto statesCurrentRawPointer = &statesCurrent_;
-    auto statesNextRawPointer = &statesNext_;
-    auto rewardsRawPointer = &rewards_;
-    auto actionsRawPointer = &actions_;
-    auto donesRawPointer = &dones_;
-    auto prioritiesRawPointer = &priorities_;
-    auto probabilitiesRawPointer = &probabilities_;
-    auto weightsRawPointer = &weights_;
-    cMemoryData->set_transition_information_references(statesCurrentRawPointer,
-                                                       statesNextRawPointer,
-                                                       rewardsRawPointer,
-                                                       actionsRawPointer,
-                                                       donesRawPointer,
-                                                       prioritiesRawPointer,
-                                                       probabilitiesRawPointer,
-                                                       weightsRawPointer);
-    auto terminalStateIndicesRawPointer = &terminalStateIndices_;
-    cMemoryData->set_terminal_state_indices_reference(terminalStateIndicesRawPointer);
-    auto prioritiesFloatRawPointer = &prioritiesFloat_;
-    cMemoryData->set_priorities_reference(prioritiesFloatRawPointer);
-    loadedIndices_.reserve(bufferSize_);
-    sumTreeSharedPtr_ = nullptr;
-    switch (prioritizationStrategyCode_) {
-        case 1:
-            sumTreeSharedPtr_ = std::make_shared<SumTree>(bufferSize_);
-            break;
-        case 2:
-            segmentQuantileIndices_ = std::vector<int64_t>(batchSize_);
-            break;
-        default:
-            break;
-    }
-    offloadFloat_ = new Offload<float_t>(bufferSize_);
-    offloadInt64_ = new Offload<int64_t>(bufferSize_);
-    loadedIndicesSlice_ = std::vector<int64_t>(batchSize_);
-    seedValues_ = std::vector<float_t>(bufferSize_);
-    sampledStateCurrent_ = std::vector<torch::Tensor>(batchSize_);
-    sampledStateNext_ = std::vector<torch::Tensor>(batchSize_);
-    sampledRewards_ = std::vector<torch::Tensor>(batchSize_);
-    sampledActions_ = std::vector<torch::Tensor>(batchSize_);
-    sampledDones_ = std::vector<torch::Tensor>(batchSize_);
-    sampledPriorities_ = std::vector<torch::Tensor>(batchSize_);
-    sampledIndices_ = std::vector<torch::Tensor>(batchSize_);
 }
 
 C_ReplayBuffer::C_ReplayBuffer() {
@@ -112,6 +71,13 @@ C_ReplayBuffer::C_ReplayBuffer() {
     offloadInt64_ = new Offload<int64_t>(bufferSize_);
     loadedIndicesSlice_ = std::vector<int64_t>(batchSize_);
     seedValues_ = std::vector<float_t>(bufferSize_);
+    sampledStateCurrent_ = std::vector<torch::Tensor>(batchSize_);
+    sampledStateNext_ = std::vector<torch::Tensor>(batchSize_);
+    sampledRewards_ = std::vector<torch::Tensor>(batchSize_);
+    sampledActions_ = std::vector<torch::Tensor>(batchSize_);
+    sampledDones_ = std::vector<torch::Tensor>(batchSize_);
+    sampledPriorities_ = std::vector<torch::Tensor>(batchSize_);
+    sampledIndices_ = std::vector<torch::Tensor>(batchSize_);
 }
 
 
@@ -341,6 +307,7 @@ std::map<std::string, torch::Tensor> C_ReplayBuffer::sample(float_t forceTermina
     bool forceTerminalState = false;
     switch (prioritizationStrategyCode_) {
         case 0: {
+            // Uniform prioritization.
             offloadInt64_->reset();
             offloadInt64_->shuffle(loadedIndices_, parallelismSizeThreshold);
             memcpy(&loadedIndicesSlice_[0], &offloadInt64_->result[0], sizeof(int64_t) * batchSize_);
@@ -419,9 +386,12 @@ std::map<std::string, torch::Tensor> C_ReplayBuffer::sample(float_t forceTermina
     if (size() < batchSize_) {
         throw std::out_of_range("Requested batch size is larger than current Memory size!");
     }
+    // Check if generated p is higher than input probability to add terminal states.
     if (p < forceTerminalStateProbability && terminalStateIndices_.size() > 1) {
         forceTerminalState = true;
     }
+    // If the flag `forceTerminalState` was set to true, randomly sample a terminal state's index and add it randomly
+    // in `loadedIndicesSlice_`.
     if (forceTerminalState) {
         int64_t randomIndexToInsertTerminalState = distributionOfTerminalIndex(generator) % batchSize_;
         int64_t randomTerminalStateInfoIndex = distributionOfTerminalIndex(generator);
@@ -439,15 +409,18 @@ std::map<std::string, torch::Tensor> C_ReplayBuffer::sample(float_t forceTermina
         sampledIndices_[index] = torch::full({}, loadedIndex);
         index++;
     }
-    auto floatTensorOptions = torch::TensorOptions().device(device_).dtype(torch::kFloat32);
+    // Declare tensor options to move tensors if required.
+    auto requestedTensorOptions = torch::TensorOptions().device(device_).dtype(dtype_);
     auto int64TensorOptions = torch::TensorOptions().device(device_).dtype(torch::kInt64);
-    auto statesCurrentStacked = torch::stack(sampledStateCurrent_, 0).to(floatTensorOptions);
-    auto statesNextStacked = torch::stack(sampledStateNext_, 0).to(floatTensorOptions);
-    auto rewardsStacked = torch::stack(sampledRewards_, 0).to(floatTensorOptions);
+    // Stack vectors to create tensors and move them with tensor options if necessary.
+    auto statesCurrentStacked = torch::stack(sampledStateCurrent_, 0).to(requestedTensorOptions);
+    auto statesNextStacked = torch::stack(sampledStateNext_, 0).to(requestedTensorOptions);
+    auto rewardsStacked = torch::stack(sampledRewards_, 0).to(requestedTensorOptions);
     auto actionsStacked = torch::stack(sampledActions_, 0).to(int64TensorOptions);
-    auto donesStacked = torch::stack(sampledDones_, 0).to(floatTensorOptions);
-    auto prioritiesStacked = torch::stack(sampledPriorities_, 0).to(floatTensorOptions);
+    auto donesStacked = torch::stack(sampledDones_, 0).to(requestedTensorOptions);
+    auto prioritiesStacked = torch::stack(sampledPriorities_, 0).to(requestedTensorOptions);
     auto sampledIndicesStacked = torch::stack(sampledIndices_, 0).to(int64TensorOptions);
+    // Organize the samples into map.
     std::map<std::string, torch::Tensor> samples = {
             {"states_current", statesCurrentStacked},
             {"states_next", statesNextStacked},
@@ -456,17 +429,18 @@ std::map<std::string, torch::Tensor> C_ReplayBuffer::sample(float_t forceTermina
             {"dones", donesStacked},
             {"priorities", prioritiesStacked},
             {"random_indices", sampledIndicesStacked}};
+    // Add `probabilities` and `weights` to samples' map appropriately.
     if (prioritizationStrategyCode_ != 0) {
-        auto probabilities = compute_probabilities(prioritiesStacked, alpha).to(floatTensorOptions);
+        auto probabilities = compute_probabilities(prioritiesStacked, alpha).to(requestedTensorOptions);
         auto weights = compute_important_sampling_weights(probabilities,
                                                           (int64_t) size(),
                                                           beta)
-                               .to(floatTensorOptions);
+                               .to(requestedTensorOptions);
         samples["probabilities"] = probabilities;
         samples["weights"] = weights;
     } else {
-        samples["probabilities"] = torch::zeros(prioritiesStacked.sizes(), floatTensorOptions);
-        samples["weights"] = torch::zeros(prioritiesStacked.sizes(), floatTensorOptions);
+        samples["probabilities"] = torch::zeros(prioritiesStacked.sizes(), requestedTensorOptions);
+        samples["weights"] = torch::zeros(prioritiesStacked.sizes(), requestedTensorOptions);
     }
     return samples;
 }
