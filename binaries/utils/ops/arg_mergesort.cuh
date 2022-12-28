@@ -14,6 +14,9 @@
  * @addtogroup utils_group utils
  * @brief Utils Module provides generic utilities to be used by all binaries in rlpack.
  * @{
+ * @addtogroup ops_group ops
+ * @brief Ops modules provides operations useful across binaries in RLPack.
+ * @{
  */
 template<typename DType>
 void arg_mergesort_merge_(DType *arr,
@@ -82,7 +85,24 @@ void arg_mergesort_merge_(DType *arr,
         mergedVectorIndex++;
     }
 }
+/*!
+ * @} @I{ // End ops_group }
+ * @} @I{ // End utils_group }
+ * @} @I{ // End binary_group }
+ */
 
+/*!
+ * @addtogroup binaries_group binaries
+ * @brief Binaries Module consists of C++ backend exposed via pybind11 to rlpack via rlpack._C. These modules are
+ * optimized to perform heavier workloads.
+ * @{
+ * @addtogroup utils_group utils
+ * @brief Utils Module provides generic utilities to be used by all binaries in rlpack.
+ * @{
+ * @addtogroup ops_group ops
+ * @brief Ops modules provides operations useful across binaries in RLPack.
+ * @{
+ */
 template<typename DType>
 void arg_mergesort(DType *arr,
                    uint64_t *index,
@@ -121,6 +141,7 @@ void arg_mergesort(DType *arr,
     arg_mergesort_merge_(arr, index, begin, mid, end, parallelismSizeThreshold);
 }
 /*!
+ * @} @I{ // End ops_group }
  * @} @I{ // End utils_group }
  * @} @I{ // End binary_group }
  */
