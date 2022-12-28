@@ -29,7 +29,7 @@ inline constexpr bool match_vector_type = is_vector<C>::value;
  * optimized to perform heavier workloads.
  * @{
  * @addtogroup replay_buffer_group replay_buffer
- * @brief Memory module is the C++ backend for rlpack._C.replay_buffer.ReplayBuffer class. Heavier workloads have been optimized
+ * @brief The C++ backend for rlpack._C.replay_buffer.ReplayBuffer class. Heavier workloads have been optimized
  * with multithreading with OpenMP and CUDA (if CUDA compatible device is found).
  * @{
  * @addtogroup offload_group offload
@@ -163,7 +163,7 @@ private:
 /*!
  * @} @I{ // End group cpu_group }
  * @} @I{ // End group offload_group }
- * @} @I{ // End group memory_group }
+ * @} @I{ // End group replay_buffer_group }
  * @} @I{ // End group binaries_group }
  */
 

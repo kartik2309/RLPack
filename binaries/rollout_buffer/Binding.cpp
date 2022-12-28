@@ -25,8 +25,8 @@ PYBIND11_MODULE(C_RolloutBuffer, m) {
             .def("get_stacked_rewards",
                  &C_RolloutBuffer::get_stacked_rewards,
                  pybind11::return_value_policy::reference)
-            .def("get_stacked_action_probabilities",
-                 &C_RolloutBuffer::get_stacked_action_probabilities,
+            .def("get_stacked_action_log_probabilities",
+                 &C_RolloutBuffer::get_stacked_action_log_probabilities,
                  pybind11::return_value_policy::reference)
             .def("get_stacked_state_current_values",
                  &C_RolloutBuffer::get_stacked_state_current_values,

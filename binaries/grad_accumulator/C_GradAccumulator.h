@@ -17,10 +17,16 @@
  * optimized to perform heavier workloads.
  * @{
  * @addtogroup grad_accumulator_group grad_accumulator
- * @brief Memory module is the C++ backend for rlpack._C.grad_accumulator.GradAccumulator class.
+ * @brief Grad accumulator module is the C++ backend for rlpack._C.grad_accumulator.GradAccumulator class.
  * @{
  */
+/*!
+ * @brief The class C_GradAccumulator Accumulates the gradients from model parameters. The binding is done via
+ * opaquing the PyTorch Tensors with std::map and hence tensors are moved by references, making the storage efficient.
+ * This class is exposed to Python as rlpack._C.grad_accumulator.GradAccumulator.
+ */
 class C_GradAccumulator {
+
 public:
     C_GradAccumulator(std::vector<std::string> &parameterKeys, int64_t boostStrapRounds);
     ~C_GradAccumulator();

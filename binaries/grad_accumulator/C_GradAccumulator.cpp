@@ -171,7 +171,7 @@ void C_GradAccumulator::clear() {
 }
 
 /*!
- * Default constructor C_GradAccumulator
+ * Default destructor C_GradAccumulator
  */
 C_GradAccumulator::~C_GradAccumulator() = default;
 

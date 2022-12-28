@@ -7,7 +7,22 @@
 
 #include <torch/extension.h>
 
+/*!
+ * @addtogroup binaries_group binaries
+ * @brief Binaries Module consists of C++ backend exposed via pybind11 to rlpack via rlpack._C. These modules are
+ * optimized to perform heavier workloads.
+ * @{
+ * @addtogroup replay_buffer_group replay_buffer
+ * @brief The C++ backend for rlpack._C.replay_buffer.ReplayBuffer class. Heavier workloads have been optimized
+ * with multithreading with OpenMP and CUDA (if CUDA compatible device is found).
+ * @{
+ */
+/*!
+ * @brief The class C_ReplayBuffer keeps the references to data that is associated with C_ReplayBuffer. This class
+ * implements the functions necessary to retrieve the data by de-referencing the data associated with C_ReplayBuffer.
+ */
 class C_ReplayBufferData {
+
 public:
     C_ReplayBufferData();
     ~C_ReplayBufferData();
@@ -47,6 +62,9 @@ private:
     //! The reference to deque that stores priorities float; C_ReplayBuffer::prioritiesFloat_.
     std::deque<float_t> *prioritiesFloatReference_ = nullptr;
 };
-
+/*!
+ * @} @I{ // End group replay_buffer_group }
+ * @} @I{ // End group binaries_group }
+ */
 
 #endif//RLPACK_BINARIES_REPLAY_BUFFER_REPLAY_BUFFER_DATA_CREPLAYBUFFERDATA_H_

@@ -11,7 +11,7 @@
  * optimized to perform heavier workloads.
  * @{
  * @addtogroup replay_buffer_group replay_buffer
- * @brief Memory module is the C++ backend for rlpack._C.replay_buffer.ReplayBuffer class. Heavier workloads have been optimized
+ * @brief The C++ backend for rlpack._C.replay_buffer.ReplayBuffer class. Heavier workloads have been optimized
  * with multithreading with OpenMP and CUDA (if CUDA compatible device is found).
  * @{
  */
@@ -67,7 +67,7 @@ private:
     bool isLeaf_ = true;
 };
 /*!
- * @} @I{ // End group memory_group }
+ * @} @I{ // End group replay_buffer_group }
  * @} @I{ // End group binaries_group }
  */
 

@@ -10,7 +10,7 @@
  * optimized to perform heavier workloads.
  * @{
  * @addtogroup replay_buffer_group replay_buffer
- * @brief Memory module is the C++ backend for rlpack._C.replay_buffer.ReplayBuffer class. Heavier workloads have been optimized
+ * @brief The C++ backend for rlpack._C.replay_buffer.ReplayBuffer class. Heavier workloads have been optimized
  * with multithreading with OpenMP and CUDA (if CUDA compatible device is found).
  * @{
  */
@@ -284,6 +284,6 @@ PYBIND11_MODULE(C_ReplayBuffer, m) {
             return mapOfDequeOfInt64; }), pybind11::return_value_policy::reference);
 }
 /*!
- * @} @I{ // End group Memory }
- * @} @I{ // End group Binaries }
+ * @} @I{ // End group replay_buffer_group }
+ * @} @I{ // End group binaries_group }
  */

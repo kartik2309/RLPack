@@ -22,7 +22,7 @@
  * optimized to perform heavier workloads.
  * @{
  * @addtogroup replay_buffer_group replay_buffer
- * @brief Memory module is the C++ backend for rlpack._C.replay_buffer.ReplayBuffer class. Heavier workloads have been optimized
+ * @brief The C++ backend for rlpack._C.replay_buffer.ReplayBuffer class. Heavier workloads have been optimized
  * with multithreading with OpenMP and CUDA (if CUDA compatible device is found).
  * @{
  */
@@ -43,11 +43,6 @@
 class C_ReplayBuffer {
 
 public:
-    /*!
-     * @brief The class C_MemoryData keeps the references to data that is associated with C_ReplayBuffer. This class
-     * implements the functions necessary to retrieve the data by de-referencing the data associated with C_ReplayBuffer.
-     */
-
     //! Shared Pointer to C_ReplayBuffer::C_MemoryData.
     std::shared_ptr<C_ReplayBufferData> cMemoryData;
 
@@ -164,7 +159,7 @@ private:
                                                             float_t beta);
 };
 /*!
- * @} @I{ // End group memory_group }
+ * @} @I{ // End group replay_buffer_group }
  * @} @I{ // End group binaries_group }
  */
 
