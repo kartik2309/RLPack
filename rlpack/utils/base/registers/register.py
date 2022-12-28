@@ -62,14 +62,24 @@ class Register:
         }
         ## The mapping between given keyword and PyTorch activation function class. @I{# noqa: E266}
         self.activation_map = {
+            "celu": pytorch.nn.CELU,
+            "elu": pytorch.nn.ELU,
+            "gelu": pytorch.nn.GELU,
+            "glu": pytorch.nn.GLU,
+            "hardtanh": pytorch.nn.Hardtanh,
             "identity": pytorch.nn.Identity,
-            "relu": pytorch.nn.ReLU,
             "leaky_relu": pytorch.nn.LeakyReLU,
-            "tanh": pytorch.nn.Tanh,
+            "mish": pytorch.nn.Mish,
+            "relu": pytorch.nn.ReLU,
+            "selu": pytorch.nn.SELU,
+            "sigmoid": pytorch.nn.Sigmoid,
+            "silu": pytorch.nn.SiLU,
             "softplus": pytorch.nn.Softplus,
             "softmax": pytorch.nn.Softmax,
-            "sigmoid": pytorch.nn.Sigmoid,
-            "gelu": pytorch.nn.GELU,
+            "softsign": pytorch.nn.Softsign,
+            "softshrink": pytorch.nn.Softshrink,
+            "tanh": pytorch.nn.Tanh,
+            "tanhshrink": pytorch.nn.Tanhshrink,
         }
         ## The mapping between given keyword and PyTorch LR Scheduler class. @I{# noqa: E266}
         self.lr_scheduler_map = {
