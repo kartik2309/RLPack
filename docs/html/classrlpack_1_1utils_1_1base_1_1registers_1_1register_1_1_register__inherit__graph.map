@@ -1,0 +1,5 @@
+<map id="rlpack.utils.base.registers.register.Register" name="rlpack.utils.base.registers.register.Register">
+<area shape="rect" id="node1" title="This abstract class contains all the necessary information about agents and models for setting them u..." alt="" coords="53,5,274,45"/>
+<area shape="rect" id="node2" href="$classrlpack_1_1utils_1_1sanity__check_1_1_sanity_check.html" title="This class does the basic sanity check of input_config." alt="" coords="5,93,148,133"/>
+<area shape="rect" id="node3" href="$classrlpack_1_1utils_1_1setup_1_1_setup.html" title="This class sets up all the necessary objects that are required to run any configuration." alt="" coords="172,101,331,126"/>
+</map>

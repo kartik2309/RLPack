@@ -1,0 +1,11 @@
+<map id="rlpack.utils.base.agent.Agent" name="rlpack.utils.base.agent.Agent">
+<area shape="rect" id="node1" title="The base class for all agents." alt="" coords="104,107,261,147"/>
+<area shape="rect" id="node3" href="$classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html" title="The ActorCriticAgent is the base class for actor&#45;critic methods." alt="" coords="309,47,505,87"/>
+<area shape="rect" id="node6" href="$classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html" title="The DqnAgent is the base class for DQN methods." alt="" coords="340,139,475,179"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,115,56,140"/>
+<area shape="rect" id="node4" href="$classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html" title="The A2C class implements the synchronous Actor&#45;Critic method." alt="" coords="580,5,760,31"/>
+<area shape="rect" id="node5" href="$classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html" title="The A3C class implements the asynchronous Actor&#45;Critic method." alt="" coords="580,55,760,80"/>
+<area shape="rect" id="node7" href="$classrlpack_1_1dqn_1_1dqn__proportional__agent_1_1_dqn_proportional_agent.html" title="This class implements the DQN with Proportional prioritization strategy." alt="" coords="574,105,766,145"/>
+<area shape="rect" id="node8" href="$classrlpack_1_1dqn_1_1dqn__rank__based__agent_1_1_dqn_rank_based_agent.html" title="This class implements the DQN with Rank&#45;Based prioritization strategy." alt="" coords="553,169,787,209"/>
+<area shape="rect" id="node9" href="$classrlpack_1_1dqn_1_1dqn__uniform__agent_1_1_dqn_uniform_agent.html" title="This class implements the basic DQN methodology, i.e." alt="" coords="585,233,755,273"/>
+</map>
