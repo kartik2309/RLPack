@@ -32,19 +32,21 @@ class ReplayBuffer(object):
         self,
         buffer_size: Optional[int] = 32768,
         device: Optional[str] = "cpu",
+        dtype: Optional[str] = "float32",
         prioritization_strategy_code: int = 0,
         batch_size: int = 32,
     ):
         """
         @param buffer_size: Optional[int]: The buffer size of the memory. No more than specified buffer
             elements are stored in the memory. Default: 32768
-        @param device: str: The cuda on which models are currently running. Default: "cpu".
+        @param device: str: The device on which models are currently running. Default: "cpu".
+        @param dtype: str: The datatype for model parameters. Default: "float32".
         @param prioritization_strategy_code: int: Indicates code for prioritization strategy. Default: 0.
         @param batch_size: int: The batch size to be used for training cycle. Default: 32
         """
         ## The instance of C_ReplayBuffer; the C++ backend of Memory class. @I{# noqa: E266}
         self.c_replay_buffer = C_ReplayBuffer.C_ReplayBuffer(
-            buffer_size, device, prioritization_strategy_code, batch_size
+            buffer_size, device, dtype, prioritization_strategy_code, batch_size
         )
         ## The input buffer size. @I{# noqa: E266}
         self.buffer_size = buffer_size
@@ -53,6 +55,8 @@ class ReplayBuffer(object):
         self.prioritization_strategy_code = prioritization_strategy_code
         ## The input `device` argument; indicating the device name. @I{# noqa: E266}
         self.device = device
+        ## The input `dtype`; indicating the datatype. @I{# noqa: E266}
+        self.dtype = dtype
 
     def insert(
         self,

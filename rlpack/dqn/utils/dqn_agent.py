@@ -191,8 +191,10 @@ class DqnAgent(Agent):
         self.save_path = save_path
         ## The input boostrap rounds. @I{# noqa: E266}
         self.bootstrap_rounds = bootstrap_rounds
-        ## The input `device` argument; indicating the device name. @I{# noqa: E266}
-        self.device = device
+        ## The input `device` argument; indicating the device name as device type class. @I{# noqa: E266}
+        self.device = pytorch.device(device=device)
+        ## The input `dtype` argument; indicating the datatype class. @I{# noqa: E266}
+        self.dtype = setup.get_torch_dtype(dtype)
         # Set necessary prioritization parameters. Depending on `prioritization_params`, appropriate values are set.
         ## The prioritization strategy code. @I{# noqa: E266}
         self.__prioritization_strategy_code = (
@@ -240,6 +242,7 @@ class DqnAgent(Agent):
         self.memory = ReplayBuffer(
             buffer_size=memory_buffer_size,
             device=device,
+            dtype=dtype,
             prioritization_strategy_code=self.__prioritization_strategy_code,
             batch_size=self.batch_size,
         )
@@ -335,7 +338,7 @@ class DqnAgent(Agent):
         @param state_current: Union[ndarray, pytorch.Tensor, List[float]]: The current state agent is in.
         @return np.ndarray: The action to be taken.
         """
-        state_current = self._cast_to_tensor(state_current).to(self.device)
+        state_current = self._cast_to_tensor(state_current).to(device=self.device, dtype=self.dtype)
         state_current = pytorch.unsqueeze(state_current, 0)
         action = self._infer_action(state_current)
         return action
