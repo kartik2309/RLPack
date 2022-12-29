@@ -243,27 +243,23 @@ class Simulator:
             summary_writer = SummaryWriter(log_dir=save_path)
         return summary_writer
 
-    def run(self, **kwargs) -> None:
+    def run(self, metrics_logging_frequency: int, **kwargs) -> None:
         """
         This method runs the simulator.
+        @param metrics_logging_frequency: int: The logging frequency for rewards.
         @param kwargs: Additional keyword arguments for the training run.
         """
         if self.trainer.is_train():
-            metrics_logging_frequency = kwargs.get(
-                "metrics_logging_frequency",
-                self.config.get("metrics_logging_frequency"),
-            )
-            if metrics_logging_frequency is None:
-                raise RuntimeError(
-                    "Did not receive `metrics_logging_frequency` argument for training."
-                )
             self.trainer.train_agent(
                 metrics_logging_frequency=metrics_logging_frequency,
                 render=kwargs.get("render", self.config.get("render", False)),
                 load=kwargs.get("load", self.config.get("load", False)),
             )
         elif self.trainer.is_eval():
-            self.trainer.evaluate_agent()
+            self.trainer.evaluate_agent(
+                metrics_logging_frequency=metrics_logging_frequency,
+                render=kwargs.get("render", self.config.get("render", False)),
+            )
         else:
             raise ValueError("Invalid mode passed! Must be in `train` or `eval`")
         return
