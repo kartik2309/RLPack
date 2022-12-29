@@ -39,7 +39,6 @@ class Register:
             "env_name",
             "agent_name",
             "num_episodes",
-            "max_timesteps",
             "agent_args",
         )
         ## The model initialization arguments when using [in-built](@ref models/index.md) models. @I{# noqa: E266}
