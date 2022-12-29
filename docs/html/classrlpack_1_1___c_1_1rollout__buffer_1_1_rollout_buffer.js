@@ -1,6 +1,7 @@
 var classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer =
 [
     [ "__init__", "classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#a8e66432735c3eeaed07ad7e840f21901", null ],
+    [ "__len__", "classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#a424ce6605361c7a49980d67933ba85a7", null ],
     [ "clear", "classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#aef4c401e33c7a5cd54d43a3bc58539ba", null ],
     [ "compute_returns", "classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#a3d35ed3f25039b34edc6e7da20f24481", null ],
     [ "get_stacked_action_log_probabilities", "classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#a2c8746fde886cde78bafae76530f96eb", null ],

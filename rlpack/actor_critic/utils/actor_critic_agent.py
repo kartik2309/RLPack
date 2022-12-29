@@ -9,16 +9,16 @@ Currently following methods are implemented:
 """
 
 
-import math
 import os
 from abc import abstractmethod
-from typing import Callable, List, Optional, Tuple, Type, Union
+from typing import List, Optional, Tuple, Type, Union
 
 import numpy as np
 
 from rlpack import pytorch, pytorch_distributions
 from rlpack._C.grad_accumulator import GradAccumulator
 from rlpack._C.rollout_buffer import RolloutBuffer
+from rlpack.exploration.utils.exploration import Exploration
 from rlpack.utils import LossFunction, LRScheduler
 from rlpack.utils.base.agent import Agent
 from rlpack.utils.internal_code_setup import InternalCodeSetup
@@ -45,8 +45,9 @@ class ActorCriticAgent(Agent):
         action_space: Union[int, Tuple[int, Union[List[int], None]]],
         backup_frequency: int,
         save_path: str,
-        bootstrap_rounds: int = 1,
-        add_gaussian_noise: bool = False,
+        rollout_accumulation_size: Union[int, None] = None,
+        grad_accumulation_rounds: int = 1,
+        exploration_tool: Union[Exploration, None] = None,
         device: str = "cpu",
         dtype: str = "float32",
         apply_norm: Union[int, str] = -1,
@@ -57,13 +58,6 @@ class ActorCriticAgent(Agent):
         max_grad_norm: Optional[float] = None,
         grad_norm_p: float = 2.0,
         clip_grad_value: Optional[float] = None,
-        variance: Optional[
-            Tuple[
-                Union[float, np.ndarray, pytorch.Tensor],
-                Callable[[float, bool, int], float],
-            ]
-        ] = None,
-        max_timesteps: int = 1000,
     ):
         """!
         @param policy_model: *pytorch.nn.Module*: The policy model to be used. Policy model must return a tuple of
@@ -87,10 +81,13 @@ class ActorCriticAgent(Agent):
         @param backup_frequency: int: The timesteps after which policy model, optimizer states and lr
             scheduler states are backed up.
         @param save_path: str: The path where policy model, optimizer states and lr scheduler states are to be saved.
-        @param bootstrap_rounds: int: The number of rounds until which gradients are to be accumulated before
-            performing calling optimizer step. Gradients are mean reduced for bootstrap_rounds > 1. Default: 1.
-        @param add_gaussian_noise: bool: Parameter indicating whether to add gaussian noise from standard normal
-            distribution; N(0, 1) is used. Default: False.
+        @param rollout_accumulation_size: Union[int, None]: The size of rollout buffer before performing optimizer
+            step. Whole rollout buffer is used to fit the policy model and is cleared. By default, after every episode.
+             Default: None.
+        @param grad_accumulation_rounds: int: The number of rounds until which gradients are to be accumulated before
+            performing calling optimizer step. Gradients are mean reduced for grad_accumulation_rounds > 1. Default: 1.
+        @param exploration_tool: Union[Exploration, None]: Exploration tool to be used to explore the environment.
+            These tools can be found in `rlpack.exploration`.
         @param device: str: The device on which models are run. Default: "cpu".
         @param dtype: str: The datatype for model parameters. Default: "float32"
         @param apply_norm: Union[int, str]: The code to select the normalization procedure to be applied on
@@ -106,33 +103,25 @@ class ActorCriticAgent(Agent):
         @param max_grad_norm: Optional[float]: The max norm for gradients for gradient clipping. Default: None
         @param grad_norm_p: float: The p-value for p-normalization of gradients. Default: 2.0
         @param clip_grad_value: Optional[float]: The gradient value for clipping gradients by value. Default: None
-        @param variance: Tuple[
-                Union[float, np.ndarray, pytorch.Tensor],
-                Callable[[Union[float, np.ndarray, pytorch.Tensor], bool, int], float],
-            ]: The tuple of variance to be used to sample actions for continuous action space and a method to
-            be used to decay it. The passed method have the signature Callable[[float, int], float]. The first
-            argument would be the variance value and second value be the boolean, done flag indicating if the state
-            is terminal or not and third will be the timestep; returning the updated variance value. Default: None
-        @param max_timesteps: int: The maximum timesteps the environment will run for. This is used for memory
-            preemptive allocation for improved efficiency.
 
         **Notes**
 
 
-        The codes for `apply_norm` are given as follows: -
-            - No Normalization: -1; (`"none"`)
-            - Min-Max Normalization: 0; (`"min_max"`)
-            - Standardization: 1; (`"standardize"`)
-            - P-Normalization: 2; (`"p_norm"`)
+        The values accepted for `apply_norm` are: -
+            - No Normalization: -1; `"none"`
+            - Min-Max Normalization: 0; `"min_max"`
+            - Standardization: 1; `"standardize"`
+            - P-Normalization: 2; `"p_norm"`
 
 
-        The codes for `apply_norm_to` are given as follows:
-            - No Normalization: -1; (`["none"]`)
-            - On States only: 0; (`["states"]`)
-            - On Rewards only: 1; (`["rewards"]`)
-            - On TD value only: 2; (`["advantage"]`)
-            - On States and Rewards: 3; (`["states", "rewards"]`)
-            - On States and TD: 4; (`["states", "advantage"]`)
+        The value accepted for `apply_norm_to` are as follows and must be passed in a list:
+            - `"none"`: -1; Don't apply normalization to any quantity.
+            - `"states"`: 0; Apply normalization to states.
+            - `"state_values"`: 1; Apply normalization to state values.
+            - `"rewards"`: 2; Apply normalization to rewards.
+            - `"returns"`: 3; Apply normalization to rewards.
+            - `"td"`: 4; Apply normalization for TD values.
+            - `"advantage"`: 5; Apply normalization to advantage values
 
 
         If a valid `max_norm_grad` is passed, then gradient clipping takes place else gradient clipping step is
@@ -170,26 +159,28 @@ class ActorCriticAgent(Agent):
         self.backup_frequency = backup_frequency
         ## The input save path for backing up agent models. @I{# noqa: E266}
         self.save_path = save_path
-        # Check sanity of `bootstrap_rounds`
+        # Check sanity of `grad_accumulation_rounds`
         assert (
-            bootstrap_rounds > 0
-        ), "Argument `bootstrap_rounds` must be an integer between 0 and 1"
-        ## The input boostrap rounds. @I{# noqa: E266}
-        self.bootstrap_rounds = bootstrap_rounds
-        ## The input `add_gaussian_noise`. @I{# noqa: E266}
-        self.add_gaussian_noise = add_gaussian_noise
+            grad_accumulation_rounds > 0
+        ), "Argument `grad_accumulation_rounds` must be an integer between 0 and 1"
+        ## The input `rollout_accumulation_size`. @I{# noqa: E266}
+        self.rollout_accumulation_size = rollout_accumulation_size
+        ## The input `grad_accumulation_rounds`. @I{# noqa: E266}
+        self.grad_accumulation_rounds = grad_accumulation_rounds
+        ## The input `exploration_tool`. @I{# noqa: E266}
+        self.exploration_tool = exploration_tool
         ## The input `device` argument; indicating the device name as device type class. @I{# noqa: E266}
         self.device = pytorch.device(device=device)
         ## The input `dtype` argument; indicating the datatype class. @I{# noqa: E266}
         self.dtype = setup.get_torch_dtype(dtype)
-        if isinstance(apply_norm, str):
-            apply_norm = setup.get_apply_norm_mode_code(apply_norm)
+        # Get code(s) for `apply_norm` and check validity.
+        apply_norm = setup.get_apply_norm_mode_code(apply_norm)
         setup.check_validity_of_apply_norm_code(apply_norm)
         ## The input `apply_norm` argument; indicating the normalisation to be used. @I{# noqa: E266}
         self.apply_norm = apply_norm
-        if isinstance(apply_norm_to, list):
-            apply_norm_to = setup.get_apply_norm_to_mode_code(apply_norm_to)
-        setup.check_validity_of_apply_norm_to_code(apply_norm_to)
+        # Get code(s) for `apply_norm_to` and check validity.
+        apply_norm_to = setup.get_apply_norm_to_mode_code(apply_norm_to)
+        setup.check_validity_of_apply_norm_to_codes(apply_norm_to)
         ## The input `apply_norm_to` argument; indicating the quantity to normalise. @I{# noqa: E266}
         self.apply_norm_to = apply_norm_to
         ## The input `eps_for_norm` argument; indicating epsilon to be used for normalisation. @I{# noqa: E266}
@@ -204,22 +195,6 @@ class ActorCriticAgent(Agent):
         self.grad_norm_p = grad_norm_p
         ## The input `clip_grad_value`; indicating the clipping range for gradients. @I{# noqa: E266}
         self.clip_grad_value = clip_grad_value
-        ## The current variance value. This will be None if `variance` argument was not passed @I{# noqa: E266}
-        self.variance_value = None
-        ## The variance decay method. This will be None if `variance` argument was not passed @I{# noqa: E266}
-        self.variance_decay_fn = None
-        ## The boolean flag indicating if variance operations are to be used. @I{# noqa: E266}
-        self._operate_with_variance = False
-        if variance is not None:
-            if len(variance) != 2:
-                raise ValueError(
-                    "Length of `variance` arg must be 2, "
-                    "first argument being the variance value and "
-                    "the second being the decay function"
-                )
-            self.variance_value = variance[0]
-            self.variance_decay_fn = variance[1]
-            self._operate_with_variance = True
         ## The step counter; counting the total timesteps done so far. @I{# noqa: E266}
         self.step_counter = 0
         ## Flag indicating if action space is continuous or discrete. @I{# noqa: E266}
@@ -231,15 +206,16 @@ class ActorCriticAgent(Agent):
         ## The list of gradients from each backward call. @I{# noqa: E266}
         ## This is only used when boostrap_rounds > 1 and is cleared after each boostrap round. @I{# noqa: E266}
         ## The rlpack._C.grad_accumulator.GradAccumulator object for grad accumulation. @I{# noqa: E266}
-        self._grad_accumulator = GradAccumulator(keys, bootstrap_rounds)
+        self._grad_accumulator = GradAccumulator(keys, grad_accumulation_rounds)
         ## The normalisation tool to be used for agent. @I{# noqa: E266}
         ## An instance of rlpack.utils.normalization.Normalization. @I{# noqa: E266}
         self._normalization = Normalization(
             apply_norm=apply_norm, eps=eps_for_norm, p=p_for_norm, dim=dim_for_norm
         )
         ## The rollout buffer to be used for agent to store necessary outputs. @I{# noqa: E266}
-        # An instance of rlpack._C.rollout_buffer.RolloutBuffer @I{# noqa: E266}
-        self._rollout_buffer = RolloutBuffer(max_timesteps, device, dtype)
+        ## An instance of rlpack._C.rollout_buffer.RolloutBuffer @I{# noqa: E266}
+        rollout_buffer_size = rollout_accumulation_size if rollout_accumulation_size is not None else 1024
+        self._rollout_buffer = RolloutBuffer(rollout_buffer_size, device, dtype)
         ## The PyTorch Normal distribution object initialized with standard mean and std. @I{# noqa: E266}
         self.gaussian_noise = self._create_noise_distribution()
 
@@ -266,32 +242,28 @@ class ActorCriticAgent(Agent):
         )
         action_values, state_current_value = self.policy_model(state_current)
         distribution = self._create_action_distribution(action_values)
-        if self._operate_with_variance:
-            self.variance_value = self.variance_decay_fn(
-                self.variance_value, done, self.step_counter
-            )
         if not self.is_continuous_action_space:
             action = distribution.sample()
         else:
             sample_shape = self._get_action_sample_shape_for_continuous()
             action = distribution.rsample(sample_shape=sample_shape)
-        if self.add_gaussian_noise:
-            action = action + self.gaussian_noise.sample(sample_shape=action.size())
         # Accumulate quantities.
         self._rollout_buffer.insert(
-            reward=pytorch.tensor(reward, device=self.device, dtype=self.dtype),
+            reward=pytorch.tensor((reward,), device=self.device, dtype=self.dtype),
             action_log_probability=distribution.log_prob(action),
             state_current_value=state_current_value,
-            entropy=distribution.entropy().mean(),
+            entropy=distribution.entropy(),
         )
         # Call train policy method.
-        self._call_to_train_policy_model(done)
+        self._call_to_run_optimizer(done)
         # Backup model every `backup_frequency` steps.
         self._call_to_save()
         # Increment `step_counter` and use policy model to get next action.
         self.step_counter += 1
         with pytorch.no_grad():
+            action = self._call_to_add_noise_to_actions(action)
             action = action.cpu().numpy()
+        self._call_to_reset_exploration_tool(done)
         return action
 
     @pytorch.no_grad()
@@ -338,6 +310,8 @@ class ActorCriticAgent(Agent):
                 f"Argument `custom_name_suffix` must be of type "
                 f"{str} or {type(None)}, but got of type {type(custom_name_suffix)}"
             )
+        if custom_name_suffix != "":
+            custom_name_suffix = f"_{custom_name_suffix}"
         save_path = self.save_path
         checkpoint = {
             "policy_model_state_dict": self.policy_model.state_dict(),
@@ -345,8 +319,6 @@ class ActorCriticAgent(Agent):
         }
         if self.lr_scheduler is not None:
             checkpoint["lr_scheduler_state_dict"] = self.lr_scheduler.state_dict()
-        if self._operate_with_variance:
-            checkpoint["variance_value"] = self.variance_value
         if os.path.isdir(save_path):
             save_path = os.path.join(save_path, f"actor_critic{custom_name_suffix}.pt")
         pytorch.save(checkpoint, save_path)
@@ -367,6 +339,8 @@ class ActorCriticAgent(Agent):
                 f"Argument `custom_name_suffix` must be of type "
                 f"{str} or {type(None)}, but got of type {type(custom_name_suffix)}"
             )
+        if custom_name_suffix != "":
+            custom_name_suffix = f"_{custom_name_suffix}"
         save_path = self.save_path
         if os.path.isdir(save_path):
             save_path = os.path.join(save_path, f"actor_critic{custom_name_suffix}.pt")
@@ -384,9 +358,6 @@ class ActorCriticAgent(Agent):
             and "lr_scheduler_state_dict" in checkpoint.keys()
         ):
             self.lr_scheduler.load_state_dict(checkpoint["lr_scheduler_state_dict"])
-        if "variance_value" in checkpoint.keys():
-            self.variance_value = checkpoint["variance_value"]
-            self._operate_with_variance = True
         return
 
     @abstractmethod
@@ -396,7 +367,7 @@ class ActorCriticAgent(Agent):
         """
         pass
 
-    def _call_to_train_policy_model(self, done: Union[bool, int]) -> None:
+    def _call_to_run_optimizer(self, done: Union[bool, int]) -> None:
         """
         Protected method to train the policy model. If done flag is True, will compute the loss and run the optimizer.
         This method is meant to periodically check if episode hsa been terminated or and train policy models if
@@ -415,8 +386,34 @@ class ActorCriticAgent(Agent):
                 f"Expected `done` argument to be of type {bool} or {int} but received {type(done)}!"
             )
         if run_optimizer:
+            if self.rollout_accumulation_size is not None:
+                if len(self._rollout_buffer) < self.rollout_accumulation_size:
+                    return
             loss = self._compute_loss()
             self._run_optimizer(loss)
+            
+    def _call_to_reset_exploration_tool(self, done: Union[bool, int]) -> None:
+        if self.exploration_tool is None:
+            return
+        reset_exploration_tool = False
+        if isinstance(done, bool):
+            if done:
+                reset_exploration_tool = True
+        elif isinstance(done, int):
+            if done == 1:
+                reset_exploration_tool = True
+        else:
+            raise TypeError(
+                f"Expected `done` argument to be of type {bool} or {int} but received {type(done)}!"
+            )
+        if reset_exploration_tool:
+            self.exploration_tool.reset()
+            
+    def _call_to_add_noise_to_actions(self, action: pytorch.Tensor) -> pytorch.Tensor:
+        if self.exploration_tool is None:
+            return action
+        action = action + self.exploration_tool.sample()
+        return action
 
     def _compute_loss(self) -> pytorch.Tensor:
         """
@@ -426,30 +423,29 @@ class ActorCriticAgent(Agent):
         if not self.policy_model.training:
             self.policy_model.train()
         self.policy_model.train()
-        # returns = self._compute_returns()
-        returns = self._rollout_buffer.compute_returns(self.gamma)
         # Stack the action log probabilities.
         action_log_probabilities = (
             self._rollout_buffer.get_stacked_action_log_probabilities()
         )
         # Get entropy values
         entropy = self._rollout_buffer.get_stacked_entropies()
-        entropy = self._adjust_dims_for_tensor(
-            entropy, target_dim=action_log_probabilities.dim()
-        )
         # Stack the State values.
-        # state_current_values = pytorch.stack(self.states_current_values).to(self.device)
         state_current_values = self._rollout_buffer.get_stacked_state_current_values()
+        # Compute returns.
+        returns = self._rollout_buffer.compute_returns(self.gamma)
+        # Apply normalization if required to state values.
+        if self._state_value_norm_code in self.apply_norm_to:
+            state_current_values = self._normalization.apply_normalization(
+                state_current_values
+            )
+        # Apply normalization if required to returns.
+        if self._returns_norm_code in self.apply_norm_to:
+            returns = self._normalization.apply_normalization(returns)
         # Compute Advantage Values
         advantage = self._compute_advantage(returns, state_current_values).detach()
-        # Adjust dimensions for further calculations
-        action_log_probabilities = self._adjust_dims_for_tensor(
-            action_log_probabilities, advantage.dim()
-        )
-        entropy = self._adjust_dims_for_tensor(entropy, advantage.dim())
         # Compute Policy Losses
-        policy_losses = (
-            -action_log_probabilities * advantage + self.entropy_coefficient * entropy
+        policy_losses = (-action_log_probabilities * advantage) + (
+            self.entropy_coefficient * entropy
         )
         # Compute Value Losses
         value_loss = self.state_value_coefficient * self.loss_function(
@@ -478,7 +474,7 @@ class ActorCriticAgent(Agent):
         # Assign average parameters to model.
         for key, param in self.policy_model.named_parameters():
             if param.requires_grad:
-                param.grad = reduced_parameters[key] / self.bootstrap_rounds
+                param.grad = reduced_parameters[key] / self.grad_accumulation_rounds
 
     def _compute_advantage(
         self, returns: pytorch.Tensor, state_current_values: pytorch.Tensor
@@ -489,17 +485,8 @@ class ActorCriticAgent(Agent):
         @param state_current_values: pytorch.Tensor: The corresponding state values
         @return pytorch.Tensor: The advantage for the given returns and state values
         """
-        returns = self._adjust_dims_for_tensor(returns, state_current_values.dim())
-        # Apply normalization if required to states.
-        if self.apply_norm_to in self._state_norm_codes:
-            state_current_values = self._normalization.apply_normalization(
-                state_current_values
-            )
-        # Apply normalization if required to rewards.
-        if self.apply_norm_to in self._reward_norm_codes:
-            returns = self._normalization.apply_normalization(returns)
         advantage = returns - state_current_values
-        if self.apply_norm_to in self._advantage_norm_codes:
+        if self._advantage_norm_code in self.apply_norm_to:
             advantage = self._normalization.apply_normalization(advantage)
         return advantage
 
@@ -538,8 +525,6 @@ class ActorCriticAgent(Agent):
         else:
             if isinstance(action_values, pytorch.Tensor):
                 action_values_ = action_values.flatten()
-                if self._operate_with_variance:
-                    action_values_[-1] = self.variance_value**0.5
                 distribution = self.distribution(*action_values_)
             elif isinstance(action_values, list):
                 assert len(action_values) == 2, (
@@ -553,22 +538,6 @@ class ActorCriticAgent(Agent):
                     else action_value
                     for action_value in action_values
                 ]
-                if self._operate_with_variance:
-                    if isinstance(self.variance_value, (float, int)):
-                        action_values[-1] = math.sqrt(self.variance_value)
-                    elif isinstance(self.variance_value, np.ndarray):
-                        action_values[-1] = pytorch.from_numpy(
-                            np.sqrt(self.variance_value)
-                        ).to(device=self.device, dtype=self.dtype)
-                    elif isinstance(self.variance_value, pytorch.Tensor):
-                        action_values[-1] = pytorch.sqrt(self.variance_value).to(
-                            device=self.device, dtype=self.dtype
-                        )
-                    else:
-                        raise TypeError(
-                            f"Invalid datatype passed for `variance` value. Must be either of "
-                            f"{float}, {np.ndarray} or {pytorch.Tensor}"
-                        )
                 distribution = self.distribution(*action_values)
             else:
                 raise TypeError(
@@ -589,6 +558,6 @@ class ActorCriticAgent(Agent):
             pytorch.tensor(1.0, device=self.device, dtype=self.dtype),
             requires_grad=False,
         )
-        ## The PyTorch Normal distribution object initialized with standard mean and std. @I{# noqa: E266}
+        # The PyTorch Normal distribution object initialized with standard mean and std.
         gaussian_noise = pytorch_distributions.Normal(_mean, _std)
         return gaussian_noise

@@ -10,6 +10,7 @@ var group__rollout__buffer__group =
       [ "get_stacked_rewards", "class_c___rollout_buffer.html#a9ac46b846924e49fb0d7aa8f0e826e72", null ],
       [ "get_stacked_state_current_values", "class_c___rollout_buffer.html#acb4f5e54a312a96e9c37565add2af9e2", null ],
       [ "insert", "class_c___rollout_buffer.html#aad015699f88dccd58db22f6d34ee5c60", null ],
+      [ "size", "class_c___rollout_buffer.html#a0b4e5f383f292623fbc316a468871cba", null ],
       [ "actionLogProbabilities_", "class_c___rollout_buffer.html#a0ef1283285078a9a3fcb3b04465118fc", null ],
       [ "bufferSize_", "class_c___rollout_buffer.html#afe88ba0d9b4fc4c9ba9abe9324c7ada6", null ],
       [ "device_", "class_c___rollout_buffer.html#a199bba23efd9f47c37194558a60f80f2", null ],

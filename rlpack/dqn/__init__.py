@@ -12,6 +12,9 @@ Currently following classes have been implemented:
         this class implements the DQN with proportional prioritization.
     - `DqnRankBasedAgent`: Implemented as rlpack.dqn.dqn_rank_based_agent.DqnRankBasedAgent; this class implements the
         DQN with rank prioritization.
+
+Following packages are part of dqn:
+    - `utils`: A package utilities for dqn package.
 """
 
 

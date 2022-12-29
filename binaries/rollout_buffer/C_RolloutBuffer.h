@@ -36,6 +36,7 @@ public:
     std::map<std::string, torch::Tensor> get_stacked_state_current_values();
     std::map<std::string, torch::Tensor> get_stacked_entropies();
     void clear();
+    size_t size();
 
 private:
     //! The buffer size that is going to be used.

@@ -111,6 +111,8 @@ class Trainer(TrainerBase):
             return
         if load:
             self.agent.load(self.custom_suffix)
+        if render:
+            logging.warning("Rendering during training may slow down the training.")
         # Start episodic loop
         for ep in range(1, self.num_episodes + 1):
             observation_current, _ = self.env.reset()

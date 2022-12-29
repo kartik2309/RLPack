@@ -1,6 +1,6 @@
 var classrlpack_1_1models_1_1utils_1_1__mlp__feature__extractor_1_1___mlp_feature_extractor =
 [
-    [ "__init__", "classrlpack_1_1models_1_1utils_1_1__mlp__feature__extractor_1_1___mlp_feature_extractor.html#aa41439ac979bfd685ac086f8fdeda7de", null ],
+    [ "__init__", "classrlpack_1_1models_1_1utils_1_1__mlp__feature__extractor_1_1___mlp_feature_extractor.html#a6b28e8e0cd06a5c2518c4ede82a4ebfe", null ],
     [ "forward", "classrlpack_1_1models_1_1utils_1_1__mlp__feature__extractor_1_1___mlp_feature_extractor.html#a38d70bffd13a31788f8855173c93245e", null ],
     [ "activation", "classrlpack_1_1models_1_1utils_1_1__mlp__feature__extractor_1_1___mlp_feature_extractor.html#a038fdccf859d78a268d09c5b859c64c2", null ],
     [ "hidden_sizes", "classrlpack_1_1models_1_1utils_1_1__mlp__feature__extractor_1_1___mlp_feature_extractor.html#a264ce82a38de06618409392b673a6d8a", null ],

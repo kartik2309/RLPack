@@ -14,7 +14,8 @@ Following packages are part of utils:
 
 import logging
 import os
-from typing import Dict, List, Optional, Tuple, Union
+from abc import ABC, abstractmethod
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import gym
 import numpy as np
@@ -24,10 +25,10 @@ from rlpack.utils import GenericFuncSignature
 from rlpack.utils.base.agent import Agent
 
 
-class TrainerBase:
+class TrainerBase(ABC):
     """
-    This class is the base class of all trainer classes which implements methods to train an agent. This class
-    implements basic utilities useful for all trainer classes.
+    This class is the abstract base class of all trainer classes which implements methods to train an agent. This
+    class implements basic utilities useful for all trainer classes.
     """
 
     def __init__(
@@ -96,6 +97,26 @@ class TrainerBase:
         )
         ## The best cumulative reward acquired so far. @I{# noqa: E266}
         self._best_cumulative_reward_value = None
+
+    @abstractmethod
+    def train_agent(self, *args, **kwargs) -> Any:
+        """
+        Abstract method to train agents
+        @param args: Positional arguments for training agents.
+        @param kwargs: Keyword arguments for training agents.
+        @return: Any: Return any object.
+        """
+        pass
+
+    @abstractmethod
+    def evaluate_agent(self, *args, **kwargs) -> Any:
+        """
+        Abstract method to evaluating agents
+        @param args: Positional arguments for evaluating agents.
+        @param kwargs: Keyword arguments for evaluating agents.
+        @return: Any: Return any object.
+        """
+        pass
 
     def get_loggable_quantities(self) -> List[str]:
         """

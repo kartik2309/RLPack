@@ -16,7 +16,12 @@ from site import getsitepackages
 from rlpack import pytorch, pytorch_distributions
 from rlpack.actor_critic.a2c import A2C
 from rlpack.actor_critic.a3c import A3C
-from rlpack.distributions import MultivariateNormalLogStd, NormalLogStd
+from rlpack.distributions import (
+    GaussianMixture,
+    GaussianMixtureLogStd,
+    MultivariateNormalLogStd,
+    NormalLogStd,
+)
 from rlpack.dqn import Dqn
 from rlpack.models.actor_critic_mlp_policy import ActorCriticMlpPolicy
 from rlpack.models.mlp import Mlp
@@ -97,6 +102,8 @@ class Register:
             "multivariate_normal": pytorch_distributions.MultivariateNormal,
             "normal_log_std": NormalLogStd,
             "multivariate_normal_log_std": MultivariateNormalLogStd,
+            "gaussian_mixture": GaussianMixture,
+            "gaussian_mixture_log_std": GaussianMixtureLogStd,
         }
         ## The mapping between given keyword and [in-built](@ref models/index.md) models. @I{# noqa: E266}
         self.models = {"mlp": Mlp, "actor_critic_mlp_policy": ActorCriticMlpPolicy}
@@ -104,24 +111,24 @@ class Register:
         self.agents = {"dqn": Dqn, "a2c": A2C, "a3c": A3C}
         ## The mapping between given keyword and [in-built](@ref models/index.md) model's default arguments. @I{# noqa: E266}
         self.model_args_default = {
-            "mlp": ("activation", "dropout"),
+            "mlp": ("sequence_length", "activation", "dropout"),
             "actor_critic_mlp_policy": (
+                "sequence_length",
                 "activation",
                 "dropout",
                 "share_network",
                 "use_actor_projection",
+                "use_diagonal_embedding_on_projection",
             ),
         }
         ## The mapping between given keyword and [in-built](@ref models/index.md) models' arguments. @I{# noqa: E266}
         self.model_args = {
             "mlp": (
-                "sequence_length",
                 "hidden_sizes",
                 "num_actions",
                 *self.model_args_default["mlp"],
             ),
             "actor_critic_mlp_policy": (
-                "sequence_length",
                 "hidden_sizes",
                 "action_space",
                 *self.model_args_default["actor_critic_mlp_policy"],
@@ -145,8 +152,9 @@ class Register:
                 "clip_grad_value",
             ),
             "a2c": (
-                "add_gaussian_noise",
-                "bootstrap_rounds",
+                "exploration_tool",
+                "rollout_accumulation_size",
+                "grad_accumulation_rounds",
                 "device",
                 "dtype",
                 "apply_norm",
@@ -157,12 +165,11 @@ class Register:
                 "max_grad_norm",
                 "grad_norm_p",
                 "clip_grad_value",
-                "variance",
-                "max_timesteps",
             ),
             "a3c": (
-                "add_gaussian_noise",
-                "bootstrap_rounds",
+                "exploration_tool",
+                "rollout_accumulation_size",
+                "grad_accumulation_rounds",
                 "device",
                 "dtype",
                 "apply_norm",
@@ -173,8 +180,6 @@ class Register:
                 "max_grad_norm",
                 "grad_norm_p",
                 "clip_grad_value",
-                "variance",
-                "max_timesteps",
             ),
         }
         ## The mapping between given keyword and [agent](@ref agents/index.md) agents' arguments. @I{# noqa: E266}

@@ -20,14 +20,13 @@ class InternalCodeRegister:
         self.norm_mode_codes = {"none": -1, "min_max": 0, "standardize": 1, "p_norm": 2}
         ## The mapping between given keyword and normalisation quantity (`apply_norm_to`) codes. @I{# noqa: E266}
         self.norm_to_mode_codes = {
-            ("none",): -1,
-            ("states",): 0,
-            ("rewards",): 1,
-            ("td",): 2,
-            ("advantage",): 2,
-            ("rewards", "states"): 3,
-            ("states", "td"): 4,
-            ("advantage", "states"): 4,
+            "none": -1,
+            "states": 0,
+            "state_values": 1,
+            "rewards": 2,
+            "returns": 3,
+            "td": 4,
+            "advantages": 5,
         }
         ## The mapping between prioritization strategy keywords and prioritization strategy codes. @I{# noqa: E266}
         self.prioritization_strategy_codes = {

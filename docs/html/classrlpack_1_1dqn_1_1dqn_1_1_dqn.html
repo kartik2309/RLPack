@@ -368,19 +368,20 @@ Public Member Functions</h2></td></tr>
 <li>Proportional: 1; <code>proportional</code></li>
 <li>Rank-Based: 2; <code>rank-based</code></li>
 </ul>
-<p >The codes for <code>apply_norm</code> are given as follows: -</p><ul>
-<li>No Normalization: -1; (<code>"none"</code>)</li>
-<li>Min-Max Normalization: 0; (<code>"min_max"</code>)</li>
-<li>Standardization: 1; (<code>"standardize"</code>)</li>
-<li>P-Normalization: 2; (<code>"p_norm"</code>)</li>
+<p >The values accepted for <code>apply_norm</code> are: -</p><ul>
+<li>No Normalization: -1; <code>"none"</code></li>
+<li>Min-Max Normalization: 0; <code>"min_max"</code></li>
+<li>Standardization: 1; <code>"standardize"</code></li>
+<li>P-Normalization: 2; <code>"p_norm"</code></li>
 </ul>
-<p >The codes for <code>apply_norm_to</code> are given as follows:</p><ul>
-<li>No Normalization: -1; (<code>["none"]</code>)</li>
-<li>On States only: 0; (<code>["states"]</code>)</li>
-<li>On Rewards only: 1; (<code>["rewards"]</code>)</li>
-<li>On TD value only: 2; (<code>["td"]</code>)</li>
-<li>On States and Rewards: 3; (<code>["states", "rewards"]</code>)</li>
-<li>On States and TD: 4; (<code>["states", "td"]</code>)</li>
+<p >The value accepted for <code>apply_norm_to</code> are as follows and must be passed in a list:</p><ul>
+<li><code>"none"</code>: -1; Don't apply normalization to any quantity.</li>
+<li><code>"states"</code>: 0; Apply normalization to states.</li>
+<li><code>"state_values"</code>: 1; Apply normalization to state values.</li>
+<li><code>"rewards"</code>: 2; Apply normalization to rewards.</li>
+<li><code>"returns"</code>: 3; Apply normalization to rewards.</li>
+<li><code>"td"</code>: 4; Apply normalization for TD values.</li>
+<li><code>"advantage"</code>: 5; Apply normalization to advantage values</li>
 </ul>
 <p >If a valid <code>max_norm_grad</code> is passed, then gradient clipping takes place else gradient clipping step is skipped. If <code>max_norm_grad</code> value was invalid, error will be raised from PyTorch.</p>
 <p >If a valid <code>clip_grad_value</code> is passed, then gradients will be clipped by value. If <code>clip_grad_value</code> value was invalid, error will be raised from PyTorch. </p>

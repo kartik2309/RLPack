@@ -130,9 +130,9 @@ $(document).ready(function(){initNavTree('classrlpack_1_1models_1_1mlp_1_1_mlp.h
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a2fc0cfd977196a15cec210bf4b4aa3ef"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1mlp_1_1_mlp.html#a2fc0cfd977196a15cec210bf4b4aa3ef">__init__</a> (self, int sequence_length, List[int] hidden_sizes, int num_actions, <a class="el" href="classrlpack_1_1utils_1_1typing__hints_1_1_activation.html">Activation</a> activation=pytorch.nn.ReLU(), float <a class="el" href="classrlpack_1_1models_1_1mlp_1_1_mlp.html#ad64600f75d5a744f6f6199b80ffd7112">dropout</a>=0.5)</td></tr>
-<tr class="memdesc:a2fc0cfd977196a15cec210bf4b4aa3ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize <a class="el" href="classrlpack_1_1models_1_1mlp_1_1_mlp.html" title="This class is a PyTorch Model implementing the MLP model for 1-D or 2-D state values.">Mlp</a> model.  <a href="classrlpack_1_1models_1_1mlp_1_1_mlp.html#a2fc0cfd977196a15cec210bf4b4aa3ef">More...</a><br /></td></tr>
-<tr class="separator:a2fc0cfd977196a15cec210bf4b4aa3ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9defe348bdafd4da56505bd07e10668b"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1mlp_1_1_mlp.html#a9defe348bdafd4da56505bd07e10668b">__init__</a> (self, List[int] hidden_sizes, int num_actions, int sequence_length=1, <a class="el" href="classrlpack_1_1utils_1_1typing__hints_1_1_activation.html">Activation</a> activation=pytorch.nn.ReLU(), float <a class="el" href="classrlpack_1_1models_1_1mlp_1_1_mlp.html#ad64600f75d5a744f6f6199b80ffd7112">dropout</a>=0.5)</td></tr>
+<tr class="memdesc:a9defe348bdafd4da56505bd07e10668b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize <a class="el" href="classrlpack_1_1models_1_1mlp_1_1_mlp.html" title="This class is a PyTorch Model implementing the MLP model for 1-D or 2-D state values.">Mlp</a> model.  <a href="classrlpack_1_1models_1_1mlp_1_1_mlp.html#a9defe348bdafd4da56505bd07e10668b">More...</a><br /></td></tr>
+<tr class="separator:a9defe348bdafd4da56505bd07e10668b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55510052932de2e84b439a3bee0fdefc"><td class="memItemLeft" align="right" valign="top">pytorch.Tensor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1models_1_1mlp_1_1_mlp.html#a55510052932de2e84b439a3bee0fdefc">forward</a> (self, pytorch.Tensor x)</td></tr>
 <tr class="memdesc:a55510052932de2e84b439a3bee0fdefc"><td class="mdescLeft">&#160;</td><td class="mdescRight">The forwards method of the nn.Module.  <a href="classrlpack_1_1models_1_1mlp_1_1_mlp.html#a55510052932de2e84b439a3bee0fdefc">More...</a><br /></td></tr>
 <tr class="separator:a55510052932de2e84b439a3bee0fdefc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -155,8 +155,8 @@ Data Fields</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >This class is a PyTorch Model implementing the MLP model for 1-D or 2-D state values. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a2fc0cfd977196a15cec210bf4b4aa3ef" name="a2fc0cfd977196a15cec210bf4b4aa3ef"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2fc0cfd977196a15cec210bf4b4aa3ef">&#9670;&#160;</a></span>__init__()</h2>
+<a id="a9defe348bdafd4da56505bd07e10668b" name="a9defe348bdafd4da56505bd07e10668b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9defe348bdafd4da56505bd07e10668b">&#9670;&#160;</a></span>__init__()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -170,12 +170,6 @@ Data Fields</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>sequence_length</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">List[int]&#160;</td>
           <td class="paramname"><em>hidden_sizes</em>, </td>
         </tr>
@@ -184,6 +178,12 @@ Data Fields</h2></td></tr>
           <td></td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>num_actions</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &#160;</td>
+          <td class="paramname"><em>sequence_length</em> = <code>1</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -208,9 +208,9 @@ Data Fields</h2></td></tr>
 <p>Initialize <a class="el" href="classrlpack_1_1models_1_1mlp_1_1_mlp.html" title="This class is a PyTorch Model implementing the MLP model for 1-D or 2-D state values.">Mlp</a> model. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">sequence_length</td><td>int: The sequence length of the expected tensor. </td></tr>
     <tr><td class="paramname">hidden_sizes</td><td>List[int]: The list of hidden sizes for each layer. </td></tr>
     <tr><td class="paramname">num_actions</td><td>int: The number of actions for the environment. </td></tr>
+    <tr><td class="paramname">sequence_length</td><td>int: The sequence length of the expected tensor. Default: 1 </td></tr>
     <tr><td class="paramname">activation</td><td>Activation: The activation function class for the model. Must be an initialized activation object from PyTorch's nn (torch.nn) module. </td></tr>
     <tr><td class="paramname">dropout</td><td>float: The dropout to be used in the final Linear (FC) layer. </td></tr>
   </table>

@@ -4,6 +4,11 @@
 
 
 Currently following classes have been implemented:
+    - `GaussianMixture`: This class implements the gaussian mixture model with optional weights for mixture. Implemented
+        as rlpack.distributions.gaussian_mixture.GaussianMixture
+    - `GaussianMixtureLogStd`: This class implements the gaussian mixture model with optional weights for mixture
+        where input scale is raised to the power `e` (Napier's constant). Implemented as
+        rlpack.distributions.gaussian_mixture_log_std.GaussianMixtureLogStd
     - `MultivariateNormalLogStd`: This is the modified version of MultiVariateNormal provided by PyTorch, wherein
         diagonal of input matrix for scale is raised to the power `e` (Napier's constant). Implemented as
         rlpack.distributions.multivariate_normal_log_std.MultivariateNormalLogStd.
@@ -42,7 +47,6 @@ class MultivariateNormalLogStd(pytorch_distributions.MultivariateNormal, ABC):
         @param precision_matrix: pytorch.Tensor: The positive-definite precision matrix.
         @param scale_tril: pytorch.Tensor: The lower-triangular factor of covariance, with positive-valued diagonal.
         @param validate_args: Any: Internal argument for PyTorch. Default: None
-
         """
         if scale_tril is not None:
             scale_tril = self._raise_to_exp(scale_tril)
@@ -54,7 +58,6 @@ class MultivariateNormalLogStd(pytorch_distributions.MultivariateNormal, ABC):
             raise ValueError(
                 "Exactly one of covariance_matrix or precision_matrix or scale_tril must be specified."
             )
-
         super(MultivariateNormalLogStd, self).__init__(
             loc, covariance_matrix, precision_matrix, scale_tril, validate_args
         )
@@ -62,15 +65,9 @@ class MultivariateNormalLogStd(pytorch_distributions.MultivariateNormal, ABC):
     @staticmethod
     def _raise_to_exp(scale_tensor: pytorch.Tensor) -> pytorch.Tensor:
         """
-        Function to raise power on given scale tensor. Power is raised on diagonal elements of the matrix and
-        diagonal embedding is used to create the new matrix.
+        Function to raise power on given scale tensor.
         @param scale_tensor: The input scale tensor on which power is to be raised.
         @return: pytorch.Tensor: The power raised tensor.
         """
-        scale_tensor = pytorch.exp(scale_tensor) * pytorch.eye(
-            *scale_tensor.size(),
-            device=scale_tensor.device,
-            dtype=scale_tensor.dtype,
-            requires_grad=False,
-        )
+        scale_tensor = pytorch.exp(scale_tensor)
         return scale_tensor

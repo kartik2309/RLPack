@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['maps_0',['Maps',['../class_maps.html',1,'']]],
-  ['mlp_1',['Mlp',['../classrlpack_1_1models_1_1mlp_1_1_mlp.html',1,'rlpack::models::mlp']]],
-  ['multivariatenormallogstd_2',['MultivariateNormalLogStd',['../classrlpack_1_1distributions_1_1multivariate__normal__log__std_1_1_multivariate_normal_log_std.html',1,'rlpack::distributions::multivariate_normal_log_std']]]
+  ['lossfunction_0',['LossFunction',['../classrlpack_1_1utils_1_1typing__hints_1_1_loss_function.html',1,'rlpack::utils::typing_hints']]],
+  ['lrscheduler_1',['LRScheduler',['../classrlpack_1_1utils_1_1typing__hints_1_1_l_r_scheduler.html',1,'rlpack::utils::typing_hints']]]
 ];

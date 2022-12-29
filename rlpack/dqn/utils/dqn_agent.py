@@ -60,7 +60,7 @@ class DqnAgent(Agent):
         force_terminal_state_selection_prob: float = 0.0,
         tau: float = 1.0,
         apply_norm: Union[int, str] = -1,
-        apply_norm_to: Union[int, List[str]] = -1,
+        apply_norm_to: Union[List[int], List[str]] = -1,
         eps_for_norm: float = 5e-12,
         p_for_norm: int = 2,
         dim_for_norm: int = 0,
@@ -107,7 +107,7 @@ class DqnAgent(Agent):
         @param apply_norm: Union[int, str]: The code to select the normalization procedure to be applied on
             selected quantities; selected by `apply_norm_to`: see below)). Direct string can also be
             passed as per accepted keys. Refer below in Notes to see the accepted values. Default: -1
-        @param apply_norm_to: Union[int, List[str]]: The code to select the quantity to which normalization is
+        @param apply_norm_to:  Union[List[int], List[str]]: The code to select the quantity to which normalization is
             to be applied. Direct list of quantities can also be passed as per accepted keys. Refer
             below in Notes to see the accepted values. Default: -1.
         @param eps_for_norm: float: Epsilon value for normalization: for numeric stability. For min-max normalization
@@ -122,20 +122,21 @@ class DqnAgent(Agent):
         **Notes**
 
 
-        The codes for `apply_norm` are given as follows: -
-            - No Normalization: -1; (`"none"`)
-            - Min-Max Normalization: 0; (`"min_max"`)
-            - Standardization: 1; (`"standardize"`)
-            - P-Normalization: 2; (`"p_norm"`)
+        The values accepted for `apply_norm` are: -
+            - No Normalization: -1; `"none"`
+            - Min-Max Normalization: 0; `"min_max"`
+            - Standardization: 1; `"standardize"`
+            - P-Normalization: 2; `"p_norm"`
 
 
-        The codes for `apply_norm_to` are given as follows:
-            - No Normalization: -1; (`["none"]`)
-            - On States only: 0; (`["states"]`)
-            - On Rewards only: 1; (`["rewards"]`)
-            - On TD value only: 2; (`["td"]`)
-            - On States and Rewards: 3; (`["states", "rewards"]`)
-            - On States and TD: 4; (`["states", "td"]`)
+        The value accepted for `apply_norm_to` are as follows and must be passed in a list:
+            - `"none"`: -1; Don't apply normalization to any quantity.
+            - `"states"`: 0; Apply normalization to states.
+            - `"state_values"`: 1; Apply normalization to state values.
+            - `"rewards"`: 2; Apply normalization to rewards.
+            - `"returns"`: 3; Apply normalization to rewards.
+            - `"td"`: 4; Apply normalization for TD values.
+            - `"advantage"`: 5; Apply normalization to advantage values
 
 
         If a valid `max_norm_grad` is passed, then gradient clipping takes place else gradient clipping step is
@@ -221,7 +222,7 @@ class DqnAgent(Agent):
         self.apply_norm = apply_norm
         if isinstance(apply_norm_to, (str, list)):
             apply_norm_to = setup.get_apply_norm_to_mode_code(apply_norm_to)
-        setup.check_validity_of_apply_norm_to_code(apply_norm_to)
+        setup.check_validity_of_apply_norm_to_codes(apply_norm_to)
         ## The input `apply_norm_to` argument; indicating the quantity to normalise. @I{# noqa: E266}
         self.apply_norm_to = apply_norm_to
         ## The input `eps_for_norm` argument; indicating epsilon to be used for normalisation. @I{# noqa: E266}
@@ -338,7 +339,9 @@ class DqnAgent(Agent):
         @param state_current: Union[ndarray, pytorch.Tensor, List[float]]: The current state agent is in.
         @return np.ndarray: The action to be taken.
         """
-        state_current = self._cast_to_tensor(state_current).to(device=self.device, dtype=self.dtype)
+        state_current = self._cast_to_tensor(state_current).to(
+            device=self.device, dtype=self.dtype
+        )
         state_current = pytorch.unsqueeze(state_current, 0)
         action = self._infer_action(state_current)
         return action
@@ -354,6 +357,8 @@ class DqnAgent(Agent):
         """
         if custom_name_suffix is None:
             custom_name_suffix = ""
+        if custom_name_suffix != "":
+            custom_name_suffix = f"_{custom_name_suffix}"
         if not isinstance(custom_name_suffix, str):
             raise TypeError(
                 f"Argument `custom_name_suffix` must be of type "
@@ -396,6 +401,8 @@ class DqnAgent(Agent):
                 f"Argument `custom_name_suffix` must be of type "
                 f"{str} or {type(None)}, but got of type {type(custom_name_suffix)}"
             )
+        if custom_name_suffix != "":
+            custom_name_suffix = f"_{custom_name_suffix}"
         if os.path.isdir(self.save_path):
             self.save_path = os.path.join(
                 self.save_path, f"actor_critic{custom_name_suffix}.pt"
@@ -440,7 +447,7 @@ class DqnAgent(Agent):
         else:
             if self.policy_model.training:
                 self.policy_model.eval()
-            if self.apply_norm_to in self._state_norm_codes:
+            if self._state_norm_code in self.apply_norm_to:
                 state_current = self._normalization.apply_normalization(state_current)
             q_values = self.policy_model(state_current)
             action_tensor = q_values.argmax(-1)
@@ -467,11 +474,11 @@ class DqnAgent(Agent):
             random_indices,
         ) = random_experiences
         # Apply normalization if required to states.
-        if self.apply_norm_to in self._state_norm_codes:
+        if self._state_norm_code in self.apply_norm_to:
             state_current = self._normalization.apply_normalization(state_current)
             state_next = self._normalization.apply_normalization(state_next)
         # Apply normalization if required to rewards.
-        if self.apply_norm_to in self._reward_norm_codes:
+        if self._reward_norm_code in self.apply_norm_to:
             rewards = self._normalization.apply_normalization(rewards)
         # Set policy model to training mode.
         if not self.policy_model.training:
@@ -481,7 +488,7 @@ class DqnAgent(Agent):
             q_values_target = self.target_model(state_next)
             td_value = self._temporal_difference(rewards, q_values_target, dones)
         # Apply normalization if required to TD values.
-        if self.apply_norm_to in self._td_norm_codes:
+        if self._td_norm_code in self.apply_norm_to:
             td_value = self._normalization.apply_normalization(td_value)
         # Compute current q-values from policy model.
         q_values_policy = self.policy_model(state_current)

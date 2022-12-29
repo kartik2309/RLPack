@@ -106,7 +106,7 @@ $(document).ready(function(){initNavTree('classrlpack_1_1utils_1_1base_1_1traine
 </div><!--header-->
 <div class="contents">
 
-<p>This class is the base class of all trainer classes which implements methods to train an agent.  
+<p>This class is the abstract base class of all trainer classes which implements methods to train an agent.  
  <a href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#details">More...</a></p>
 <div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Inheritance diagram for rlpack.utils.base.trainer_base.TrainerBase:</div>
@@ -115,15 +115,27 @@ $(document).ready(function(){initNavTree('classrlpack_1_1utils_1_1base_1_1traine
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base__inherit__graph.png" border="0" usemap="#arlpack_8utils_8base_8trainer__base_8_trainer_base_inherit__map" alt="Inheritance graph"/></div>
 <map name="arlpack_8utils_8base_8trainer__base_8_trainer_base_inherit__map" id="arlpack_8utils_8base_8trainer__base_8_trainer_base_inherit__map">
-<area shape="rect" title="This class is the base class of all trainer classes which implements methods to train an agent." alt="" coords="16,5,173,45"/>
-<area shape="rect" href="classrlpack_1_1trainer_1_1trainer_1_1_trainer.html" title="This class is a generic class to train or evaluate any agent in any environment." alt="" coords="5,93,184,119"/>
+<area shape="rect" title="This class is the abstract base class of all trainer classes which implements methods to train an age..." alt="" coords="16,79,173,119"/>
+<area shape="rect" href="classrlpack_1_1trainer_1_1trainer_1_1_trainer.html" title="This class is a generic class to train or evaluate any agent in any environment." alt="" coords="5,167,184,192"/>
+<area shape="rect" title=" " alt="" coords="69,5,120,31"/>
+</map>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
+<div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-1-trigger" src="closed.png" alt="+"/> Collaboration diagram for rlpack.utils.base.trainer_base.TrainerBase:</div>
+<div id="dynsection-1-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-1-content" class="dyncontent" style="display:none;">
+<div class="center"><img src="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base__coll__graph.png" border="0" usemap="#arlpack_8utils_8base_8trainer__base_8_trainer_base_coll__map" alt="Collaboration graph"/></div>
+<map name="arlpack_8utils_8base_8trainer__base_8_trainer_base_coll__map" id="arlpack_8utils_8base_8trainer__base_8_trainer_base_coll__map">
+<area shape="rect" title="This class is the abstract base class of all trainer classes which implements methods to train an age..." alt="" coords="5,79,163,119"/>
+<area shape="rect" title=" " alt="" coords="59,5,109,31"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a03aa0c4b32bfe5ae66e14df6aa912da6"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a03aa0c4b32bfe5ae66e14df6aa912da6">__init__</a> (self, str <a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a376057c6b38bd9d0beef21226a26d570">mode</a>, <a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html">Agent</a> <a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a5bbedd36b731b61f432aaee2ada19248">agent</a>, gym.Env <a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a4e4a1eaf19a960b09af6d831e393c8bd">env</a>, str save_path, Union[SummaryWriter, None] <a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a0c06e22415be29579b2f71c2481df926">summary_writer</a>=None, bool <a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a089dcf82de62b1dc6b0a25d4e2f69e18">is_distributed</a>=False)</td></tr>
-<tr class="memdesc:a03aa0c4b32bfe5ae66e14df6aa912da6"><td class="mdescLeft">&#160;</td><td class="mdescRight">The initializer method (class constructor) for <a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html" title="This class is the base class of all trainer classes which implements methods to train an agent.">TrainerBase</a>.  <a href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a03aa0c4b32bfe5ae66e14df6aa912da6">More...</a><br /></td></tr>
+<tr class="memdesc:a03aa0c4b32bfe5ae66e14df6aa912da6"><td class="mdescLeft">&#160;</td><td class="mdescRight">The initializer method (class constructor) for <a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html" title="This class is the abstract base class of all trainer classes which implements methods to train an age...">TrainerBase</a>.  <a href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a03aa0c4b32bfe5ae66e14df6aa912da6">More...</a><br /></td></tr>
 <tr class="separator:a03aa0c4b32bfe5ae66e14df6aa912da6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f8281c79ba7a9baad6fe57026cd323c"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a8f8281c79ba7a9baad6fe57026cd323c">append_reward</a> (self, float reward)</td></tr>
 <tr class="memdesc:a8f8281c79ba7a9baad6fe57026cd323c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Append the reward to current list of rewards (<a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a35a730cd69a9f25ef0557aaa8e624f2b" title="The list of rewards at each timestep.">TrainerBase.rewards</a>).  <a href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a8f8281c79ba7a9baad6fe57026cd323c">More...</a><br /></td></tr>
@@ -137,6 +149,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a90cfba63858a47b1691a5eaba7e330b9"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a90cfba63858a47b1691a5eaba7e330b9">clear_rewards</a> (self)</td></tr>
 <tr class="memdesc:a90cfba63858a47b1691a5eaba7e330b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear the rewards accumulated so far.  <a href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a90cfba63858a47b1691a5eaba7e330b9">More...</a><br /></td></tr>
 <tr class="separator:a90cfba63858a47b1691a5eaba7e330b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd2694c38533dccd91d656a0dc2038ab"><td class="memItemLeft" align="right" valign="top">Any&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#afd2694c38533dccd91d656a0dc2038ab">evaluate_agent</a> (self, *args, **kwargs)</td></tr>
+<tr class="memdesc:afd2694c38533dccd91d656a0dc2038ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abstract method to evaluating agents.  <a href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#afd2694c38533dccd91d656a0dc2038ab">More...</a><br /></td></tr>
+<tr class="separator:afd2694c38533dccd91d656a0dc2038ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33d4c8fa96801786dde41b07f3f1e6bd"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a33d4c8fa96801786dde41b07f3f1e6bd">fill_cumulative_reward</a> (self)</td></tr>
 <tr class="memdesc:a33d4c8fa96801786dde41b07f3f1e6bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populates the cumulative rewards (<a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#aa2861dce3797eb0a549686c2822bf2ec" title="The cumulative rewards after each episode.">TrainerBase.cumulative_rewards</a>) list by computing cumulative rewards at the moment.  <a href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a33d4c8fa96801786dde41b07f3f1e6bd">More...</a><br /></td></tr>
 <tr class="separator:a33d4c8fa96801786dde41b07f3f1e6bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -188,6 +203,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a74703b7974ec213fa5b9ce57d09b2ec7"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a74703b7974ec213fa5b9ce57d09b2ec7">save_agent_with_custom_suffix</a> (self, str custom_suffix)</td></tr>
 <tr class="memdesc:a74703b7974ec213fa5b9ce57d09b2ec7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves the agent with given custom suffix if obtained cumulative reward of the agent is found to be best so far.  <a href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a74703b7974ec213fa5b9ce57d09b2ec7">More...</a><br /></td></tr>
 <tr class="separator:a74703b7974ec213fa5b9ce57d09b2ec7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5a1f09279b00abc659cdc5e99c5db53"><td class="memItemLeft" align="right" valign="top">Any&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#af5a1f09279b00abc659cdc5e99c5db53">train_agent</a> (self, *args, **kwargs)</td></tr>
+<tr class="memdesc:af5a1f09279b00abc659cdc5e99c5db53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abstract method to train agents.  <a href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#af5a1f09279b00abc659cdc5e99c5db53">More...</a><br /></td></tr>
+<tr class="separator:af5a1f09279b00abc659cdc5e99c5db53"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
@@ -201,7 +219,7 @@ Data Fields</h2></td></tr>
 <tr class="memdesc:a4e4a1eaf19a960b09af6d831e393c8bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">The gym environment on which the agent will run.  <a href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a4e4a1eaf19a960b09af6d831e393c8bd">More...</a><br /></td></tr>
 <tr class="separator:a4e4a1eaf19a960b09af6d831e393c8bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a089dcf82de62b1dc6b0a25d4e2f69e18"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a089dcf82de62b1dc6b0a25d4e2f69e18">is_distributed</a></td></tr>
-<tr class="memdesc:a089dcf82de62b1dc6b0a25d4e2f69e18"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>is_distributed</code> indicating if <a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html" title="This class is the base class of all trainer classes which implements methods to train an agent.">TrainerBase</a> is launched in multiprocessing setting.  <a href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a089dcf82de62b1dc6b0a25d4e2f69e18">More...</a><br /></td></tr>
+<tr class="memdesc:a089dcf82de62b1dc6b0a25d4e2f69e18"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>is_distributed</code> indicating if <a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html" title="This class is the abstract base class of all trainer classes which implements methods to train an age...">TrainerBase</a> is launched in multiprocessing setting.  <a href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a089dcf82de62b1dc6b0a25d4e2f69e18">More...</a><br /></td></tr>
 <tr class="separator:a089dcf82de62b1dc6b0a25d4e2f69e18"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a376057c6b38bd9d0beef21226a26d570"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a376057c6b38bd9d0beef21226a26d570">mode</a></td></tr>
 <tr class="memdesc:a376057c6b38bd9d0beef21226a26d570"><td class="mdescLeft">&#160;</td><td class="mdescRight">The mode in which trainer will be run (training or evaluation).  <a href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a376057c6b38bd9d0beef21226a26d570">More...</a><br /></td></tr>
@@ -270,7 +288,7 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a99bb42fde041c8f76d59d965f455f3ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p >This class is the base class of all trainer classes which implements methods to train an agent. </p>
+<div class="textblock"><p >This class is the abstract base class of all trainer classes which implements methods to train an agent. </p>
 <p >This class implements basic utilities useful for all trainer classes. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a03aa0c4b32bfe5ae66e14df6aa912da6" name="a03aa0c4b32bfe5ae66e14df6aa912da6"></a>
@@ -329,7 +347,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>The initializer method (class constructor) for <a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html" title="This class is the base class of all trainer classes which implements methods to train an agent.">TrainerBase</a>. </p>
+<p>The initializer method (class constructor) for <a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html" title="This class is the abstract base class of all trainer classes which implements methods to train an age...">TrainerBase</a>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">mode</td><td>bool: Current mode of operation of Trainer (training/evaluation). </td></tr>
@@ -717,6 +735,52 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Clear the rewards accumulated so far. </p>
+
+</div>
+</div>
+<a id="afd2694c38533dccd91d656a0dc2038ab" name="afd2694c38533dccd91d656a0dc2038ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd2694c38533dccd91d656a0dc2038ab">&#9670;&#160;</a></span>evaluate_agent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Any rlpack.utils.base.trainer_base.TrainerBase.evaluate_agent </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">*&#160;</td>
+          <td class="paramname"><em>args</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">**&#160;</td>
+          <td class="paramname"><em>kwargs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Abstract method to evaluating agents. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">args</td><td>Positional arguments for evaluating agents. </td></tr>
+    <tr><td class="paramname">kwargs</td><td>Keyword arguments for evaluating agents. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>: Any: Return any object. </dd></dl>
+
+<p>Reimplemented in <a class="el" href="classrlpack_1_1trainer_1_1trainer_1_1_trainer.html#ae5922ccbd57c96bfc34c1ca0896976e6">rlpack.trainer.trainer.Trainer</a>.</p>
 
 </div>
 </div>
@@ -1211,6 +1275,52 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="af5a1f09279b00abc659cdc5e99c5db53" name="af5a1f09279b00abc659cdc5e99c5db53"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5a1f09279b00abc659cdc5e99c5db53">&#9670;&#160;</a></span>train_agent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Any rlpack.utils.base.trainer_base.TrainerBase.train_agent </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">*&#160;</td>
+          <td class="paramname"><em>args</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">**&#160;</td>
+          <td class="paramname"><em>kwargs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Abstract method to train agents. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">args</td><td>Positional arguments for training agents. </td></tr>
+    <tr><td class="paramname">kwargs</td><td>Keyword arguments for training agents. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>: Any: Return any object. </dd></dl>
+
+<p>Reimplemented in <a class="el" href="classrlpack_1_1trainer_1_1trainer_1_1_trainer.html#abe3cdf0295d4775cf165e4ce050f4112">rlpack.trainer.trainer.Trainer</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Field Documentation</h2>
 <a id="a30d8eaf8a9f7c0b8c7a3637e0a0f787a" name="a30d8eaf8a9f7c0b8c7a3637e0a0f787a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a30d8eaf8a9f7c0b8c7a3637e0a0f787a">&#9670;&#160;</a></span>_best_cumulative_reward_value</h2>
@@ -1464,7 +1574,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>The input <code>is_distributed</code> indicating if <a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html" title="This class is the base class of all trainer classes which implements methods to train an agent.">TrainerBase</a> is launched in multiprocessing setting. </p>
+<p>The input <code>is_distributed</code> indicating if <a class="el" href="classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html" title="This class is the abstract base class of all trainer classes which implements methods to train an age...">TrainerBase</a> is launched in multiprocessing setting. </p>
 
 </div>
 </div>

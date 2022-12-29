@@ -22,14 +22,14 @@ class _MlpFeatureExtractor(pytorch.nn.Module):
 
     def __init__(
         self,
-        sequence_length: int,
         hidden_sizes: List[int],
+        sequence_length: int = 1,
         activation: Activation = pytorch.nn.ReLU(),
     ):
         """
         Initialize MlpFeatureExtractor model.
-        @param sequence_length: int: The sequence length of the expected tensor.
         @param hidden_sizes: List[int]: The list of hidden sizes for each layer.
+        @param sequence_length: int: The sequence length of the expected tensor. Default: 1
         @param activation: Activation: The activation function class for the model. Must be an initialized
             activation object from PyTorch's nn (torch.nn) module.
         """

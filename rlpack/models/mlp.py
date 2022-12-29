@@ -9,6 +9,9 @@ Currently following models have been implemented:
     - `ActorCriticMlpPolicy`: MLP based Policy model for Actor-Critic Methods implemented as
         rlpack.models.actor_critic_mlp_policy.ActorCriticMlpPolicy. More information can be found
         [here](@ref models/in_built/actor_critic_mlp_policy.md).
+
+Following packages are part of models:
+    - `utils`: A package utilities for models package.
 """
 
 
@@ -26,17 +29,17 @@ class Mlp(pytorch.nn.Module):
 
     def __init__(
         self,
-        sequence_length: int,
         hidden_sizes: List[int],
         num_actions: int,
+        sequence_length: int = 1,
         activation: Activation = pytorch.nn.ReLU(),
         dropout: float = 0.5,
     ):
         """
         Initialize Mlp model.
-        @param sequence_length: int: The sequence length of the expected tensor.
         @param hidden_sizes: List[int]: The list of hidden sizes for each layer.
         @param num_actions: int: The number of actions for the environment.
+        @param sequence_length: int: The sequence length of the expected tensor. Default: 1
         @param activation: Activation: The activation function class for the model. Must be an initialized
             activation object from PyTorch's nn (torch.nn) module.
         @param dropout: float: The dropout to be used in the final Linear (FC) layer.
@@ -47,7 +50,6 @@ class Mlp(pytorch.nn.Module):
             sequence_length=sequence_length,
             hidden_sizes=hidden_sizes,
             activation=activation,
-            dropout=dropout,
         )
         ## The input dropout probability. @I{# noqa: E266}
         self.dropout = pytorch.nn.Dropout(dropout)

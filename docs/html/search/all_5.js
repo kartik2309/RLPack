@@ -9,5 +9,8 @@ var searchData=
   ['epsilon_5fdecay_5ffrequency_6',['epsilon_decay_frequency',['../classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#af3efdd7264b62fdc212096763225e487',1,'rlpack::dqn::utils::dqn_agent::DqnAgent']]],
   ['epsilon_5fdecay_5frate_7',['epsilon_decay_rate',['../classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#a7c4f777fd5ad33eb96f4fe5afc69f34f',1,'rlpack::dqn::utils::dqn_agent::DqnAgent']]],
   ['errorarray_5f_8',['errorArray_',['../class_offload.html#a095ccbe83b1d39081de1bdc602c616c2',1,'Offload']]],
-  ['evaluate_5fagent_9',['evaluate_agent',['../classrlpack_1_1trainer_1_1trainer_1_1_trainer.html#ae5922ccbd57c96bfc34c1ca0896976e6',1,'rlpack::trainer::trainer::Trainer']]]
+  ['evaluate_5fagent_9',['evaluate_agent',['../classrlpack_1_1trainer_1_1trainer_1_1_trainer.html#ae5922ccbd57c96bfc34c1ca0896976e6',1,'rlpack.trainer.trainer.Trainer.evaluate_agent()'],['../classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#afd2694c38533dccd91d656a0dc2038ab',1,'rlpack.utils.base.trainer_base.TrainerBase.evaluate_agent()']]],
+  ['exploration_10',['Exploration',['../classrlpack_1_1exploration_1_1utils_1_1exploration_1_1_exploration.html',1,'rlpack::exploration::utils::exploration']]],
+  ['exploration_2epy_11',['exploration.py',['../exploration_8py.html',1,'']]],
+  ['exploration_5ftool_12',['exploration_tool',['../classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ac76827b34c015165373ec76358b60dea',1,'rlpack::actor_critic::utils::actor_critic_agent::ActorCriticAgent']]]
 ];

@@ -1,6 +1,6 @@
 var classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy =
 [
-    [ "__init__", "classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a1724d3929f1f8ff24afce5735bf292ee", null ],
+    [ "__init__", "classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a272f98e0ae94427f7a9b7a2f75b18d62", null ],
     [ "_process_action_space", "classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a30304f5d8d09ef4581f2c772f7f9f7d0", null ],
     [ "_process_activation", "classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aac18c461384c776fbba5d0e0d15cdc6f", null ],
     [ "_run_non_shared_forward", "classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a6778ff44fc25d10be2f3d50b16f39b10", null ],
@@ -22,5 +22,6 @@ var classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_pol
     [ "mlp_feature_extractor", "classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#acb05c340b3bf2f6693382040abbda5d3", null ],
     [ "share_network", "classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aecf9f6171326ea4e102b94f500ec83bc", null ],
     [ "use_actor_projection", "classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#acc3d0c82767c3101f50c0dd71b9a6e42", null ],
+    [ "use_diagonal_embedding_on_projection", "classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a812806819ae4b98740be3dc7f17607f3", null ],
     [ "value_activation", "classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a243b342828ce37830e4713f8ba996edd", null ]
 ];

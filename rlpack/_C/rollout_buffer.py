@@ -99,3 +99,10 @@ class RolloutBuffer:
         Clears the accumulated quantities so far. This will not de-allocate the memory.
         """
         self.c_rollout_buffer.clear()
+
+    def __len__(self) -> int:
+        """
+        Gets the length of Rollout Buffer.
+        @return: int: The size of the Rollout Buffer
+        """
+        return self.c_rollout_buffer.size()

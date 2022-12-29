@@ -12,6 +12,9 @@ Currently following classes have been implemented:
         this class implements the DQN with proportional prioritization.
     - `DqnRankBasedAgent`: Implemented as rlpack.dqn.dqn_rank_based_agent.DqnRankBasedAgent; this class implements the
         DQN with rank prioritization.
+
+Following packages are part of dqn:
+    - `utils`: A package utilities for dqn package.
 """
 
 
@@ -118,20 +121,21 @@ class DqnUniformAgent(DqnAgent):
         **Notes**
 
 
-        The codes for `apply_norm` are given as follows: -
-            - No Normalization: -1; (`"none"`)
-            - Min-Max Normalization: 0; (`"min_max"`)
-            - Standardization: 1; (`"standardize"`)
-            - P-Normalization: 2; (`"p_norm"`)
+        The values accepted for `apply_norm` are: -
+            - No Normalization: -1; `"none"`
+            - Min-Max Normalization: 0; `"min_max"`
+            - Standardization: 1; `"standardize"`
+            - P-Normalization: 2; `"p_norm"`
 
 
-        The codes for `apply_norm_to` are given as follows:
-            - No Normalization: -1; (`["none"]`)
-            - On States only: 0; (`["states"]`)
-            - On Rewards only: 1; (`["rewards"]`)
-            - On TD value only: 2; (`["td"]`)
-            - On States and Rewards: 3; (`["states", "rewards"]`)
-            - On States and TD: 4; (`["states", "td"]`)
+        The value accepted for `apply_norm_to` are as follows and must be passed in a list:
+            - `"none"`: -1; Don't apply normalization to any quantity.
+            - `"states"`: 0; Apply normalization to states.
+            - `"state_values"`: 1; Apply normalization to state values.
+            - `"rewards"`: 2; Apply normalization to rewards.
+            - `"returns"`: 3; Apply normalization to rewards.
+            - `"td"`: 4; Apply normalization for TD values.
+            - `"advantage"`: 5; Apply normalization to advantage values
 
 
         If a valid `max_norm_grad` is passed, then gradient clipping takes place else gradient clipping step is

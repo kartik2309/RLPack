@@ -1,4 +1,8 @@
 var searchData=
 [
-  ['hostoffload_2etpp_0',['HostOffload.tpp',['../_host_offload_8tpp.html',1,'']]]
+  ['gaussian_5fmixture_2epy_0',['gaussian_mixture.py',['../gaussian__mixture_8py.html',1,'']]],
+  ['gaussian_5fmixture_5flog_5fstd_2epy_1',['gaussian_mixture_log_std.py',['../gaussian__mixture__log__std_8py.html',1,'']]],
+  ['gaussian_5fnoise_2epy_2',['gaussian_noise.py',['../gaussian__noise_8py.html',1,'']]],
+  ['get_5fstarted_2emd_3',['get_started.md',['../get__started_8md.html',1,'']]],
+  ['grad_5faccumulator_2epy_4',['grad_accumulator.py',['../grad__accumulator_8py.html',1,'']]]
 ];

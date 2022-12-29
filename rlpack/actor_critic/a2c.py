@@ -8,15 +8,17 @@ Currently following methods are implemented:
      [here](@ref agents/actor_critic/a2c.md)
      - `A3C`: Implemented in rlpack.actor_critic.a3c.A3C. More details can be found
      [here](@ref agents/actor_critic/a3c.md)
+
+Following packages are part of actor_critic:
+    - `utils`: A package utilities for actor_critic package.
 """
 
 
-from typing import Callable, List, Optional, Tuple, Type, Union
-
-import numpy as np
+from typing import List, Optional, Tuple, Type, Union
 
 from rlpack import pytorch, pytorch_distributions
 from rlpack.actor_critic.utils.actor_critic_agent import ActorCriticAgent
+from rlpack.exploration.utils.exploration import Exploration
 from rlpack.utils import LossFunction, LRScheduler
 
 
@@ -39,8 +41,9 @@ class A2C(ActorCriticAgent):
         action_space: Union[int, Tuple[int, Union[List[int], None]]],
         backup_frequency: int,
         save_path: str,
-        bootstrap_rounds: int = 1,
-        add_gaussian_noise: bool = False,
+        rollout_accumulation_size: Union[int, None] = None,
+        grad_accumulation_rounds: int = 1,
+        exploration_tool: Union[Exploration, None] = None,
         device: str = "cpu",
         dtype: str = "float32",
         apply_norm: Union[int, str] = -1,
@@ -51,12 +54,6 @@ class A2C(ActorCriticAgent):
         max_grad_norm: Optional[float] = None,
         grad_norm_p: float = 2.0,
         clip_grad_value: Optional[float] = None,
-        variance: Optional[
-            Tuple[
-                Union[float, np.ndarray, pytorch.Tensor],
-                Callable[[float, bool, int], float],
-            ]
-        ] = None,
         max_timesteps: int = 1000,
     ):
         """!
@@ -81,10 +78,13 @@ class A2C(ActorCriticAgent):
         @param backup_frequency: int: The timesteps after which policy model, optimizer states and lr
             scheduler states are backed up.
         @param save_path: str: The path where policy model, optimizer states and lr scheduler states are to be saved.
-        @param bootstrap_rounds: int: The number of rounds until which gradients are to be accumulated before
-            performing calling optimizer step. Gradients are mean reduced for bootstrap_rounds > 1. Default: 1.
-        @param add_gaussian_noise: bool: Parameter indicating whether to add gaussian noise from standard normal
-            distribution; N(0, 1) is used. Default: False.
+        @param rollout_accumulation_size: Union[int, None]: The size of rollout buffer before performing optimizer
+            step. Whole rollout buffer is used to fit the policy model and is cleared. By default, after every episode.
+             Default: None.
+        @param grad_accumulation_rounds: int: The number of rounds until which gradients are to be accumulated before
+            performing calling optimizer step. Gradients are mean reduced for grad_accumulation_rounds > 1. Default: 1.
+        @param exploration_tool: Union[Exploration, None]: Exploration tool to be used to explore the environment.
+            These tools can be found in `rlpack.exploration`.
         @param device: str: The device on which models are run. Default: "cpu".
         @param dtype: str: The datatype for model parameters. Default: "float32"
         @param apply_norm: Union[int, str]: The code to select the normalization procedure to be applied on
@@ -100,33 +100,26 @@ class A2C(ActorCriticAgent):
         @param max_grad_norm: Optional[float]: The max norm for gradients for gradient clipping. Default: None
         @param grad_norm_p: float: The p-value for p-normalization of gradients. Default: 2.0
         @param clip_grad_value: Optional[float]: The gradient value for clipping gradients by value. Default: None
-        @param variance: Tuple[
-                Union[float, np.ndarray, pytorch.Tensor],
-                Callable[[Union[float, np.ndarray, pytorch.Tensor], bool, int], float],
-            ]: The tuple of variance to be used to sample actions for continuous action space and a method to
-            be used to decay it. The passed method have the signature Callable[[float, int], float]. The first
-            argument would be the variance value and second value be the boolean, done flag indicating if the state
-            is terminal or not and third will be the timestep; returning the updated variance value. Default: None
-        @param max_timesteps: int: The maximum timesteps the environment will run for. This is used for memory
-            preemptive allocation for improved efficiency.
+
 
         **Notes**
 
 
-        The codes for `apply_norm` are given as follows: -
-            - No Normalization: -1; (`"none"`)
-            - Min-Max Normalization: 0; (`"min_max"`)
-            - Standardization: 1; (`"standardize"`)
-            - P-Normalization: 2; (`"p_norm"`)
+        The values accepted for `apply_norm` are: -
+            - No Normalization: -1; `"none"`
+            - Min-Max Normalization: 0; `"min_max"`
+            - Standardization: 1; `"standardize"`
+            - P-Normalization: 2; `"p_norm"`
 
 
-        The codes for `apply_norm_to` are given as follows:
-            - No Normalization: -1; (`["none"]`)
-            - On States only: 0; (`["states"]`)
-            - On Rewards only: 1; (`["rewards"]`)
-            - On TD value only: 2; (`["advantage"]`)
-            - On States and Rewards: 3; (`["states", "rewards"]`)
-            - On States and TD: 4; (`["states", "advantage"]`)
+        The value accepted for `apply_norm_to` are as follows and must be passed in a list:
+            - `"none"`: -1; Don't apply normalization to any quantity.
+            - `"states"`: 0; Apply normalization to states.
+            - `"state_values"`: 1; Apply normalization to state values.
+            - `"rewards"`: 2; Apply normalization to rewards.
+            - `"returns"`: 3; Apply normalization to rewards.
+            - `"td"`: 4; Apply normalization for TD values.
+            - `"advantage"`: 5; Apply normalization to advantage values
 
 
         If a valid `max_norm_grad` is passed, then gradient clipping takes place else gradient clipping step is
@@ -148,8 +141,9 @@ class A2C(ActorCriticAgent):
             action_space,
             backup_frequency,
             save_path,
-            bootstrap_rounds,
-            add_gaussian_noise,
+            rollout_accumulation_size,
+            grad_accumulation_rounds,
+            exploration_tool,
             device,
             dtype,
             apply_norm,
@@ -160,8 +154,6 @@ class A2C(ActorCriticAgent):
             max_grad_norm,
             grad_norm_p,
             clip_grad_value,
-            variance,
-            max_timesteps,
         )
 
     def _call_to_save(self) -> None:
@@ -175,8 +167,8 @@ class A2C(ActorCriticAgent):
     def _run_optimizer(self, loss) -> None:
         """
         Protected void method to train the model or accumulate the gradients for training.
-        - If bootstrap_rounds is passed as 1 (default), model is trained each time the method is called.
-        - If bootstrap_rounds > 1, the gradients are accumulated in grad_accumulator and model is trained via
+        - If grad_accumulation_rounds is passed as 1 (default), model is trained each time the method is called.
+        - If grad_accumulation_rounds > 1, the gradients are accumulated in grad_accumulator and model is trained via
             _train_models method.
         """
         # Clear the buffer values.
@@ -187,11 +179,11 @@ class A2C(ActorCriticAgent):
         loss.backward()
         # Append loss to list
         self.loss.append(loss.item())
-        if self.bootstrap_rounds > 1:
-            # When `bootstrap_rounds` is greater than 1; accumulate gradients if no. of rounds
-            # specified by `bootstrap_rounds` have not been completed and return.
+        if self.grad_accumulation_rounds > 1:
+            # When `grad_accumulation_rounds` is greater than 1; accumulate gradients if no. of rounds
+            # specified by `grad_accumulation_rounds` have not been completed and return.
             # If no. of rounds have been completed, perform mean reduction and proceed with optimizer step.
-            if len(self._grad_accumulator) < self.bootstrap_rounds:
+            if len(self._grad_accumulator) < self.grad_accumulation_rounds:
                 self._grad_accumulator.accumulate(self.policy_model.named_parameters())
                 return
             else:

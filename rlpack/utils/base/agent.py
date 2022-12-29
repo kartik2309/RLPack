@@ -31,14 +31,18 @@ class Agent(ABC):
         """
         ## The default discounting factor for agents. @I{# noqa: E266}
         self.gamma = 0.99
-        ## The state normalisation codes; indicating the codes to normalise states. @I{# noqa: E266}
-        self._state_norm_codes = (0, 3, 4)
-        ## The reward normalisation codes; indicating the codes to normalise rewards. @I{# noqa: E266}
-        self._reward_norm_codes = (1, 3)
-        ## The TD normalisation codes; indicating the codes to normalise TD Errors. @I{# noqa: E266}
-        self._td_norm_codes = (2, 4)
-        ## The Advantage normalisation codes; indicating the codes to normalise Advantages. @I{# noqa: E266}
-        self._advantage_norm_codes = (2, 4)
+        ## The state normalisation code; indicating the code to normalise states. @I{# noqa: E266}
+        self._state_norm_code = 0
+        ## The state value normalisation code; indicating the code to normalise state values. @I{# noqa: E266}
+        self._state_value_norm_code = 1
+        ## The reward normalisation code; indicating the code to normalise rewards. @I{# noqa: E266}
+        self._reward_norm_code = 2
+        ## The returns normalisation code; indicating the code to normalise returns. @I{# noqa: E266}
+        self._returns_norm_code = 3
+        ## The TD normalisation code; indicating the code to normalise TD Errors. @I{# noqa: E266}
+        self._td_norm_code = 4
+        ## The Advantage normalisation code; indicating the code to normalise Advantages. @I{# noqa: E266}
+        self._advantage_norm_code = 5
         ## The list of losses accumulated after each backward call. @I{# noqa: E266}
         self.loss = list()
         ## The path to save agent states and models. @I{# noqa: E266}

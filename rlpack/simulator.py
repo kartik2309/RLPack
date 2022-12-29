@@ -178,16 +178,19 @@ class Simulator:
         """
         self.is_custom_model = self.sanity_check.check_model_init_sanity()
         if not self.is_custom_model:
-            activation = self.setup.get_activation(
-                activation_name=self.config.get("activation_name", pytorch.nn.ReLU()),
-                activation_args=self.config.get("activation_args", dict()),
-            )
             model_kwargs = {
-                k: self.config["model_args"][k]
-                if k not in ("activation",)
-                else activation
-                for k in self.setup.get_model_args(self.config["model_name"])
+                key: value
+                for key, value in self.config["model_args"].items()
+                if key in self.setup.get_model_args(self.config["model_name"])
             }
+            if "activation" not in model_kwargs.keys():
+                activation = self.setup.get_activation(
+                    activation_name=self.config.get(
+                        "activation_name", pytorch.nn.ReLU()
+                    ),
+                    activation_args=self.config.get("activation_args", dict()),
+                )
+                model_kwargs["activation"] = activation
             models = self.setup.get_models(
                 model_name=self.config["model_name"],
                 agent_name=self.config["agent_name"],

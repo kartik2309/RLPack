@@ -17,10 +17,10 @@ C_RolloutBuffer::C_RolloutBuffer(int64_t bufferSize, std::string &device, std::s
     device_ = Maps::deviceMap[device];
     dtype_ = Maps::dTypeMap[dtype];
     tensorOptions_ = torch::TensorOptions().device(device_).dtype(dtype_);
-    rewards_.reserve(bufferSize);
-    actionLogProbabilities_.reserve(bufferSize);
-    stateCurrentValues_.reserve(bufferSize);
-    entropies_.reserve(bufferSize);
+    rewards_.reserve(bufferSize_);
+    actionLogProbabilities_.reserve(bufferSize_);
+    stateCurrentValues_.reserve(bufferSize_);
+    entropies_.reserve(bufferSize_);
 }
 
 /*!
@@ -42,12 +42,6 @@ void C_RolloutBuffer::insert(std::map<std::string, torch::Tensor> &inputMap) {
      * For more information, please refer rlpack._C.rollout_buffer.RolloutBuffer and
      * rlpack.actor_critic.base.ActorCriticAgent
      */
-    if (rewards_.size() >= bufferSize_) {
-        std::string errorMessage = "With given buffer size of " +
-                                   std::to_string(bufferSize_) +
-                                   " attempted to add more elements";
-        throw std::out_of_range(errorMessage.c_str());
-    }
     rewards_.push_back(inputMap["reward"]);
     actionLogProbabilities_.push_back(inputMap["action_log_probability"]);
     stateCurrentValues_.push_back(inputMap["state_current_value"]);
@@ -115,4 +109,11 @@ std::map<std::string, torch::Tensor> C_RolloutBuffer::get_stacked_entropies() {
      * @return A map of PyTorch tensor of entropies, keyed "entropies".
      */
     return {{"entropies", torch::stack(entropies_).to(tensorOptions_)}};
+}
+
+size_t C_RolloutBuffer::size() {
+    /*!
+     * Returns the size of Rollout Buffer.
+     */
+    return rewards_.size();
 }

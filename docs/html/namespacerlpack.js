@@ -4,6 +4,7 @@ var namespacerlpack =
     [ "actor_critic", "namespacerlpack_1_1actor__critic.html", "namespacerlpack_1_1actor__critic" ],
     [ "distributions", "namespacerlpack_1_1distributions.html", "namespacerlpack_1_1distributions" ],
     [ "dqn", "namespacerlpack_1_1dqn.html", "namespacerlpack_1_1dqn" ],
+    [ "exploration", "namespacerlpack_1_1exploration.html", "namespacerlpack_1_1exploration" ],
     [ "models", "namespacerlpack_1_1models.html", "namespacerlpack_1_1models" ],
     [ "simulator", "namespacerlpack_1_1simulator.html", "namespacerlpack_1_1simulator" ],
     [ "simulator_distributed", "namespacerlpack_1_1simulator__distributed.html", "namespacerlpack_1_1simulator__distributed" ],

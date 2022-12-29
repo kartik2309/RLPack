@@ -8,4 +8,7 @@ Currently following methods are implemented:
      [here](@ref agents/actor_critic/a2c.md)
      - `A3C`: Implemented in rlpack.actor_critic.a3c.A3C. More details can be found
      [here](@ref agents/actor_critic/a3c.md)
+
+Following packages are part of actor_critic:
+    - `utils`: A package utilities for actor_critic package.
 """

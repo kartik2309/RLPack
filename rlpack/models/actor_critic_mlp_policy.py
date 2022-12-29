@@ -9,6 +9,9 @@ Currently following models have been implemented:
     - `ActorCriticMlpPolicy`: MLP based Policy model for Actor-Critic Methods implemented as
         rlpack.models.actor_critic_mlp_policy.ActorCriticMlpPolicy. More information can be found
         [here](@ref models/in_built/actor_critic_mlp_policy.md).
+
+Following packages are part of models:
+    - `utils`: A package utilities for models package.
 """
 
 
@@ -26,23 +29,24 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
 
     def __init__(
         self,
-        sequence_length: int,
         hidden_sizes: List[int],
         action_space: Union[int, Tuple[int, Union[List[int], None]]],
+        sequence_length: int = 1,
         activation: Union[Activation, List[Activation]] = pytorch.nn.ReLU(),
         dropout: float = 0.5,
         share_network: bool = False,
         use_actor_projection: bool = False,
+        use_diagonal_embedding_on_projection: bool = False,
     ):
         """
         Initialize ActorCriticMlpPolicy model.
-        @param sequence_length: int: The sequence length of the expected tensor.
         @param hidden_sizes: List[int]: The list of hidden sizes for each layer.
         @param action_space: Union[int, Tuple[int, Union[List[int], None]]]: The action space of the environment.
             - If discrete action set is used, number of actions can be passed.
             - If continuous action space is used, a list must be passed with first element representing
             the output features from model, second element representing the shape of action to be sampled. Second
             element can be an empty list or None, if you wish to sample the default no. of samples.
+        @param sequence_length: int: The sequence length of the expected tensor. Default: 1
         @param activation: Union[Activation, List[Activation]]: The activation function class(es) for the model.
             Must be an initialized activation object from PyTorch's nn (torch.nn) module. If a list is passed, List
             must be of length [1, 3], first activation for feature extractor, second for actor head and third for
@@ -52,12 +56,17 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
             separate networks. Default: False
         @param use_actor_projection: bool: Flag indicating whether to use projection for actor. Projection is applied
             to output of feature extractor of actor model.
+        @param use_diagonal_embedding_on_projection: bool: The flag indicating whether to perform diagonal embedding
+            on projected action values from actor i.e. create a diagonal covariance matrix. This is only active
+            when `use_actor_projection` is True.
         """
         super(ActorCriticMlpPolicy, self).__init__()
         ## The input `share_network`. @I{# noqa: E266}
         self.share_network = share_network
         ## The input `use_actor_projection`. @I{# noqa: E266}
         self.use_actor_projection = use_actor_projection
+        ## The input `use_diagonal_embedding_on_projection`. @I{# noqa: E266}
+        self.use_diagonal_embedding_on_projection = use_diagonal_embedding_on_projection
         ## Flag indicating whether to apply activation to output of actor head or not. @I{# noqa: E266}
         self._apply_actor_activation = False
         ## Flag indicating whether to apply activation to output of critic head or not. @I{# noqa: E266}
@@ -78,6 +87,10 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         self.actor_activation = None
         ## The activation function for the critic's output. @I{# noqa: E266}
         self.value_activation = None
+        # Process `activation`
+        activation = self._process_activation(activation, use_actor_projection)
+        # Process `action_space`
+        out_features = self._process_action_space(action_space)
         if not share_network:
             self._set_non_shared_network_attributes(
                 sequence_length, hidden_sizes, activation
@@ -86,10 +99,6 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
             self._set_shared_network_attributes(
                 sequence_length, hidden_sizes, activation
             )
-        # Process `activation`
-        activation = self._process_activation(activation, use_actor_projection)
-        # Process `action_space`
-        out_features = self._process_action_space(action_space)
         ## The final head for actor; creates logits/parameters for actions. @I{# noqa: E266}
         self.actor_head = pytorch.nn.Linear(
             in_features=hidden_sizes[-1],
@@ -140,7 +149,8 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
                         action_outputs, self.actor_activation
                     )
                 ]
-                action_outputs[1] = pytorch.diag_embed(action_outputs[1])
+                if self.use_diagonal_embedding_on_projection:
+                    action_outputs[1] = pytorch.diag_embed(action_outputs[1])
             else:
                 action_outputs = self.actor_activation[0](action_outputs)
         if self._apply_critic_activation:
@@ -169,14 +179,17 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         # Pass the features through the respective heads.
         action_outputs = self.actor_head(features)
         state_value = self.critic_head(features)
-        # Flatten action and state outputs
-        action_outputs = self.flatten(action_outputs)
-        state_value = self.flatten(state_value)
+        # Flatten action and state value outputs required.
+        if action_outputs.dim() > 1:
+            action_outputs = self.flatten(action_outputs)
+        if state_value.dim() > 1:
+            state_value = self.flatten(state_value)
         if self.use_actor_projection:
             # When actor projection is to be used, pass through actor_projector.
             action_projection = self.actor_projector(features)
-            # Flatten action and action projections.
-            action_projection = self.flatten(action_projection)
+            # Flatten action projection if required.
+            if action_projection.dim() > 1:
+                action_projection = self.flatten(action_projection)
             action_outputs = [action_outputs, action_projection]
         return action_outputs, state_value
 
@@ -203,14 +216,17 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         # Pass the features through the respective heads.
         action_outputs = self.actor_head(action_features)
         state_value = self.critic_head(state_value_features)
-        # Flatten action and state outputs.
-        action_outputs = self.flatten(action_outputs)
-        state_value = self.flatten(state_value)
+        # Flatten action and state value outputs required.
+        if action_outputs.dim() > 1:
+            action_outputs = self.flatten(action_outputs)
+        if state_value.dim() > 1:
+            state_value = self.flatten(state_value)
         if self.use_actor_projection:
             # When actor projection is to be used, pass through actor_projector.
             action_projection = self.actor_projector(action_features)
-            # Flatten action and action projections.
-            action_projection = self.flatten(action_projection)
+            # Flatten action projection if required.
+            if action_projection.dim() > 1:
+                action_projection = self.flatten(action_projection)
             action_outputs = [action_outputs, action_projection]
         return action_outputs, state_value
 
@@ -327,6 +343,7 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
                         del activation[2]
                     elif len(activation) == 4:
                         activation[1] = [activation[1], activation[2]]
+                        del activation[2]
                 else:
                     activation[1] = [activation[1]]
         elif isinstance(activation, pytorch.nn.Module):

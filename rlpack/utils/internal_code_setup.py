@@ -11,6 +11,12 @@ Currently following classes have been implemented:
     - `Setup`: Sets up the simulator to run the agent with environment. Implemented as rlpack.utils.setup.Setup.
     - `InternalCodeSetup`: For internal use to check/validate arguments and to retrieve codes for internal use.
         Implemented as rlpack.utils.internal_code_setup.InternalCodeSetup.
+
+Following packages are part of utils:
+    - `base`: A package for base class, implemented as rlpack.utils.base
+
+Following typing hints have been defined:
+    - `LRScheduler`: The Typing variable for LR Schedulers.
     - `LossFunction`: Typing hint for loss functions for RLPack. Implemented as
         rlpack.utils.typing_hints.LossFunction.
     - `Activation`: Typing hint for activation functions for RLPack. Implemented as
@@ -20,12 +26,6 @@ Currently following classes have been implemented:
         rlpack.utils.typing_hints.RunFuncSignature.
     - `GenericFuncSignature`: Typing hint for generic void function signatures. Implemented as
         rlpack.utils.typing_hints.GenericFuncSignature.
-
-Following packages are part of utils:
-    - `base`: A package for base class, implemented as rlpack.utils.base
-
-Following TypeVars have been defined:
-    - `LRScheduler`: The Typing variable for LR Schedulers.
 """
 
 
@@ -39,10 +39,11 @@ class InternalCodeSetup(InternalCodeRegister):
     def __init__(self):
         super(InternalCodeSetup, self).__init__()
 
-    def get_apply_norm_mode_code(self, apply_norm: str) -> int:
+    def get_apply_norm_mode_code(self, apply_norm: Union[str, int]) -> int:
         """
-        This method retrieves the apply_norm code from the given string. This code is to be supplied to agents.
-        @param apply_norm: str: The apply_norm string, specifying the normalization techniques to be used.
+        This method retrieves the apply_norm code from the given string. This code is to be supplied to agents. If
+        code is passed, returns it directly.
+        @param apply_norm: Union[str, int]: The apply_norm string, specifying the normalization techniques to be used.
             *See the notes below to see the accepted values.
         @return (int): The code corresponding to the supplied valid apply_norm.
 
@@ -53,31 +54,52 @@ class InternalCodeSetup(InternalCodeRegister):
             - "standardize": Standardization.
             - "p_norm": P-Normalization
         """
+        if not isinstance(apply_norm, (int, str)):
+            raise TypeError(
+                f"Expected `apply_norm` to be of type {str} or {int}, but received {type(apply_norm)}!"
+            )
+        if isinstance(apply_norm, int):
+            return apply_norm
         if apply_norm not in self.norm_mode_codes.keys():
             raise ValueError("Invalid or unsupported value for `apply_norm` passed")
         return self.norm_mode_codes[apply_norm]
 
-    def get_apply_norm_to_mode_code(self, apply_norm_to: List[str]) -> int:
+    def get_apply_norm_to_mode_code(
+        self, apply_norm_to: Union[List[int], List[str]]
+    ) -> List[int]:
         """
-        This method retrieves the apply_norm code_to from the given string. This code is to be supplied to agents.
-        @param apply_norm_to: List[str]: The apply_norm_to list, specifying the quantities on which we wish to
-            apply normalization specified by `apply_norm`
+        This method retrieves the apply_norm code_to from the given string. This code is to be supplied to agents. If
+        codes are passed, returns it directly.
+        @param apply_norm_to: Union[List[int], List[str]]: The apply_norm_to list, specifying the quantities on which
+            we wish to apply normalization specified by `apply_norm`
             *See the notes below to see the accepted values.
-        @return int: The code corresponding to the supplied valid apply_norm_to.
+        @return List[int]: The codes corresponding to the supplied valid apply_norm_to.
 
         *NOTE
-        The value accepted for `apply_norm_to` are:
-            - ["none"]: Don't apply normalization to any quantity.
-            - ["states"]: Apply normalization to states.
-            - ["rewards"]: Apply normalization to rewards.
-            - ["td"]: Apply normalization for TD values.
-            - ["states", "rewards"]: Apply normalization to states and rewards.
-            - ["states", "td"]: Apply normalization to states and TD values.
+        The value accepted for `apply_norm_to` are as follows and must be passed in a list:
+            - `"none"`: -1; Don't apply normalization to any quantity.
+            - `"states"`: 0; Apply normalization to states.
+            - `"state_values"`: 1; Apply normalization to state values.
+            - `"rewards"`: 2; Apply normalization to rewards.
+            - `"returns"`: 3; Apply normalization to rewards.
+            - `"td"`: 4; Apply normalization for TD values.
+            - `"advantage"`: 5; Apply normalization to advantage values
         """
-        apply_norm_to = tuple(sorted(apply_norm_to))
-        if apply_norm_to not in self.norm_to_mode_codes.keys():
-            raise ValueError("Invalid or unsupported value for `apply_norm_to` passed")
-        return self.norm_to_mode_codes[apply_norm_to]
+        apply_norm_to_codes = list()
+        if not isinstance(apply_norm_to, list):
+            raise TypeError(
+                f"Expected `apply_norm_to` to be a list, but received {type(apply_norm_to)}!"
+            )
+        for apply_norm_to_ in apply_norm_to:
+            if isinstance(apply_norm_to_, int):
+                apply_norm_to_codes.append(apply_norm_to_)
+                continue
+            if apply_norm_to_ not in self.norm_to_mode_codes.keys():
+                raise ValueError(
+                    f"Invalid or unsupported value for `apply_norm_to`; ({apply_norm_to_}) passed!"
+                )
+            apply_norm_to_codes.append(self.norm_to_mode_codes[apply_norm_to_])
+        return apply_norm_to_codes
 
     def get_prioritization_code(self, prioritization_strategy: str) -> int:
         """
@@ -123,14 +145,16 @@ class InternalCodeSetup(InternalCodeRegister):
             return
         raise ValueError("Invalid value of `apply_norm` code was received!")
 
-    def check_validity_of_apply_norm_to_code(self, apply_norm_to: int) -> None:
+    def check_validity_of_apply_norm_to_codes(self, apply_norm_to: List[int]) -> None:
         """
         Check of validity of the `apply_norm_to` code. Raises ValueError if code is invalid.
         @param apply_norm_to: int: `apply_norm_to` code to check
         """
-        if apply_norm_to in list(self.norm_to_mode_codes.values()):
-            return
-        raise ValueError("Invalid value of `apply_norm_to` code was received!")
+        for apply_norm_to_ in apply_norm_to:
+            if apply_norm_to_ not in list(self.norm_to_mode_codes.values()):
+                raise ValueError(
+                    f"Invalid value of `apply_norm_to`; ({apply_norm_to_}) was received!"
+                )
 
     @staticmethod
     def check_validity_of_action_space(

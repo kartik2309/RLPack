@@ -8,5 +8,6 @@ var searchData=
   ['epsilon_5',['epsilon',['../classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#af0810aea28b0f30171e12a1910d70a5b',1,'rlpack::dqn::utils::dqn_agent::DqnAgent']]],
   ['epsilon_5fdecay_5ffrequency_6',['epsilon_decay_frequency',['../classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#af3efdd7264b62fdc212096763225e487',1,'rlpack::dqn::utils::dqn_agent::DqnAgent']]],
   ['epsilon_5fdecay_5frate_7',['epsilon_decay_rate',['../classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#a7c4f777fd5ad33eb96f4fe5afc69f34f',1,'rlpack::dqn::utils::dqn_agent::DqnAgent']]],
-  ['errorarray_5f_8',['errorArray_',['../class_offload.html#a095ccbe83b1d39081de1bdc602c616c2',1,'Offload']]]
+  ['errorarray_5f_8',['errorArray_',['../class_offload.html#a095ccbe83b1d39081de1bdc602c616c2',1,'Offload']]],
+  ['exploration_5ftool_9',['exploration_tool',['../classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ac76827b34c015165373ec76358b60dea',1,'rlpack::actor_critic::utils::actor_critic_agent::ActorCriticAgent']]]
 ];

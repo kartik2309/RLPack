@@ -35,7 +35,9 @@ PYBIND11_MODULE(C_RolloutBuffer, m) {
                  &C_RolloutBuffer::get_stacked_entropies,
                  pybind11::return_value_policy::reference)
             .def("clear",
-                 &C_RolloutBuffer::clear);
+                 &C_RolloutBuffer::clear)
+            .def("size",
+                 &C_RolloutBuffer::size);
 
     /*
      * Binding the opaque object std::map<std::string, torch::Tensor> to Python.
