@@ -34,7 +34,7 @@ class GaussianNoise(Exploration):
         weight: Union[pytorch.Tensor, None] = None,
     ):
         """
-
+        Initialization Method for GaussianNoise
         @param loc: pytorch.Tensor: The `loc` parameter for Normal distribution; the mean. Also called `mu`.
         @param scale: pytorch.Tensor: The `scale` parameter for Normal distribution;
             the standard deviation. Also called `sigma`.
