@@ -28,6 +28,7 @@ var NAVTREE =
     [ "Documentation", "intro.html", [
       [ "Overview", "overview.html", null ],
       [ "Get Started", "get_started.html", null ],
+      [ "Distributions", "distributions.html", null ],
       [ "Models", "models.html", [
         [ "In-Built Models", "in_build_models.html", [
           [ "MLP", "mlp.html", null ],
@@ -41,12 +42,11 @@ var NAVTREE =
       [ "Agents", "agents.html", [
         [ "DQN", "dqn.html", null ],
         [ "Actor-Critic", "actor_critic.html", [
-          [ "AC", "@ref acc", null ],
+          [ "AC", "ac.html", null ],
           [ "A2C", "a2c.html", null ],
           [ "A3C", "a3c.html", null ]
         ] ]
-      ] ],
-      [ "Distributions", "distributions.html", null ]
+      ] ]
     ] ],
     [ "Modules", "modules.html", "modules" ],
     [ "Packages", "namespaces.html", [
@@ -57,7 +57,7 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"@ref acc",
+"a2c.html",
 "classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a0dddd26f1bfa9e729fb771a28b2cd4bb",
 "classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a1dfcae45bfdf82ef6e11ef5244c53c01"
 ];
