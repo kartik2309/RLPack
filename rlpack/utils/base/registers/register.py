@@ -11,11 +11,10 @@ Currently following base classes have been implemented:
 """
 
 
-from site import getsitepackages
-
 from rlpack import pytorch, pytorch_distributions
 from rlpack.actor_critic.a2c import A2C
 from rlpack.actor_critic.a3c import A3C
+from rlpack.actor_critic.ac import AC
 from rlpack.distributions import (
     GaussianMixture,
     GaussianMixtureLogStd,
@@ -107,7 +106,7 @@ class Register:
         ## The mapping between given keyword and [in-built](@ref models/index.md) models. @I{# noqa: E266}
         self.models = {"mlp": Mlp, "actor_critic_mlp_policy": ActorCriticMlpPolicy}
         ## The mapping between given keyword and [agents](@ref agents/index.md) models. @I{# noqa: E266}
-        self.agents = {"dqn": Dqn, "a2c": A2C, "a3c": A3C}
+        self.agents = {"dqn": Dqn, "ac": AC, "a2c": A2C, "a3c": A3C}
         ## The mapping between given keyword and [in-built](@ref models/index.md) model's default arguments. @I{# noqa: E266}
         self.model_args_default = {
             "mlp": ("sequence_length", "activation", "dropout"),
@@ -141,6 +140,21 @@ class Register:
                 "prioritization_params",
                 "force_terminal_state_selection_prob",
                 "tau",
+                "apply_norm",
+                "apply_norm_to",
+                "eps_for_norm",
+                "p_for_norm",
+                "dim_for_norm",
+                "max_grad_norm",
+                "grad_norm_p",
+                "clip_grad_value",
+            ),
+            "ac": (
+                "exploration_tool",
+                "rollout_accumulation_size",
+                "grad_accumulation_rounds",
+                "device",
+                "dtype",
                 "apply_norm",
                 "apply_norm_to",
                 "eps_for_norm",
@@ -204,6 +218,21 @@ class Register:
                 "save_path",
                 *self.agent_args_default["dqn"],
             ),
+            "ac": (
+                "policy_model",
+                "optimizer",
+                "lr_scheduler",
+                "loss_function",
+                "distribution",
+                "gamma",
+                "entropy_coefficient",
+                "state_value_coefficient",
+                "backup_frequency",
+                "lr_threshold",
+                "action_space",
+                "save_path",
+                *self.agent_args_default["ac"],
+            ),
             "a2c": (
                 "policy_model",
                 "optimizer",
@@ -238,16 +267,11 @@ class Register:
         ## The mapping between keyword and agents' model arguments to wrap optimizer with. @I{# noqa: E266}
         self.model_args_to_optimize = {
             "dqn": {"target_model": False, "policy_model": True},
+            "ac": {"policy_model": True},
             "a2c": {"policy_model": True},
             "a3c": {"policy_model": True},
         }
-        self.mandatory_distributed_agents = ("a3c",)
-        self.mandatory_distribution_required_agents = ("a2c", "a3c")
-
-    @staticmethod
-    def get_prefix_path():
-        """
-        Gets prefix path for rlpack package, from python installation.
-        @return: str: The prefix path to rlpack.
-        """
-        return f"{getsitepackages()[0]}/rlpack"
+        ## The tuple of agent names, mandatory to be launched in distributed setting. @I{# noqa: E266}
+        self.mandatory_distributed_agents = ("a2c", "a3c")
+        ## The tuple of agent names, that require `distribution` parameter. @I{# noqa: E266}
+        self.mandatory_distribution_required_agents = ("ac", "a2c", "a3c")

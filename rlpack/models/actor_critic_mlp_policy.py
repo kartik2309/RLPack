@@ -45,20 +45,20 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
             - If discrete action set is used, number of actions can be passed.
             - If continuous action space is used, a list must be passed with first element representing
             the output features from model, second element representing the shape of action to be sampled. Second
-            element can be an empty list or None, if you wish to sample the default no. of samples.
+            element can be an empty list, if you wish to sample the default no. of samples.
         @param sequence_length: int: The sequence length of the expected tensor. Default: 1
         @param activation: Union[Activation, List[Activation]]: The activation function class(es) for the model.
             Must be an initialized activation object from PyTorch's nn (torch.nn) module. If a list is passed, List
             must be of length [1, 3], first activation for feature extractor, second for actor head and third for
             critic head.
-        @param dropout: float: The dropout to be used in the final Linear (FC) layer.
+        @param dropout: float: The dropout to be used in the final Linear (FC) layer. Default: 0.5
         @param share_network: bool: Flag indicating whether to use the shared network for actor and critic or
             separate networks. Default: False
         @param use_actor_projection: bool: Flag indicating whether to use projection for actor. Projection is applied
-            to output of feature extractor of actor model.
+            to output of feature extractor of actor model. Default: False
         @param use_diagonal_embedding_on_projection: bool: The flag indicating whether to perform diagonal embedding
             on projected action values from actor i.e. create a diagonal covariance matrix. This is only active
-            when `use_actor_projection` is True.
+            when `use_actor_projection` is True. Default: False
         """
         super(ActorCriticMlpPolicy, self).__init__()
         ## The input `share_network`. @I{# noqa: E266}
@@ -80,6 +80,10 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         self.critic_feature_extractor = None
         ## The projection vector for actor. This will be None if `use_actor_projection` is False. @I{# noqa: E266}
         self.actor_projector = None
+        # Process `activation`
+        activation = self._process_activation(activation, use_actor_projection)
+        # Process `action_space`
+        out_features = self._process_action_space(action_space)
         ## The core activation function to be used. This will be used in feature extractor @I{# noqa: E266}
         ## and between feature extractor and heads. @I{# noqa: E266}
         self.activation_core = activation[0]
@@ -87,10 +91,6 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         self.actor_activation = None
         ## The activation function for the critic's output. @I{# noqa: E266}
         self.value_activation = None
-        # Process `activation`
-        activation = self._process_activation(activation, use_actor_projection)
-        # Process `action_space`
-        out_features = self._process_action_space(action_space)
         if not share_network:
             self._set_non_shared_network_attributes(
                 sequence_length, hidden_sizes, activation
@@ -330,7 +330,7 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
                 )
             if not 0 < len(activation) <= 4 and use_actor_projection:
                 raise ValueError(
-                    "Activation must be a list of either one, two three or four activation; "
+                    "Activation must be a list of either one, two, three or four activation; "
                     "first for feature extractor; second for actor head's first projection; "
                     "third for actor's second projection; fourth for critic head"
                 )
