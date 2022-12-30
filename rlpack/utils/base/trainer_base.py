@@ -18,6 +18,7 @@ from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import gym
+import matplotlib.pyplot as plt
 import numpy as np
 
 from rlpack import SummaryWriter, pytorch_distributed
@@ -60,6 +61,10 @@ class TrainerBase(ABC):
         self.env = env
         ## The input `summary_writer` for tensorboard logging. @I{# noqa: E266}
         self.summary_writer = summary_writer
+        # Check if is_distributed valid
+        if is_distributed:
+            if not pytorch_distributed.is_initialized():
+                raise Exception("Passed `is_distributed` but PyTorch distributed has not been initialized!")
         ## The input `is_distributed` indicating if TrainerBase is launched in multiprocessing setting. @I{# noqa: E266}
         self.is_distributed = is_distributed
         ## The python logger for logging metrics. This is saved in input `save_path` as trainer.log. @I{# noqa: E266}
@@ -68,6 +73,8 @@ class TrainerBase(ABC):
         self.rewards = list()
         ## The cumulative rewards after each episode. @I{# noqa: E266}
         self.cumulative_rewards = list()
+        ## The reward tracker to track the reward at each global timestep. @I{# noqa: E266}
+        self._reward_tracker = list()
         ## The basic quantities to log. @I{# noqa: E266}
         self._log_quantities_base = (
             "return",
@@ -77,7 +84,6 @@ class TrainerBase(ABC):
         self._log_quantities_agent = (
             "epsilon",
             "loss",
-            "variance_value",
             "prioritization_params",
         )
         ## The prioritization quantities from agents to log. @I{# noqa: E266}
@@ -227,23 +233,6 @@ class TrainerBase(ABC):
             f"Mean Cumulative reward at episode {episode}: {mean_reward}"
         )
 
-    def log_reward_with_summary_writer(
-        self, reward: float, episode: int, timestep: int
-    ) -> None:
-        """
-        Computes average cumulative rewards accumulated so far and logs them.
-        @param reward: float: The reward obtained at the given timestep.
-        @param episode: int:  The current episode for which logging is being done.
-        @param timestep: int: The current timestep of the given episode.
-        """
-        if self.summary_writer is None:
-            return
-        self.summary_writer.add_scalar(
-            tag=f"{self.mode}/reward",
-            scalar_value=reward,
-            global_step=episode * timestep,
-        )
-
     def log_cumulative_rewards_with_summary_writer(self, episode: int) -> None:
         """
         Computes average cumulative rewards accumulated so far and logs them with Tensorboard logger.
@@ -251,7 +240,7 @@ class TrainerBase(ABC):
         """
         if self.summary_writer is None:
             return
-        mean_reward = self._list_mean(self.rewards)
+        mean_reward = self._list_mean(self.cumulative_rewards)
         self.summary_writer.add_scalar(
             tag=f"{self.mode}/cumulative_rewards",
             scalar_value=mean_reward,
@@ -282,15 +271,33 @@ class TrainerBase(ABC):
         """
         Logs header line for block separation.
         """
-        self.py_logger.info(f"\n{'~' * 60}")
+        if self.is_distributed:
+            message = f"\n{'~' * 30} Process {pytorch_distributed.get_rank()} {'~' * 30}"
+        else:
+            message = f"\n{'~' * 60}"
+        self.py_logger.info(message)
 
-    def append_reward(self, reward: float) -> None:
+    def append_reward(self, reward: float, episode: int, timestep: int) -> None:
         """
         Append the reward to current list of rewards (TrainerBase.rewards). Ideally this must be called at each
         timestep.
-        @param reward: float: The current reward
+        @param reward: float: The current reward.
+        @param episode: int:  The current episode for which logging is being done.
+        @param timestep: int: The current timestep of the given episode.
         """
         self.rewards.append(reward)
+        self._reward_tracker.append((reward, episode * timestep))
+
+    def generate_reward_scatter_plot_with_summary_writer(self):
+        rewards = [reward_tuple[0] for reward_tuple in self._reward_tracker]
+        timesteps = [reward_tuple[1] for reward_tuple in self._reward_tracker]
+        plt.switch_backend("agg")
+        plt.scatter(x=timesteps, y=rewards)
+        plt.xlabel("Timesteps")
+        plt.ylabel("Rewards")
+        plt.title("Rewards vs. Timesteps")
+        figure = plt.gcf()
+        self.summary_writer.add_figure(f"{self.mode}/rewards", figure)
 
     def fill_cumulative_reward(self) -> None:
         """
@@ -348,6 +355,12 @@ class TrainerBase(ABC):
         @return bool: True if training mode is set.
         """
         return self.mode in self._possible_train_names
+
+    def close_summary_writer(self) -> None:
+        """
+        Method to close the summary writer
+        """
+        self.summary_writer.close()
 
     def _update_best_reward_value(self) -> bool:
         """
