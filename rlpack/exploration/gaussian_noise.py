@@ -58,7 +58,9 @@ class GaussianNoise(Exploration):
     def reset(self):
         if self.anneal_func is not None:
             self.loc, self.scale, self.weight = self.anneal_func(
-                self.loc, self.scale, self.weight,
+                self.loc,
+                self.scale,
+                self.weight,
             )
             self.normal_distribution = pytorch_distributions.Normal(
                 self.loc, self.scale
