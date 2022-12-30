@@ -4,6 +4,8 @@
 
 
 Currently following methods are implemented:
+    - `AC`: Implemented in rlpack.actor_critic.ac.AC. More details
+        can be found [here](@ref agents/actor_critic.ac.md)
     - `A2C`: Implemented in rlpack.actor_critic.a2c.A2C. More details can be found
      [here](@ref agents/actor_critic/a2c.md)
      - `A3C`: Implemented in rlpack.actor_critic.a3c.A3C. More details can be found
@@ -16,15 +18,17 @@ Following packages are part of actor_critic:
 
 from typing import List, Optional, Tuple, Type, Union
 
-from rlpack import pytorch, pytorch_distributions
+from rlpack import pytorch, pytorch_distributed, pytorch_distributions
 from rlpack.actor_critic.utils.actor_critic_agent import ActorCriticAgent
 from rlpack.exploration.utils.exploration import Exploration
 from rlpack.utils import LossFunction, LRScheduler
+from rlpack.utils.exceptions import AgentError
 
 
 class A2C(ActorCriticAgent):
     """
-    The A2C class implements the synchronous Actor-Critic method.
+    The A2C class implements the asynchronous Actor-Critic method with synchronization. This uses
+    PyTorch's multiprocessing for gradient all-reduce operations in synchronous fashion.
     """
 
     def __init__(
@@ -54,7 +58,6 @@ class A2C(ActorCriticAgent):
         max_grad_norm: Optional[float] = None,
         grad_norm_p: float = 2.0,
         clip_grad_value: Optional[float] = None,
-        max_timesteps: int = 1000,
     ):
         """!
         @param policy_model: *pytorch.nn.Module*: The policy model to be used. Policy model must return a tuple of
@@ -73,18 +76,18 @@ class A2C(ActorCriticAgent):
         @param action_space: Union[int, Tuple[int, Union[List[int], None]]]: The action space of the environment.
             - If discrete action set is used, number of actions can be passed.
             - If continuous action space is used, a list must be passed with first element representing
-            the output features from model, second element representing the shape of action to be sampled. Second
-            element can be an empty list or None, if you wish to sample the default no. of samples.
+                the output features from model, second element representing the shape of action to be sampled. Second
+                element can be an empty list, if you wish to sample the default no. of samples.
         @param backup_frequency: int: The timesteps after which policy model, optimizer states and lr
             scheduler states are backed up.
+        @param exploration_tool: Union[Exploration, None]: Exploration tool to be used to explore the environment.
+            These tools can be found in `rlpack.exploration`.
         @param save_path: str: The path where policy model, optimizer states and lr scheduler states are to be saved.
         @param rollout_accumulation_size: Union[int, None]: The size of rollout buffer before performing optimizer
             step. Whole rollout buffer is used to fit the policy model and is cleared. By default, after every episode.
              Default: None.
         @param grad_accumulation_rounds: int: The number of rounds until which gradients are to be accumulated before
             performing calling optimizer step. Gradients are mean reduced for grad_accumulation_rounds > 1. Default: 1.
-        @param exploration_tool: Union[Exploration, None]: Exploration tool to be used to explore the environment.
-            These tools can be found in `rlpack.exploration`.
         @param device: str: The device on which models are run. Default: "cpu".
         @param dtype: str: The datatype for model parameters. Default: "float32"
         @param apply_norm: Union[int, str]: The code to select the normalization procedure to be applied on
@@ -127,7 +130,6 @@ class A2C(ActorCriticAgent):
         If a valid `clip_grad_value` is passed, then gradients will be clipped by value. If `clip_grad_value` value
         was invalid, error will be raised from PyTorch.
         """
-
         super(A2C, self).__init__(
             policy_model,
             optimizer,
@@ -155,59 +157,34 @@ class A2C(ActorCriticAgent):
             grad_norm_p,
             clip_grad_value,
         )
+        if not pytorch_distributed.is_initialized():
+            raise AgentError("A2C can only be launched in distributed setting!")
+        ## The callable method for gradient reduction in distributed environment.@I{# noqa: E266}
+        self._distributed_grad_reduce_method = self._sync_gradients
+        ## The process rank for A2C worker. @I{# noqa: E266}
+        self._process_rank = pytorch_distributed.get_rank()
+        ## The world size for A2C workers @I{# noqa: E266}
+        self._world_size = pytorch_distributed.get_world_size()
 
     def _call_to_save(self) -> None:
         """
-        Method calling the save method when required. This method is to be overriden by asynchronous methods.
+        Method calling the save method when required. Only saved from first process (process with rank 0).
         """
-        if (self.step_counter + 1) % self.backup_frequency == 0:
-            self.save()
-        return
-
-    def _run_optimizer(self, loss) -> None:
-        """
-        Protected void method to train the model or accumulate the gradients for training.
-        - If grad_accumulation_rounds is passed as 1 (default), model is trained each time the method is called.
-        - If grad_accumulation_rounds > 1, the gradients are accumulated in grad_accumulator and model is trained via
-            _train_models method.
-        """
-        # Clear the buffer values.
-        self._clear()
-        # Prepare for optimizer step by setting zero grads.
-        self.optimizer.zero_grad()
-        # Backward call
-        loss.backward()
-        # Append loss to list
-        self.loss.append(loss.item())
-        if self.grad_accumulation_rounds > 1:
-            # When `grad_accumulation_rounds` is greater than 1; accumulate gradients if no. of rounds
-            # specified by `grad_accumulation_rounds` have not been completed and return.
-            # If no. of rounds have been completed, perform mean reduction and proceed with optimizer step.
-            if len(self._grad_accumulator) < self.grad_accumulation_rounds:
-                self._grad_accumulator.accumulate(self.policy_model.named_parameters())
-                return
-            else:
-                # Perform mean reduction.
-                self._grad_mean_reduction()
-                # Clear Accumulated Gradient buffer.
-                self._grad_accumulator.clear()
-        # Clip gradients by norm if requested.
-        if self.max_grad_norm is not None:
-            pytorch.nn.utils.clip_grad_norm_(
-                self.policy_model.parameters(),
-                max_norm=self.max_grad_norm,
-                norm_type=self.grad_norm_p,
-            )
-        # Clip gradients by value if requested.
-        if self.clip_grad_value is not None:
-            pytorch.nn.utils.clip_grad_value_(
-                self.policy_model.parameters(), clip_value=self.clip_grad_value
-            )
-        # Take optimizer step.
-        self.optimizer.step()
-        # Take an LR Scheduler step if required.
         if (
-            self.lr_scheduler is not None
-            and min([*self.lr_scheduler.get_last_lr()]) > self.lr_threshold
-        ):
-            self.lr_scheduler.step()
+            (self.step_counter + 1) % self.backup_frequency == 0
+        ) and self._process_rank == 0:
+            self.save()
+
+    @pytorch.no_grad()
+    def _sync_gradients(self) -> None:
+        """
+        Synchronously averages the gradients across the world_size (number of processes) using blocking
+        all-reduce method for synchronization.Thirty minute timeout has been placed for blocking call after
+        which error is raised.
+        """
+        for param in self.policy_model.parameters():
+            if param.requires_grad:
+                pytorch_distributed.all_reduce(
+                    param.grad, op=pytorch_distributed.ReduceOp.SUM, async_op=False
+                )
+                param.grad /= self._world_size

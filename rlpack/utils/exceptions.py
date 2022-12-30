@@ -36,6 +36,7 @@ class AgentError(Exception):
     """
     Exception for when error occurs in initializing agents.
     """
+
     def __init__(self, message: str):
         """
         Initialization method for AgentError

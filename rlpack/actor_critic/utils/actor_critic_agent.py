@@ -76,8 +76,8 @@ class ActorCriticAgent(Agent):
         @param action_space: Union[int, Tuple[int, Union[List[int], None]]]: The action space of the environment.
             - If discrete action set is used, number of actions can be passed.
             - If continuous action space is used, a list must be passed with first element representing
-            the output features from model, second element representing the shape of action to be sampled. Second
-            element can be an empty list or None, if you wish to sample the default no. of samples.
+                the output features from model, second element representing the shape of action to be sampled. Second
+                element can be an empty list, if you wish to sample the default no. of samples.
         @param backup_frequency: int: The timesteps after which policy model, optimizer states and lr
             scheduler states are backed up.
         @param save_path: str: The path where policy model, optimizer states and lr scheduler states are to be saved.
@@ -162,7 +162,7 @@ class ActorCriticAgent(Agent):
         # Check sanity of `grad_accumulation_rounds`
         assert (
             grad_accumulation_rounds > 0
-        ), "Argument `grad_accumulation_rounds` must be an integer between 0 and 1"
+        ), "Argument `grad_accumulation_rounds` must be an integer greater than 0"
         ## The input `rollout_accumulation_size`. @I{# noqa: E266}
         self.rollout_accumulation_size = rollout_accumulation_size
         ## The input `grad_accumulation_rounds`. @I{# noqa: E266}
@@ -214,10 +214,20 @@ class ActorCriticAgent(Agent):
         )
         ## The rollout buffer to be used for agent to store necessary outputs. @I{# noqa: E266}
         ## An instance of rlpack._C.rollout_buffer.RolloutBuffer @I{# noqa: E266}
-        rollout_buffer_size = rollout_accumulation_size if rollout_accumulation_size is not None else 1024
+        rollout_buffer_size = (
+            rollout_accumulation_size if rollout_accumulation_size is not None else 1024
+        )
         self._rollout_buffer = RolloutBuffer(rollout_buffer_size, device, dtype)
-        ## The PyTorch Normal distribution object initialized with standard mean and std. @I{# noqa: E266}
-        self.gaussian_noise = self._create_noise_distribution()
+        ## The callable method for gradient reduction in distributed environment. @I{# noqa: E266}
+        self._distributed_grad_reduce_method = None
+        ## The callable method for parameter scattering in distributed environment. @I{# noqa: E266}
+        self._distributed_param_scatter_method = None
+        ## The process rank for multi-agents. For uni-agents, will be None. @I{# noqa: E266}
+        self._process_rank = None
+        ## The world size for multi-agents. For uni-agents, will be None. @I{# noqa: E266}
+        self._world_size = None
+        ## The master process id for multi-agents. Is set to 0 as a standard. @I{# noqa: E266}
+        self._master_process_rank = 0
 
     def train(
         self,
@@ -391,7 +401,7 @@ class ActorCriticAgent(Agent):
                     return
             loss = self._compute_loss()
             self._run_optimizer(loss)
-            
+
     def _call_to_reset_exploration_tool(self, done: Union[bool, int]) -> None:
         if self.exploration_tool is None:
             return
@@ -408,7 +418,7 @@ class ActorCriticAgent(Agent):
             )
         if reset_exploration_tool:
             self.exploration_tool.reset()
-            
+
     def _call_to_add_noise_to_actions(self, action: pytorch.Tensor) -> pytorch.Tensor:
         if self.exploration_tool is None:
             return action
@@ -457,13 +467,60 @@ class ActorCriticAgent(Agent):
         loss = policy_loss + value_loss
         return loss
 
-    @abstractmethod
-    def _run_optimizer(self, loss) -> None:
+    def _run_optimizer(self, loss: pytorch.Tensor) -> None:
         """
-        Protected void method to train the model or accumulate the gradients for training. This method is to be
-        overriden.
+        Protected void method to train the model or accumulate the gradients for training.
+        - If grad_accumulation_rounds is passed as 1 (default), model is trained each time the method is called.
+        - If grad_accumulation_rounds > 1, the gradients are accumulated in grad_accumulator and model is trained via
+            _train_models method.
+        @param loss: pytorch.Tensor: The loss scalar tensor
         """
-        pass
+        # Clear the buffer values.
+        self._clear()
+        # Prepare for optimizer step by setting zero grads.
+        self.optimizer.zero_grad()
+        # Backward call
+        loss.backward()
+        # Append loss to list
+        self.loss.append(loss.item())
+        if self.grad_accumulation_rounds > 1:
+            # When `grad_accumulation_rounds` is greater than 1; accumulate gradients if no. of rounds
+            # specified by `grad_accumulation_rounds` have not been completed and return.
+            # If no. of rounds have been completed, perform mean reduction and proceed with optimizer step.
+            if len(self._grad_accumulator) < self.grad_accumulation_rounds:
+                self._grad_accumulator.accumulate(self.policy_model.named_parameters())
+                return
+            else:
+                # Perform mean reduction.
+                self._grad_mean_reduction()
+                # Clear Accumulated Gradient buffer.
+                self._grad_accumulator.clear()
+        # Perform distributed gradient reduction if required.
+        if self._distributed_grad_reduce_method is not None:
+            self._distributed_grad_reduce_method()
+        # Clip gradients if requested.
+        if self.max_grad_norm is not None:
+            pytorch.nn.utils.clip_grad_norm_(
+                self.policy_model.parameters(),
+                max_norm=self.max_grad_norm,
+                norm_type=self.grad_norm_p,
+            )
+        # Clip gradients by value if requested.
+        if self.clip_grad_value is not None:
+            pytorch.nn.utils.clip_grad_value_(
+                self.policy_model.parameters(), clip_value=self.clip_grad_value
+            )
+        # Take optimizer step.
+        self.optimizer.step()
+        # Perform distributed parameter scattering if required.
+        if self._distributed_param_scatter_method is not None:
+            self._distributed_param_scatter_method()
+        # Take an LR Scheduler step if required.
+        if (
+            self.lr_scheduler is not None
+            and min([*self.lr_scheduler.get_last_lr()]) > self.lr_threshold
+        ):
+            self.lr_scheduler.step()
 
     @pytorch.no_grad()
     def _grad_mean_reduction(self) -> None:
