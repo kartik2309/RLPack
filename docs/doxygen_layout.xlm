@@ -19,9 +19,12 @@
         <tab type="usergroup" visible="yes" url="@ref agents" title="Agents">
             <tab type="user" url="@ref dqn" title="DQN"/>
             <tab type="usergroup" url="@ref actor_critic" title="Actor-Critic">
+                <tab type="user" url="@ref acc" title="AC"/>
                 <tab type="user" url="@ref a2c" title="A2C"/>
                 <tab type="user" url="@ref a3c" title="A3C"/>
             </tab>
+        </tab>
+        <tab type="usergroup" url="@ref distributions" title="Distributions">
         </tab>
     </tab>
     <tab type="pages" visible="no" title="" intro=""/>

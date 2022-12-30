@@ -1,7 +1,8 @@
 # Distributions {#distributions}
 
 RLPack provides in-built way to access and pass required distribution type to agents, which is also accessible by 
-keywords. Take a look below to learn more about available distributions and their corresponding keywords.
+keywords for use in `rlpack.simualator.Simulator` or `rlpack.simulator_distributed.SimulatorDistributed`. Take a 
+look below to learn more about available distributions and their corresponding keywords. 
 
 | Distribution            | Description                                                                                                                                                                                                                                                                                                          | Keyword                         |
 |-------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|
@@ -15,3 +16,6 @@ keywords. Take a look below to learn more about available distributions and thei
 | `MultivariateLogStd`    | The Multivariate Normal distribution (for continuous action spaces) just like `MultivariateNormal` but assumes covariance matrix (cov_mat) is of form log(cov_mat). This is implemented in rlpack.distributions.multivariate_normal_log_std.MultivariateNormalLogStd                                                 | `"multivariate_normal_log_std"` |
 | `GaussianMixture`       | The Gaussian Mixture distribution for given independent mean and standard deviations. This is implemented in rlpack.distributions.gaussian_mixture.GaussianMixture. This currently does not support `rsample` to compute pathwise derivative.                                                                        | `"gaussian_mixture"`            |
 | `GaussianMixtureLogStd` | The Gaussian Mixture distribution for given independent mean and standard deviations but assumes standard deviation (std) is of form log(std). This is implemented as rlpack.distributions.gaussian_mixture_log_std.GaussianMixtureLogStd. This currently does not support `rsample` to compute pathwise derivative. | `"gaussian_mixture_log_std"`    |
+
+Note that some distributions are implemented in PyTorch which is fetched by RLPack from PyTorch. Some distributions are 
+implemented in RLPack in `rlpack.distributions`.

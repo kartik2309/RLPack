@@ -99,7 +99,7 @@ $(document).ready(function(){initNavTree('distributions.html',''); initResizable
   <div class="headertitle"><div class="title">Distributions </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p ><a class="anchor" id="md_distributions_index"></a> RLPack provides in-built way to access and pass required distribution type to agents, which is also accessible by keywords. Take a look below to learn more about available distributions and their corresponding keywords.</p>
+<div class="textblock"><p ><a class="anchor" id="md_distributions_index"></a> RLPack provides in-built way to access and pass required distribution type to agents, which is also accessible by keywords for use in <code>rlpack.simualator.Simulator</code> or <code><a class="el" href="classrlpack_1_1simulator__distributed_1_1_simulator_distributed.html" title="Similar to rlpack.simulator.Simulator, SimulatorDistributed class sets up agents and runs simulation ...">rlpack.simulator_distributed.SimulatorDistributed</a></code>. Take a look below to learn more about available distributions and their corresponding keywords.</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Distribution   </th><th class="markdownTableHeadNone">Description   </th><th class="markdownTableHeadNone">Keyword    </th></tr>
@@ -124,6 +124,7 @@ $(document).ready(function(){initNavTree('distributions.html',''); initResizable
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code> `GaussianMixtureLogStd`   </code></td><td class="markdownTableBodyNone"><code> The Gaussian Mixture distribution for given independent mean and standard deviations but assumes standard deviation (std) is of form log(std). This is implemented as <a class="el" href="classrlpack_1_1distributions_1_1gaussian__mixture__log__std_1_1_gaussian_mixture_log_std.html" title="This class implements the Gaussian Mixture distribution where input standard deviation (scale) is ass...">rlpack.distributions.gaussian_mixture_log_std.GaussianMixtureLogStd</a>. This currently does not support `rsample` to compute pathwise derivative.   </code></td><td class="markdownTableBodyNone"><code> `"gaussian_mixture_log_std"`   </code></td></tr>
 </table>
+<p ><code>Note that some distributions are implemented in PyTorch which is fetched by RLPack from PyTorch. Some distributions are implemented in RLPack in <code><a class="el" href="namespacerlpack_1_1distributions.html" title="This package implements the additional or modified distributions for RLPack.">rlpack.distributions</a></code>. </code></p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

@@ -1,8 +1,9 @@
 var NAVTREEINDEX0 =
 {
-"a2c.html":[0,3,1,0],
+"@ref acc":[0,3,1,0],
+"a2c.html":[0,3,1,1],
 "a2c_mlp.html":[0,2,0,1],
-"a3c.html":[0,3,1,1],
+"a3c.html":[0,3,1,2],
 "activations.html":[0,2,1],
 "actor_critic.html":[0,3,1],
 "agents.html":[0,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX0 =
 "classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a00c1fb74f19174eecd6fcd03dc0b9843":[2,0,0,1,3,0,0,49],
 "classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a05e8b2d000bd94f5fb854516c84200e5":[2,0,0,1,3,0,0,30],
 "classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a073e3f0455059d575ce1bc9a28b3eee5":[2,0,0,1,3,0,0,50],
-"classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a081dcbd51017df1d26abbf15821089d7":[2,0,0,1,3,0,0,42],
-"classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a0dddd26f1bfa9e729fb771a28b2cd4bb":[2,0,0,1,3,0,0,7]
+"classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a081dcbd51017df1d26abbf15821089d7":[2,0,0,1,3,0,0,42]
 };

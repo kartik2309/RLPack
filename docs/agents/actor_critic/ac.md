@@ -1,4 +1,4 @@
-# Actor-Critic (AC) {#a3c}
+# Actor-Critic (AC) {#ac}
 
 `Actor-Critic (AC)` is implemented as `rlpack.actor_critic.ac.AC`. It inherits from
 `ActorCriticAgent` class defined as `rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent`.

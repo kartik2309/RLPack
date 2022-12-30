@@ -1,5 +1,6 @@
 var NAVTREEINDEX2 =
 {
+"classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a1dfcae45bfdf82ef6e11ef5244c53c01":[2,0,0,9,0,1,1,0,19],
 "classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a21dc8871a21ce75a92035986a11038db":[2,0,0,9,0,1,1,0,8],
 "classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a2f15458887945a449dbb60b04f44b5af":[2,0,0,9,0,1,1,0,3],
 "classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a33b4e4e22e082b3909777596a4ad4886":[2,0,0,9,0,1,1,0,9],
@@ -128,6 +129,7 @@ var NAVTREEINDEX2 =
 "classrlpack_1_1utils_1_1typing__hints_1_1_loss_function.html#aaee879e8c4c7139fc8da6c6b6ee59d98":[2,0,0,9,6,2,0],
 "classrlpack_1_1utils_1_1typing__hints_1_1_run_func_signature.html":[2,0,0,9,6,4],
 "classrlpack_1_1utils_1_1typing__hints_1_1_run_func_signature.html#a81ff90d471d893008de47372e5817ce4":[2,0,0,9,6,4,0],
+"distributions.html":[0,4],
 "dqn.html":[0,3,0],
 "get_started.html":[0,1],
 "group__binaries__group.html":[1,0],

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>RLPack: Actor Critic Methods</title>
+<title>RLPack: Actor-Critic (AC)</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,7 +70,7 @@ var searchBox = new SearchBox("searchBox", "search/",'.html');
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('actor_critic.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('ac.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -96,29 +96,12 @@ $(document).ready(function(){initNavTree('actor_critic.html',''); initResizable(
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">Actor Critic Methods </div></div>
+  <div class="headertitle"><div class="title">Actor-Critic (AC) </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p ><a class="anchor" id="md_agents_actor_critic_index"></a> Actor-Critic methods are provided in RLPack via <a class="el" href="namespacerlpack_1_1actor__critic.html" title="This package implements the Actor-Critic methods.">rlpack.actor_critic</a> package. <a class="el" href="in_build_models.html#md_models_in_built_index">In-Built</a> can be used with Actor Critic agents to train an agent on the fly. Currently following variants have been implemented:</p>
-<table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Method   </th><th class="markdownTableHeadNone">Description   </th><th class="markdownTableHeadNone">Keyword    </th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><a class="el" href="ac.html#md_agents_actor_critic_ac">AC</a>   </td><td class="markdownTableBodyNone">Actor Critic Uni-Agent method   </td><td class="markdownTableBodyNone"><code>"ac"</code>    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a class="el" href="a2c.html#md_agents_actor_critic_a2c">A2C</a>   </td><td class="markdownTableBodyNone">Synchronous Actor Critic Method   </td><td class="markdownTableBodyNone"><code>"a2c"</code>    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><a class="el" href="a3c.html#md_agents_actor_critic_a3c">A3C</a>   </td><td class="markdownTableBodyNone">Asynchronous Actor Critic Method   </td><td class="markdownTableBodyNone">"`a3c`"   </td></tr>
-</table>
-<p >Since Actor Critic implementations in RLPack support both continuous and discrete action spaces, all methods have an argument <code>action_space</code>. You must pass this argument in the following way:</p><ul>
-<li><b>Continuous case</b>: In this case, you must the argument as a tuple of two elements.<ul>
-<li>First element of the tuple will have output features desired from policy model. This is directly unpacked into the distribution object selected with <code>distribution</code>, hence make sure to check the arguments for the distribution you are passing. Generally the policy model in continuous case must output the statistics for probability distribution selected.</li>
-<li>Second element of the tuple will have the output shape of the action as a list. This shape is used to sample from the given distribution. You must know the default shape of sample from the given distribution. If you wish to sample with default shape from the distribution, you can pass an empty list or <code>None</code>. An example of default shape is <a href="https://pytorch.org/docs/stable/distributions.html#normal">Normal distribution</a> where by-default a scalar value is sampled, hence a tensor of shape <code>(1,)</code> is sampled.</li>
-<li>An example: If we have passed normal distribution and action is expected to be of shape <code>(1,)</code>, then the <code>action_space</code> would be <code>[2, []]</code>, where 2 represents the no. of features in output of the policy model (for loc (mean) and scale (standard deviation), and <code>[]</code> is the desired shape of sample. This will sample a value of shape <code>(1,)</code> from normal distribution. This will also be equivalent to <code>[2, None]</code>.</li>
-</ul>
-</li>
-<li><b>Discrete case</b>: In this case, you can simply pass an integer representing the number of actions for the environment. For example if agent can take four actions in the environment, we simply pass <code>4</code>. </li>
-</ul>
+<div class="textblock"><p ><a class="anchor" id="md_agents_actor_critic_ac"></a> <code>Actor-Critic (AC)</code> is implemented as <code><a class="el" href="classrlpack_1_1actor__critic_1_1ac_1_1_a_c.html" title="The ActorCritic class implements the basic Actor-Critic method with single agent.">rlpack.actor_critic.ac.AC</a></code>. It inherits from <code>ActorCriticAgent</code> class defined as <code><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html" title="The ActorCriticAgent is the base class for actor-critic methods.">rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent</a></code>.</p>
+<p >This version of Actor-Critic methods is the basic version of Actor Critic with uni-agent setting, so there is only actor interacting with the agent. This is primarily useful to run a trained agent from A2C or A3C for evaluation in a single process but can also be used to train agents where computational resources are limited.</p>
+<h4>Keyword: <code> Keyword: <code>agent_name: "ac"</code> </code> </h4>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
