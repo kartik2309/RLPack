@@ -136,10 +136,7 @@ class Trainer(TrainerBase):
                     reward=reward,
                     done=done,
                 )
-                self.log_reward_with_summary_writer(
-                    reward=reward, episode=ep, timestep=timestep
-                )
-                self.append_reward(reward)
+                self.append_reward(reward, ep, timestep)
                 observation_current = observation_next
                 # Break the loop once done
                 if done:
@@ -157,6 +154,8 @@ class Trainer(TrainerBase):
                 self.log_agent_info_with_py_logger(episode=ep)
                 self.clear_cumulative_rewards()
                 self.clear_agent_loss()
+        self.generate_reward_scatter_plot_with_summary_writer()
+        self.close_summary_writer()
         self.env.close()
 
     def evaluate_agent(
@@ -189,10 +188,7 @@ class Trainer(TrainerBase):
                 )
                 if terminated or truncated:
                     done = True
-                self.log_reward_with_summary_writer(
-                    reward=reward, episode=ep, timestep=timestep
-                )
-                self.append_reward(reward)
+                self.append_reward(reward, ep, timestep)
                 observation = observation_next
                 if done:
                     break
@@ -206,4 +202,6 @@ class Trainer(TrainerBase):
                 self.log_agent_info_with_py_logger(episode=ep)
                 self.clear_cumulative_rewards()
                 self.clear_agent_loss()
+        self.generate_reward_scatter_plot_with_summary_writer()
+        self.close_summary_writer()
         self.env.close()
