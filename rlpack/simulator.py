@@ -188,7 +188,7 @@ class Simulator:
                     activation_name=self.config.get(
                         "activation_name", pytorch.nn.ReLU()
                     ),
-                    activation_args=self.config.get("activation_args", dict()),
+                    activation_args=self.config.get("activation_args"),
                 )
                 model_kwargs["activation"] = activation
             models = self.setup.get_models(
