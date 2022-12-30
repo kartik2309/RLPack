@@ -5,21 +5,10 @@ can be used with Actor Critic agents to train an agent on the fly. Currently fol
 
 | Method                                 | Description                      | Keyword |
 |----------------------------------------|----------------------------------|---------|
+| [AC](@ref agents/actor_critic/ac.md)   | Actor Critic Uni-Agent method    | `"ac"`  |
 | [A2C](@ref agents/actor_critic/a2c.md) | Synchronous Actor Critic Method  | `"a2c"` |
 | [A3C](@ref agents/actor_critic/a3c.md) | Asynchronous Actor Critic Method | "`a3c`" |
 
-Actor-Critic methods implemented in RLPack support both continuous and discrete action spaces. To support both types of 
-action spaces simultaneously, RLPack provides an argument `distribution` for actor critic methods to sample actions
-from. Currently, following distributions are available and accessible by keyword when using simulators.
-
-| Distribution          | Description                                                                                                                                                                | Keyword                 |
-|-----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------|
-| `Normal`              | The Normal distribution (for continuous action spaces). More info can be found [here](https://pytorch.org/docs/stable/distributions.html#normal).                          | `"normal"`              |
-| `LogNormal`           | The LogNormal distribution (for continuous action spaces). More info can be found [here](https://pytorch.org/docs/stable/distributions.html#lognormal).                    | `"log_normal"`          |
-| `multivariate_normal` | The Multivariate Normal distribution (for continuous action spaces). More info can be found [here] (https://pytorch.org/docs/stable/distributions.html#multivariatenormal) | `"multivariate_normal"` |
-| `Categorical`         | The Categorical distribution (for discrete action spaces). More info can be found [here](https://pytorch.org/docs/stable/distributions.html#categorical).                  | `"categorical"`         |
-| `Binomial`            | The Binomial distribution (for discrete action spaces). More info can be found [here](https://pytorch.org/docs/stable/distributions.html#binomial).                        | `"binomial"`            |
-| `Bernoulli`           | The Bernoulli distribution (for discrete action spaces). More info can be found [here](https://pytorch.org/docs/stable/distributions.html#bernoulli)                       | `"bernoulli"`           |
 
 Since Actor Critic implementations in RLPack support both continuous and discrete action spaces, all methods have an 
 argument `action_space`. You must pass this argument in the following way:
@@ -37,6 +26,5 @@ argument `action_space`. You must pass this argument in the following way:
   `action_space` would be `[2, []]`, where 2 represents the no. of features in output of the policy model (for loc 
   (mean) and scale (standard deviation), and `[]` is the desired shape of sample. This will sample a value of shape
   `(1,)` from normal distribution. This will also be equivalent to `[2, None]`.
-  - 
 - **Discrete case**: In this case, you can simply pass an integer representing the number of actions for the environment.
 For example if agent can take four actions in the environment, we simply pass `4`.
