@@ -1,13 +1,16 @@
 var searchData=
 [
-  ['device_0',['device',['../classrlpack_1_1___c_1_1memory_1_1_memory.html#ac7670dc2d5a5f6cf6cedd5d840310d04',1,'rlpack._C.memory.Memory.device()'],['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a3f3c23d256a14d2b124fb866732051b6',1,'rlpack.actor_critic.a2c.A2C.device()'],['../classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#aa24c4cde1b3c86793aa0c163975f7e46',1,'rlpack.dqn.dqn_agent.DqnAgent.device()']]],
-  ['device_5f_1',['device_',['../class_c___memory.html#a30ff9629c4f49b935ad8b058ce187141',1,'C_Memory']]],
-  ['devicemap_5f_2',['deviceMap_',['../class_c___memory.html#afac47b21c1f9e5a1231506b43e1e52f2',1,'C_Memory']]],
-  ['dim_3',['dim',['../classrlpack_1_1utils_1_1normalization_1_1_normalization.html#a7db1fd84cfcf5900c6bc00b55684e000',1,'rlpack::utils::normalization::Normalization']]],
-  ['dim_5ffor_5fnorm_4',['dim_for_norm',['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ac3f70110b14a2bc1354fadaa02f3bdff',1,'rlpack.actor_critic.a2c.A2C.dim_for_norm()'],['../classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#ab587b11f42305490ece52cb5683cee6d',1,'rlpack.dqn.dqn_agent.DqnAgent.dim_for_norm()']]],
-  ['distribution_5',['distribution',['../classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ad1b2cb43a9ea064b3809838bbb0270f4',1,'rlpack::actor_critic::a2c::A2C']]],
-  ['distribution_6',['Distribution',['../namespacerlpack_1_1utils.html#aaad9a70a6c4529173da81bf76d2ceadd',1,'rlpack::utils']]],
-  ['distributions_5fmap_7',['distributions_map',['../classrlpack_1_1utils_1_1base_1_1register_1_1_register.html#a4a4f01f371201400fe35f2c17bb08e3c',1,'rlpack::utils::base::register::Register']]],
-  ['dones_5f_8',['dones_',['../class_c___memory.html#aed1b6d5e37187033b423023e040bb5b0',1,'C_Memory']]],
-  ['dropout_9',['dropout',['../classrlpack_1_1models_1_1__mlp__feature__extractor_1_1___mlp_feature_extractor.html#a57eb1081b87bfe42e59f70681b723425',1,'rlpack::models::_mlp_feature_extractor::_MlpFeatureExtractor']]]
+  ['device_0',['device',['../classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a288f640a25684e3d7f30c22f0f0a5c39',1,'rlpack._C.replay_buffer.ReplayBuffer.device()'],['../classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a05e8b2d000bd94f5fb854516c84200e5',1,'rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent.device()'],['../classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#afe7c028c868812f954e364a624fbba8c',1,'rlpack.dqn.utils.dqn_agent.DqnAgent.device()']]],
+  ['device_5f_1',['device_',['../class_c___replay_buffer.html#a54f6468d839381cd123f21a751ef643a',1,'C_ReplayBuffer::device_()'],['../class_c___rollout_buffer.html#a199bba23efd9f47c37194558a60f80f2',1,'C_RolloutBuffer::device_()']]],
+  ['devicemap_2',['deviceMap',['../class_maps.html#a6549405b43cee13c49f2c44e5beddf96',1,'Maps']]],
+  ['devicemap_5f_3',['deviceMap_',['../class_c___replay_buffer.html#a26e1eb2898a60eced4af23a99b53a46a',1,'C_ReplayBuffer']]],
+  ['dim_4',['dim',['../classrlpack_1_1utils_1_1normalization_1_1_normalization.html#a7db1fd84cfcf5900c6bc00b55684e000',1,'rlpack::utils::normalization::Normalization']]],
+  ['dim_5ffor_5fnorm_5',['dim_for_norm',['../classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a1db6c1588e7f4d11b3a723825809411a',1,'rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent.dim_for_norm()'],['../classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#abc1a1a17922ce6b2fa6eb83a58b1ab7c',1,'rlpack.dqn.utils.dqn_agent.DqnAgent.dim_for_norm()']]],
+  ['distribution_6',['distribution',['../classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a9244a2ba98485e2bedf6cee830ca1a22',1,'rlpack::actor_critic::utils::actor_critic_agent::ActorCriticAgent']]],
+  ['distributions_5fmap_7',['distributions_map',['../classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#af8516a4cbd5ce628d1b9a4dc58c6f592',1,'rlpack::utils::base::registers::register::Register']]],
+  ['dones_5f_8',['dones_',['../class_c___replay_buffer.html#ab8897d65d99edd1ed59c6b8eacc17458',1,'C_ReplayBuffer']]],
+  ['dropout_9',['dropout',['../classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a815a4185be1c351bf7f0e40b26c01749',1,'rlpack.models.actor_critic_mlp_policy.ActorCriticMlpPolicy.dropout()'],['../classrlpack_1_1models_1_1mlp_1_1_mlp.html#ad64600f75d5a744f6f6199b80ffd7112',1,'rlpack.models.mlp.Mlp.dropout()']]],
+  ['dtype_10',['dtype',['../classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a4a18734ba48f313979a23e0f835a0acb',1,'rlpack._C.replay_buffer.ReplayBuffer.dtype()'],['../classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a6dc53028e64988f4a9442a047736acb8',1,'rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent.dtype()'],['../classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#ab9b704a3e825fbee8fb62028b1608289',1,'rlpack.dqn.utils.dqn_agent.DqnAgent.dtype()']]],
+  ['dtype_5f_11',['dtype_',['../class_c___replay_buffer.html#a71efcf934489d61354ec94fb5e980f21',1,'C_ReplayBuffer::dtype_()'],['../class_c___rollout_buffer.html#a6e63b70d536c23ff93aab45178441508',1,'C_RolloutBuffer::dtype_()']]],
+  ['dtypemap_12',['dTypeMap',['../class_maps.html#a7ca35f3527ce4f3f77e385ce81339eda',1,'Maps']]]
 ];

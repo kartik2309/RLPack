@@ -114,13 +114,16 @@ $(document).ready(function(){initNavTree('classrlpack_1_1utils_1_1base_1_1agent_
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent__inherit__graph.png" border="0" usemap="#arlpack_8utils_8base_8agent_8_agent_inherit__map" alt="Inheritance graph"/></div>
 <map name="arlpack_8utils_8base_8agent_8_agent_inherit__map" id="arlpack_8utils_8base_8agent_8_agent_inherit__map">
-<area shape="rect" title="The base class for all agents." alt="" coords="111,34,268,74"/>
-<area shape="rect" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html" title="The A2C class implements the synchronous Actor&#45;Critic method." alt="" coords="316,9,496,35"/>
-<area shape="rect" href="classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html" title="This class implements the basic DQN methodology, i.e." alt="" coords="319,62,493,102"/>
-<area shape="rect" title=" " alt="" coords="5,41,63,67"/>
-<area shape="rect" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html" title="The A2C class implements the synchronous Actor&#45;Critic method." alt="" coords="585,5,765,31"/>
-<area shape="rect" href="classrlpack_1_1dqn_1_1dqn__proportional__prioritization__agent_1_1_dqn_proportional_prioritization_agent.html" title="This class implements the DQN with Proportional prioritization strategy." alt="" coords="558,55,793,109"/>
-<area shape="rect" href="classrlpack_1_1dqn_1_1dqn__rank__based__prioritization__agent_1_1_dqn_rank_based_prioritization_agent.html" title="This class implements the DQN with Rank&#45;Based prioritization strategy." alt="" coords="544,133,807,188"/>
+<area shape="rect" title="The base class for all agents." alt="" coords="104,139,261,179"/>
+<area shape="rect" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html" title="The ActorCriticAgent is the base class for actor&#45;critic methods." alt="" coords="309,79,505,119"/>
+<area shape="rect" href="classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html" title="The DqnAgent is the base class for DQN methods." alt="" coords="340,171,475,211"/>
+<area shape="rect" title=" " alt="" coords="5,147,56,172"/>
+<area shape="rect" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html" title="The A2C class implements the asynchronous Actor&#45;Critic method with synchronization." alt="" coords="580,5,760,31"/>
+<area shape="rect" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html" title="The A3C class implements the asynchronous Actor&#45;Critic method." alt="" coords="580,55,760,80"/>
+<area shape="rect" href="classrlpack_1_1actor__critic_1_1ac_1_1_a_c.html" title="The ActorCritic class implements the basic Actor&#45;Critic method with single agent." alt="" coords="587,104,753,129"/>
+<area shape="rect" href="classrlpack_1_1dqn_1_1dqn__proportional__agent_1_1_dqn_proportional_agent.html" title="This class implements the DQN with Proportional prioritization strategy." alt="" coords="574,154,766,194"/>
+<area shape="rect" href="classrlpack_1_1dqn_1_1dqn__rank__based__agent_1_1_dqn_rank_based_agent.html" title="This class implements the DQN with Rank&#45;Based prioritization strategy." alt="" coords="553,218,787,258"/>
+<area shape="rect" href="classrlpack_1_1dqn_1_1dqn__uniform__agent_1_1_dqn_uniform_agent.html" title="This class implements the basic DQN methodology, i.e." alt="" coords="585,282,755,322"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -131,7 +134,7 @@ $(document).ready(function(){initNavTree('classrlpack_1_1utils_1_1base_1_1agent_
 <div class="center"><img src="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent__coll__graph.png" border="0" usemap="#arlpack_8utils_8base_8agent_8_agent_coll__map" alt="Collaboration graph"/></div>
 <map name="arlpack_8utils_8base_8agent_8_agent_coll__map" id="arlpack_8utils_8base_8agent_8_agent_coll__map">
 <area shape="rect" title="The base class for all agents." alt="" coords="5,79,163,119"/>
-<area shape="rect" title=" " alt="" coords="55,5,113,31"/>
+<area shape="rect" title=" " alt="" coords="59,5,109,31"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -161,6 +164,9 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
+<tr class="memitem:a4104e76aed3a37b4df4ef1069383aee8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a4104e76aed3a37b4df4ef1069383aee8">gamma</a></td></tr>
+<tr class="memdesc:a4104e76aed3a37b4df4ef1069383aee8"><td class="mdescLeft">&#160;</td><td class="mdescRight">The default discounting factor for agents.  <a href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a4104e76aed3a37b4df4ef1069383aee8">More...</a><br /></td></tr>
+<tr class="separator:a4104e76aed3a37b4df4ef1069383aee8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3ce395269c69c095865fee40818db2e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#ab3ce395269c69c095865fee40818db2e">loss</a></td></tr>
 <tr class="memdesc:ab3ce395269c69c095865fee40818db2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The list of losses accumulated after each backward call.  <a href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#ab3ce395269c69c095865fee40818db2e">More...</a><br /></td></tr>
 <tr class="separator:ab3ce395269c69c095865fee40818db2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -181,18 +187,24 @@ Static Private Member Functions</h2></td></tr>
 Private Attributes</h2></td></tr>
 <tr class="memitem:aff8c8c9261819399a09fb3727529135e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#aff8c8c9261819399a09fb3727529135e">__dict__</a></td></tr>
 <tr class="separator:aff8c8c9261819399a09fb3727529135e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ffc0e6945ca3cb2fd322139f5a3d808"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a8ffc0e6945ca3cb2fd322139f5a3d808">_advantage_norm_codes</a></td></tr>
-<tr class="memdesc:a8ffc0e6945ca3cb2fd322139f5a3d808"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Advantage normalisation codes; indicating the codes to normalise Advantages.  <a href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a8ffc0e6945ca3cb2fd322139f5a3d808">More...</a><br /></td></tr>
-<tr class="separator:a8ffc0e6945ca3cb2fd322139f5a3d808"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd1fdd611f925bf4ea7834a54fa1849f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#acd1fdd611f925bf4ea7834a54fa1849f">_reward_norm_codes</a></td></tr>
-<tr class="memdesc:acd1fdd611f925bf4ea7834a54fa1849f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The reward normalisation codes; indicating the codes to normalise rewards.  <a href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#acd1fdd611f925bf4ea7834a54fa1849f">More...</a><br /></td></tr>
-<tr class="separator:acd1fdd611f925bf4ea7834a54fa1849f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5ae6867b9e07f0419f08d9646d6f142e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a5ae6867b9e07f0419f08d9646d6f142e">_state_norm_codes</a></td></tr>
-<tr class="memdesc:a5ae6867b9e07f0419f08d9646d6f142e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The state normalisation codes; indicating the codes to normalise states.  <a href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a5ae6867b9e07f0419f08d9646d6f142e">More...</a><br /></td></tr>
-<tr class="separator:a5ae6867b9e07f0419f08d9646d6f142e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae23803298a22178209253ffb03eba240"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#ae23803298a22178209253ffb03eba240">_td_norm_codes</a></td></tr>
-<tr class="memdesc:ae23803298a22178209253ffb03eba240"><td class="mdescLeft">&#160;</td><td class="mdescRight">The TD normalisation codes; indicating the codes to normalise TD Errors.  <a href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#ae23803298a22178209253ffb03eba240">More...</a><br /></td></tr>
-<tr class="separator:ae23803298a22178209253ffb03eba240"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7915228053e592492b774af6b9da6d2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#aa7915228053e592492b774af6b9da6d2">_advantage_norm_code</a></td></tr>
+<tr class="memdesc:aa7915228053e592492b774af6b9da6d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Advantage normalisation code; indicating the code to normalise Advantages.  <a href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#aa7915228053e592492b774af6b9da6d2">More...</a><br /></td></tr>
+<tr class="separator:aa7915228053e592492b774af6b9da6d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8d7e52d4744520b881b9e400cc55e21"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#ac8d7e52d4744520b881b9e400cc55e21">_returns_norm_code</a></td></tr>
+<tr class="memdesc:ac8d7e52d4744520b881b9e400cc55e21"><td class="mdescLeft">&#160;</td><td class="mdescRight">The returns normalisation code; indicating the code to normalise returns.  <a href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#ac8d7e52d4744520b881b9e400cc55e21">More...</a><br /></td></tr>
+<tr class="separator:ac8d7e52d4744520b881b9e400cc55e21"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01c6c4db6dbc3b2254aa0aa1f4c00e40"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a01c6c4db6dbc3b2254aa0aa1f4c00e40">_reward_norm_code</a></td></tr>
+<tr class="memdesc:a01c6c4db6dbc3b2254aa0aa1f4c00e40"><td class="mdescLeft">&#160;</td><td class="mdescRight">The reward normalisation code; indicating the code to normalise rewards.  <a href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a01c6c4db6dbc3b2254aa0aa1f4c00e40">More...</a><br /></td></tr>
+<tr class="separator:a01c6c4db6dbc3b2254aa0aa1f4c00e40"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a987a1a2e5d3a34c934a1d6bc9d316da8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a987a1a2e5d3a34c934a1d6bc9d316da8">_state_norm_code</a></td></tr>
+<tr class="memdesc:a987a1a2e5d3a34c934a1d6bc9d316da8"><td class="mdescLeft">&#160;</td><td class="mdescRight">The state normalisation code; indicating the code to normalise states.  <a href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a987a1a2e5d3a34c934a1d6bc9d316da8">More...</a><br /></td></tr>
+<tr class="separator:a987a1a2e5d3a34c934a1d6bc9d316da8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6765c31b3732920240d2e3d38a76edd4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a6765c31b3732920240d2e3d38a76edd4">_state_value_norm_code</a></td></tr>
+<tr class="memdesc:a6765c31b3732920240d2e3d38a76edd4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The state value normalisation code; indicating the code to normalise state values.  <a href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a6765c31b3732920240d2e3d38a76edd4">More...</a><br /></td></tr>
+<tr class="separator:a6765c31b3732920240d2e3d38a76edd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10a645e9753e541dd45783ef153bbfcd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a10a645e9753e541dd45783ef153bbfcd">_td_norm_code</a></td></tr>
+<tr class="memdesc:a10a645e9753e541dd45783ef153bbfcd"><td class="mdescLeft">&#160;</td><td class="mdescRight">The TD normalisation code; indicating the code to normalise TD Errors.  <a href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a10a645e9753e541dd45783ef153bbfcd">More...</a><br /></td></tr>
+<tr class="separator:a10a645e9753e541dd45783ef153bbfcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >The base class for all agents. </p>
@@ -216,7 +228,7 @@ Private Attributes</h2></td></tr>
 <p>The class initializer. </p>
 <p >Defines basic variables useful for all agents. </p>
 
-<p>Reimplemented in <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#adba1d3b5950c18986254b7d1c88e5670">rlpack.actor_critic.a2c.A2C</a>, <a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#aeeade381614a6fc5eb01aff4600bc59a">rlpack.actor_critic.a3c.A3C</a>, <a class="el" href="classrlpack_1_1dqn_1_1dqn__proportional__prioritization__agent_1_1_dqn_proportional_prioritization_agent.html#af7930448fa3795d1176f913352a6bde9">rlpack.dqn.dqn_proportional_prioritization_agent.DqnProportionalPrioritizationAgent</a>, <a class="el" href="classrlpack_1_1dqn_1_1dqn__rank__based__prioritization__agent_1_1_dqn_rank_based_prioritization_agent.html#a417978864c00a005babbd888a4d52294">rlpack.dqn.dqn_rank_based_prioritization_agent.DqnRankBasedPrioritizationAgent</a>, and <a class="el" href="classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a9c056ee02e4cd1b61448680a11b88e5d">rlpack.dqn.dqn_agent.DqnAgent</a>.</p>
+<p>Reimplemented in <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a053aa4d80326d086eb58b34cba99a27d">rlpack.actor_critic.a2c.A2C</a>, <a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#ae6ef32612103c3a672e2eb31697d01ba">rlpack.actor_critic.a3c.A3C</a>, <a class="el" href="classrlpack_1_1actor__critic_1_1ac_1_1_a_c.html#a7709778fc781c0d452641adbf693386a">rlpack.actor_critic.ac.AC</a>, <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a8a01a254acf0c63cc4f7ed7990b0b222">rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent</a>, <a class="el" href="classrlpack_1_1dqn_1_1dqn__proportional__agent_1_1_dqn_proportional_agent.html#a648b7f06008904201e3f16cbaea4d3a1">rlpack.dqn.dqn_proportional_agent.DqnProportionalAgent</a>, <a class="el" href="classrlpack_1_1dqn_1_1dqn__rank__based__agent_1_1_dqn_rank_based_agent.html#a6b40a7cd2f94862daa4edf18bafa307d">rlpack.dqn.dqn_rank_based_agent.DqnRankBasedAgent</a>, <a class="el" href="classrlpack_1_1dqn_1_1dqn__uniform__agent_1_1_dqn_uniform_agent.html#a0e9d1c80561c9aeb5303ac744223ac51">rlpack.dqn.dqn_uniform_agent.DqnUniformAgent</a>, and <a class="el" href="classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#a94337dcee4db205e4182606b98a4c66d">rlpack.dqn.utils.dqn_agent.DqnAgent</a>.</p>
 
 </div>
 </div>
@@ -402,7 +414,7 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p>Reimplemented in <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af0b97082eda91653d7a2511c3325b70f">rlpack.actor_critic.a2c.A2C</a>, and <a class="el" href="classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#adfd9b38d7e3b4f55eb7f857b0285ae0c">rlpack.dqn.dqn_agent.DqnAgent</a>.</p>
+<p>Reimplemented in <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a369d886df0d6762cb825f10682607581">rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent</a>, and <a class="el" href="classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#acc23718bf09c4d35834e548d307ec7a5">rlpack.dqn.utils.dqn_agent.DqnAgent</a>.</p>
 
 </div>
 </div>
@@ -448,7 +460,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Any: Action to be taken. </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a38ee1487797979a2ca7ad4db304d27b4">rlpack.dqn.dqn_agent.DqnAgent</a>, and <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#afb6171b51be4c79316278355e78fb25e">rlpack.actor_critic.a2c.A2C</a>.</p>
+<p>Reimplemented in <a class="el" href="classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#a5427658eb9e28b2a90b87ccd4c9fdde7">rlpack.dqn.utils.dqn_agent.DqnAgent</a>, and <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ae8e3441052d7b47fa91188a684e18659">rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent</a>.</p>
 
 </div>
 </div>
@@ -493,7 +505,7 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p>Reimplemented in <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a7793678505da4a71178d7a1043c4023d">rlpack.actor_critic.a2c.A2C</a>, and <a class="el" href="classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#aabbebafa737394e23228307873976a6b">rlpack.dqn.dqn_agent.DqnAgent</a>.</p>
+<p>Reimplemented in <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ad0e78685793f897be63b701cb75b6fc5">rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent</a>, and <a class="el" href="classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#a698dbc292a0a128866ac0ecdff92dee2">rlpack.dqn.utils.dqn_agent.DqnAgent</a>.</p>
 
 </div>
 </div>
@@ -539,7 +551,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Any: Action to be taken. </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aa8082ac2128495030e29f87cb454ab44">rlpack.actor_critic.a2c.A2C</a>, and <a class="el" href="classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a5f91cd9fcd61a59fd87bd6dde3cf5c8b">rlpack.dqn.dqn_agent.DqnAgent</a>.</p>
+<p>Reimplemented in <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a4a5798a278a42acc9ce85d6d7797d889">rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent</a>, and <a class="el" href="classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#a68b97ab35a5394b65d342f78e44dcc8e">rlpack.dqn.utils.dqn_agent.DqnAgent</a>.</p>
 
 </div>
 </div>
@@ -566,8 +578,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a8ffc0e6945ca3cb2fd322139f5a3d808" name="a8ffc0e6945ca3cb2fd322139f5a3d808"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8ffc0e6945ca3cb2fd322139f5a3d808">&#9670;&#160;</a></span>_advantage_norm_codes</h2>
+<a id="aa7915228053e592492b774af6b9da6d2" name="aa7915228053e592492b774af6b9da6d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7915228053e592492b774af6b9da6d2">&#9670;&#160;</a></span>_advantage_norm_code</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -576,7 +588,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">rlpack.utils.base.agent.Agent._advantage_norm_codes</td>
+          <td class="memname">rlpack.utils.base.agent.Agent._advantage_norm_code</td>
         </tr>
       </table>
   </td>
@@ -586,12 +598,12 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>The Advantage normalisation codes; indicating the codes to normalise Advantages. </p>
+<p>The Advantage normalisation code; indicating the code to normalise Advantages. </p>
 
 </div>
 </div>
-<a id="acd1fdd611f925bf4ea7834a54fa1849f" name="acd1fdd611f925bf4ea7834a54fa1849f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acd1fdd611f925bf4ea7834a54fa1849f">&#9670;&#160;</a></span>_reward_norm_codes</h2>
+<a id="ac8d7e52d4744520b881b9e400cc55e21" name="ac8d7e52d4744520b881b9e400cc55e21"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8d7e52d4744520b881b9e400cc55e21">&#9670;&#160;</a></span>_returns_norm_code</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -600,7 +612,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">rlpack.utils.base.agent.Agent._reward_norm_codes</td>
+          <td class="memname">rlpack.utils.base.agent.Agent._returns_norm_code</td>
         </tr>
       </table>
   </td>
@@ -610,12 +622,12 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>The reward normalisation codes; indicating the codes to normalise rewards. </p>
+<p>The returns normalisation code; indicating the code to normalise returns. </p>
 
 </div>
 </div>
-<a id="a5ae6867b9e07f0419f08d9646d6f142e" name="a5ae6867b9e07f0419f08d9646d6f142e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5ae6867b9e07f0419f08d9646d6f142e">&#9670;&#160;</a></span>_state_norm_codes</h2>
+<a id="a01c6c4db6dbc3b2254aa0aa1f4c00e40" name="a01c6c4db6dbc3b2254aa0aa1f4c00e40"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01c6c4db6dbc3b2254aa0aa1f4c00e40">&#9670;&#160;</a></span>_reward_norm_code</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -624,7 +636,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">rlpack.utils.base.agent.Agent._state_norm_codes</td>
+          <td class="memname">rlpack.utils.base.agent.Agent._reward_norm_code</td>
         </tr>
       </table>
   </td>
@@ -634,12 +646,12 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>The state normalisation codes; indicating the codes to normalise states. </p>
+<p>The reward normalisation code; indicating the code to normalise rewards. </p>
 
 </div>
 </div>
-<a id="ae23803298a22178209253ffb03eba240" name="ae23803298a22178209253ffb03eba240"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae23803298a22178209253ffb03eba240">&#9670;&#160;</a></span>_td_norm_codes</h2>
+<a id="a987a1a2e5d3a34c934a1d6bc9d316da8" name="a987a1a2e5d3a34c934a1d6bc9d316da8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a987a1a2e5d3a34c934a1d6bc9d316da8">&#9670;&#160;</a></span>_state_norm_code</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -648,7 +660,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">rlpack.utils.base.agent.Agent._td_norm_codes</td>
+          <td class="memname">rlpack.utils.base.agent.Agent._state_norm_code</td>
         </tr>
       </table>
   </td>
@@ -658,7 +670,71 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>The TD normalisation codes; indicating the codes to normalise TD Errors. </p>
+<p>The state normalisation code; indicating the code to normalise states. </p>
+
+</div>
+</div>
+<a id="a6765c31b3732920240d2e3d38a76edd4" name="a6765c31b3732920240d2e3d38a76edd4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6765c31b3732920240d2e3d38a76edd4">&#9670;&#160;</a></span>_state_value_norm_code</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">rlpack.utils.base.agent.Agent._state_value_norm_code</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The state value normalisation code; indicating the code to normalise state values. </p>
+
+</div>
+</div>
+<a id="a10a645e9753e541dd45783ef153bbfcd" name="a10a645e9753e541dd45783ef153bbfcd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10a645e9753e541dd45783ef153bbfcd">&#9670;&#160;</a></span>_td_norm_code</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">rlpack.utils.base.agent.Agent._td_norm_code</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The TD normalisation code; indicating the code to normalise TD Errors. </p>
+
+</div>
+</div>
+<a id="a4104e76aed3a37b4df4ef1069383aee8" name="a4104e76aed3a37b4df4ef1069383aee8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4104e76aed3a37b4df4ef1069383aee8">&#9670;&#160;</a></span>gamma</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">rlpack.utils.base.agent.Agent.gamma</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The default discounting factor for agents. </p>
 
 </div>
 </div>

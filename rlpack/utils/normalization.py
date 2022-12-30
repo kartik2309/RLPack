@@ -9,14 +9,26 @@ Currently following classes have been implemented:
     - `SanityCheck`: Sanity check for arguments when using Simulator from rlpack.simulator.Simulator. Class is
         implemented as rlpack.utils.sanity_check.SanityCheck.
     - `Setup`: Sets up the simulator to run the agent with environment. Implemented as rlpack.utils.setup.Setup.
+    - `InternalCodeSetup`: For internal use to check/validate arguments and to retrieve codes for internal use.
+        Implemented as rlpack.utils.internal_code_setup.InternalCodeSetup.
 
 Following packages are part of utils:
-    - `base`: A package for base class, implemented as utils.base
+    - `base`: A package for base class, implemented as rlpack.utils.base
 
-Following TypeVars have been defined:
+Following exceptions have been defined:
+    - `AgentError`: For error happening in Agent's initialization. Implemented as rlpack.utils.exceptions.AgentError.
+
+Following typing hints have been defined:
     - `LRScheduler`: The Typing variable for LR Schedulers.
-    - `LossFunction`: The Typing variable for Loss Functions.
-    - `Activation`: The Typing variable for Activations.
+    - `LossFunction`: Typing hint for loss functions for RLPack. Implemented as
+        rlpack.utils.typing_hints.LossFunction.
+    - `Activation`: Typing hint for activation functions for RLPack. Implemented as
+        rlpack.utils.typing_hints.Activation.
+    - `RunFuncSignature`: Typing hint for function signatures to be launched in
+        rlpack.simulator_distributed.SimulatedDistributed in distributed mode. Implemented as
+        rlpack.utils.typing_hints.RunFuncSignature.
+    - `GenericFuncSignature`: Typing hint for generic void function signatures. Implemented as
+        rlpack.utils.typing_hints.GenericFuncSignature.
 """
 
 

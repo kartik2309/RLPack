@@ -31,7 +31,13 @@ void C_GradAccumulator::accumulate(std::map<std::string, torch::Tensor> &namedPa
     std::map<std::string, torch::Tensor> namedParameterGrads;
     for (int64_t keyIndex = 0; keyIndex != parameterKeys_.size(); keyIndex++) {
         auto key = parameterKeys_[keyIndex];
-        auto clonedGrad = namedParameters[key].grad().detach().clone();
+        auto param = namedParameters[key];
+        if (not param.requires_grad()) {
+            auto tensorOptionsDefault = torch::TensorOptions().device(param.device()).dtype(param.dtype());
+            namedParameterGrads[key] = torch::zeros(param.sizes(), tensorOptionsDefault);
+            continue;
+        }
+        auto clonedGrad = param.grad().detach().clone();
         if (clonedGrad.isnan().all().item<bool>()) {
             throw std::runtime_error("Gradients were NaN! Did you call .backward() on loss?");
         }
@@ -165,7 +171,7 @@ void C_GradAccumulator::clear() {
 }
 
 /*!
- * Default constructor C_GradAccumulator
+ * Default destructor C_GradAccumulator
  */
 C_GradAccumulator::~C_GradAccumulator() = default;
 

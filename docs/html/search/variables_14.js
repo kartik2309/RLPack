@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['weights_5f_0',['weights_',['../class_c___memory.html#a50c26d2568ff0a4d181094dfad7ced64',1,'C_Memory']]]
+  ['weight_0',['weight',['../classrlpack_1_1exploration_1_1gaussian__noise_1_1_gaussian_noise.html#a0e7eaf57f6f4ab268ebfe49f654768fe',1,'rlpack::exploration::gaussian_noise::GaussianNoise']]],
+  ['weights_5f_1',['weights_',['../class_c___replay_buffer.html#a874ae8397cfe9838a9df054ee6753ad6',1,'C_ReplayBuffer']]]
 ];

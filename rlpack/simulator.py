@@ -6,12 +6,14 @@ been optimized with C++ backend.
 
 
 import os
+from pathlib import Path
 from typing import Any, Dict, List
 
+import gym
 import yaml
 
-from rlpack import pytorch
-from rlpack.environments.environments import Environments
+from rlpack import SummaryWriter, pytorch
+from rlpack.trainer.trainer import Trainer
 from rlpack.utils.base.agent import Agent
 from rlpack.utils.sanity_check import SanityCheck
 from rlpack.utils.setup import Setup
@@ -56,11 +58,24 @@ class Simulator:
             )
         # Set save path in config.
         self.config["agent_args"]["save_path"] = save_path
-        # Setup agent and initialize environment.
         ## The agent object requested via config. @I{# noqa: E266}
         self.agent = self.setup_agent()
+        env = self.setup_environment()
+        summary_writer = self.setup_summary_writer(save_path)
         ## The environment object requested via config or passed via config. @I{# noqa: E266}
-        self.env = Environments(agent=self.agent, config=self.config)
+        self.trainer = Trainer(
+            mode=self.config["mode"],
+            agent=self.agent,
+            env=env,
+            save_path=save_path,
+            num_episodes=self.config["num_episodes"],
+            max_timesteps=self.config.get("max_timesteps"),
+            custom_suffix=self.config.get("custom_suffix"),
+            reshape_func=self.config.get("reshape_func"),
+            new_shape=self.config.get("new_shape"),
+            summary_writer=summary_writer,
+            is_distributed=is_child_process,
+        )
         ## The flag indicating if the model is custom or not, i.e. does not use [in-built](@ref models/index.md) models. @I{# noqa: E266}
         self.is_custom_model = False
         self.agent_model_args = list()
@@ -163,16 +178,19 @@ class Simulator:
         """
         self.is_custom_model = self.sanity_check.check_model_init_sanity()
         if not self.is_custom_model:
-            activation = self.setup.get_activation(
-                activation_name=self.config.get("activation_name", pytorch.nn.ReLU()),
-                activation_args=self.config.get("activation_args", dict()),
-            )
             model_kwargs = {
-                k: self.config["model_args"][k]
-                if k not in ("activation",)
-                else activation
-                for k in self.setup.get_model_args(self.config["model_name"])
+                key: value
+                for key, value in self.config["model_args"].items()
+                if key in self.setup.get_model_args(self.config["model_name"])
             }
+            if "activation" not in model_kwargs.keys():
+                activation = self.setup.get_activation(
+                    activation_name=self.config.get(
+                        "activation_name", pytorch.nn.ReLU()
+                    ),
+                    activation_args=self.config.get("activation_args"),
+                )
+                model_kwargs["activation"] = activation
             models = self.setup.get_models(
                 model_name=self.config["model_name"],
                 agent_name=self.config["agent_name"],
@@ -188,23 +206,60 @@ class Simulator:
             ]
         return models
 
-    def run(self, **kwargs) -> None:
+    def setup_environment(self):
+        if self.config.get("env") is None:
+            assert self.config.get("env_name") is not None, (
+                "Either `env` (for gym environment) or `env_name` (for env name registered with gym)"
+                " must be passed in config"
+            )
+            env_name = self.config["env_name"]
+            env_args = self.config.get("env_args", dict())
+            env = gym.make(env_name, **env_args)
+        else:
+            env = self.config["env"]
+        return env
+
+    @staticmethod
+    def setup_summary_writer(save_path: str) -> SummaryWriter:
+        """
+        Sets up summary writer for Tensorboard logger.
+        @param save_path: str: The save path for agents. A new directory "tensorboard_logs" is created is save_path
+            is a directory. If path for agent file is passed, "tensorboard_logs" directory is created in the parent
+            directory.
+        @return SummaryWriter: The instance of summary writer for Tensorboard logging.
+        """
+        path = Path(save_path)
+        if not path.exists():
+            raise NotADirectoryError(
+                "Given path is not a valid directory or a valid path to a file name"
+            )
+        if path.is_dir():
+            save_path = os.path.join(save_path, "tensorboard_logs")
+            os.makedirs(save_path, exist_ok=True)
+            summary_writer = SummaryWriter(log_dir=save_path)
+        else:
+            save_path = os.path.join(str(path.parent), "tensorboard_logs")
+            os.makedirs(save_path, exist_ok=True)
+            summary_writer = SummaryWriter(log_dir=save_path)
+        return summary_writer
+
+    def run(self, metrics_logging_frequency: int, **kwargs) -> None:
         """
         This method runs the simulator.
+        @param metrics_logging_frequency: int: The logging frequency for rewards.
         @param kwargs: Additional keyword arguments for the training run.
         """
-        if self.env.is_train():
-            self.env.train_agent(
+        if self.trainer.is_train():
+            self.trainer.train_agent(
+                metrics_logging_frequency=metrics_logging_frequency,
                 render=kwargs.get("render", self.config.get("render", False)),
                 load=kwargs.get("load", self.config.get("load", False)),
-                plot=kwargs.get("plot", self.config.get("plot", False)),
-                verbose=kwargs.get("plot", self.config.get("verbose", -1)),
-                distributed_mode=kwargs.get(
-                    "distributed_mode", self.config.get("distributed_mode", False)
-                ),
             )
-        elif self.env.is_eval():
-            self.env.evaluate_agent()
+        elif self.trainer.is_eval():
+            self.trainer.evaluate_agent(
+                metrics_logging_frequency=metrics_logging_frequency,
+                render=kwargs.get("render", self.config.get("render", False)),
+            )
         else:
             raise ValueError("Invalid mode passed! Must be in `train` or `eval`")
         return

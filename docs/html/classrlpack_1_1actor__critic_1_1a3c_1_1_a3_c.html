@@ -99,12 +99,13 @@ $(document).ready(function(){initNavTree('classrlpack_1_1actor__critic_1_1a3c_1_
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Data Fields</a> &#124;
-<a href="#pri-methods">Private Member Functions</a>  </div>
+<a href="#pri-methods">Private Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a>  </div>
   <div class="headertitle"><div class="title">rlpack.actor_critic.a3c.A3C Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>The A2C class implements the synchronous Actor-Critic method.  
+<p>The <a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html" title="The A3C class implements the asynchronous Actor-Critic method.">A3C</a> class implements the asynchronous Actor-Critic method.  
  <a href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#details">More...</a></p>
 <div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Inheritance diagram for rlpack.actor_critic.a3c.A3C:</div>
@@ -113,10 +114,10 @@ $(document).ready(function(){initNavTree('classrlpack_1_1actor__critic_1_1a3c_1_
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c__inherit__graph.png" border="0" usemap="#arlpack_8actor__critic_8a3c_8_a3_c_inherit__map" alt="Inheritance graph"/></div>
 <map name="arlpack_8actor__critic_8a3c_8_a3_c_inherit__map" id="arlpack_8actor__critic_8a3c_8_a3_c_inherit__map">
-<area shape="rect" title="The A2C class implements the synchronous Actor&#45;Critic method." alt="" coords="5,240,185,265"/>
-<area shape="rect" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html" title="The A2C class implements the synchronous Actor&#45;Critic method." alt="" coords="5,167,185,192"/>
-<area shape="rect" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html" title="The base class for all agents." alt="" coords="17,79,174,119"/>
-<area shape="rect" title=" " alt="" coords="67,5,124,31"/>
+<area shape="rect" title="The A3C class implements the asynchronous Actor&#45;Critic method." alt="" coords="13,255,193,280"/>
+<area shape="rect" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html" title="The ActorCriticAgent is the base class for actor&#45;critic methods." alt="" coords="5,167,201,207"/>
+<area shape="rect" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html" title="The base class for all agents." alt="" coords="25,79,182,119"/>
+<area shape="rect" title=" " alt="" coords="78,5,129,31"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -126,32 +127,32 @@ $(document).ready(function(){initNavTree('classrlpack_1_1actor__critic_1_1a3c_1_
 <div id="dynsection-1-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c__coll__graph.png" border="0" usemap="#arlpack_8actor__critic_8a3c_8_a3_c_coll__map" alt="Collaboration graph"/></div>
 <map name="arlpack_8actor__critic_8a3c_8_a3_c_coll__map" id="arlpack_8actor__critic_8a3c_8_a3_c_coll__map">
-<area shape="rect" title="The A2C class implements the synchronous Actor&#45;Critic method." alt="" coords="5,240,185,265"/>
-<area shape="rect" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html" title="The A2C class implements the synchronous Actor&#45;Critic method." alt="" coords="5,167,185,192"/>
-<area shape="rect" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html" title="The base class for all agents." alt="" coords="17,79,174,119"/>
-<area shape="rect" title=" " alt="" coords="67,5,124,31"/>
+<area shape="rect" title="The A3C class implements the asynchronous Actor&#45;Critic method." alt="" coords="13,255,193,280"/>
+<area shape="rect" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html" title="The ActorCriticAgent is the base class for actor&#45;critic methods." alt="" coords="5,167,201,207"/>
+<area shape="rect" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html" title="The base class for all agents." alt="" coords="25,79,182,119"/>
+<area shape="rect" title=" " alt="" coords="78,5,129,31"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aeeade381614a6fc5eb01aff4600bc59a"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#aeeade381614a6fc5eb01aff4600bc59a">__init__</a> (self, pytorch.nn.Module <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a186663b4b9a13fdff2d3a6c068573a4b">policy_model</a>, pytorch.optim.Optimizer <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a531fa341471a4ad1f97d36c00f221981">optimizer</a>, Union[LRScheduler, None] <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a67fd595af5ce5ef1a935083e8383f6af">lr_scheduler</a>, LossFunction <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ace16f409552ad6b3d8274b91be4b5157">loss_function</a>, Distribution <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ad1b2cb43a9ea064b3809838bbb0270f4">distribution</a>, float <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a335067fc595b3c6bf62395024fd0008a">gamma</a>, float <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a6def13b25087f4b35685140b0a8e31ff">entropy_coefficient</a>, float <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a808c41752e5a391ccccc5eaa820abc09">state_value_coefficient</a>, float <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#abca9e9f63b00391c576378683d000d8a">lr_threshold</a>, Union[int, List[Union[int, List[int]]]] <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a4d1c1b160e9cd0cf5ae5a21ace351b56">action_space</a>, int <a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#ae7c982d3965337796765f6559d3e579d">backup_frequency</a>, str <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#affac024bad4b94c555d8299db2e7a64c">save_path</a>, int <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a67a8def97a97cef04686199250556bd0">bootstrap_rounds</a>=1, str <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a3f3c23d256a14d2b124fb866732051b6">device</a>=&quot;cpu&quot;, Union[int, str] <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a57416c3545397ddaaa31ee69142e67da">apply_norm</a>=-1, Union[int, List[str]] <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aeef17e7ec0e0b81e2b47b0c4663bad2c">apply_norm_to</a>=-1, float <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ab79962d551f8a638f440166462456111">eps_for_norm</a>=5e-12, int <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af4f2a8721367dc7865955f308cc6149b">p_for_norm</a>=2, int <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ac3f70110b14a2bc1354fadaa02f3bdff">dim_for_norm</a>=0, Optional[float] <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af326d53cbea6b99ed2792a0b88f73539">max_grad_norm</a>=None, float <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a3f1d962e32fb21e733c9161a3e5ec206">grad_norm_p</a>=2.0, Optional[Tuple[float, Callable[[float, int], int]]] variance=None)</td></tr>
-<tr class="separator:aeeade381614a6fc5eb01aff4600bc59a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html">rlpack.actor_critic.a2c.A2C</a></td></tr>
-<tr class="memitem:adba1d3b5950c18986254b7d1c88e5670 inherit pub_methods_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#adba1d3b5950c18986254b7d1c88e5670">__init__</a> (self, pytorch.nn.Module <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a186663b4b9a13fdff2d3a6c068573a4b">policy_model</a>, pytorch.optim.Optimizer <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a531fa341471a4ad1f97d36c00f221981">optimizer</a>, Union[LRScheduler, None] <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a67fd595af5ce5ef1a935083e8383f6af">lr_scheduler</a>, LossFunction <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ace16f409552ad6b3d8274b91be4b5157">loss_function</a>, Distribution <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ad1b2cb43a9ea064b3809838bbb0270f4">distribution</a>, float <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a335067fc595b3c6bf62395024fd0008a">gamma</a>, float <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a6def13b25087f4b35685140b0a8e31ff">entropy_coefficient</a>, float <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a808c41752e5a391ccccc5eaa820abc09">state_value_coefficient</a>, float <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#abca9e9f63b00391c576378683d000d8a">lr_threshold</a>, Union[int, List[Union[int, List[int]]]] <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a4d1c1b160e9cd0cf5ae5a21ace351b56">action_space</a>, int <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a26e70f7a784551fa58fa81b1f2dcc894">backup_frequency</a>, str <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#affac024bad4b94c555d8299db2e7a64c">save_path</a>, int <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a67a8def97a97cef04686199250556bd0">bootstrap_rounds</a>=1, str <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a3f3c23d256a14d2b124fb866732051b6">device</a>=&quot;cpu&quot;, Union[int, str] <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a57416c3545397ddaaa31ee69142e67da">apply_norm</a>=-1, Union[int, List[str]] <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aeef17e7ec0e0b81e2b47b0c4663bad2c">apply_norm_to</a>=-1, float <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ab79962d551f8a638f440166462456111">eps_for_norm</a>=5e-12, int <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af4f2a8721367dc7865955f308cc6149b">p_for_norm</a>=2, int <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ac3f70110b14a2bc1354fadaa02f3bdff">dim_for_norm</a>=0, Optional[float] <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af326d53cbea6b99ed2792a0b88f73539">max_grad_norm</a>=None, float <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a3f1d962e32fb21e733c9161a3e5ec206">grad_norm_p</a>=2.0, Optional[Tuple[float, Callable[[float, bool, int], float]]] variance=None)</td></tr>
-<tr class="separator:adba1d3b5950c18986254b7d1c88e5670 inherit pub_methods_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0b97082eda91653d7a2511c3325b70f inherit pub_methods_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af0b97082eda91653d7a2511c3325b70f">load</a> (self, Optional[str] custom_name_suffix=None)</td></tr>
-<tr class="memdesc:af0b97082eda91653d7a2511c3325b70f inherit pub_methods_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method loads the target_model, policy_model, optimizer, lr_scheduler and agent_states from the supplied <code>save_path</code> argument in the DQN Agent class' constructor (also called <b>init</b>).  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af0b97082eda91653d7a2511c3325b70f">More...</a><br /></td></tr>
-<tr class="separator:af0b97082eda91653d7a2511c3325b70f inherit pub_methods_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb6171b51be4c79316278355e78fb25e inherit pub_methods_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">Union[int, np.ndarray]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#afb6171b51be4c79316278355e78fb25e">policy</a> (self, Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]] state_current, **kwargs)</td></tr>
-<tr class="memdesc:afb6171b51be4c79316278355e78fb25e inherit pub_methods_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The policy method to evaluate the agent.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#afb6171b51be4c79316278355e78fb25e">More...</a><br /></td></tr>
-<tr class="separator:afb6171b51be4c79316278355e78fb25e inherit pub_methods_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7793678505da4a71178d7a1043c4023d inherit pub_methods_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a7793678505da4a71178d7a1043c4023d">save</a> (self, Optional[str] custom_name_suffix=None)</td></tr>
-<tr class="memdesc:a7793678505da4a71178d7a1043c4023d inherit pub_methods_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method saves the target_model, policy_model, optimizer, lr_scheduler and agent_states in the supplied <code>save_path</code> argument in the DQN Agent class' constructor (also called <b>init</b>).  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a7793678505da4a71178d7a1043c4023d">More...</a><br /></td></tr>
-<tr class="separator:a7793678505da4a71178d7a1043c4023d inherit pub_methods_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8082ac2128495030e29f87cb454ab44 inherit pub_methods_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">Union[int, np.ndarray]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aa8082ac2128495030e29f87cb454ab44">train</a> (self, Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]] state_current, Union[int, float] reward, Union[bool, int] done, **kwargs)</td></tr>
-<tr class="memdesc:aa8082ac2128495030e29f87cb454ab44 inherit pub_methods_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The train method to train the agent and underlying policy model.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aa8082ac2128495030e29f87cb454ab44">More...</a><br /></td></tr>
-<tr class="separator:aa8082ac2128495030e29f87cb454ab44 inherit pub_methods_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6ef32612103c3a672e2eb31697d01ba"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#ae6ef32612103c3a672e2eb31697d01ba">__init__</a> (self, pytorch.nn.Module <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a3c0e7b3a8cc0a96cebe026d304c5590c">policy_model</a>, pytorch.optim.Optimizer <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#aa2f798b74bd64640ef35da8f672f3e95">optimizer</a>, Union[<a class="el" href="classrlpack_1_1utils_1_1typing__hints_1_1_l_r_scheduler.html">LRScheduler</a>, None] <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a081dcbd51017df1d26abbf15821089d7">lr_scheduler</a>, <a class="el" href="classrlpack_1_1utils_1_1typing__hints_1_1_loss_function.html">LossFunction</a> <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#af5485148744d68c770b872e62361ca10">loss_function</a>, Type[pytorch_distributions.Distribution] <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a9244a2ba98485e2bedf6cee830ca1a22">distribution</a>, float <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ab09c920ad70ce8b4cd3fa485b2f1bd55">gamma</a>, float <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#affc2a52ddeb68b4c0a6c05793fa58261">entropy_coefficient</a>, float <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a073e3f0455059d575ce1bc9a28b3eee5">state_value_coefficient</a>, float <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a2238587b60c04bf2a7e83e497a030b1e">lr_threshold</a>, Union[int, Tuple[int, Union[List[int], None]]] <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a31e3fa147ea1d19490fb388ffe61aee3">action_space</a>, int <a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#ae7c982d3965337796765f6559d3e579d">backup_frequency</a>, str <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a00c1fb74f19174eecd6fcd03dc0b9843">save_path</a>, Union[int, None] <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a9e282f966f2bd18c24ffba49ceefd00b">rollout_accumulation_size</a>=None, int <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a724bcb1e4d32cd2cd880911eed207af6">grad_accumulation_rounds</a>=1, Union[<a class="el" href="classrlpack_1_1exploration_1_1utils_1_1exploration_1_1_exploration.html">Exploration</a>, None] <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ac76827b34c015165373ec76358b60dea">exploration_tool</a>=None, str <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a05e8b2d000bd94f5fb854516c84200e5">device</a>=&quot;cpu&quot;, str <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a6dc53028e64988f4a9442a047736acb8">dtype</a>=&quot;float32&quot;, Union[int, str] <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#aff3d0599e56caa4b5b0b36cccbf684b1">apply_norm</a>=-1, Union[int, List[str]] <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a7e6b39931e27a1d569945fdb177d40cc">apply_norm_to</a>=-1, float <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a940d6caf441fdc4b732ef0185e2694e9">eps_for_norm</a>=5e-12, int <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#acde06241652873c70e7d4d9523eab0b0">p_for_norm</a>=2, int <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a1db6c1588e7f4d11b3a723825809411a">dim_for_norm</a>=0, Optional[float] <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ae98b91d40567e6e9990304977809d997">max_grad_norm</a>=None, float <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#aa2bfe032740a7146997162d125274fe9">grad_norm_p</a>=2.0, Optional[float] <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#aa7a4a5ac2156c6877cbc0533601724e7">clip_grad_value</a>=None)</td></tr>
+<tr class="separator:ae6ef32612103c3a672e2eb31697d01ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html">rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent</a></td></tr>
+<tr class="memitem:a8a01a254acf0c63cc4f7ed7990b0b222 inherit pub_methods_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a8a01a254acf0c63cc4f7ed7990b0b222">__init__</a> (self, pytorch.nn.Module <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a3c0e7b3a8cc0a96cebe026d304c5590c">policy_model</a>, pytorch.optim.Optimizer <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#aa2f798b74bd64640ef35da8f672f3e95">optimizer</a>, Union[<a class="el" href="classrlpack_1_1utils_1_1typing__hints_1_1_l_r_scheduler.html">LRScheduler</a>, None] <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a081dcbd51017df1d26abbf15821089d7">lr_scheduler</a>, <a class="el" href="classrlpack_1_1utils_1_1typing__hints_1_1_loss_function.html">LossFunction</a> <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#af5485148744d68c770b872e62361ca10">loss_function</a>, Type[pytorch_distributions.Distribution] <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a9244a2ba98485e2bedf6cee830ca1a22">distribution</a>, float <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ab09c920ad70ce8b4cd3fa485b2f1bd55">gamma</a>, float <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#affc2a52ddeb68b4c0a6c05793fa58261">entropy_coefficient</a>, float <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a073e3f0455059d575ce1bc9a28b3eee5">state_value_coefficient</a>, float <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a2238587b60c04bf2a7e83e497a030b1e">lr_threshold</a>, Union[int, Tuple[int, Union[List[int], None]]] <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a31e3fa147ea1d19490fb388ffe61aee3">action_space</a>, int <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#af19d87d26f908a6938f3b3ec1d25c70c">backup_frequency</a>, str <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a00c1fb74f19174eecd6fcd03dc0b9843">save_path</a>, Union[int, None] <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a9e282f966f2bd18c24ffba49ceefd00b">rollout_accumulation_size</a>=None, int <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a724bcb1e4d32cd2cd880911eed207af6">grad_accumulation_rounds</a>=1, Union[<a class="el" href="classrlpack_1_1exploration_1_1utils_1_1exploration_1_1_exploration.html">Exploration</a>, None] <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ac76827b34c015165373ec76358b60dea">exploration_tool</a>=None, str <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a05e8b2d000bd94f5fb854516c84200e5">device</a>=&quot;cpu&quot;, str <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a6dc53028e64988f4a9442a047736acb8">dtype</a>=&quot;float32&quot;, Union[int, str] <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#aff3d0599e56caa4b5b0b36cccbf684b1">apply_norm</a>=-1, Union[int, List[str]] <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a7e6b39931e27a1d569945fdb177d40cc">apply_norm_to</a>=-1, float <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a940d6caf441fdc4b732ef0185e2694e9">eps_for_norm</a>=5e-12, int <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#acde06241652873c70e7d4d9523eab0b0">p_for_norm</a>=2, int <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a1db6c1588e7f4d11b3a723825809411a">dim_for_norm</a>=0, Optional[float] <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ae98b91d40567e6e9990304977809d997">max_grad_norm</a>=None, float <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#aa2bfe032740a7146997162d125274fe9">grad_norm_p</a>=2.0, Optional[float] <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#aa7a4a5ac2156c6877cbc0533601724e7">clip_grad_value</a>=None)</td></tr>
+<tr class="separator:a8a01a254acf0c63cc4f7ed7990b0b222 inherit pub_methods_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a369d886df0d6762cb825f10682607581 inherit pub_methods_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a369d886df0d6762cb825f10682607581">load</a> (self, Optional[str] custom_name_suffix=None)</td></tr>
+<tr class="memdesc:a369d886df0d6762cb825f10682607581 inherit pub_methods_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method loads the target_model, policy_model, optimizer, lr_scheduler and agent_states from the supplied <code>save_path</code> argument in the DQN Agent class' constructor (also called <b>init</b>).  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a369d886df0d6762cb825f10682607581">More...</a><br /></td></tr>
+<tr class="separator:a369d886df0d6762cb825f10682607581 inherit pub_methods_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8e3441052d7b47fa91188a684e18659 inherit pub_methods_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">np.ndarray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ae8e3441052d7b47fa91188a684e18659">policy</a> (self, Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]] state_current, **kwargs)</td></tr>
+<tr class="memdesc:ae8e3441052d7b47fa91188a684e18659 inherit pub_methods_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The policy method to evaluate the agent.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ae8e3441052d7b47fa91188a684e18659">More...</a><br /></td></tr>
+<tr class="separator:ae8e3441052d7b47fa91188a684e18659 inherit pub_methods_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0e78685793f897be63b701cb75b6fc5 inherit pub_methods_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ad0e78685793f897be63b701cb75b6fc5">save</a> (self, Optional[str] custom_name_suffix=None)</td></tr>
+<tr class="memdesc:ad0e78685793f897be63b701cb75b6fc5 inherit pub_methods_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method saves the target_model, policy_model, optimizer, lr_scheduler and agent_states in the supplied <code>save_path</code> argument in the DQN Agent class' constructor (also called <b>init</b>).  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ad0e78685793f897be63b701cb75b6fc5">More...</a><br /></td></tr>
+<tr class="separator:ad0e78685793f897be63b701cb75b6fc5 inherit pub_methods_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a5798a278a42acc9ce85d6d7797d889 inherit pub_methods_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">np.ndarray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a4a5798a278a42acc9ce85d6d7797d889">train</a> (self, Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]] state_current, Union[int, float] reward, Union[bool, int] done, **kwargs)</td></tr>
+<tr class="memdesc:a4a5798a278a42acc9ce85d6d7797d889 inherit pub_methods_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The train method to train the agent and underlying policy model.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a4a5798a278a42acc9ce85d6d7797d889">More...</a><br /></td></tr>
+<tr class="separator:a4a5798a278a42acc9ce85d6d7797d889 inherit pub_methods_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html">rlpack.utils.base.agent.Agent</a></td></tr>
 <tr class="memitem:accaa47a12b6f65fee88824d3018b8c8e inherit pub_methods_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td class="memItemLeft" align="right" valign="top">Dict[str, Any]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#accaa47a12b6f65fee88824d3018b8c8e">__getstate__</a> (self)</td></tr>
 <tr class="memdesc:accaa47a12b6f65fee88824d3018b8c8e inherit pub_methods_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">To get the agent's current state (dict of attributes).  <a href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#accaa47a12b6f65fee88824d3018b8c8e">More...</a><br /></td></tr>
@@ -179,95 +180,92 @@ Public Member Functions</h2></td></tr>
 Data Fields</h2></td></tr>
 <tr class="memitem:ae7c982d3965337796765f6559d3e579d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#ae7c982d3965337796765f6559d3e579d">backup_frequency</a></td></tr>
 <tr class="separator:ae7c982d3965337796765f6559d3e579d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c')"><img src="closed.png" alt="-"/>&#160;Data Fields inherited from <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html">rlpack.actor_critic.a2c.A2C</a></td></tr>
-<tr class="memitem:a989698a1260432ca0fcbd1668fe9c7ac inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a989698a1260432ca0fcbd1668fe9c7ac">action_log_probabilities</a></td></tr>
-<tr class="memdesc:a989698a1260432ca0fcbd1668fe9c7ac inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The list of sampled actions from each timestep from the action distribution.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a989698a1260432ca0fcbd1668fe9c7ac">More...</a><br /></td></tr>
-<tr class="separator:a989698a1260432ca0fcbd1668fe9c7ac inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d1c1b160e9cd0cf5ae5a21ace351b56 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a4d1c1b160e9cd0cf5ae5a21ace351b56">action_space</a></td></tr>
-<tr class="memdesc:a4d1c1b160e9cd0cf5ae5a21ace351b56 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input number of actions.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a4d1c1b160e9cd0cf5ae5a21ace351b56">More...</a><br /></td></tr>
-<tr class="separator:a4d1c1b160e9cd0cf5ae5a21ace351b56 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57416c3545397ddaaa31ee69142e67da inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a57416c3545397ddaaa31ee69142e67da">apply_norm</a></td></tr>
-<tr class="memdesc:a57416c3545397ddaaa31ee69142e67da inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>apply_norm</code> argument; indicating the normalisation to be used.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a57416c3545397ddaaa31ee69142e67da">More...</a><br /></td></tr>
-<tr class="separator:a57416c3545397ddaaa31ee69142e67da inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeef17e7ec0e0b81e2b47b0c4663bad2c inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aeef17e7ec0e0b81e2b47b0c4663bad2c">apply_norm_to</a></td></tr>
-<tr class="memdesc:aeef17e7ec0e0b81e2b47b0c4663bad2c inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>apply_norm_to</code> argument; indicating the quantity to normalise.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aeef17e7ec0e0b81e2b47b0c4663bad2c">More...</a><br /></td></tr>
-<tr class="separator:aeef17e7ec0e0b81e2b47b0c4663bad2c inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a26e70f7a784551fa58fa81b1f2dcc894 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a26e70f7a784551fa58fa81b1f2dcc894">backup_frequency</a></td></tr>
-<tr class="memdesc:a26e70f7a784551fa58fa81b1f2dcc894 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input model backup frequency in terms of timesteps.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a26e70f7a784551fa58fa81b1f2dcc894">More...</a><br /></td></tr>
-<tr class="separator:a26e70f7a784551fa58fa81b1f2dcc894 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67a8def97a97cef04686199250556bd0 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a67a8def97a97cef04686199250556bd0">bootstrap_rounds</a></td></tr>
-<tr class="memdesc:a67a8def97a97cef04686199250556bd0 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input boostrap rounds.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a67a8def97a97cef04686199250556bd0">More...</a><br /></td></tr>
-<tr class="separator:a67a8def97a97cef04686199250556bd0 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f3c23d256a14d2b124fb866732051b6 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a3f3c23d256a14d2b124fb866732051b6">device</a></td></tr>
-<tr class="memdesc:a3f3c23d256a14d2b124fb866732051b6 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>device</code> argument; indicating the device name.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a3f3c23d256a14d2b124fb866732051b6">More...</a><br /></td></tr>
-<tr class="separator:a3f3c23d256a14d2b124fb866732051b6 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3f70110b14a2bc1354fadaa02f3bdff inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ac3f70110b14a2bc1354fadaa02f3bdff">dim_for_norm</a></td></tr>
-<tr class="memdesc:ac3f70110b14a2bc1354fadaa02f3bdff inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>dim_for_norm</code> argument; indicating dimension along which we wish to normalise.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ac3f70110b14a2bc1354fadaa02f3bdff">More...</a><br /></td></tr>
-<tr class="separator:ac3f70110b14a2bc1354fadaa02f3bdff inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1b2cb43a9ea064b3809838bbb0270f4 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ad1b2cb43a9ea064b3809838bbb0270f4">distribution</a></td></tr>
-<tr class="memdesc:ad1b2cb43a9ea064b3809838bbb0270f4 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input distribution object.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ad1b2cb43a9ea064b3809838bbb0270f4">More...</a><br /></td></tr>
-<tr class="separator:ad1b2cb43a9ea064b3809838bbb0270f4 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac030e4955c3b5317db360d8539e51163 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ac030e4955c3b5317db360d8539e51163">entropies</a></td></tr>
-<tr class="memdesc:ac030e4955c3b5317db360d8539e51163 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The list of entropies from each timestep.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ac030e4955c3b5317db360d8539e51163">More...</a><br /></td></tr>
-<tr class="separator:ac030e4955c3b5317db360d8539e51163 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6def13b25087f4b35685140b0a8e31ff inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a6def13b25087f4b35685140b0a8e31ff">entropy_coefficient</a></td></tr>
-<tr class="memdesc:a6def13b25087f4b35685140b0a8e31ff inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input entropy coefficient.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a6def13b25087f4b35685140b0a8e31ff">More...</a><br /></td></tr>
-<tr class="separator:a6def13b25087f4b35685140b0a8e31ff inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab79962d551f8a638f440166462456111 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ab79962d551f8a638f440166462456111">eps_for_norm</a></td></tr>
-<tr class="memdesc:ab79962d551f8a638f440166462456111 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>eps_for_norm</code> argument; indicating epsilon to be used for normalisation.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ab79962d551f8a638f440166462456111">More...</a><br /></td></tr>
-<tr class="separator:ab79962d551f8a638f440166462456111 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a335067fc595b3c6bf62395024fd0008a inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a335067fc595b3c6bf62395024fd0008a">gamma</a></td></tr>
-<tr class="memdesc:a335067fc595b3c6bf62395024fd0008a inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input discounting factor.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a335067fc595b3c6bf62395024fd0008a">More...</a><br /></td></tr>
-<tr class="separator:a335067fc595b3c6bf62395024fd0008a inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f1d962e32fb21e733c9161a3e5ec206 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a3f1d962e32fb21e733c9161a3e5ec206">grad_norm_p</a></td></tr>
-<tr class="memdesc:a3f1d962e32fb21e733c9161a3e5ec206 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>grad_norm_p</code>; indicating the p-value for p-normalisation for gradient clippings.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a3f1d962e32fb21e733c9161a3e5ec206">More...</a><br /></td></tr>
-<tr class="separator:a3f1d962e32fb21e733c9161a3e5ec206 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0959df6d9aaba07b171fa0bc30d9c306 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a0959df6d9aaba07b171fa0bc30d9c306">is_continuous_action_space</a></td></tr>
-<tr class="memdesc:a0959df6d9aaba07b171fa0bc30d9c306 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag indicating if action space is continuous or discrete.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a0959df6d9aaba07b171fa0bc30d9c306">More...</a><br /></td></tr>
-<tr class="separator:a0959df6d9aaba07b171fa0bc30d9c306 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ace16f409552ad6b3d8274b91be4b5157 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ace16f409552ad6b3d8274b91be4b5157">loss_function</a></td></tr>
-<tr class="memdesc:ace16f409552ad6b3d8274b91be4b5157 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input loss function.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#ace16f409552ad6b3d8274b91be4b5157">More...</a><br /></td></tr>
-<tr class="separator:ace16f409552ad6b3d8274b91be4b5157 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67fd595af5ce5ef1a935083e8383f6af inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a67fd595af5ce5ef1a935083e8383f6af">lr_scheduler</a></td></tr>
-<tr class="memdesc:a67fd595af5ce5ef1a935083e8383f6af inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input optional LR Scheduler (this can be None).  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a67fd595af5ce5ef1a935083e8383f6af">More...</a><br /></td></tr>
-<tr class="separator:a67fd595af5ce5ef1a935083e8383f6af inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abca9e9f63b00391c576378683d000d8a inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#abca9e9f63b00391c576378683d000d8a">lr_threshold</a></td></tr>
-<tr class="memdesc:abca9e9f63b00391c576378683d000d8a inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input LR Threshold.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#abca9e9f63b00391c576378683d000d8a">More...</a><br /></td></tr>
-<tr class="separator:abca9e9f63b00391c576378683d000d8a inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af326d53cbea6b99ed2792a0b88f73539 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af326d53cbea6b99ed2792a0b88f73539">max_grad_norm</a></td></tr>
-<tr class="memdesc:af326d53cbea6b99ed2792a0b88f73539 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>max_grad_norm</code>; indicating the maximum gradient norm for gradient clippings.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af326d53cbea6b99ed2792a0b88f73539">More...</a><br /></td></tr>
-<tr class="separator:af326d53cbea6b99ed2792a0b88f73539 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a531fa341471a4ad1f97d36c00f221981 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a531fa341471a4ad1f97d36c00f221981">optimizer</a></td></tr>
-<tr class="memdesc:a531fa341471a4ad1f97d36c00f221981 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input optimizer wrapped with policy_model parameters.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a531fa341471a4ad1f97d36c00f221981">More...</a><br /></td></tr>
-<tr class="separator:a531fa341471a4ad1f97d36c00f221981 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af4f2a8721367dc7865955f308cc6149b inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af4f2a8721367dc7865955f308cc6149b">p_for_norm</a></td></tr>
-<tr class="memdesc:af4f2a8721367dc7865955f308cc6149b inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>p_for_norm</code> argument; indicating p-value for p-normalisation.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af4f2a8721367dc7865955f308cc6149b">More...</a><br /></td></tr>
-<tr class="separator:af4f2a8721367dc7865955f308cc6149b inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a186663b4b9a13fdff2d3a6c068573a4b inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a186663b4b9a13fdff2d3a6c068573a4b">policy_model</a></td></tr>
-<tr class="memdesc:a186663b4b9a13fdff2d3a6c068573a4b inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input policy model moved to desired device.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a186663b4b9a13fdff2d3a6c068573a4b">More...</a><br /></td></tr>
-<tr class="separator:a186663b4b9a13fdff2d3a6c068573a4b inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1cc2aee9a3fdd63cd263a8600f19eaae inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a1cc2aee9a3fdd63cd263a8600f19eaae">rewards</a></td></tr>
-<tr class="memdesc:a1cc2aee9a3fdd63cd263a8600f19eaae inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The list of rewards from each timestep.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a1cc2aee9a3fdd63cd263a8600f19eaae">More...</a><br /></td></tr>
-<tr class="separator:a1cc2aee9a3fdd63cd263a8600f19eaae inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:affac024bad4b94c555d8299db2e7a64c inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#affac024bad4b94c555d8299db2e7a64c">save_path</a></td></tr>
-<tr class="memdesc:affac024bad4b94c555d8299db2e7a64c inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input save path for backing up agent models.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#affac024bad4b94c555d8299db2e7a64c">More...</a><br /></td></tr>
-<tr class="separator:affac024bad4b94c555d8299db2e7a64c inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a808c41752e5a391ccccc5eaa820abc09 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a808c41752e5a391ccccc5eaa820abc09">state_value_coefficient</a></td></tr>
-<tr class="memdesc:a808c41752e5a391ccccc5eaa820abc09 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input state value coefficient.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a808c41752e5a391ccccc5eaa820abc09">More...</a><br /></td></tr>
-<tr class="separator:a808c41752e5a391ccccc5eaa820abc09 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaf2d6eee242ba098e6b977b9b39e5cda inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aaf2d6eee242ba098e6b977b9b39e5cda">states_current_values</a></td></tr>
-<tr class="memdesc:aaf2d6eee242ba098e6b977b9b39e5cda inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The list of state values at each timestep.This is cleared after each episode.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aaf2d6eee242ba098e6b977b9b39e5cda">More...</a><br /></td></tr>
-<tr class="separator:aaf2d6eee242ba098e6b977b9b39e5cda inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa40ba92a0c825186f61c04e9ac713a55 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aa40ba92a0c825186f61c04e9ac713a55">step_counter</a></td></tr>
-<tr class="memdesc:aa40ba92a0c825186f61c04e9ac713a55 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The step counter; counting the total timesteps done so far.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#aa40ba92a0c825186f61c04e9ac713a55">More...</a><br /></td></tr>
-<tr class="separator:aa40ba92a0c825186f61c04e9ac713a55 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9002f6e78992ea0a133036ac944fc971 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a9002f6e78992ea0a133036ac944fc971">variance_decay_fn</a></td></tr>
-<tr class="memdesc:a9002f6e78992ea0a133036ac944fc971 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The variance decay method.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a9002f6e78992ea0a133036ac944fc971">More...</a><br /></td></tr>
-<tr class="separator:a9002f6e78992ea0a133036ac944fc971 inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a87e1de2217cd2e1d25827d6fc4d3f4ca inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a87e1de2217cd2e1d25827d6fc4d3f4ca">variance_value</a></td></tr>
-<tr class="memdesc:a87e1de2217cd2e1d25827d6fc4d3f4ca inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current variance value.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a87e1de2217cd2e1d25827d6fc4d3f4ca">More...</a><br /></td></tr>
-<tr class="separator:a87e1de2217cd2e1d25827d6fc4d3f4ca inherit pub_attribs_classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent')"><img src="closed.png" alt="-"/>&#160;Data Fields inherited from <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html">rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent</a></td></tr>
+<tr class="memitem:a31e3fa147ea1d19490fb388ffe61aee3 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a31e3fa147ea1d19490fb388ffe61aee3">action_space</a></td></tr>
+<tr class="memdesc:a31e3fa147ea1d19490fb388ffe61aee3 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input number of actions.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a31e3fa147ea1d19490fb388ffe61aee3">More...</a><br /></td></tr>
+<tr class="separator:a31e3fa147ea1d19490fb388ffe61aee3 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff3d0599e56caa4b5b0b36cccbf684b1 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#aff3d0599e56caa4b5b0b36cccbf684b1">apply_norm</a></td></tr>
+<tr class="memdesc:aff3d0599e56caa4b5b0b36cccbf684b1 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>apply_norm</code> argument; indicating the normalisation to be used.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#aff3d0599e56caa4b5b0b36cccbf684b1">More...</a><br /></td></tr>
+<tr class="separator:aff3d0599e56caa4b5b0b36cccbf684b1 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e6b39931e27a1d569945fdb177d40cc inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a7e6b39931e27a1d569945fdb177d40cc">apply_norm_to</a></td></tr>
+<tr class="memdesc:a7e6b39931e27a1d569945fdb177d40cc inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>apply_norm_to</code> argument; indicating the quantity to normalise.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a7e6b39931e27a1d569945fdb177d40cc">More...</a><br /></td></tr>
+<tr class="separator:a7e6b39931e27a1d569945fdb177d40cc inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af19d87d26f908a6938f3b3ec1d25c70c inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#af19d87d26f908a6938f3b3ec1d25c70c">backup_frequency</a></td></tr>
+<tr class="memdesc:af19d87d26f908a6938f3b3ec1d25c70c inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input model backup frequency in terms of timesteps.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#af19d87d26f908a6938f3b3ec1d25c70c">More...</a><br /></td></tr>
+<tr class="separator:af19d87d26f908a6938f3b3ec1d25c70c inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7a4a5ac2156c6877cbc0533601724e7 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#aa7a4a5ac2156c6877cbc0533601724e7">clip_grad_value</a></td></tr>
+<tr class="memdesc:aa7a4a5ac2156c6877cbc0533601724e7 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>clip_grad_value</code>; indicating the clipping range for gradients.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#aa7a4a5ac2156c6877cbc0533601724e7">More...</a><br /></td></tr>
+<tr class="separator:aa7a4a5ac2156c6877cbc0533601724e7 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05e8b2d000bd94f5fb854516c84200e5 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a05e8b2d000bd94f5fb854516c84200e5">device</a></td></tr>
+<tr class="memdesc:a05e8b2d000bd94f5fb854516c84200e5 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>device</code> argument; indicating the device name as device type class.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a05e8b2d000bd94f5fb854516c84200e5">More...</a><br /></td></tr>
+<tr class="separator:a05e8b2d000bd94f5fb854516c84200e5 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1db6c1588e7f4d11b3a723825809411a inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a1db6c1588e7f4d11b3a723825809411a">dim_for_norm</a></td></tr>
+<tr class="memdesc:a1db6c1588e7f4d11b3a723825809411a inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>dim_for_norm</code> argument; indicating dimension along which we wish to normalise.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a1db6c1588e7f4d11b3a723825809411a">More...</a><br /></td></tr>
+<tr class="separator:a1db6c1588e7f4d11b3a723825809411a inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9244a2ba98485e2bedf6cee830ca1a22 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a9244a2ba98485e2bedf6cee830ca1a22">distribution</a></td></tr>
+<tr class="memdesc:a9244a2ba98485e2bedf6cee830ca1a22 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input distribution object.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a9244a2ba98485e2bedf6cee830ca1a22">More...</a><br /></td></tr>
+<tr class="separator:a9244a2ba98485e2bedf6cee830ca1a22 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6dc53028e64988f4a9442a047736acb8 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a6dc53028e64988f4a9442a047736acb8">dtype</a></td></tr>
+<tr class="memdesc:a6dc53028e64988f4a9442a047736acb8 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>dtype</code> argument; indicating the datatype class.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a6dc53028e64988f4a9442a047736acb8">More...</a><br /></td></tr>
+<tr class="separator:a6dc53028e64988f4a9442a047736acb8 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affc2a52ddeb68b4c0a6c05793fa58261 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#affc2a52ddeb68b4c0a6c05793fa58261">entropy_coefficient</a></td></tr>
+<tr class="memdesc:affc2a52ddeb68b4c0a6c05793fa58261 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input entropy coefficient.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#affc2a52ddeb68b4c0a6c05793fa58261">More...</a><br /></td></tr>
+<tr class="separator:affc2a52ddeb68b4c0a6c05793fa58261 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a940d6caf441fdc4b732ef0185e2694e9 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a940d6caf441fdc4b732ef0185e2694e9">eps_for_norm</a></td></tr>
+<tr class="memdesc:a940d6caf441fdc4b732ef0185e2694e9 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>eps_for_norm</code> argument; indicating epsilon to be used for normalisation.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a940d6caf441fdc4b732ef0185e2694e9">More...</a><br /></td></tr>
+<tr class="separator:a940d6caf441fdc4b732ef0185e2694e9 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac76827b34c015165373ec76358b60dea inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ac76827b34c015165373ec76358b60dea">exploration_tool</a></td></tr>
+<tr class="memdesc:ac76827b34c015165373ec76358b60dea inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>exploration_tool</code>.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ac76827b34c015165373ec76358b60dea">More...</a><br /></td></tr>
+<tr class="separator:ac76827b34c015165373ec76358b60dea inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab09c920ad70ce8b4cd3fa485b2f1bd55 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ab09c920ad70ce8b4cd3fa485b2f1bd55">gamma</a></td></tr>
+<tr class="memdesc:ab09c920ad70ce8b4cd3fa485b2f1bd55 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input discounting factor.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ab09c920ad70ce8b4cd3fa485b2f1bd55">More...</a><br /></td></tr>
+<tr class="separator:ab09c920ad70ce8b4cd3fa485b2f1bd55 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a724bcb1e4d32cd2cd880911eed207af6 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a724bcb1e4d32cd2cd880911eed207af6">grad_accumulation_rounds</a></td></tr>
+<tr class="memdesc:a724bcb1e4d32cd2cd880911eed207af6 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>grad_accumulation_rounds</code>.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a724bcb1e4d32cd2cd880911eed207af6">More...</a><br /></td></tr>
+<tr class="separator:a724bcb1e4d32cd2cd880911eed207af6 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2bfe032740a7146997162d125274fe9 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#aa2bfe032740a7146997162d125274fe9">grad_norm_p</a></td></tr>
+<tr class="memdesc:aa2bfe032740a7146997162d125274fe9 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>grad_norm_p</code>; indicating the p-value for p-normalisation for gradient clippings.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#aa2bfe032740a7146997162d125274fe9">More...</a><br /></td></tr>
+<tr class="separator:aa2bfe032740a7146997162d125274fe9 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b605080b32f1199d314ded5efa4230a inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a4b605080b32f1199d314ded5efa4230a">is_continuous_action_space</a></td></tr>
+<tr class="memdesc:a4b605080b32f1199d314ded5efa4230a inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag indicating if action space is continuous or discrete.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a4b605080b32f1199d314ded5efa4230a">More...</a><br /></td></tr>
+<tr class="separator:a4b605080b32f1199d314ded5efa4230a inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5485148744d68c770b872e62361ca10 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#af5485148744d68c770b872e62361ca10">loss_function</a></td></tr>
+<tr class="memdesc:af5485148744d68c770b872e62361ca10 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input loss function.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#af5485148744d68c770b872e62361ca10">More...</a><br /></td></tr>
+<tr class="separator:af5485148744d68c770b872e62361ca10 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a081dcbd51017df1d26abbf15821089d7 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a081dcbd51017df1d26abbf15821089d7">lr_scheduler</a></td></tr>
+<tr class="memdesc:a081dcbd51017df1d26abbf15821089d7 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input optional LR Scheduler (this can be None).  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a081dcbd51017df1d26abbf15821089d7">More...</a><br /></td></tr>
+<tr class="separator:a081dcbd51017df1d26abbf15821089d7 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2238587b60c04bf2a7e83e497a030b1e inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a2238587b60c04bf2a7e83e497a030b1e">lr_threshold</a></td></tr>
+<tr class="memdesc:a2238587b60c04bf2a7e83e497a030b1e inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input LR Threshold.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a2238587b60c04bf2a7e83e497a030b1e">More...</a><br /></td></tr>
+<tr class="separator:a2238587b60c04bf2a7e83e497a030b1e inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae98b91d40567e6e9990304977809d997 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ae98b91d40567e6e9990304977809d997">max_grad_norm</a></td></tr>
+<tr class="memdesc:ae98b91d40567e6e9990304977809d997 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>max_grad_norm</code>; indicating the maximum gradient norm for gradient clippings.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ae98b91d40567e6e9990304977809d997">More...</a><br /></td></tr>
+<tr class="separator:ae98b91d40567e6e9990304977809d997 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2f798b74bd64640ef35da8f672f3e95 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#aa2f798b74bd64640ef35da8f672f3e95">optimizer</a></td></tr>
+<tr class="memdesc:aa2f798b74bd64640ef35da8f672f3e95 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input optimizer wrapped with policy_model parameters.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#aa2f798b74bd64640ef35da8f672f3e95">More...</a><br /></td></tr>
+<tr class="separator:aa2f798b74bd64640ef35da8f672f3e95 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acde06241652873c70e7d4d9523eab0b0 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#acde06241652873c70e7d4d9523eab0b0">p_for_norm</a></td></tr>
+<tr class="memdesc:acde06241652873c70e7d4d9523eab0b0 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>p_for_norm</code> argument; indicating p-value for p-normalisation.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#acde06241652873c70e7d4d9523eab0b0">More...</a><br /></td></tr>
+<tr class="separator:acde06241652873c70e7d4d9523eab0b0 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c0e7b3a8cc0a96cebe026d304c5590c inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a3c0e7b3a8cc0a96cebe026d304c5590c">policy_model</a></td></tr>
+<tr class="memdesc:a3c0e7b3a8cc0a96cebe026d304c5590c inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input policy model moved to desired device.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a3c0e7b3a8cc0a96cebe026d304c5590c">More...</a><br /></td></tr>
+<tr class="separator:a3c0e7b3a8cc0a96cebe026d304c5590c inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e282f966f2bd18c24ffba49ceefd00b inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a9e282f966f2bd18c24ffba49ceefd00b">rollout_accumulation_size</a></td></tr>
+<tr class="memdesc:a9e282f966f2bd18c24ffba49ceefd00b inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>rollout_accumulation_size</code>.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a9e282f966f2bd18c24ffba49ceefd00b">More...</a><br /></td></tr>
+<tr class="separator:a9e282f966f2bd18c24ffba49ceefd00b inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00c1fb74f19174eecd6fcd03dc0b9843 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a00c1fb74f19174eecd6fcd03dc0b9843">save_path</a></td></tr>
+<tr class="memdesc:a00c1fb74f19174eecd6fcd03dc0b9843 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input save path for backing up agent models.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a00c1fb74f19174eecd6fcd03dc0b9843">More...</a><br /></td></tr>
+<tr class="separator:a00c1fb74f19174eecd6fcd03dc0b9843 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a073e3f0455059d575ce1bc9a28b3eee5 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a073e3f0455059d575ce1bc9a28b3eee5">state_value_coefficient</a></td></tr>
+<tr class="memdesc:a073e3f0455059d575ce1bc9a28b3eee5 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input state value coefficient.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a073e3f0455059d575ce1bc9a28b3eee5">More...</a><br /></td></tr>
+<tr class="separator:a073e3f0455059d575ce1bc9a28b3eee5 inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42a2685035dad0c95918126682a0d4ff inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a42a2685035dad0c95918126682a0d4ff">step_counter</a></td></tr>
+<tr class="memdesc:a42a2685035dad0c95918126682a0d4ff inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The step counter; counting the total timesteps done so far.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a42a2685035dad0c95918126682a0d4ff">More...</a><br /></td></tr>
+<tr class="separator:a42a2685035dad0c95918126682a0d4ff inherit pub_attribs_classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent')"><img src="closed.png" alt="-"/>&#160;Data Fields inherited from <a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html">rlpack.utils.base.agent.Agent</a></td></tr>
+<tr class="memitem:a4104e76aed3a37b4df4ef1069383aee8 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a4104e76aed3a37b4df4ef1069383aee8">gamma</a></td></tr>
+<tr class="memdesc:a4104e76aed3a37b4df4ef1069383aee8 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The default discounting factor for agents.  <a href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a4104e76aed3a37b4df4ef1069383aee8">More...</a><br /></td></tr>
+<tr class="separator:a4104e76aed3a37b4df4ef1069383aee8 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3ce395269c69c095865fee40818db2e inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#ab3ce395269c69c095865fee40818db2e">loss</a></td></tr>
 <tr class="memdesc:ab3ce395269c69c095865fee40818db2e inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td class="mdescLeft">&#160;</td><td class="mdescRight">The list of losses accumulated after each backward call.  <a href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#ab3ce395269c69c095865fee40818db2e">More...</a><br /></td></tr>
 <tr class="separator:ab3ce395269c69c095865fee40818db2e inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1agent_1_1_agent"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -277,21 +275,36 @@ Data Fields</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:a2739e83067f7119119372bf013f16447"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#a2739e83067f7119119372bf013f16447">_async_gradients</a> (self)</td></tr>
-<tr class="memdesc:a2739e83067f7119119372bf013f16447"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asynchronously averages the gradients across the world_size (number of processes) using non-blocking all-reduce method.  <a href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#a2739e83067f7119119372bf013f16447">More...</a><br /></td></tr>
-<tr class="separator:a2739e83067f7119119372bf013f16447"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9bab1241cd97eabcb19a23b41352dd07"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#a9bab1241cd97eabcb19a23b41352dd07">_async_grad_all_reduce</a> (self)</td></tr>
+<tr class="memdesc:a9bab1241cd97eabcb19a23b41352dd07"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asynchronously averages the gradients across the world_size (number of processes) using non-blocking all-reduce method.  <a href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#a9bab1241cd97eabcb19a23b41352dd07">More...</a><br /></td></tr>
+<tr class="separator:a9bab1241cd97eabcb19a23b41352dd07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5421dc18cdfc15b42934acf19cfbe9e3"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#a5421dc18cdfc15b42934acf19cfbe9e3">_async_param_scatter</a> (self)</td></tr>
+<tr class="separator:a5421dc18cdfc15b42934acf19cfbe9e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac2f6faa17ef5e68d665f2e085636b5d2"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#ac2f6faa17ef5e68d665f2e085636b5d2">_call_to_save</a> (self)</td></tr>
 <tr class="memdesc:ac2f6faa17ef5e68d665f2e085636b5d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method calling the save method when required.  <a href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#ac2f6faa17ef5e68d665f2e085636b5d2">More...</a><br /></td></tr>
 <tr class="separator:ac2f6faa17ef5e68d665f2e085636b5d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4436f7743be9e692d44b3af582c25193"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#a4436f7743be9e692d44b3af582c25193">_run_optimizer</a> (self, <a class="el" href="classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#ab3ce395269c69c095865fee40818db2e">loss</a>)</td></tr>
-<tr class="memdesc:a4436f7743be9e692d44b3af582c25193"><td class="mdescLeft">&#160;</td><td class="mdescRight">Protected void method to train the model or accumulate the gradients for training.  <a href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#a4436f7743be9e692d44b3af582c25193">More...</a><br /></td></tr>
-<tr class="separator:a4436f7743be9e692d44b3af582c25193"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a595cd5ebfa44644b21001843457db5dd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#a595cd5ebfa44644b21001843457db5dd">_distributed_grad_reduce_method</a></td></tr>
+<tr class="memdesc:a595cd5ebfa44644b21001843457db5dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">The callable method for gradient reduction in distributed environment.  <a href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#a595cd5ebfa44644b21001843457db5dd">More...</a><br /></td></tr>
+<tr class="separator:a595cd5ebfa44644b21001843457db5dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf9dfcbf6a610a015c1bad82b8adfbc9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#acf9dfcbf6a610a015c1bad82b8adfbc9">_distributed_param_scatter_method</a></td></tr>
+<tr class="memdesc:acf9dfcbf6a610a015c1bad82b8adfbc9"><td class="mdescLeft">&#160;</td><td class="mdescRight">The callable method for parameter scattering in distributed environment.  <a href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#acf9dfcbf6a610a015c1bad82b8adfbc9">More...</a><br /></td></tr>
+<tr class="separator:acf9dfcbf6a610a015c1bad82b8adfbc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2b6ab113de0e38ea8b5da556fddff5c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#ad2b6ab113de0e38ea8b5da556fddff5c">_process_rank</a></td></tr>
+<tr class="memdesc:ad2b6ab113de0e38ea8b5da556fddff5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The process rank for <a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html" title="The A3C class implements the asynchronous Actor-Critic method.">A3C</a> worker.  <a href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#ad2b6ab113de0e38ea8b5da556fddff5c">More...</a><br /></td></tr>
+<tr class="separator:ad2b6ab113de0e38ea8b5da556fddff5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca6520d3aa919aa4535c72ea50649538"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#aca6520d3aa919aa4535c72ea50649538">_world_size</a></td></tr>
+<tr class="memdesc:aca6520d3aa919aa4535c72ea50649538"><td class="mdescLeft">&#160;</td><td class="mdescRight">The world size for <a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html" title="The A3C class implements the asynchronous Actor-Critic method.">A3C</a> workers.  <a href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#aca6520d3aa919aa4535c72ea50649538">More...</a><br /></td></tr>
+<tr class="separator:aca6520d3aa919aa4535c72ea50649538"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p >The A2C class implements the synchronous Actor-Critic method. </p>
+<div class="textblock"><p >The <a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html" title="The A3C class implements the asynchronous Actor-Critic method.">A3C</a> class implements the asynchronous Actor-Critic method. </p>
+<p >This uses PyTorch's multiprocessing for gradient all-reduce operations. In this implementation master process' policy model is assumed to be the global model as well. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="aeeade381614a6fc5eb01aff4600bc59a" name="aeeade381614a6fc5eb01aff4600bc59a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeeade381614a6fc5eb01aff4600bc59a">&#9670;&#160;</a></span>__init__()</h2>
+<a id="ae6ef32612103c3a672e2eb31697d01ba" name="ae6ef32612103c3a672e2eb31697d01ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6ef32612103c3a672e2eb31697d01ba">&#9670;&#160;</a></span>__init__()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -317,19 +330,19 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Union[LRScheduler, None]&#160;</td>
+          <td class="paramtype">Union[<a class="el" href="classrlpack_1_1utils_1_1typing__hints_1_1_l_r_scheduler.html">LRScheduler</a>, None]&#160;</td>
           <td class="paramname"><em>lr_scheduler</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">LossFunction&#160;</td>
+          <td class="paramtype"><a class="el" href="classrlpack_1_1utils_1_1typing__hints_1_1_loss_function.html">LossFunction</a>&#160;</td>
           <td class="paramname"><em>loss_function</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Distribution&#160;</td>
+          <td class="paramtype">Type[pytorch_distributions.Distribution]&#160;</td>
           <td class="paramname"><em>distribution</em>, </td>
         </tr>
         <tr>
@@ -359,7 +372,7 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Union[int, List[Union[int, List[int]]]]&#160;</td>
+          <td class="paramtype">Union[int, Tuple[int, Union[List[int], None]]]&#160;</td>
           <td class="paramname"><em>action_space</em>, </td>
         </tr>
         <tr>
@@ -377,14 +390,32 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">Union[int, None] &#160;</td>
+          <td class="paramname"><em>rollout_accumulation_size</em> = <code>None</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">int &#160;</td>
-          <td class="paramname"><em>bootstrap_rounds</em> = <code>1</code>, </td>
+          <td class="paramname"><em>grad_accumulation_rounds</em> = <code>1</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Union[<a class="el" href="classrlpack_1_1exploration_1_1utils_1_1exploration_1_1_exploration.html">Exploration</a>, None] &#160;</td>
+          <td class="paramname"><em>exploration_tool</em> = <code>None</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">str &#160;</td>
           <td class="paramname"><em>device</em> = <code>&quot;cpu&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str &#160;</td>
+          <td class="paramname"><em>dtype</em> = <code>&quot;float32&quot;</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -431,8 +462,8 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Optional[Tuple[float, Callable[[float, int], int]]] &#160;</td>
-          <td class="paramname"><em>variance</em> = <code>None</code>&#160;</td>
+          <td class="paramtype">Optional[float] &#160;</td>
+          <td class="paramname"><em>clip_grad_value</em> = <code>None</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -447,16 +478,23 @@ Private Member Functions</h2></td></tr>
     <tr><td class="paramname">optimizer</td><td>pytorch.optim.Optimizer: The optimizer to be used for policy model. Optimizer must be initialized and wrapped with policy model parameters. </td></tr>
     <tr><td class="paramname">lr_scheduler</td><td>Union[LRScheduler, None]: The LR Scheduler to be used to decay the learning rate. LR Scheduler must be initialized and wrapped with passed optimizer. </td></tr>
     <tr><td class="paramname">loss_function</td><td>LossFunction: A PyTorch loss function. </td></tr>
-    <tr><td class="paramname">distribution</td><td>: dist_math.distribution.Distribution: The distribution of PyTorch to be used to sampled actions in action space. (See <code>action_space</code>). </td></tr>
+    <tr><td class="paramname">distribution</td><td>: Type[pytorch_distributions.Distribution]: The distribution of PyTorch to be used to sampled actions in action space. (See <code>action_space</code>). </td></tr>
     <tr><td class="paramname">gamma</td><td>float: The discounting factor for rewards. </td></tr>
     <tr><td class="paramname">entropy_coefficient</td><td>float: The coefficient to be used for entropy in policy loss computation. </td></tr>
     <tr><td class="paramname">state_value_coefficient</td><td>float: The coefficient to be used for state value in final loss computation. </td></tr>
     <tr><td class="paramname">lr_threshold</td><td>float: The threshold LR which once reached LR scheduler is not called further. </td></tr>
-    <tr><td class="paramname">action_space</td><td>Union[int, List[Union[int, List[int]]]]: The action space of the environment. If discrete action set is used, number of actions can be passed. If continuous action space is used, a list must be passed with first element representing the output features from model, second representing the shape of action to be sampled. </td></tr>
+    <tr><td class="paramname">action_space</td><td>Union[int, Tuple[int, Union[List[int], None]]]: The action space of the environment.<ul>
+<li>If discrete action set is used, number of actions can be passed.</li>
+<li>If continuous action space is used, a list must be passed with first element representing the output features from model, second element representing the shape of action to be sampled. Second element can be an empty list, if you wish to sample the default no. of samples. </li>
+</ul>
+</td></tr>
     <tr><td class="paramname">backup_frequency</td><td>int: The timesteps after which policy model, optimizer states and lr scheduler states are backed up. </td></tr>
+    <tr><td class="paramname">exploration_tool</td><td>Union[Exploration, None]: Exploration tool to be used to explore the environment. These tools can be found in <code><a class="el" href="namespacerlpack_1_1exploration.html" title="This package implements the exploration tools for RLPack to explore the environment.">rlpack.exploration</a></code>. </td></tr>
     <tr><td class="paramname">save_path</td><td>str: The path where policy model, optimizer states and lr scheduler states are to be saved. </td></tr>
-    <tr><td class="paramname">bootstrap_rounds</td><td>int: The number of rounds until which gradients are to be accumulated before performing calling optimizer step. Gradients are mean reduced for bootstrap_rounds &gt; 1. Default: 1. </td></tr>
+    <tr><td class="paramname">rollout_accumulation_size</td><td>Union[int, None]: The size of rollout buffer before performing optimizer step. Whole rollout buffer is used to fit the policy model and is cleared. By default, after every episode. Default: None. </td></tr>
+    <tr><td class="paramname">grad_accumulation_rounds</td><td>int: The number of rounds until which gradients are to be accumulated before performing calling optimizer step. Gradients are mean reduced for grad_accumulation_rounds &gt; 1. Default: 1. </td></tr>
     <tr><td class="paramname">device</td><td>str: The device on which models are run. Default: "cpu". </td></tr>
+    <tr><td class="paramname">dtype</td><td>str: The datatype for model parameters. Default: "float32" </td></tr>
     <tr><td class="paramname">apply_norm</td><td>Union[int, str]: The code to select the normalization procedure to be applied on selected quantities; selected by <code>apply_norm_to</code>: see below)). Direct string can also be passed as per accepted keys. Refer below in Notes to see the accepted values. Default: -1 </td></tr>
     <tr><td class="paramname">apply_norm_to</td><td>Union[int, List[str]]: The code to select the quantity to which normalization is to be applied. Direct list of quantities can also be passed as per accepted keys. Refer below in Notes to see the accepted values. Default: -1. </td></tr>
     <tr><td class="paramname">eps_for_norm</td><td>float: Epsilon value for normalization; for numeric stability. For min-max normalization and standardized normalization. Default: 5e-12. </td></tr>
@@ -464,34 +502,35 @@ Private Member Functions</h2></td></tr>
     <tr><td class="paramname">dim_for_norm</td><td>int: The dimension across which normalization is to be performed. Default: 0. </td></tr>
     <tr><td class="paramname">max_grad_norm</td><td>Optional[float]: The max norm for gradients for gradient clipping. Default: None </td></tr>
     <tr><td class="paramname">grad_norm_p</td><td>float: The p-value for p-normalization of gradients. Default: 2.0 </td></tr>
-    <tr><td class="paramname">variance</td><td>Optional[Tuple[float, Callable[[float, bool, int], float]]]: The tuple of variance to be used to sample actions for continuous action space and a method to be used to decay it. The passed method have the signature Callable[[float, int], float]. The first argument would be the variance value and second value be the boolean, done flag indicating if the state is terminal or not and third will be the timestep; returning the updated variance value. Default: None</td></tr>
+    <tr><td class="paramname">clip_grad_value</td><td>Optional[float]: The gradient value for clipping gradients by value. Default: None</td></tr>
   </table>
   </dd>
 </dl>
 <p><b>Notes</b></p>
-<p >The codes for <code>apply_norm</code> are given as follows: -</p><ul>
-<li>No Normalization: -1; (<code>"none"</code>)</li>
-<li>Min-Max Normalization: 0; (<code>"min_max"</code>)</li>
-<li>Standardization: 1; (<code>"standardize"</code>)</li>
-<li>P-Normalization: 2; (<code>"p_norm"</code>)</li>
+<p >The values accepted for <code>apply_norm</code> are: -</p><ul>
+<li>No Normalization: -1; <code>"none"</code></li>
+<li>Min-Max Normalization: 0; <code>"min_max"</code></li>
+<li>Standardization: 1; <code>"standardize"</code></li>
+<li>P-Normalization: 2; <code>"p_norm"</code></li>
 </ul>
-<p >The codes for <code>apply_norm_to</code> are given as follows:</p><ul>
-<li>No Normalization: -1; (<code>["none"]</code>)</li>
-<li>On States only: 0; (<code>["states"]</code>)</li>
-<li>On Rewards only: 1; (<code>["rewards"]</code>)</li>
-<li>On TD value only: 2; (<code>["advantage"]</code>)</li>
-<li>On States and Rewards: 3; (<code>["states", "rewards"]</code>)</li>
-<li>On States and TD: 4; (<code>["states", "advantage"]</code>)</li>
+<p >The value accepted for <code>apply_norm_to</code> are as follows and must be passed in a list:</p><ul>
+<li><code>"none"</code>: -1; Don't apply normalization to any quantity.</li>
+<li><code>"states"</code>: 0; Apply normalization to states.</li>
+<li><code>"state_values"</code>: 1; Apply normalization to state values.</li>
+<li><code>"rewards"</code>: 2; Apply normalization to rewards.</li>
+<li><code>"returns"</code>: 3; Apply normalization to rewards.</li>
+<li><code>"td"</code>: 4; Apply normalization for TD values.</li>
+<li><code>"advantage"</code>: 5; Apply normalization to advantage values</li>
 </ul>
-<p >If a valid <code>max_norm_grad</code> is passed, then gradient clipping takes place else gradient clipping step is skipped. If <code>max_norm_grad</code> value was invalid, error will be raised from PyTorch. </p>
+<p >If a valid <code>max_norm_grad</code> is passed, then gradient clipping takes place else gradient clipping step is skipped. If <code>max_norm_grad</code> value was invalid, error will be raised from PyTorch. If a valid <code>clip_grad_value</code> is passed, then gradients will be clipped by value. If <code>clip_grad_value</code> value was invalid, error will be raised from PyTorch. </p>
 
-<p>Reimplemented from <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#adba1d3b5950c18986254b7d1c88e5670">rlpack.actor_critic.a2c.A2C</a>.</p>
+<p>Reimplemented from <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a8a01a254acf0c63cc4f7ed7990b0b222">rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a2739e83067f7119119372bf013f16447" name="a2739e83067f7119119372bf013f16447"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2739e83067f7119119372bf013f16447">&#9670;&#160;</a></span>_async_gradients()</h2>
+<a id="a9bab1241cd97eabcb19a23b41352dd07" name="a9bab1241cd97eabcb19a23b41352dd07"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9bab1241cd97eabcb19a23b41352dd07">&#9670;&#160;</a></span>_async_grad_all_reduce()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -500,7 +539,7 @@ Private Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">def rlpack.actor_critic.a3c.A3C._async_gradients </td>
+          <td class="memname"> None rlpack.actor_critic.a3c.A3C._async_grad_all_reduce </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><em>self</em></td><td>)</td>
@@ -515,6 +554,32 @@ Private Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Asynchronously averages the gradients across the world_size (number of processes) using non-blocking all-reduce method. </p>
+
+</div>
+</div>
+<a id="a5421dc18cdfc15b42934acf19cfbe9e3" name="a5421dc18cdfc15b42934acf19cfbe9e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5421dc18cdfc15b42934acf19cfbe9e3">&#9670;&#160;</a></span>_async_param_scatter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def rlpack.actor_critic.a3c.A3C._async_param_scatter </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -543,14 +608,15 @@ Private Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Method calling the save method when required. </p>
-<p >This method is to be overriden by asynchronous methods. </p>
+<p >Only saved from first process (process with rank 0). </p>
 
-<p>Reimplemented from <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a487c58b125fb7cd2e14972552bdf5ea6">rlpack.actor_critic.a2c.A2C</a>.</p>
+<p>Reimplemented from <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a79da689b8d6edfd4ae0f3128ac130d57">rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent</a>.</p>
 
 </div>
 </div>
-<a id="a4436f7743be9e692d44b3af582c25193" name="a4436f7743be9e692d44b3af582c25193"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4436f7743be9e692d44b3af582c25193">&#9670;&#160;</a></span>_run_optimizer()</h2>
+<h2 class="groupheader">Field Documentation</h2>
+<a id="a595cd5ebfa44644b21001843457db5dd" name="a595cd5ebfa44644b21001843457db5dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a595cd5ebfa44644b21001843457db5dd">&#9670;&#160;</a></span>_distributed_grad_reduce_method</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -559,21 +625,7 @@ Private Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"> None rlpack.actor_critic.a3c.A3C._run_optimizer </td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>self</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>loss</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
+          <td class="memname">rlpack.actor_critic.a3c.A3C._distributed_grad_reduce_method</td>
         </tr>
       </table>
   </td>
@@ -583,17 +635,82 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Protected void method to train the model or accumulate the gradients for training. </p>
-<ul>
-<li>If bootstrap_rounds is passed as 1 (default), model is trained each time the method is called.</li>
-<li>If bootstrap_rounds &gt; 1, the gradients are accumulated in grad_accumulator and model is trained via _train_models method. </li>
-</ul>
-
-<p>Reimplemented from <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a1ff4a067c80053f646906c6603e196a8">rlpack.actor_critic.a2c.A2C</a>.</p>
+<p>The callable method for gradient reduction in distributed environment. </p>
 
 </div>
 </div>
-<h2 class="groupheader">Field Documentation</h2>
+<a id="acf9dfcbf6a610a015c1bad82b8adfbc9" name="acf9dfcbf6a610a015c1bad82b8adfbc9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf9dfcbf6a610a015c1bad82b8adfbc9">&#9670;&#160;</a></span>_distributed_param_scatter_method</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">rlpack.actor_critic.a3c.A3C._distributed_param_scatter_method</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The callable method for parameter scattering in distributed environment. </p>
+
+</div>
+</div>
+<a id="ad2b6ab113de0e38ea8b5da556fddff5c" name="ad2b6ab113de0e38ea8b5da556fddff5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2b6ab113de0e38ea8b5da556fddff5c">&#9670;&#160;</a></span>_process_rank</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">rlpack.actor_critic.a3c.A3C._process_rank</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The process rank for <a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html" title="The A3C class implements the asynchronous Actor-Critic method.">A3C</a> worker. </p>
+
+</div>
+</div>
+<a id="aca6520d3aa919aa4535c72ea50649538" name="aca6520d3aa919aa4535c72ea50649538"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca6520d3aa919aa4535c72ea50649538">&#9670;&#160;</a></span>_world_size</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">rlpack.actor_critic.a3c.A3C._world_size</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The world size for <a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html" title="The A3C class implements the asynchronous Actor-Critic method.">A3C</a> workers. </p>
+
+</div>
+</div>
 <a id="ae7c982d3965337796765f6559d3e579d" name="ae7c982d3965337796765f6559d3e579d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae7c982d3965337796765f6559d3e579d">&#9670;&#160;</a></span>backup_frequency</h2>
 

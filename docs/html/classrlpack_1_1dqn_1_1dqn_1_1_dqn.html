@@ -97,8 +97,7 @@ $(document).ready(function(){initNavTree('classrlpack_1_1dqn_1_1dqn_1_1_dqn.html
 
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pri-static-methods">Static Private Member Functions</a>  </div>
+<a href="#pub-methods">Public Member Functions</a>  </div>
   <div class="headertitle"><div class="title">rlpack.dqn.dqn.Dqn Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -108,122 +107,14 @@ $(document).ready(function(){initNavTree('classrlpack_1_1dqn_1_1dqn_1_1_dqn.html
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a3f6af8d5c52eece10c6b950c37932c35"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1dqn_1_1dqn_1_1_dqn.html#a3f6af8d5c52eece10c6b950c37932c35">__new__</a> (cls, pytorch.nn.Module target_model, pytorch.nn.Module policy_model, pytorch.optim.Optimizer optimizer, Union[LRScheduler, None] lr_scheduler, LossFunction loss_function, float gamma, float epsilon, float min_epsilon, float epsilon_decay_rate, int epsilon_decay_frequency, int memory_buffer_size, int target_model_update_rate, int policy_model_update_rate, int backup_frequency, float lr_threshold, int batch_size, int num_actions, str save_path, int bootstrap_rounds=1, str device=&quot;cpu&quot;, Optional[Dict[str, Any]] prioritization_params=None, float force_terminal_state_selection_prob=0.0, float tau=1.0, int apply_norm=-1, int apply_norm_to=-1, float eps_for_norm=5e-12, int p_for_norm=2, int dim_for_norm=0, Optional[float] max_grad_norm=None, float grad_norm_p=2.0)</td></tr>
-<tr class="separator:a3f6af8d5c52eece10c6b950c37932c35"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-methods" name="pri-static-methods"></a>
-Static Private Member Functions</h2></td></tr>
-<tr class="memitem:abc2eef64f62abc555261093ad2c7a1a7"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1dqn_1_1dqn_1_1_dqn.html#abc2eef64f62abc555261093ad2c7a1a7">__anneal_alpha_default_fn</a> (float alpha, float alpha_annealing_factor)</td></tr>
-<tr class="memdesc:abc2eef64f62abc555261093ad2c7a1a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Protected method to anneal alpha parameter for important sampling weights.  <a href="classrlpack_1_1dqn_1_1dqn_1_1_dqn.html#abc2eef64f62abc555261093ad2c7a1a7">More...</a><br /></td></tr>
-<tr class="separator:abc2eef64f62abc555261093ad2c7a1a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae320a1e6550b7e479854ae7885e0e634"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1dqn_1_1dqn_1_1_dqn.html#ae320a1e6550b7e479854ae7885e0e634">__anneal_beta_default_fn</a> (float beta, float beta_annealing_factor)</td></tr>
-<tr class="memdesc:ae320a1e6550b7e479854ae7885e0e634"><td class="mdescLeft">&#160;</td><td class="mdescRight">Protected method to anneal beta parameter for important sampling weights.  <a href="classrlpack_1_1dqn_1_1dqn_1_1_dqn.html#ae320a1e6550b7e479854ae7885e0e634">More...</a><br /></td></tr>
-<tr class="separator:ae320a1e6550b7e479854ae7885e0e634"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad27f1bdffabfcd6b8b80c0014e3c0f76"><td class="memItemLeft" align="right" valign="top">Dict[str, Any]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1dqn_1_1dqn_1_1_dqn.html#ad27f1bdffabfcd6b8b80c0014e3c0f76">__process_prioritization_params</a> (Dict[str, Any] prioritization_params, int prioritization_strategy_code, Callable[[float, float], float] anneal_alpha_default_fn, Callable[[float, float], float] anneal_beta_default_fn, int batch_size)</td></tr>
-<tr class="memdesc:ad27f1bdffabfcd6b8b80c0014e3c0f76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Private method to process the prioritization parameters.  <a href="classrlpack_1_1dqn_1_1dqn_1_1_dqn.html#ad27f1bdffabfcd6b8b80c0014e3c0f76">More...</a><br /></td></tr>
-<tr class="separator:ad27f1bdffabfcd6b8b80c0014e3c0f76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a704e8805e6f55ccae621d424d02d3a22"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1dqn_1_1dqn_1_1_dqn.html#a704e8805e6f55ccae621d424d02d3a22">__new__</a> (cls, pytorch.nn.Module target_model, pytorch.nn.Module policy_model, pytorch.optim.Optimizer optimizer, Union[<a class="el" href="classrlpack_1_1utils_1_1typing__hints_1_1_l_r_scheduler.html">LRScheduler</a>, None] lr_scheduler, <a class="el" href="classrlpack_1_1utils_1_1typing__hints_1_1_loss_function.html">LossFunction</a> loss_function, float gamma, float epsilon, float min_epsilon, float epsilon_decay_rate, int epsilon_decay_frequency, int memory_buffer_size, int target_model_update_rate, int policy_model_update_rate, int backup_frequency, float lr_threshold, int batch_size, int num_actions, str save_path, int bootstrap_rounds=1, str device=&quot;cpu&quot;, str dtype=&quot;float32&quot;, Optional[Dict[str, Any]] prioritization_params=None, float force_terminal_state_selection_prob=0.0, float tau=1.0, Union[int, str] apply_norm=-1, Union[int, List[str]] apply_norm_to=-1, float eps_for_norm=5e-12, int p_for_norm=2, int dim_for_norm=0, Optional[float] max_grad_norm=None, float grad_norm_p=2.0, Optional[float] clip_grad_value=None)</td></tr>
+<tr class="separator:a704e8805e6f55ccae621d424d02d3a22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >This is a helper class that selects the correct the variant of DQN implementations based on prioritization strategy determined by the argument <code>prioritization_params</code>. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="abc2eef64f62abc555261093ad2c7a1a7" name="abc2eef64f62abc555261093ad2c7a1a7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abc2eef64f62abc555261093ad2c7a1a7">&#9670;&#160;</a></span>__anneal_alpha_default_fn()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"> float rlpack.dqn.dqn.Dqn.__anneal_alpha_default_fn </td>
-          <td>(</td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>alpha</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>alpha_annealing_factor</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Protected method to anneal alpha parameter for important sampling weights. </p>
-<p >This will be called every <code>alpha_annealing_frequency</code> times. <code>alpha_annealing_frequency</code> is a key to be passed in dictionary <code>prioritization_params</code> argument in the DqnAgent class' constructor. This method is called by default to anneal alpha.</p>
-<p >If <code>alpha_annealing_frequency</code> is not passed in <code>prioritization_params</code>, the annealing of alpha will not take place. This method uses another value <code>alpha_annealing_factor</code> that must also be passed in <code>prioritization_params</code>. <code>alpha_annealing_factor</code> is typically below 1 to slowly annealed it to 0 or <code>min_alpha</code>.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">alpha</td><td>float: The input alpha value to anneal. </td></tr>
-    <tr><td class="paramname">alpha_annealing_factor</td><td>float: The annealing factor to be used to anneal alpha. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>float: Annealed alpha. </dd></dl>
-
-</div>
-</div>
-<a id="ae320a1e6550b7e479854ae7885e0e634" name="ae320a1e6550b7e479854ae7885e0e634"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae320a1e6550b7e479854ae7885e0e634">&#9670;&#160;</a></span>__anneal_beta_default_fn()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"> float rlpack.dqn.dqn.Dqn.__anneal_beta_default_fn </td>
-          <td>(</td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>beta</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>beta_annealing_factor</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Protected method to anneal beta parameter for important sampling weights. </p>
-<p >This will be called every <code>beta_annealing_frequency</code> times. <code>beta_annealing_frequency</code> is a key to be passed in dictionary <code>prioritization_params</code> argument in the DqnAgent class' constructor.</p>
-<p >If <code>beta_annealing_frequency</code> is not passed in <code>prioritization_params</code>, the annealing of beta will not take place. This method uses another value <code>beta_annealing_factor</code> that must also be passed in <code>prioritization_params</code>. <code>beta_annealing_factor</code> is typically above 1 to slowly annealed it to 1 or <code>max_beta</code></p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">beta</td><td>float: The input beta value to anneal. </td></tr>
-    <tr><td class="paramname">beta_annealing_factor</td><td>float: The annealing factor to be used to anneal beta. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>float: Annealed beta. </dd></dl>
-
-</div>
-</div>
-<a id="a3f6af8d5c52eece10c6b950c37932c35" name="a3f6af8d5c52eece10c6b950c37932c35"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3f6af8d5c52eece10c6b950c37932c35">&#9670;&#160;</a></span>__new__()</h2>
+<a id="a704e8805e6f55ccae621d424d02d3a22" name="a704e8805e6f55ccae621d424d02d3a22"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a704e8805e6f55ccae621d424d02d3a22">&#9670;&#160;</a></span>__new__()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -255,13 +146,13 @@ Static Private Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Union[LRScheduler, None]&#160;</td>
+          <td class="paramtype">Union[<a class="el" href="classrlpack_1_1utils_1_1typing__hints_1_1_l_r_scheduler.html">LRScheduler</a>, None]&#160;</td>
           <td class="paramname"><em>lr_scheduler</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">LossFunction&#160;</td>
+          <td class="paramtype"><a class="el" href="classrlpack_1_1utils_1_1typing__hints_1_1_loss_function.html">LossFunction</a>&#160;</td>
           <td class="paramname"><em>loss_function</em>, </td>
         </tr>
         <tr>
@@ -357,6 +248,12 @@ Static Private Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">str &#160;</td>
+          <td class="paramname"><em>dtype</em> = <code>&quot;float32&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">Optional[Dict[str, Any]] &#160;</td>
           <td class="paramname"><em>prioritization_params</em> = <code>None</code>, </td>
         </tr>
@@ -375,13 +272,13 @@ Static Private Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int &#160;</td>
+          <td class="paramtype">Union[int, str] &#160;</td>
           <td class="paramname"><em>apply_norm</em> = <code>-1</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int &#160;</td>
+          <td class="paramtype">Union[int, List[str]] &#160;</td>
           <td class="paramname"><em>apply_norm_to</em> = <code>-1</code>, </td>
         </tr>
         <tr>
@@ -412,7 +309,13 @@ Static Private Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float &#160;</td>
-          <td class="paramname"><em>grad_norm_p</em> = <code>2.0</code>&#160;</td>
+          <td class="paramname"><em>grad_norm_p</em> = <code>2.0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Optional[float] &#160;</td>
+          <td class="paramname"><em>clip_grad_value</em> = <code>None</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -443,6 +346,7 @@ Static Private Member Functions</h2></td></tr>
     <tr><td class="paramname">save_path</td><td>str: The save path for models: target_model and policy_model, optimizer, lr_scheduler and agent_states. </td></tr>
     <tr><td class="paramname">bootstrap_rounds</td><td>int: The number of rounds until which gradients are to be accumulated before performing calling optimizer step. Gradients are mean reduced for bootstrap_rounds &gt; 1. Default: 1. </td></tr>
     <tr><td class="paramname">device</td><td>str: The device on which models are run. Default: "cpu". </td></tr>
+    <tr><td class="paramname">dtype</td><td>str: The datatype for model parameters. Default: "float32" </td></tr>
     <tr><td class="paramname">prioritization_params</td><td>Optional[Dict[str, Any]]: The parameters for prioritization in prioritized memory: or relay buffer). Default: None. </td></tr>
     <tr><td class="paramname">force_terminal_state_selection_prob</td><td>float: The probability for forcefully selecting a terminal state in a batch. Default: 0.0. </td></tr>
     <tr><td class="paramname">tau</td><td>float: The weighted update of weights from policy_model to target_model. This is done by formula target_weight = tau * policy_weight +: 1 - tau) * target_weight/. Default: -1. </td></tr>
@@ -452,7 +356,8 @@ Static Private Member Functions</h2></td></tr>
     <tr><td class="paramname">p_for_norm</td><td>int: The p value for p-normalization. Default: 2: L2 Norm. </td></tr>
     <tr><td class="paramname">dim_for_norm</td><td>int: The dimension across which normalization is to be performed. Default: 0. </td></tr>
     <tr><td class="paramname">max_grad_norm</td><td>Optional[float]: The max norm for gradients for gradient clipping. Default: None </td></tr>
-    <tr><td class="paramname">grad_norm_p</td><td>Optional[float]: The p-value for p-normalization of gradients. Default: 2.0</td></tr>
+    <tr><td class="paramname">grad_norm_p</td><td>Optional[float]: The p-value for p-normalization of gradients. Default: 2.0. </td></tr>
+    <tr><td class="paramname">clip_grad_value</td><td>Optional[float]: The gradient value for clipping gradients by value. Default: None</td></tr>
   </table>
   </dd>
 </dl>
@@ -463,88 +368,23 @@ Static Private Member Functions</h2></td></tr>
 <li>Proportional: 1; <code>proportional</code></li>
 <li>Rank-Based: 2; <code>rank-based</code></li>
 </ul>
-<p >The codes for <code>apply_norm</code> are given as follows: -</p><ul>
-<li>No Normalization: -1; (<code>"none"</code>)</li>
-<li>Min-Max Normalization: 0; (<code>"min_max"</code>)</li>
-<li>Standardization: 1; (<code>"standardize"</code>)</li>
-<li>P-Normalization: 2; (<code>"p_norm"</code>)</li>
+<p >The values accepted for <code>apply_norm</code> are: -</p><ul>
+<li>No Normalization: -1; <code>"none"</code></li>
+<li>Min-Max Normalization: 0; <code>"min_max"</code></li>
+<li>Standardization: 1; <code>"standardize"</code></li>
+<li>P-Normalization: 2; <code>"p_norm"</code></li>
 </ul>
-<p >The codes for <code>apply_norm_to</code> are given as follows:</p><ul>
-<li>No Normalization: -1; (<code>["none"]</code>)</li>
-<li>On States only: 0; (<code>["states"]</code>)</li>
-<li>On Rewards only: 1; (<code>["rewards"]</code>)</li>
-<li>On TD value only: 2; (<code>["td"]</code>)</li>
-<li>On States and Rewards: 3; (<code>["states", "rewards"]</code>)</li>
-<li>On States and TD: 4; (<code>["states", "td"]</code>)</li>
+<p >The value accepted for <code>apply_norm_to</code> are as follows and must be passed in a list:</p><ul>
+<li><code>"none"</code>: -1; Don't apply normalization to any quantity.</li>
+<li><code>"states"</code>: 0; Apply normalization to states.</li>
+<li><code>"state_values"</code>: 1; Apply normalization to state values.</li>
+<li><code>"rewards"</code>: 2; Apply normalization to rewards.</li>
+<li><code>"returns"</code>: 3; Apply normalization to rewards.</li>
+<li><code>"td"</code>: 4; Apply normalization for TD values.</li>
+<li><code>"advantage"</code>: 5; Apply normalization to advantage values</li>
 </ul>
-<p >If a valid <code>max_norm_grad</code> is passed, then gradient clipping takes place else gradient clipping step is skipped. If <code>max_norm_grad</code> value was invalid, error will be raised from PyTorch. </p>
-
-</div>
-</div>
-<a id="ad27f1bdffabfcd6b8b80c0014e3c0f76" name="ad27f1bdffabfcd6b8b80c0014e3c0f76"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad27f1bdffabfcd6b8b80c0014e3c0f76">&#9670;&#160;</a></span>__process_prioritization_params()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"> Dict[str, Any] rlpack.dqn.dqn.Dqn.__process_prioritization_params </td>
-          <td>(</td>
-          <td class="paramtype">Dict[str, Any]&#160;</td>
-          <td class="paramname"><em>prioritization_params</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>prioritization_strategy_code</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Callable[[float, float], float]&#160;</td>
-          <td class="paramname"><em>anneal_alpha_default_fn</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Callable[[float, float], float]&#160;</td>
-          <td class="paramname"><em>anneal_beta_default_fn</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>batch_size</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Private method to process the prioritization parameters. </p>
-<p >This includes sanity check and loading of default values of mandatory parameters. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">prioritization_params</td><td>Dict[str, Any]: The prioritization parameters for when we use prioritized memory. </td></tr>
-    <tr><td class="paramname">prioritization_strategy_code</td><td>int: The prioritization code corresponding to the given prioritization strategy string. </td></tr>
-    <tr><td class="paramname">anneal_alpha_default_fn</td><td>Callable[[float, float], float]: The default annealing function for alpha. </td></tr>
-    <tr><td class="paramname">anneal_beta_default_fn</td><td>Callable[[float, float], float]: The default annealing function for beta. </td></tr>
-    <tr><td class="paramname">batch_size</td><td>int: The requested batch size; used in rank-based prioritization to determine the number of segments. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Dict[str, Any]: The processed prioritization parameters with necessary parameters loaded. </dd></dl>
+<p >If a valid <code>max_norm_grad</code> is passed, then gradient clipping takes place else gradient clipping step is skipped. If <code>max_norm_grad</code> value was invalid, error will be raised from PyTorch.</p>
+<p >If a valid <code>clip_grad_value</code> is passed, then gradients will be clipped by value. If <code>clip_grad_value</code> value was invalid, error will be raised from PyTorch. </p>
 
 </div>
 </div>

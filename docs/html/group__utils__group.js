@@ -1,5 +1,8 @@
 var group__utils__group =
 [
-    [ "arg_mergesort", "group__utils__group.html#ga90fd756dc46d5d374416f8657b423110", null ],
-    [ "arg_mergesort_merge_", "group__utils__group.html#ga1d9931e6b86a5813c159e0caffa8df91", null ]
+    [ "ops", "group__ops__group.html", "group__ops__group" ],
+    [ "Maps", "class_maps.html", [
+      [ "deviceMap", "class_maps.html#a6549405b43cee13c49f2c44e5beddf96", null ],
+      [ "dTypeMap", "class_maps.html#a7ca35f3527ce4f3f77e385ce81339eda", null ]
+    ] ]
 ];

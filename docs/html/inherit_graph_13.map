@@ -1,7 +1,23 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classrlpack_1_1utils_1_1base_1_1internal__code__register_1_1_internal_code_register.html" title=" " alt="" coords="5,19,239,59"/>
-<area shape="rect" id="node2" href="$classrlpack_1_1utils_1_1internal__code__setup_1_1_internal_code_setup.html" title=" " alt="" coords="287,5,495,45"/>
-<area shape="rect" id="node3" href="$classrlpack_1_1utils_1_1setup_1_1_setup.html" title="This class sets up all the necessary objects that are required to run any configuration." alt="" coords="311,70,470,95"/>
-<area shape="rect" id="node4" href="$classrlpack_1_1utils_1_1base_1_1register_1_1_register.html" title="This abstract class contains all the necessary information about agents and models for setting them u..." alt="" coords="39,95,205,135"/>
-<area shape="rect" id="node5" href="$classrlpack_1_1utils_1_1sanity__check_1_1_sanity_check.html" title="This class does the basic sanity check of input_config." alt="" coords="319,120,462,160"/>
+<area shape="rect" id="node1" title=" " alt="" coords="17,49,207,89"/>
+<area shape="rect" id="node2" href="$classrlpack_1_1distributions_1_1gaussian__mixture_1_1_gaussian_mixture.html" title="This class implements the Gaussian Mixture distribution." alt="" coords="309,85,495,125"/>
+<area shape="rect" id="node3" href="$classrlpack_1_1distributions_1_1gaussian__mixture__log__std_1_1_gaussian_mixture_log_std.html" title="This class implements the Gaussian Mixture distribution where input standard deviation (scale) is ass..." alt="" coords="291,5,513,60"/>
+<area shape="rect" id="node4" title=" " alt="" coords="5,149,219,189"/>
+<area shape="rect" id="node5" href="$classrlpack_1_1distributions_1_1multivariate__normal__log__std_1_1_multivariate_normal_log_std.html" title="This class implements a variant of MultivariateNormal distribution where input scale matrix is assume..." alt="" coords="267,149,537,189"/>
+<area shape="rect" id="node6" title=" " alt="" coords="18,412,206,437"/>
+<area shape="rect" id="node7" href="$classrlpack_1_1distributions_1_1normal__log__std_1_1_normal_log_std.html" title="This class implements a variant of Normal distribution where input standard deviation (scale) is assu..." alt="" coords="315,405,489,445"/>
+<area shape="rect" id="node8" title=" " alt="" coords="87,220,137,245"/>
+<area shape="rect" id="node9" href="$classrlpack_1_1exploration_1_1utils_1_1exploration_1_1_exploration.html" title=" " alt="" coords="291,213,513,253"/>
+<area shape="rect" id="node11" href="$classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html" title="The base class for all agents." alt="" coords="323,277,481,317"/>
+<area shape="rect" id="node20" href="$classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html" title="This class is the abstract base class of all trainer classes which implements methods to train an age..." alt="" coords="323,341,481,381"/>
+<area shape="rect" id="node10" href="$classrlpack_1_1exploration_1_1gaussian__noise_1_1_gaussian_noise.html" title="Exploration tool to produce gaussian noise." alt="" coords="593,185,773,225"/>
+<area shape="rect" id="node12" href="$classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html" title="The ActorCriticAgent is the base class for actor&#45;critic methods." alt="" coords="585,249,781,289"/>
+<area shape="rect" id="node16" href="$classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html" title="The DqnAgent is the base class for DQN methods." alt="" coords="616,313,751,353"/>
+<area shape="rect" id="node13" href="$classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html" title="The A2C class implements the asynchronous Actor&#45;Critic method with synchronization." alt="" coords="856,160,1036,185"/>
+<area shape="rect" id="node14" href="$classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html" title="The A3C class implements the asynchronous Actor&#45;Critic method." alt="" coords="856,209,1036,235"/>
+<area shape="rect" id="node15" href="$classrlpack_1_1actor__critic_1_1ac_1_1_a_c.html" title="The ActorCritic class implements the basic Actor&#45;Critic method with single agent." alt="" coords="863,259,1029,284"/>
+<area shape="rect" id="node17" href="$classrlpack_1_1dqn_1_1dqn__proportional__agent_1_1_dqn_proportional_agent.html" title="This class implements the DQN with Proportional prioritization strategy." alt="" coords="850,309,1042,349"/>
+<area shape="rect" id="node18" href="$classrlpack_1_1dqn_1_1dqn__rank__based__agent_1_1_dqn_rank_based_agent.html" title="This class implements the DQN with Rank&#45;Based prioritization strategy." alt="" coords="829,373,1063,413"/>
+<area shape="rect" id="node19" href="$classrlpack_1_1dqn_1_1dqn__uniform__agent_1_1_dqn_uniform_agent.html" title="This class implements the basic DQN methodology, i.e." alt="" coords="861,437,1031,477"/>
+<area shape="rect" id="node21" href="$classrlpack_1_1trainer_1_1trainer_1_1_trainer.html" title="This class is a generic class to train or evaluate any agent in any environment." alt="" coords="594,377,773,403"/>
 </map>

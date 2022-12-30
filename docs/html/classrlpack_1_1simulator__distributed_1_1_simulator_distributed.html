@@ -113,16 +113,16 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:aab82ef501ff4b6f9cf11cc0212664b77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialization of class <a class="el" href="classrlpack_1_1simulator__distributed_1_1_simulator_distributed.html" title="Similar to rlpack.simulator.Simulator, SimulatorDistributed class sets up agents and runs simulation ...">SimulatorDistributed</a>.  <a href="classrlpack_1_1simulator__distributed_1_1_simulator_distributed.html#aab82ef501ff4b6f9cf11cc0212664b77">More...</a><br /></td></tr>
 <tr class="separator:aab82ef501ff4b6f9cf11cc0212664b77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a763fb34e298ccedcc98d0af597b78792"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1simulator__distributed_1_1_simulator_distributed.html#a763fb34e298ccedcc98d0af597b78792">run</a> (self, **kwargs)</td></tr>
-<tr class="memdesc:a763fb34e298ccedcc98d0af597b78792"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs the simulation in distributed setting.  <a href="classrlpack_1_1simulator__distributed_1_1_simulator_distributed.html#a763fb34e298ccedcc98d0af597b78792">More...</a><br /></td></tr>
+<tr class="memdesc:a763fb34e298ccedcc98d0af597b78792"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs the simulation in pytorch_distributedributed setting.  <a href="classrlpack_1_1simulator__distributed_1_1_simulator_distributed.html#a763fb34e298ccedcc98d0af597b78792">More...</a><br /></td></tr>
 <tr class="separator:a763fb34e298ccedcc98d0af597b78792"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a352a5cf59baedd8988fd2ee8beb53286"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1simulator__distributed_1_1_simulator_distributed.html#a352a5cf59baedd8988fd2ee8beb53286">init_process</a> (int process_rank, int world_size, Callable[[int, int, Dict[str, Any],...], None] func, Dict[str, Any] <a class="el" href="classrlpack_1_1simulator__distributed_1_1_simulator_distributed.html#a3b35c4029588c87e3184013dc2d0f619">config</a>, str <a class="el" href="classrlpack_1_1simulator__distributed_1_1_simulator_distributed.html#aac2f1b30db6596e3f4337a12590248bc">backend</a>=&quot;gloo&quot;, **kwargs)</td></tr>
-<tr class="memdesc:a352a5cf59baedd8988fd2ee8beb53286"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialized the distributed environment to run the given func.  <a href="classrlpack_1_1simulator__distributed_1_1_simulator_distributed.html#a352a5cf59baedd8988fd2ee8beb53286">More...</a><br /></td></tr>
-<tr class="separator:a352a5cf59baedd8988fd2ee8beb53286"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0655924015158c90aedb9b672bac1d66"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1simulator__distributed_1_1_simulator_distributed.html#a0655924015158c90aedb9b672bac1d66">init_process</a> (int process_rank, int world_size, <a class="el" href="classrlpack_1_1utils_1_1typing__hints_1_1_run_func_signature.html">RunFuncSignature</a> func, Dict[str, Any] <a class="el" href="classrlpack_1_1simulator__distributed_1_1_simulator_distributed.html#a3b35c4029588c87e3184013dc2d0f619">config</a>, str <a class="el" href="classrlpack_1_1simulator__distributed_1_1_simulator_distributed.html#aac2f1b30db6596e3f4337a12590248bc">backend</a>=&quot;gloo&quot;, **kwargs)</td></tr>
+<tr class="memdesc:a0655924015158c90aedb9b672bac1d66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialized the pytorch_distributedributed environment to run the given func.  <a href="classrlpack_1_1simulator__distributed_1_1_simulator_distributed.html#a0655924015158c90aedb9b672bac1d66">More...</a><br /></td></tr>
+<tr class="separator:a0655924015158c90aedb9b672bac1d66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3ed47f74a90523bbfba6ed81beb86113"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1simulator__distributed_1_1_simulator_distributed.html#a3ed47f74a90523bbfba6ed81beb86113">run_</a> (int process_rank, int world_size, Dict[str, Any] <a class="el" href="classrlpack_1_1simulator__distributed_1_1_simulator_distributed.html#a3b35c4029588c87e3184013dc2d0f619">config</a>, **kwargs)</td></tr>
-<tr class="memdesc:a3ed47f74a90523bbfba6ed81beb86113"><td class="mdescLeft">&#160;</td><td class="mdescRight">Launches the <a class="el" href="classrlpack_1_1simulator_1_1_simulator.html" title="Simulator class simulates the environments and runs the agent through the environment.">rlpack.simulator.Simulator</a> in distributed setting.  <a href="classrlpack_1_1simulator__distributed_1_1_simulator_distributed.html#a3ed47f74a90523bbfba6ed81beb86113">More...</a><br /></td></tr>
+<tr class="memdesc:a3ed47f74a90523bbfba6ed81beb86113"><td class="mdescLeft">&#160;</td><td class="mdescRight">Launches the <a class="el" href="classrlpack_1_1simulator_1_1_simulator.html" title="Simulator class simulates the environments and runs the agent through the environment.">rlpack.simulator.Simulator</a> in pytorch_distributedributed setting.  <a href="classrlpack_1_1simulator__distributed_1_1_simulator_distributed.html#a3ed47f74a90523bbfba6ed81beb86113">More...</a><br /></td></tr>
 <tr class="separator:a3ed47f74a90523bbfba6ed81beb86113"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
@@ -181,7 +181,7 @@ Data Fields</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">n_procs</td><td>int: The total number of processes to be launched. </td></tr>
     <tr><td class="paramname">config</td><td>Dict[str, Any]: The configuration to be used. </td></tr>
-    <tr><td class="paramname">backend</td><td>str: The PyTorch multiprocessing backend to be used. Default: "gloo"; the Gloo backend. More information can be found <a href="https://pytorch.org/docs/stable/distributed.html#module-torch.distributed">here</a> </td></tr>
+    <tr><td class="paramname">backend</td><td>str: The PyTorch multiprocessing backend to be used. Default: "gloo"; the Gloo backend. More information can be found <a href="https://pytorch.org/docs/stable/pytorch_distributedributed.html#module-torch.pytorch_distributedributed">here</a> </td></tr>
   </table>
   </dd>
 </dl>
@@ -189,8 +189,8 @@ Data Fields</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a352a5cf59baedd8988fd2ee8beb53286" name="a352a5cf59baedd8988fd2ee8beb53286"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a352a5cf59baedd8988fd2ee8beb53286">&#9670;&#160;</a></span>init_process()</h2>
+<a id="a0655924015158c90aedb9b672bac1d66" name="a0655924015158c90aedb9b672bac1d66"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0655924015158c90aedb9b672bac1d66">&#9670;&#160;</a></span>init_process()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -213,7 +213,7 @@ Data Fields</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Callable[[int, int, Dict[str, Any], ...], None]&#160;</td>
+          <td class="paramtype"><a class="el" href="classrlpack_1_1utils_1_1typing__hints_1_1_run_func_signature.html">RunFuncSignature</a>&#160;</td>
           <td class="paramname"><em>func</em>, </td>
         </tr>
         <tr>
@@ -247,12 +247,12 @@ Data Fields</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Initialized the distributed environment to run the given func. </p>
+<p>Initialized the pytorch_distributedributed environment to run the given func. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">process_rank</td><td>int: The process rank of the initialized process. </td></tr>
     <tr><td class="paramname">world_size</td><td>int: Total number of processes launched or to be launched. </td></tr>
-    <tr><td class="paramname">func</td><td>Callable[[int, int, Dict[str, Any], ...], None]: A function with given signature to be launched in distributed setting on processes. </td></tr>
+    <tr><td class="paramname">func</td><td>RunFuncSignature: A function with given signature to be launched in pytorch_distributedributed setting on processes. </td></tr>
     <tr><td class="paramname">config</td><td>Dict[str, Any]: The configuration to be used. </td></tr>
     <tr><td class="paramname">backend</td><td>str: The PyTorch multiprocessing backend to be used. </td></tr>
     <tr><td class="paramname">kwargs</td><td>Other keyword arguments for <code>func</code>. </td></tr>
@@ -288,7 +288,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Runs the simulation in distributed setting. </p>
+<p>Runs the simulation in pytorch_distributedributed setting. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">kwargs</td><td>Other keyword arguments corresponding to rlpack.environments.environments.Environments.train method. </td></tr>
@@ -344,7 +344,7 @@ Data Fields</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Launches the <a class="el" href="classrlpack_1_1simulator_1_1_simulator.html" title="Simulator class simulates the environments and runs the agent through the environment.">rlpack.simulator.Simulator</a> in distributed setting. </p>
+<p>Launches the <a class="el" href="classrlpack_1_1simulator_1_1_simulator.html" title="Simulator class simulates the environments and runs the agent through the environment.">rlpack.simulator.Simulator</a> in pytorch_distributedributed setting. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">process_rank</td><td>int: The process rank of the initialized process. </td></tr>

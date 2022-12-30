@@ -1,6 +1,0 @@
-var classrlpack_1_1dqn_1_1dqn__proportional__prioritization__agent_1_1_dqn_proportional_prioritization_agent =
-[
-    [ "__init__", "classrlpack_1_1dqn_1_1dqn__proportional__prioritization__agent_1_1_dqn_proportional_prioritization_agent.html#af7930448fa3795d1176f913352a6bde9", null ],
-    [ "_apply_prioritization_strategy", "classrlpack_1_1dqn_1_1dqn__proportional__prioritization__agent_1_1_dqn_proportional_prioritization_agent.html#a0ae9dd55db77107cbede76750eabf702", null ],
-    [ "__prioritization_strategy_code", "classrlpack_1_1dqn_1_1dqn__proportional__prioritization__agent_1_1_dqn_proportional_prioritization_agent.html#a34d64b2e00addf6596a5c917c74da987", null ]
-];

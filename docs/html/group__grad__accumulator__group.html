@@ -103,7 +103,7 @@ $(document).ready(function(){initNavTree('group__grad__accumulator__group.html',
 </div><!--header-->
 <div class="contents">
 
-<p>Memory module is the C++ backend for <a class="el" href="classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html" title="This class provides the python interface to C_GradAccumulator, the C++ class which performs heavier w...">rlpack._C.grad_accumulator.GradAccumulator</a> class. Heavier workloads have been optimized with multithreading with OpenMP.  
+<p>Grad accumulator module is the C++ backend for <a class="el" href="classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html" title="This class provides the python interface to C_GradAccumulator, the C++ class which performs heavier w...">rlpack._C.grad_accumulator.GradAccumulator</a> class.  
 <a href="#details">More...</a></p>
 <div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Collaboration diagram for grad_accumulator:</div>
@@ -113,13 +113,14 @@ $(document).ready(function(){initNavTree('group__grad__accumulator__group.html',
 <div class="center"><img src="group__grad__accumulator__group.png" border="0" usemap="#agroup____grad____accumulator____group" alt=""/></div>
 <map name="agroup____grad____accumulator____group" id="agroup____grad____accumulator____group">
 <area shape="rect" href="group__binaries__group.html" title="Binaries Module consists of C++ backend exposed via pybind11 to rlpack via rlpack...." alt="" coords="5,5,72,31"/>
-<area shape="rect" title="Memory module is the C++ backend for rlpack._C.grad_accumulator.GradAccumulator class...." alt="" coords="120,5,245,31"/>
+<area shape="rect" title="Grad accumulator module is the C++ backend for rlpack._C.grad_accumulator.GradAccumulator class." alt="" coords="120,5,245,31"/>
 </map>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___grad_accumulator.html">C_GradAccumulator</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The class <a class="el" href="class_c___grad_accumulator.html" title="The class C_GradAccumulator Accumulates the gradients from model parameters. The binding is done via ...">C_GradAccumulator</a> Accumulates the gradients from model parameters. The binding is done via opaquing the PyTorch Tensors with std::map and hence tensors are moved by references, making the storage efficient. This class is exposed to Python as <a class="el" href="classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html" title="This class provides the python interface to C_GradAccumulator, the C++ class which performs heavier w...">rlpack._C.grad_accumulator.GradAccumulator</a>.  <a href="class_c___grad_accumulator.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
@@ -128,8 +129,7 @@ Functions</h2></td></tr>
 <tr class="separator:ga6c6f30d5d2df9f96f907debc36b7a701"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p >Memory module is the C++ backend for <a class="el" href="classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html" title="This class provides the python interface to C_GradAccumulator, the C++ class which performs heavier w...">rlpack._C.grad_accumulator.GradAccumulator</a> class. Heavier workloads have been optimized with multithreading with OpenMP. </p>
-<p >Memory module is the C++ backend for <a class="el" href="classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html" title="This class provides the python interface to C_GradAccumulator, the C++ class which performs heavier w...">rlpack._C.grad_accumulator.GradAccumulator</a> class.</p>
+<p >Grad accumulator module is the C++ backend for <a class="el" href="classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html" title="This class provides the python interface to C_GradAccumulator, the C++ class which performs heavier w...">rlpack._C.grad_accumulator.GradAccumulator</a> class. </p>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="ga6c6f30d5d2df9f96f907debc36b7a701" name="ga6c6f30d5d2df9f96f907debc36b7a701"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga6c6f30d5d2df9f96f907debc36b7a701">&#9670;&#160;</a></span>PYBIND11_MODULE()</h2>
@@ -156,6 +156,7 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Python bindings for <a class="el" href="class_c___grad_accumulator.html" title="The class C_GradAccumulator Accumulates the gradients from model parameters. The binding is done via ...">C_GradAccumulator</a>. Only relevant public methods are exposed to Python.</p>
 
 </div>
 </div>

@@ -13,7 +13,7 @@ There are currently three supported implementations for DQN:
 
     This variant is implemented as rlpack.dqn.dqn_agent.DqnAgent. In this DQN variant, we populate the memory
 (also called transition buffer) with transitions and sample them as per uniform distribution. This 
-essentially means that each transition we store in the bufer has equal probability of being sampled for next 
+essentially means that each transition we store in the buffer has equal probability of being sampled for next 
 batch. To use this variant, set `prioritization_params=None` in `agent_args`. 
 
 - **Proportional based DQN**
@@ -45,9 +45,8 @@ higher value implying more aggressive prioritization.
 - `beta`: The beta value for bias correction. Beta indicates the level of bias correction by adjusting Important
 Sampling weights. The higher values of beta indicate the greater bias correction.
 - `min_alpha`: The lower limit of `alpha`. This is the minimum value beta can reach during training. Default is set to 
-0 by `DqnAgent`.
-- `max_beta`: The upper limit of `beta`. This is the maximum value beta can reach during training. Default is set to 1
-by `DqnAgent`.
+0.
+- `max_beta`: The upper limit of `beta`. This is the maximum value beta can reach during training. Default is set to 1.
 - `alpha_annealing_frequency`: This parameter indicates the number of timesteps after which the alpha is annealed. 
   - If `alpha_annealing_fn` is passed, this function is called every `alpha_annealing_frequency` timesteps. 
   - If `None` is passed, `alpha` is not annealed.

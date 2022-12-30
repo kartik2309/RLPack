@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['memory_0',['Memory',['../classrlpack_1_1___c_1_1memory_1_1_memory.html',1,'rlpack::_C::memory']]],
-  ['mlp_1',['Mlp',['../classrlpack_1_1models_1_1mlp_1_1_mlp.html',1,'rlpack::models::mlp']]]
+  ['lossfunction_0',['LossFunction',['../classrlpack_1_1utils_1_1typing__hints_1_1_loss_function.html',1,'rlpack::utils::typing_hints']]],
+  ['lrscheduler_1',['LRScheduler',['../classrlpack_1_1utils_1_1typing__hints_1_1_l_r_scheduler.html',1,'rlpack::utils::typing_hints']]]
 ];

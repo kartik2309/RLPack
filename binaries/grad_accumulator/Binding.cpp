@@ -2,7 +2,6 @@
 // Created by Kartik Rajeshwaran on 2022-12-14.
 //
 
-#include <pybind11/functional.h>
 #include <pybind11/stl.h>
 #include <pybind11/stl_bind.h>
 
@@ -14,13 +13,14 @@
  * optimized to perform heavier workloads.
  * @{
  * @addtogroup grad_accumulator_group grad_accumulator
- * @brief Memory module is the C++ backend for rlpack._C.grad_accumulator.GradAccumulator class. Heavier workloads
- * have been optimized with multithreading with OpenMP.
+ * @brief Grad accumulator module is the C++ backend for rlpack._C.grad_accumulator.GradAccumulator class.
  * @{
  */
 PYBIND11_MAKE_OPAQUE(std::map<std::string, torch::Tensor>)
 PYBIND11_MODULE(C_GradAccumulator, m) {
-
+    /*!
+     * Python bindings for C_GradAccumulator. Only relevant public methods are exposed to Python.
+     */
     m.doc() = "Module to provide Python binding for C_GradAccumulator class";
     pybind11::class_<C_GradAccumulator>(m, "C_GradAccumulator")
             .def(pybind11::init<std::vector<std::string> &, int64_t>(),

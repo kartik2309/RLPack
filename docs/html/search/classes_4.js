@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['environments_0',['Environments',['../classrlpack_1_1environments_1_1environments_1_1_environments.html',1,'rlpack::environments::environments']]]
+  ['exploration_0',['Exploration',['../classrlpack_1_1exploration_1_1utils_1_1exploration_1_1_exploration.html',1,'rlpack::exploration::utils::exploration']]]
 ];

@@ -6,29 +6,26 @@
 Currently following classes have been implemented:
     - `Dqn`: This class is a helper class that selects the correct variant of DQN agent based on argument
         `prioritization_params`.
-    - `DqnAgent`: Implemented as rlpack.dqn.dqn_agent.DqnAgent this class implements the basic DQN methodology, i.e.
-        without prioritization. It also acts as a base class for DQN agents with prioritization strategies.
-    - `DqnProportionalPrioritizationAgent`: Implemented as
-        rlpack.dqn.dqn_proportional_prioritization_agent.DqnProportionalPrioritizationAgent this class implements the
-         DQN with proportional prioritization.
-    - `DqnRankBasedPrioritizationAgent`: Implemented as
-        rlpack.dqn.dqn_rank_based_prioritization_agent.DqnRankBasedPrioritizationAgent; this class implements the
+    - `DqnUniformAgent`: Implemented as rlpack.dqn.dqn_uniform_agent.DqnUniformAgent this class implements the basic
+        DQN methodology, i.e. without prioritization.
+    - `DqnProportionalAgent`: Implemented as rlpack.dqn.dqn_proportional_prioritization_agent.DqnProportionalAgent
+        this class implements the DQN with proportional prioritization.
+    - `DqnRankBasedAgent`: Implemented as rlpack.dqn.dqn_rank_based_agent.DqnRankBasedAgent; this class implements the
         DQN with rank prioritization.
+
+Following packages are part of dqn:
+    - `utils`: A package utilities for dqn package.
 """
 
 
-from typing import Any, Callable, Dict, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 from rlpack import pytorch
-from rlpack.dqn.dqn_agent import DqnAgent
-from rlpack.dqn.dqn_proportional_prioritization_agent import (
-    DqnProportionalPrioritizationAgent,
-)
-from rlpack.dqn.dqn_rank_based_prioritization_agent import (
-    DqnRankBasedPrioritizationAgent,
-)
+from rlpack.dqn.dqn_proportional_agent import DqnProportionalAgent
+from rlpack.dqn.dqn_rank_based_agent import DqnRankBasedAgent
+from rlpack.dqn.dqn_uniform_agent import DqnUniformAgent
+from rlpack.dqn.utils.process_prioritization_params import ProcessPrioritizationParams
 from rlpack.utils import LossFunction, LRScheduler
-from rlpack.utils.internal_code_setup import InternalCodeSetup
 
 
 class Dqn:
@@ -59,16 +56,18 @@ class Dqn:
         save_path: str,
         bootstrap_rounds: int = 1,
         device: str = "cpu",
+        dtype: str = "float32",
         prioritization_params: Optional[Dict[str, Any]] = None,
         force_terminal_state_selection_prob: float = 0.0,
         tau: float = 1.0,
-        apply_norm: int = -1,
-        apply_norm_to: int = -1,
+        apply_norm: Union[int, str] = -1,
+        apply_norm_to: Union[int, List[str]] = -1,
         eps_for_norm: float = 5e-12,
         p_for_norm: int = 2,
         dim_for_norm: int = 0,
         max_grad_norm: Optional[float] = None,
         grad_norm_p: float = 2.0,
+        clip_grad_value: Optional[float] = None,
     ):
         """
         @param target_model: nn.Module: The target network for DQN model. This the network which has
@@ -99,13 +98,14 @@ class Dqn:
         @param bootstrap_rounds: int: The number of rounds until which gradients are to be accumulated before
             performing calling optimizer step. Gradients are mean reduced for bootstrap_rounds > 1. Default: 1.
         @param device: str: The device on which models are run. Default: "cpu".
+        @param dtype: str: The datatype for model parameters. Default: "float32"
         @param prioritization_params: Optional[Dict[str, Any]]: The parameters for prioritization in prioritized
             memory: or relay buffer). Default: None.
         @param force_terminal_state_selection_prob: float: The probability for forcefully selecting a terminal state
             in a batch. Default: 0.0.
         @param tau: float: The weighted update of weights from policy_model to target_model. This is done by formula
             target_weight = tau * policy_weight +: 1 - tau) * target_weight/. Default: -1.
-         @param apply_norm: Union[int, str]: The code to select the normalization procedure to be applied on
+        @param apply_norm: Union[int, str]: The code to select the normalization procedure to be applied on
             selected quantities; selected by `apply_norm_to`: see below)). Direct string can also be
             passed as per accepted keys. Refer below in Notes to see the accepted values. Default: -1
         @param apply_norm_to: Union[int, List[str]]: The code to select the quantity to which normalization is
@@ -116,8 +116,8 @@ class Dqn:
         @param p_for_norm: int: The p value for p-normalization. Default: 2: L2 Norm.
         @param dim_for_norm: int: The dimension across which normalization is to be performed. Default: 0.
         @param max_grad_norm: Optional[float]: The max norm for gradients for gradient clipping. Default: None
-        @param grad_norm_p: Optional[float]: The p-value for p-normalization of gradients. Default: 2.0
-
+        @param grad_norm_p: Optional[float]: The p-value for p-normalization of gradients. Default: 2.0.
+        @param clip_grad_value: Optional[float]: The gradient value for clipping gradients by value. Default: None
 
 
         **Notes**
@@ -134,41 +134,39 @@ class Dqn:
             - Rank-Based: 2; `rank-based`
 
 
-        The codes for `apply_norm` are given as follows: -
-            - No Normalization: -1; (`"none"`)
-            - Min-Max Normalization: 0; (`"min_max"`)
-            - Standardization: 1; (`"standardize"`)
-            - P-Normalization: 2; (`"p_norm"`)
+        The values accepted for `apply_norm` are: -
+            - No Normalization: -1; `"none"`
+            - Min-Max Normalization: 0; `"min_max"`
+            - Standardization: 1; `"standardize"`
+            - P-Normalization: 2; `"p_norm"`
 
 
-        The codes for `apply_norm_to` are given as follows:
-            - No Normalization: -1; (`["none"]`)
-            - On States only: 0; (`["states"]`)
-            - On Rewards only: 1; (`["rewards"]`)
-            - On TD value only: 2; (`["td"]`)
-            - On States and Rewards: 3; (`["states", "rewards"]`)
-            - On States and TD: 4; (`["states", "td"]`)
+        The value accepted for `apply_norm_to` are as follows and must be passed in a list:
+            - `"none"`: -1; Don't apply normalization to any quantity.
+            - `"states"`: 0; Apply normalization to states.
+            - `"state_values"`: 1; Apply normalization to state values.
+            - `"rewards"`: 2; Apply normalization to rewards.
+            - `"returns"`: 3; Apply normalization to rewards.
+            - `"td"`: 4; Apply normalization for TD values.
+            - `"advantage"`: 5; Apply normalization to advantage values
 
 
         If a valid `max_norm_grad` is passed, then gradient clipping takes place else gradient clipping step is
         skipped. If `max_norm_grad` value was invalid, error will be raised from PyTorch.
+
+        If a valid `clip_grad_value` is passed, then gradients will be clipped by value. If `clip_grad_value` value
+        was invalid, error will be raised from PyTorch.
         """
-        if prioritization_params is None:
-            prioritization_params = dict()
-        prioritization_strategy = prioritization_params.get(
-            "prioritization_strategy", "uniform"
+        process_prioritization_params = ProcessPrioritizationParams(
+            prioritization_params=prioritization_params
         )
-        setup = InternalCodeSetup()
-        prioritization_strategy_code = setup.get_prioritization_code(
-            prioritization_strategy=prioritization_strategy
+        prioritization_strategy_code = (
+            process_prioritization_params.get_prioritization_strategy_code()
         )
-        prioritization_params = cls.__process_prioritization_params(
-            prioritization_params=prioritization_params,
-            prioritization_strategy_code=prioritization_strategy_code,
-            anneal_alpha_default_fn=cls.__anneal_alpha_default_fn,
-            anneal_beta_default_fn=cls.__anneal_beta_default_fn,
-            batch_size=batch_size,
+        prioritization_strategy = (
+            process_prioritization_params.get_prioritization_strategy()
         )
+        prioritization_params = process_prioritization_params(batch_size=batch_size)
         args_ = (
             target_model,
             policy_model,
@@ -190,6 +188,7 @@ class Dqn:
             save_path,
             bootstrap_rounds,
             device,
+            dtype,
             prioritization_params,
             force_terminal_state_selection_prob,
             tau,
@@ -200,149 +199,18 @@ class Dqn:
             dim_for_norm,
             max_grad_norm,
             grad_norm_p,
+            clip_grad_value,
         )
+
         # Select the appropriate DQN variant.
         if prioritization_strategy_code == 0:
-            dqn = DqnAgent(*args_)
+            dqn = DqnUniformAgent(*args_)
         elif prioritization_strategy_code == 1:
-            dqn = DqnProportionalPrioritizationAgent(*args_)
+            dqn = DqnProportionalAgent(*args_)
         elif prioritization_strategy_code == 2:
-            dqn = DqnRankBasedPrioritizationAgent(*args_)
+            dqn = DqnRankBasedAgent(*args_)
         else:
             raise NotImplementedError(
                 f"The provided prioritization strategy {prioritization_strategy} is not supported or is invalid!"
             )
         return dqn
-
-    @staticmethod
-    def __anneal_alpha_default_fn(alpha: float, alpha_annealing_factor: float) -> float:
-        """
-        Protected method to anneal alpha parameter for important sampling weights. This will be called
-            every `alpha_annealing_frequency` times. `alpha_annealing_frequency` is a key to be passed in dictionary
-            `prioritization_params` argument in the DqnAgent class' constructor. This method is called by default
-            to anneal alpha.
-
-        If `alpha_annealing_frequency` is not passed in `prioritization_params`, the annealing of alpha will not take
-            place. This method uses another value `alpha_annealing_factor` that must also be passed in
-            `prioritization_params`. `alpha_annealing_factor` is typically below 1 to slowly annealed it to
-            0 or `min_alpha`.
-
-        @param alpha: float: The input alpha value to anneal.
-        @param alpha_annealing_factor: float: The annealing factor to be used to anneal alpha.
-        @return float: Annealed alpha.
-        """
-        alpha *= alpha_annealing_factor
-        return alpha
-
-    @staticmethod
-    def __anneal_beta_default_fn(beta: float, beta_annealing_factor: float) -> float:
-        """
-        Protected method to anneal beta parameter for important sampling weights. This will be called
-            every `beta_annealing_frequency` times. `beta_annealing_frequency` is a key to be passed in dictionary
-            `prioritization_params` argument in the DqnAgent class' constructor.
-
-        If `beta_annealing_frequency` is not passed in `prioritization_params`, the annealing of beta will not take
-            place. This method uses another value `beta_annealing_factor` that must also be passed in
-            `prioritization_params`. `beta_annealing_factor` is typically above 1 to slowly annealed it to
-            1 or `max_beta`
-
-        @param beta: float: The input beta value to anneal.
-        @param beta_annealing_factor: float: The annealing factor to be used to anneal beta.
-        @return float: Annealed beta.
-        """
-        beta *= beta_annealing_factor
-        return beta
-
-    @staticmethod
-    def __process_prioritization_params(
-        prioritization_params: Dict[str, Any],
-        prioritization_strategy_code: int,
-        anneal_alpha_default_fn: Callable[[float, float], float],
-        anneal_beta_default_fn: Callable[[float, float], float],
-        batch_size: int,
-    ) -> Dict[str, Any]:
-        """
-        Private method to process the prioritization parameters. This includes sanity check and loading of default
-            values of mandatory parameters.
-        @param prioritization_params: Dict[str, Any]: The prioritization parameters for when
-            we use prioritized memory.
-        @param prioritization_strategy_code: int: The prioritization code corresponding to the given
-            prioritization strategy string.
-        @param anneal_alpha_default_fn: Callable[[float, float], float]: The default annealing function for alpha.
-        @param anneal_beta_default_fn: Callable[[float, float], float]: The default annealing function for beta.
-        @param batch_size: int: The requested batch size; used in rank-based prioritization to determine the number of
-            segments.
-        @return Dict[str, Any]: The processed prioritization parameters with necessary parameters loaded.
-        """
-        to_anneal_alpha = False
-        to_anneal_beta = False
-        if prioritization_params is not None and prioritization_strategy_code > 0:
-            assert (
-                "alpha" in prioritization_params.keys()
-            ), "`alpha` must be passed when passing prioritization_params"
-            assert (
-                "beta" in prioritization_params.keys()
-            ), "`beta` must be passed when passing prioritization_params"
-        else:
-            prioritization_params = dict()
-        alpha = float(prioritization_params.get("alpha", -1))
-        beta = float(prioritization_params.get("beta", -1))
-        min_alpha = float(prioritization_params.get("min_alpha", 1.0))
-        max_beta = float(prioritization_params.get("max_beta", 1.0))
-        alpha_annealing_frequency = int(
-            prioritization_params.get("alpha_annealing_frequency", -1)
-        )
-        beta_annealing_frequency = int(
-            prioritization_params.get("beta_annealing_frequency", -1)
-        )
-        alpha_annealing_fn = prioritization_params.get(
-            "alpha_annealing_fn", anneal_alpha_default_fn
-        )
-        beta_annealing_fn = prioritization_params.get(
-            "beta_annealing_fn", anneal_beta_default_fn
-        )
-        # Check if to anneal alpha based on input parameters.
-        if alpha_annealing_frequency != -1:
-            to_anneal_alpha = True
-        # Get args and kwargs for to pass to alpha_annealing_fn.
-        alpha_annealing_fn_args = prioritization_params.get(
-            "alpha_annealing_fn_args", tuple()
-        )
-        alpha_annealing_fn_kwargs = prioritization_params.get(
-            "alpha_annealing_fn_kwargs", dict()
-        )
-        # Check if to anneal beta based on input parameters.
-        if beta_annealing_frequency != -1:
-            to_anneal_beta = True
-        # Get args and kwargs for to pass to beta_annealing_fn.
-        beta_annealing_fn_args = prioritization_params.get(
-            "beta_annealing_fn_args", tuple()
-        )
-        beta_annealing_fn_kwargs = prioritization_params.get(
-            "beta_annealing_fn_kwargs", dict()
-        )
-        # Error for proportional based prioritized memory.
-        error = float(prioritization_params.get("error", 5e-3))
-        # Number of segments for rank-based prioritized memory.
-        num_segments = prioritization_params.get("num_segments", batch_size)
-        # Creation of final process dictionary for prioritization_params
-        prioritization_params_processed = {
-            "prioritization_strategy_code": prioritization_strategy_code,
-            "to_anneal_alpha": to_anneal_alpha,
-            "to_anneal_beta": to_anneal_beta,
-            "alpha": alpha,
-            "beta": beta,
-            "min_alpha": min_alpha,
-            "max_beta": max_beta,
-            "alpha_annealing_frequency": alpha_annealing_frequency,
-            "beta_annealing_frequency": beta_annealing_frequency,
-            "alpha_annealing_fn": alpha_annealing_fn,
-            "alpha_annealing_fn_args": alpha_annealing_fn_args,
-            "alpha_annealing_fn_kwargs": alpha_annealing_fn_kwargs,
-            "beta_annealing_fn": beta_annealing_fn,
-            "beta_annealing_fn_args": beta_annealing_fn_args,
-            "beta_annealing_fn_kwargs": beta_annealing_fn_kwargs,
-            "error": error,
-            "num_segments": num_segments,
-        }
-        return prioritization_params_processed

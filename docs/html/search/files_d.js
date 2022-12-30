@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['readme_2emd_0',['README.md',['../_r_e_a_d_m_e_8md.html',1,'']]],
-  ['register_2epy_1',['register.py',['../register_8py.html',1,'']]]
+  ['process_5fprioritization_5fparams_2epy_0',['process_prioritization_params.py',['../process__prioritization__params_8py.html',1,'']]]
 ];

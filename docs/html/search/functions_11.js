@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['view_0',['view',['../classrlpack_1_1___c_1_1memory_1_1_memory.html#a95d6fb2acaa293da125fefe9f4c14859',1,'rlpack._C.memory.Memory.view()'],['../class_c___memory.html#ad9be7c5aee3749e713e7da1015df7177',1,'C_Memory::view()']]]
+  ['update_0',['update',['../class_sum_tree.html#a21084e7f717839a48f1383864d8b088f',1,'SumTree']]],
+  ['update_5fpriorities_1',['update_priorities',['../classrlpack_1_1___c_1_1replay__buffer_1_1_replay_buffer.html#a4646a733b77a10315ea0f101ea62424e',1,'rlpack._C.replay_buffer.ReplayBuffer.update_priorities()'],['../class_c___replay_buffer.html#abf887194e4f1897179d1c7ddd9b82b66',1,'C_ReplayBuffer::update_priorities()']]]
 ];

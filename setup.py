@@ -11,7 +11,7 @@ from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext
 from torch.utils import cmake_prefix_path
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 
 class CMakeExtension(Extension):
@@ -51,7 +51,11 @@ class BuildExternal(build_ext):
         build_temp.mkdir(parents=True, exist_ok=True)
         external_dir = Path(self.get_ext_fullpath(ext.name))
         external_dir.mkdir(parents=True, exist_ok=True)
-        lib_directories = ["binaries/memory", "binaries/grad_accumulator"]
+        lib_directories = [
+            "binaries/replay_buffer",
+            "binaries/grad_accumulator",
+            "binaries/rollout_buffer",
+        ]
 
         config = "Debug" if self.debug else "Release"
         cmake_args = [
@@ -85,18 +89,25 @@ setup(
     author="Kartik Rajeshwaran",
     author_email="kartik.rajeshwaran@gmail.com",
     description="Implementation of RL Algorithms",
-    long_description="Implementation of RL Algorithms with PyTorch and optimization with C++.",
+    long_description=(Path(__file__).parent / "README.md").read_text(),
     long_description_content_type="text/markdown",
     url="https://github.com/kartik2309/RLPack",
     packages=[
         "rlpack",
-        "rlpack.dqn",
+        "rlpack._C",
         "rlpack.actor_critic",
+        "rlpack.actor_critic.utils",
+        "rlpack.distributions",
+        "rlpack.dqn",
+        "rlpack.dqn.utils",
+        "rlpack.exploration",
+        "rlpack.exploration.utils",
         "rlpack.models",
-        "rlpack.environments",
+        "rlpack.models.utils",
+        "rlpack.trainer",
         "rlpack.utils",
         "rlpack.utils.base",
-        "rlpack._C",
+        "rlpack.utils.base.registers",
     ],
     package_data={
         "license_files": ["LICENSE.md"],
@@ -105,13 +116,20 @@ setup(
     include_package_data=True,
     package_dir={
         "rlpack": "rlpack",
-        "rlpack.dqn": "rlpack/dqn",
+        "rlpack._C": "rlpack/_C",
         "rlpack.actor_critic": "rlpack/actor_critic",
+        "rlpack.actor_critic.utils": "rlpack/actor_critic/utils",
+        "rlpack.distributions": "rlpack/distributions",
+        "rlpack.dqn": "rlpack/dqn",
+        "rlpack.dqn.utils": "rlpack/dqn/utils",
+        "rlpack.exploration": "rlpack/exploration",
+        "rlpack.exploration.utils": "rlpack/exploration/utils",
         "rlpack.models": "rlpack/models",
-        "rlpack.environments": "rlpack/environments",
+        "rlpack.models.utils": "rlpack/models/utils",
+        "rlpack.trainer": "rlpack/trainer",
         "rlpack.utils": "rlpack/utils",
         "rlpack.utils.base": "rlpack/utils/base",
-        "rlpack._C": "rlpack/_C",
+        "rlpack.utils.base.registers": "rlpack/utils/base/registers",
     },
     classifiers=[
         "Programming Language :: Python :: 3",

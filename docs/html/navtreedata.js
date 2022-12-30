@@ -28,6 +28,7 @@ var NAVTREE =
     [ "Documentation", "intro.html", [
       [ "Overview", "overview.html", null ],
       [ "Get Started", "get_started.html", null ],
+      [ "Distributions", "distributions.html", null ],
       [ "Models", "models.html", [
         [ "In-Built Models", "in_build_models.html", [
           [ "MLP", "mlp.html", null ],
@@ -41,6 +42,7 @@ var NAVTREE =
       [ "Agents", "agents.html", [
         [ "DQN", "dqn.html", null ],
         [ "Actor-Critic", "actor_critic.html", [
+          [ "AC", "ac.html", null ],
           [ "A2C", "a2c.html", null ],
           [ "A3C", "a3c.html", null ]
         ] ]
@@ -56,8 +58,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "a2c.html",
-"classrlpack_1_1dqn_1_1dqn__agent_1_1_dqn_agent.html#a634dc4ae6c73036f3fbe223929765dcf",
-"pages.html"
+"classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a0dddd26f1bfa9e729fb771a28b2cd4bb",
+"classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a1dfcae45bfdf82ef6e11ef5244c53c01"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
