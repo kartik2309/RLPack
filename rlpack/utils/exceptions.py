@@ -32,10 +32,21 @@ Following typing hints have been defined:
 """
 
 
-from rlpack.utils.typing_hints import (
-    Activation,
-    GenericFuncSignature,
-    LossFunction,
-    LRScheduler,
-    RunFuncSignature,
-)
+class AgentError(Exception):
+    """
+    Exception for when error occurs in initializing agents.
+    """
+    def __init__(self, message: str):
+        """
+        Initialization method for AgentError
+        @param message: str: The error message
+        """
+        super(AgentError, self).__init__(message)
+        self.message = message
+
+    def __repr__(self) -> str:
+        """
+        repr method to return the error message
+        @return: str: The error message in string.
+        """
+        return self.message

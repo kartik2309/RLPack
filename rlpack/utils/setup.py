@@ -15,6 +15,9 @@ Currently following classes have been implemented:
 Following packages are part of utils:
     - `base`: A package for base class, implemented as rlpack.utils.base
 
+Following exceptions have been defined:
+    - `AgentError`: For error happening in Agent's initialization. Implemented as rlpack.utils.exceptions.AgentError.
+
 Following typing hints have been defined:
     - `LRScheduler`: The Typing variable for LR Schedulers.
     - `LossFunction`: Typing hint for loss functions for RLPack. Implemented as
@@ -114,21 +117,38 @@ class Setup(Register, InternalCodeRegister):
         This method retrieves the activation to be supplied for the models. If list is passed, list of initialized
         activation objects are retrieved.
         @param activation_name: Union[str, List[str]]: The activation name to be used.
-        @param activation_args: DUnion[Dict[str, Any], List[Dict[str, Any]]]: A dictionary with keyword arguments
+        @param activation_args: Union[Dict[str, Any], List[Dict[str, Any]], None]: A dictionary with keyword arguments
             for to-be initialized activation function.
-        @return Union[Activation, List[Activation]]: The initialized activated function.
+        @return Union[Activation, List[Activation]]: The initialized activated function(s).
         """
-        if isinstance(activation_name, str) and isinstance(activation_args, dict):
+        if isinstance(activation_name, str):
+            if activation_args is None:
+                activation_args = dict()
+            if not isinstance(activation_args, dict):
+                raise TypeError(
+                    f"Expected `activation_args` to be of type {dict} or {type(None)}, "
+                    f"but got {type(activation_args)}"
+                )
             activation = self.activation_map[activation_name](**activation_args)
-        else:
-            if isinstance(activation_args, dict):
+        elif isinstance(activation_name, (list, tuple)):
+            if activation_args is None:
                 activation_args = [dict()] * len(activation_name)
+            if not isinstance(activation_args, (list, tuple)):
+                raise TypeError(
+                    f"Expected `activation_args` to be of type {list}, {tuple} or {type(None)}, "
+                    f"but got {type(activation_args)}"
+                )
             activation = [
                 self.activation_map[activation_name_](**activation_args_)
                 for activation_name_, activation_args_ in zip(
                     activation_name, activation_args
                 )
             ]
+        else:
+            raise TypeError(
+                f"Expected `activation_name` to be of type {list}, {tuple} or {Activation}, "
+                f"but got {type(activation_args)}"
+            )
         return activation
 
     def get_lr_scheduler(
@@ -136,14 +156,14 @@ class Setup(Register, InternalCodeRegister):
         optimizer: pytorch.optim.Optimizer,
         lr_scheduler_name: Optional[str] = None,
         lr_scheduler_args: Optional[Dict[str, Any]] = None,
-    ) -> LRScheduler:
+    ) -> Union[LRScheduler, None]:
         """
         This method retrieves the lr_scheduler to be supplied for the models if LR Scheduler is requested.
         @param optimizer: pytorch.optim.Optimizer: The optimizer to wrap the lr scheduler around.
         @param lr_scheduler_name: str: The LR Scheduler's name to be used.
         @param lr_scheduler_args: Dict[str, Any]: A dictionary with keyword arguments for to-be initialized
             LR Scheduler.
-        @return Activation: The initialized lr_scheduler.
+        @return Union[LRScheduler, None]: The initialized lr_scheduler if passed else None.
         """
         if lr_scheduler_name is None or lr_scheduler_args is None:
             return
