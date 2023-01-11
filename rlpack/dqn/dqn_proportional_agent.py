@@ -23,6 +23,7 @@ from typing import Any, Dict, List, Optional, Union
 from rlpack import pytorch
 from rlpack.dqn.utils.dqn_agent import DqnAgent
 from rlpack.utils import LossFunction, LRScheduler
+from rlpack.utils.base.model import Model
 from rlpack.utils.normalization import Normalization
 
 
@@ -33,8 +34,8 @@ class DqnProportionalAgent(DqnAgent):
 
     def __init__(
         self,
-        target_model: pytorch.nn.Module,
-        policy_model: pytorch.nn.Module,
+        target_model: Model,
+        policy_model: Model,
         optimizer: pytorch.optim.Optimizer,
         lr_scheduler: Union[LRScheduler, None],
         loss_function: LossFunction,
@@ -64,9 +65,9 @@ class DqnProportionalAgent(DqnAgent):
         clip_grad_value: Optional[float] = None,
     ):
         """
-        @param target_model: nn.Module: The target network for DQN model. This the network which has
+        @param target_model: Model: The target network for DQN model. This the network which has
             its weights frozen.
-        @param policy_model: nn.Module: The policy network for DQN model. This is the network which is trained.
+        @param policy_model: Model: The policy network for DQN model. This is the network which is trained.
         @param optimizer: optim.Optimizer: The optimizer wrapped with policy model's parameters.
         @param lr_scheduler: Union[LRScheduler, None]: The PyTorch LR Scheduler with wrapped optimizer.
         @param loss_function: LossFunction: The loss function from PyTorch's nn module. Initialized

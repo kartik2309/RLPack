@@ -21,6 +21,7 @@ from rlpack._C.rollout_buffer import RolloutBuffer
 from rlpack.exploration.utils.exploration import Exploration
 from rlpack.utils import LossFunction, LRScheduler
 from rlpack.utils.base.agent import Agent
+from rlpack.utils.base.model import Model
 from rlpack.utils.exceptions import AgentError
 from rlpack.utils.internal_code_setup import InternalCodeSetup
 from rlpack.utils.normalization import Normalization
@@ -34,7 +35,7 @@ class ActorCriticAgent(Agent):
 
     def __init__(
         self,
-        policy_model: pytorch.nn.Module,
+        policy_model: Model,
         optimizer: pytorch.optim.Optimizer,
         lr_scheduler: Union[LRScheduler, None],
         loss_function: LossFunction,
@@ -61,7 +62,7 @@ class ActorCriticAgent(Agent):
         timeout: timedelta = timedelta(minutes=30),
     ):
         """!
-        @param policy_model: *pytorch.nn.Module*: The policy model to be used. Policy model must return a tuple of
+        @param policy_model: Model: The policy model to be used. Policy model must return a tuple of
             action logits and state values.
         @param optimizer: pytorch.optim.Optimizer: The optimizer to be used for policy model. Optimizer must be
             initialized and wrapped with policy model parameters.
@@ -295,8 +296,8 @@ class ActorCriticAgent(Agent):
         with pytorch.no_grad():
             # Apply normalization to state current if required
             if (
-                    self._state_norm_code in self.apply_norm_to
-                    and self._normalization is not None
+                self._state_norm_code in self.apply_norm_to
+                and self._normalization is not None
             ):
                 state_current = self._normalization.apply_normalization_pre_silent(
                     state_current, "states"
@@ -306,7 +307,7 @@ class ActorCriticAgent(Agent):
             # Create action distribution from action values.
             distribution = self._create_action_distribution(action_values)
             # Create action from distribution by sampling
-            action = self._action_from_distribution(distribution)
+            action = self._get_action_from_distribution(distribution)
             # Add noise to the given action.
             action = self._add_noise_to_actions(action)
             # Move action tensor to CPU and convert to NumPy.
@@ -340,7 +341,7 @@ class ActorCriticAgent(Agent):
             )
         action_values, _ = self.policy_model(state_current)
         distribution = self._create_action_distribution(action_values)
-        action = self._action_from_distribution(distribution)
+        action = self._get_action_from_distribution(distribution)
         action = action.cpu().numpy()
         return action
 
@@ -463,25 +464,26 @@ class ActorCriticAgent(Agent):
         if self._take_forward_step:
             for index in range(self._rollout_buffer.size_transitions()):
                 transition = self._rollout_buffer.transition_at(index)
-                state_current = transition["state_current"]
                 state_next = transition["state_next"]
+                state_current = transition["state_current"]
                 if self._state_norm_code in self.apply_norm_to:
-                    state_current = self._normalization.apply_normalization_pre(
-                        state_current, "states"
-                    )
                     state_next = self._normalization.apply_normalization_pre(
                         state_next, "states"
                     )
+                    state_current = self._normalization.apply_normalization_pre(
+                        state_current, "states"
+                    )
+                # Compute state_next_value.
+                _, state_next_value = self.policy_model(state_next)
+                # Compute action values and state_current_values.
                 action_value, state_current_value = self.policy_model(state_current)
-                with pytorch.no_grad():
-                    _, state_next_value = self.policy_model(state_next)
                 # Create distribution from action values.
                 distribution = self._create_action_distribution(action_value)
-                # Use re-parameterization trick if continuous space.
-                action = self._action_from_distribution(
+                # Create action from distribution by sampling.
+                action = self._get_action_from_distribution(
                     distribution, reparametrize=True
                 )
-                # Add noise to actions
+                # Add noise to actions.
                 action = self._add_noise_to_actions(action)
                 # Accumulate policy outputs.
                 self._rollout_buffer.insert_policy_output(
@@ -529,7 +531,7 @@ class ActorCriticAgent(Agent):
         """
         Checks if policy model has a valid exploration tool.
         """
-        if hasattr(self.policy_model, "exploration_tool"):
+        if self.policy_model.has_exploration_tool:
             if self.policy_model.exploration_tool is not None:
                 self._policy_model_has_exploration_tool = True
 
@@ -553,7 +555,7 @@ class ActorCriticAgent(Agent):
         if self._policy_model_has_exploration_tool:
             noise = self.policy_model.get_noise()
         elif self._agent_has_exploration_tool:
-            noise = self.exploration_tool.rsample()
+            noise = self.exploration_tool.sample()
         if noise is not None:
             action = action + noise
         return action
@@ -703,7 +705,7 @@ class ActorCriticAgent(Agent):
                 )
         return distribution
 
-    def _action_from_distribution(
+    def _get_action_from_distribution(
         self, distribution: pytorch_distributions.Distribution, reparametrize=False
     ) -> pytorch.Tensor:
         if not self.is_continuous_action_space:

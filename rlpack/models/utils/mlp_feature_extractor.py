@@ -13,9 +13,10 @@ from typing import List
 
 from rlpack import pytorch
 from rlpack.utils import Activation
+from rlpack.utils.base.model import Model
 
 
-class MlpFeatureExtractor(pytorch.nn.Module):
+class MlpFeatureExtractor(Model):
     """
     This class is a PyTorch Model implementing the MLP based feature extractor for 1-D or 2-D state values.
     """

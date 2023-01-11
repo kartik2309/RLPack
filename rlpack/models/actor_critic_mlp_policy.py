@@ -21,9 +21,10 @@ from rlpack import pytorch
 from rlpack.exploration.utils.exploration import Exploration
 from rlpack.models.utils.mlp_feature_extractor import MlpFeatureExtractor
 from rlpack.utils import Activation
+from rlpack.utils.base.model import Model
 
 
-class ActorCriticMlpPolicy(pytorch.nn.Module):
+class ActorCriticMlpPolicy(Model):
     """
     This class is a PyTorch Model implementing the MLP based Actor-Critic Policy.
     """
@@ -74,6 +75,8 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         self.use_diagonal_embedding_on_projection = use_diagonal_embedding_on_projection
         ## The input `exploration_tool`. @I{# noqa: E266}
         self.exploration_tool = exploration_tool
+        ## Flag indicating whether to Model has exploration tool. @I{# noqa: E266}
+        self.has_exploration_tool = True if exploration_tool is not None else False
         ## The feature extractor instance of rlpack.models._mlp_feature_extractor.MlpFeatureExtractor. @I{# noqa: E266}
         ## This will be None if network is not shared. @I{# noqa: E266}
         self.mlp_feature_extractor = None
@@ -87,8 +90,6 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         self._apply_actor_activation = False
         ## Flag indicating whether to apply activation to output of critic head or not. @I{# noqa: E266}
         self._apply_critic_activation = False
-        ## Flag indicating whether to use exploration tool. @I{# noqa: E266}
-        self._use_exploration_tool = True if exploration_tool is not None else False
         # Process `activation`
         activation = self._process_activation(activation, use_actor_projection)
         # Process `action_space`
@@ -156,12 +157,12 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         else:
             action_features = self._run_shared_forward(x)
             action_values, state_values = self._apply_heads(action_features, None)
-        if self._use_exploration_tool:
-            self._noise.append(self.exploration_tool.rsample(action_features))
+        if self.has_exploration_tool:
+            self._noise.append(self.exploration_tool.rsample(features=action_features))
         return action_values, state_values
 
-    def get_noise(self) -> pytorch.Tensor:
-        return self._noise[-1]
+    def get_noise(self, at: int = -1) -> pytorch.Tensor:
+        return self._noise[at]
 
     def clear_noise(self) -> None:
         self._noise.clear()

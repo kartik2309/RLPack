@@ -24,6 +24,7 @@ from rlpack import pytorch, pytorch_distributions
 from rlpack.actor_critic.utils.actor_critic_agent import ActorCriticAgent
 from rlpack.exploration.utils.exploration import Exploration
 from rlpack.utils import LossFunction, LRScheduler
+from rlpack.utils.base.model import Model
 from rlpack.utils.normalization import Normalization
 
 
@@ -34,7 +35,7 @@ class AC(ActorCriticAgent, ABC):
 
     def __init__(
         self,
-        policy_model: pytorch.nn.Module,
+        policy_model: Model,
         optimizer: pytorch.optim.Optimizer,
         lr_scheduler: Union[LRScheduler, None],
         loss_function: LossFunction,
@@ -61,7 +62,7 @@ class AC(ActorCriticAgent, ABC):
         timeout: timedelta = timedelta(minutes=30),
     ):
         """!
-        @param policy_model: *pytorch.nn.Module*: The policy model to be used. Policy model must return a tuple of
+        @param policy_model: Model: The policy model to be used. Policy model must return a tuple of
             action logits and state values.
         @param optimizer: pytorch.optim.Optimizer: The optimizer to be used for policy model. Optimizer must be
             initialized and wrapped with policy model parameters.
