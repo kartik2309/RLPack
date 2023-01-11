@@ -8,9 +8,9 @@ Currently following methods are implemented:
         all actor-critic methods and implements some basic methods to be used across different actor critic methods.
 """
 
-
 import os
 from abc import abstractmethod
+from datetime import timedelta
 from typing import List, Optional, Tuple, Type, Union
 
 import numpy as np
@@ -21,6 +21,7 @@ from rlpack._C.rollout_buffer import RolloutBuffer
 from rlpack.exploration.utils.exploration import Exploration
 from rlpack.utils import LossFunction, LRScheduler
 from rlpack.utils.base.agent import Agent
+from rlpack.utils.exceptions import AgentError
 from rlpack.utils.internal_code_setup import InternalCodeSetup
 from rlpack.utils.normalization import Normalization
 
@@ -45,19 +46,19 @@ class ActorCriticAgent(Agent):
         action_space: Union[int, Tuple[int, Union[List[int], None]]],
         backup_frequency: int,
         save_path: str,
-        rollout_accumulation_size: Union[int, None] = None,
+        gae_lambda: float = 1.0,
+        exploration_steps: Union[int, None] = None,
         grad_accumulation_rounds: int = 1,
+        training_frequency: Union[int, None] = None,
         exploration_tool: Union[Exploration, None] = None,
         device: str = "cpu",
         dtype: str = "float32",
-        apply_norm: Union[int, str] = -1,
+        normalization_tool: Union[Normalization, None] = None,
         apply_norm_to: Union[int, List[str]] = -1,
-        eps_for_norm: float = 5e-12,
-        p_for_norm: int = 2,
-        dim_for_norm: int = 0,
         max_grad_norm: Optional[float] = None,
         grad_norm_p: float = 2.0,
         clip_grad_value: Optional[float] = None,
+        timeout: timedelta = timedelta(minutes=30),
     ):
         """!
         @param policy_model: *pytorch.nn.Module*: The policy model to be used. Policy model must return a tuple of
@@ -81,38 +82,32 @@ class ActorCriticAgent(Agent):
         @param backup_frequency: int: The timesteps after which policy model, optimizer states and lr
             scheduler states are backed up.
         @param save_path: str: The path where policy model, optimizer states and lr scheduler states are to be saved.
-        @param rollout_accumulation_size: Union[int, None]: The size of rollout buffer before performing optimizer
+        @param gae_lambda: float: The Generalized Advantage Estimation coefficient (referred to as lambda), indicating
+            the bias-variance trade-off.
+        @param exploration_steps: Union[int, None]: The size of rollout buffer before performing optimizer
             step. Whole rollout buffer is used to fit the policy model and is cleared. By default, after every episode.
              Default: None.
         @param grad_accumulation_rounds: int: The number of rounds until which gradients are to be accumulated before
             performing calling optimizer step. Gradients are mean reduced for grad_accumulation_rounds > 1. Default: 1.
+        @param training_frequency: Union[int, None]: The number of timesteps after which policy model is to be trained.
+            By default, training is done at the end of an episode: Default: None.
         @param exploration_tool: Union[Exploration, None]: Exploration tool to be used to explore the environment.
             These tools can be found in `rlpack.exploration`.
         @param device: str: The device on which models are run. Default: "cpu".
-        @param dtype: str: The datatype for model parameters. Default: "float32"
-        @param apply_norm: Union[int, str]: The code to select the normalization procedure to be applied on
-            selected quantities; selected by `apply_norm_to`: see below)). Direct string can also be
-            passed as per accepted keys. Refer below in Notes to see the accepted values. Default: -1
+        @param dtype: str: The datatype for model parameters. Default: "float32".
+        @param normalization_tool: Union[Normalization, None]: The normalization tool to be used. This must be an
+            instance of rlpack.utils.normalization.Normalization if passed. By default, is initialized to None and
+            no normalization takes place. If passed, make sure a valid `apply_norm_to` is passed.
         @param apply_norm_to: Union[int, List[str]]: The code to select the quantity to which normalization is
             to be applied. Direct list of quantities can also be passed as per accepted keys. Refer
             below in Notes to see the accepted values. Default: -1.
-        @param eps_for_norm: float: Epsilon value for normalization; for numeric stability. For min-max normalization
-            and standardized normalization. Default: 5e-12.
-        @param p_for_norm: int: The p value for p-normalization. Default: 2; L2 Norm.
-        @param dim_for_norm: int: The dimension across which normalization is to be performed. Default: 0.
         @param max_grad_norm: Optional[float]: The max norm for gradients for gradient clipping. Default: None
         @param grad_norm_p: float: The p-value for p-normalization of gradients. Default: 2.0
         @param clip_grad_value: Optional[float]: The gradient value for clipping gradients by value. Default: None
+        @param timeout: timedelta: The timeout for synchronous calls. Default is 30 minutes.
+
 
         **Notes**
-
-
-        The values accepted for `apply_norm` are: -
-            - No Normalization: -1; `"none"`
-            - Min-Max Normalization: 0; `"min_max"`
-            - Standardization: 1; `"standardize"`
-            - P-Normalization: 2; `"p_norm"`
-
 
         The value accepted for `apply_norm_to` are as follows and must be passed in a list:
             - `"none"`: -1; Don't apply normalization to any quantity.
@@ -159,48 +154,48 @@ class ActorCriticAgent(Agent):
         self.backup_frequency = backup_frequency
         ## The input save path for backing up agent models. @I{# noqa: E266}
         self.save_path = save_path
+        ## The input GAE Lambda (from argument `gae_lambda). @I{# noqa: E266}
+        self.gae_lambda = gae_lambda
         # Check sanity of `grad_accumulation_rounds`
         assert (
             grad_accumulation_rounds > 0
         ), "Argument `grad_accumulation_rounds` must be an integer greater than 0"
         ## The input `rollout_accumulation_size`. @I{# noqa: E266}
-        self.rollout_accumulation_size = rollout_accumulation_size
+        self.exploration_steps = exploration_steps
         ## The input `grad_accumulation_rounds`. @I{# noqa: E266}
         self.grad_accumulation_rounds = grad_accumulation_rounds
+        ## The input `training_frequency`. @I{# noqa: E266}
+        self.training_frequency = training_frequency
         ## The input `exploration_tool`. @I{# noqa: E266}
         self.exploration_tool = exploration_tool
         ## The input `device` argument; indicating the device name as device type class. @I{# noqa: E266}
         self.device = pytorch.device(device=device)
         ## The input `dtype` argument; indicating the datatype class. @I{# noqa: E266}
         self.dtype = setup.get_torch_dtype(dtype)
-        # Get code(s) for `apply_norm` and check validity.
-        apply_norm = setup.get_apply_norm_mode_code(apply_norm)
-        setup.check_validity_of_apply_norm_code(apply_norm)
-        ## The input `apply_norm` argument; indicating the normalisation to be used. @I{# noqa: E266}
-        self.apply_norm = apply_norm
         # Get code(s) for `apply_norm_to` and check validity.
         apply_norm_to = setup.get_apply_norm_to_mode_code(apply_norm_to)
         setup.check_validity_of_apply_norm_to_codes(apply_norm_to)
         ## The input `apply_norm_to` argument; indicating the quantity to normalise. @I{# noqa: E266}
         self.apply_norm_to = apply_norm_to
-        ## The input `eps_for_norm` argument; indicating epsilon to be used for normalisation. @I{# noqa: E266}
-        self.eps_for_norm = eps_for_norm
-        ## The input `p_for_norm` argument; indicating p-value for p-normalisation. @I{# noqa: E266}
-        self.p_for_norm = p_for_norm
-        ## The input `dim_for_norm` argument; indicating dimension along which we wish to normalise. @I{# noqa: E266}
-        self.dim_for_norm = dim_for_norm
         ## The input `max_grad_norm`; indicating the maximum gradient norm for gradient clippings. @I{# noqa: E266}
         self.max_grad_norm = max_grad_norm
         ## The input `grad_norm_p`; indicating the p-value for p-normalisation for gradient clippings. @I{# noqa: E266}
         self.grad_norm_p = grad_norm_p
         ## The input `clip_grad_value`; indicating the clipping range for gradients. @I{# noqa: E266}
         self.clip_grad_value = clip_grad_value
+        ## The input `timeout`; indicating the timeout for synchronous calls. @I{# noqa: E266}
+        self.timeout = timedelta(milliseconds=(timeout.seconds * 1e3))
         ## The step counter; counting the total timesteps done so far. @I{# noqa: E266}
         self.step_counter = 0
         ## Flag indicating if action space is continuous or discrete. @I{# noqa: E266}
         self.is_continuous_action_space = True
         if isinstance(self.action_space, int):
             self.is_continuous_action_space = False
+        self._agent_has_exploration_tool = (
+            True if self.exploration_tool is not None else False
+        )
+        self._policy_model_has_exploration_tool = False
+        self._check_if_policy_model_has_exploration_tool()
         # Parameter keys of the model.
         keys = list(dict(self.policy_model.named_parameters()).keys())
         ## The list of gradients from each backward call. @I{# noqa: E266}
@@ -209,71 +204,115 @@ class ActorCriticAgent(Agent):
         self._grad_accumulator = GradAccumulator(keys, grad_accumulation_rounds)
         ## The normalisation tool to be used for agent. @I{# noqa: E266}
         ## An instance of rlpack.utils.normalization.Normalization. @I{# noqa: E266}
-        self._normalization = Normalization(
-            apply_norm=apply_norm, eps=eps_for_norm, p=p_for_norm, dim=dim_for_norm
-        )
-        ## The rollout buffer to be used for agent to store necessary outputs. @I{# noqa: E266}
-        ## An instance of rlpack._C.rollout_buffer.RolloutBuffer @I{# noqa: E266}
-        rollout_buffer_size = (
-            rollout_accumulation_size if rollout_accumulation_size is not None else 1024
-        )
-        self._rollout_buffer = RolloutBuffer(rollout_buffer_size, device, dtype)
-        ## The callable method for gradient reduction in distributed environment. @I{# noqa: E266}
-        self._distributed_grad_reduce_method = None
-        ## The callable method for parameter scattering in distributed environment. @I{# noqa: E266}
-        self._distributed_param_scatter_method = None
+        self._normalization = normalization_tool
         ## The process rank for multi-agents. For uni-agents, will be None. @I{# noqa: E266}
         self._process_rank = None
         ## The world size for multi-agents. For uni-agents, will be None. @I{# noqa: E266}
         self._world_size = None
         ## The master process id for multi-agents. Is set to 0 as a standard. @I{# noqa: E266}
         self._master_process_rank = 0
+        ## The process group currently being used. For uni-agents, will be None. @I{# noqa: E266}
+        self._process_group = None
+        ## The flag indicating weather to perform forward pass. @I{# noqa: E266}
+        self._take_forward_step = True
+        ## The flag indicating weather to perform backward pass. @I{# noqa: E266}
+        self._take_backward_step = True
+        ## The flag indicating weather to perform gradient processing (normalization and clipping). @I{# noqa: E266}
+        self._perform_grad_processing = True
+        ## The flag indicating weather to take optimizer step. It is dangerous to modify this externally.  @I{# noqa: E266}
+        self._take_optimizer_step = True
+        ## The flag indicating weather to take LR scheduler step. It is dangerous to modify this externally. @I{# noqa: E266}
+        self._take_lr_scheduler_step = True
+        # Call to set
+        self._set_attribute_custom_values()
+        ## The rollout buffer to be used for agent to store necessary outputs. @I{# noqa: E266}
+        ## An instance of rlpack._C.rollout_buffer.RolloutBuffer @I{# noqa: E266}
+        self._rollout_buffer = RolloutBuffer(
+            buffer_size=self._get_rollout_buffer_size(
+                training_frequency=training_frequency,
+                exploration_steps=exploration_steps,
+            ),
+            device=device,
+            dtype=dtype,
+            process_group=self._process_group,
+            work_timeout=timeout,
+        )
 
     def train(
         self,
         state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
+        state_next: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]],
         reward: Union[int, float],
         done: Union[bool, int],
         **kwargs,
     ) -> np.ndarray:
         """
         The train method to train the agent and underlying policy model.
-        @param state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]: The current state returned
+        @param state_current: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]: The current state.
+        @param state_next: Union[pytorch.Tensor, np.ndarray, List[Union[float, int]]]: The next state returned.
         @param reward: Union[int, float]: The reward returned from previous action
         @param done: Union[bool, int]: Flag indicating if episode has terminated or not
         @param kwargs: Other keyword arguments.
         @return np.ndarray: The action to be taken
         """
-        # Cast `state_current` to tensor.
-        if not self.policy_model.training:
-            self.policy_model.train()
-        state_current = self._cast_to_tensor(state_current).to(
-            device=self.device, dtype=self.dtype
+        state_current = self._cast_to_tensor(state_current).to(dtype=self.dtype)
+        state_next = self._cast_to_tensor(state_next).to(dtype=self.dtype)
+        self._rollout_buffer.insert_transition(
+            state_current=state_current,
+            state_next=state_next,
+            reward=self._cast_to_tensor(reward).to(dtype=self.dtype),
+            done=self._cast_to_tensor(int(done)),
         )
-        action_values, state_current_value = self.policy_model(state_current)
-        distribution = self._create_action_distribution(action_values)
-        if not self.is_continuous_action_space:
-            action = distribution.sample()
+        # Run exploration until `exploration_steps` if not None.
+        if self.exploration_steps is not None:
+            if (self.step_counter + 1) % self.exploration_steps == 0:
+                # If states are to be normalized. compute the state statistics of explored states.
+                if (
+                    self._state_norm_code in self.apply_norm_to
+                    and self._normalization is not None
+                ):
+                    states_current_statistics = (
+                        self._rollout_buffer.get_states_statistics()
+                    )
+                    # Update the statistics for current state in dictionary
+                    self._normalization.update_statistics(
+                        "states", dict(states_current_statistics)
+                    )
+                self.exploration_steps = None
+        # Run training as per `training_frequency`
         else:
-            sample_shape = self._get_action_sample_shape_for_continuous()
-            action = distribution.rsample(sample_shape=sample_shape)
-        # Accumulate quantities.
-        self._rollout_buffer.insert(
-            reward=pytorch.tensor((reward,), device=self.device, dtype=self.dtype),
-            action_log_probability=distribution.log_prob(action),
-            state_current_value=state_current_value,
-            entropy=distribution.entropy(),
-        )
-        # Call train policy method.
-        self._call_to_run_optimizer(done)
+            if self.training_frequency is not None:
+                if (self.step_counter + 1) % self.training_frequency == 0:
+                    self._train_policy_model()
+            else:
+                if self._is_done(done):
+                    self._train_policy_model()
+        if (
+            self._state_norm_code in self.apply_norm_to
+            and self._normalization is not None
+        ):
+            state_current = self._normalization.apply_normalization_pre(
+                state_current, "states"
+            )
         # Backup model every `backup_frequency` steps.
         self._call_to_save()
         # Increment `step_counter` and use policy model to get next action.
         self.step_counter += 1
+        # Apply normalization to state current if required
+        if (
+            self._state_norm_code in self.apply_norm_to
+            and self._normalization is not None
+        ):
+            state_current = self._normalization.apply_normalization_pre_silent(
+                state_current, "states"
+            )
         with pytorch.no_grad():
-            action = self._call_to_add_noise_to_actions(action)
+            # Perform forward pass with policy model.
+            action_values, _ = self.policy_model(state_current)
+            distribution = self._create_action_distribution(action_values)
+            action = self._action_from_distribution(distribution)
+            action = self._add_noise_to_actions(action)
             action = action.cpu().numpy()
-        self._call_to_reset_exploration_tool(done)
         return action
 
     @pytorch.no_grad()
@@ -294,13 +333,16 @@ class ActorCriticAgent(Agent):
         state_current = self._cast_to_tensor(state_current).to(
             device=self.device, dtype=self.dtype
         )
+        if (
+            self._state_norm_code in self.apply_norm_to
+            and self._normalization is not None
+        ):
+            state_current = self._normalization.apply_normalization_pre_silent(
+                state_current, "states"
+            )
         action_values, _ = self.policy_model(state_current)
         distribution = self._create_action_distribution(action_values)
-        if not self.is_continuous_action_space:
-            action = distribution.sample()
-        else:
-            sample_shape = self._get_action_sample_shape_for_continuous()
-            action = distribution.sample(sample_shape=sample_shape)
+        action = self._action_from_distribution(distribution)
         action = action.cpu().numpy()
         return action
 
@@ -329,6 +371,10 @@ class ActorCriticAgent(Agent):
         }
         if self.lr_scheduler is not None:
             checkpoint["lr_scheduler_state_dict"] = self.lr_scheduler.state_dict()
+        if self._normalization is not None:
+            checkpoint[
+                "normalization_state_dict"
+            ] = self._normalization.get_state_dict()
         if os.path.isdir(save_path):
             save_path = os.path.join(save_path, f"actor_critic{custom_name_suffix}.pt")
         pytorch.save(checkpoint, save_path)
@@ -368,7 +414,16 @@ class ActorCriticAgent(Agent):
             and "lr_scheduler_state_dict" in checkpoint.keys()
         ):
             self.lr_scheduler.load_state_dict(checkpoint["lr_scheduler_state_dict"])
+        if (
+            self._normalization is not None
+            and "normalization_state_dict" in checkpoint.keys()
+        ):
+            self._normalization.load_state_dict(checkpoint["normalization_state_dict"])
         return
+
+    @abstractmethod
+    def _set_attribute_custom_values(self) -> None:
+        pass
 
     @abstractmethod
     def _call_to_save(self) -> None:
@@ -377,52 +432,132 @@ class ActorCriticAgent(Agent):
         """
         pass
 
-    def _call_to_run_optimizer(self, done: Union[bool, int]) -> None:
+    @abstractmethod
+    def _call_to_extend_transitions(self) -> None:
         """
-        Protected method to train the policy model. If done flag is True, will compute the loss and run the optimizer.
-        This method is meant to periodically check if episode hsa been terminated or and train policy models if
-        episode has terminated.
-        @param done: Union[bool, int]: Flag indicating if episode has terminated or not
+        Method calling the method RolloutBuffer.extend_transitions. This method is to be overriden by
+        appropriate class.
         """
-        run_optimizer = False
-        if isinstance(done, bool):
-            if done:
-                run_optimizer = True
-        elif isinstance(done, int):
-            if done == 1:
-                run_optimizer = True
-        else:
-            raise TypeError(
-                f"Expected `done` argument to be of type {bool} or {int} but received {type(done)}!"
-            )
-        if run_optimizer:
-            if self.rollout_accumulation_size is not None:
-                if len(self._rollout_buffer) < self.rollout_accumulation_size:
-                    return
+        pass
+
+    @abstractmethod
+    def _share_gradients(self) -> None:
+        """
+        Asynchronously averages the gradients across the world_size (number of processes) using non-blocking
+        reduce method to share gradients to master process. This method is to be overriden by appropriate class.
+        """
+        pass
+
+    @abstractmethod
+    def _share_parameters(self) -> None:
+        """
+        Method to share parameters from a single model. This must typically implement scatter collective communication
+        operation. This method is to be overriden by appropriate class.
+        """
+        pass
+
+    def _train_policy_model(self):
+        if not self.policy_model.training:
+            self.policy_model.train()
+        # Extend rollout buffer if required (typically by gathering from multiple actors).
+        self._call_to_extend_transitions()
+        # Perform forward pass in policy model if required.
+        if self._take_forward_step:
+            for index in range(self._rollout_buffer.size_transitions()):
+                transition = self._rollout_buffer.transition_at(index)
+                state_current = transition["state_current"]
+                state_next = transition["state_next"]
+                if self._state_norm_code in self.apply_norm_to:
+                    state_current = self._normalization.apply_normalization_pre(
+                        state_current, "states"
+                    )
+                    state_next = self._normalization.apply_normalization_pre(
+                        state_next, "states"
+                    )
+                action_value, state_current_value = self.policy_model(state_current)
+                with pytorch.no_grad():
+                    _, state_next_value = self.policy_model(state_next)
+                # Create distribution from action values.
+                distribution = self._create_action_distribution(action_value)
+                # Use re-parameterization trick if continuous space.
+                action = self._action_from_distribution(
+                    distribution, reparametrize=True
+                )
+                # Add noise to actions
+                action = self._add_noise_to_actions(action)
+                # Accumulate policy outputs.
+                self._rollout_buffer.insert_policy_output(
+                    action_log_probability=distribution.log_prob(action),
+                    state_current_value=state_current_value,
+                    state_next_value=state_next_value,
+                    entropy=distribution.entropy(),
+                )
+        # Perform backward pass if required.
+        if self._take_backward_step:
+            if not self._take_forward_step:
+                raise AgentError(
+                    "Cannot take backward pass without having done forward pass!"
+                )
             loss = self._compute_loss()
-            self._run_optimizer(loss)
+            # Prepare for optimizer step by setting zero grads.
+            self.optimizer.zero_grad()
+            # Backward call.
+            loss.backward()
+            # Clear the buffer values.
+            self._clear_rollout_buffer()
+            # Append loss to list.
+            self.loss.append(loss.item())
+            # Accumulate gradients if required.
+            if self.grad_accumulation_rounds > 1:
+                # When `grad_accumulation_rounds` is greater than 1; accumulate gradients if no. of rounds
+                # specified by `grad_accumulation_rounds` have not been completed and return.
+                # If no. of rounds have been completed, perform mean reduction and proceed with optimizer step.
+                if len(self._grad_accumulator) < self.grad_accumulation_rounds:
+                    self._grad_accumulator.accumulate(
+                        self.policy_model.named_parameters()
+                    )
+                    return
+                else:
+                    # Perform mean reduction.
+                    self._grad_mean_reduction()
+                    # Clear Accumulated Gradient buffer.
+                    self._grad_accumulator.clear()
+        # Reset exploration tool.
+        self._reset_exploration_tool()
+        # Run optimizer.
+        self._run_optimizer()
 
-    def _call_to_reset_exploration_tool(self, done: Union[bool, int]) -> None:
-        if self.exploration_tool is None:
-            return
-        reset_exploration_tool = False
-        if isinstance(done, bool):
-            if done:
-                reset_exploration_tool = True
-        elif isinstance(done, int):
-            if done == 1:
-                reset_exploration_tool = True
-        else:
-            raise TypeError(
-                f"Expected `done` argument to be of type {bool} or {int} but received {type(done)}!"
-            )
-        if reset_exploration_tool:
+    def _check_if_policy_model_has_exploration_tool(self) -> None:
+        """
+        Checks if policy model has a valid exploration tool.
+        """
+        if hasattr(self.policy_model, "exploration_tool"):
+            if self.policy_model.exploration_tool is not None:
+                self._policy_model_has_exploration_tool = True
+
+    def _reset_exploration_tool(self) -> None:
+        """
+        Resets exploration tool for both policy and model if valid.
+        """
+        if self._agent_has_exploration_tool:
             self.exploration_tool.reset()
+        if self._policy_model_has_exploration_tool:
+            self.policy_model.exploration_tool.reset()
+            self.policy_model.clear_noise()
 
-    def _call_to_add_noise_to_actions(self, action: pytorch.Tensor) -> pytorch.Tensor:
-        if self.exploration_tool is None:
-            return action
-        action = action + self.exploration_tool.sample()
+    def _add_noise_to_actions(self, action: pytorch.Tensor) -> pytorch.Tensor:
+        """
+        Adds noise to the given action according to the exploration tool being used.
+        @param action: pytorch.Tensor: The action tensors
+        @return: pytorch.Tensor: The noisy action tensor.
+        """
+        noise = None
+        if self._policy_model_has_exploration_tool:
+            noise = self.policy_model.get_noise()
+        elif self._agent_has_exploration_tool:
+            noise = self.exploration_tool.rsample()
+        if noise is not None:
+            action = action + noise
         return action
 
     def _compute_loss(self) -> pytorch.Tensor:
@@ -430,133 +565,102 @@ class ActorCriticAgent(Agent):
         Method to compute total loss (from actor and critic).
         @return pytorch.Tensor: The loss tensor.
         """
-        if not self.policy_model.training:
-            self.policy_model.train()
-        self.policy_model.train()
-        # Stack the action log probabilities.
+        # Get action log probabilities.
         action_log_probabilities = (
             self._rollout_buffer.get_stacked_action_log_probabilities()
         )
         # Get entropy values
         entropy = self._rollout_buffer.get_stacked_entropies()
-        # Stack the State values.
+        # Get state values and normalize if required.
         state_current_values = self._rollout_buffer.get_stacked_state_current_values()
-        # Compute returns.
-        returns = self._rollout_buffer.compute_returns(self.gamma)
-        # Apply normalization if required to state values.
-        if self._state_value_norm_code in self.apply_norm_to:
+        if (
+            self._state_value_norm_code in self.apply_norm_to
+            and self._normalization is not None
+        ):
             state_current_values = self._normalization.apply_normalization(
                 state_current_values
             )
-        # Apply normalization if required to returns.
-        if self._returns_norm_code in self.apply_norm_to:
-            returns = self._normalization.apply_normalization(returns)
-        # Compute Advantage Values
-        advantage = self._compute_advantage(returns, state_current_values).detach()
+        # Compute Advantage Values and normalize if required.
+        advantage = self._rollout_buffer.compute_generalized_advantage_estimates(
+            self.gamma, self.gae_lambda
+        ).detach()
+        if (
+            self._advantage_norm_code in self.apply_norm_to
+            and self._normalization is not None
+        ):
+            advantage = self._normalization.apply_normalization(advantage)
         # Compute Policy Losses
         policy_losses = (-action_log_probabilities * advantage) + (
             self.entropy_coefficient * entropy
         )
+        # Compute Mean for policy losses
+        policy_loss = policy_losses.mean()
         # Compute Value Losses
         value_loss = self.state_value_coefficient * self.loss_function(
             state_current_values, advantage
         )
-        # Compute Mean for policy losses
-        policy_loss = policy_losses.mean()
         # Compute final loss
         loss = policy_loss + value_loss
         return loss
 
-    def _run_optimizer(self, loss: pytorch.Tensor) -> None:
+    def _run_optimizer(self) -> None:
         """
-        Protected void method to train the model or accumulate the gradients for training.
-        - If grad_accumulation_rounds is passed as 1 (default), model is trained each time the method is called.
-        - If grad_accumulation_rounds > 1, the gradients are accumulated in grad_accumulator and model is trained via
-            _train_models method.
-        @param loss: pytorch.Tensor: The loss scalar tensor
+        Protected void method to train to process gradients (gradient normalization and clipping), run optimizer and
+        LR Scheduler.
         """
-        # Clear the buffer values.
-        self._clear()
-        # Prepare for optimizer step by setting zero grads.
-        self.optimizer.zero_grad()
-        # Backward call
-        loss.backward()
-        # Append loss to list
-        self.loss.append(loss.item())
-        if self.grad_accumulation_rounds > 1:
-            # When `grad_accumulation_rounds` is greater than 1; accumulate gradients if no. of rounds
-            # specified by `grad_accumulation_rounds` have not been completed and return.
-            # If no. of rounds have been completed, perform mean reduction and proceed with optimizer step.
-            if len(self._grad_accumulator) < self.grad_accumulation_rounds:
-                self._grad_accumulator.accumulate(self.policy_model.named_parameters())
-                return
-            else:
-                # Perform mean reduction.
-                self._grad_mean_reduction()
-                # Clear Accumulated Gradient buffer.
-                self._grad_accumulator.clear()
         # Perform distributed gradient reduction if required.
-        if self._distributed_grad_reduce_method is not None:
-            self._distributed_grad_reduce_method()
-        # Clip gradients if requested.
-        if self.max_grad_norm is not None:
-            pytorch.nn.utils.clip_grad_norm_(
-                self.policy_model.parameters(),
-                max_norm=self.max_grad_norm,
-                norm_type=self.grad_norm_p,
-            )
-        # Clip gradients by value if requested.
-        if self.clip_grad_value is not None:
-            pytorch.nn.utils.clip_grad_value_(
-                self.policy_model.parameters(), clip_value=self.clip_grad_value
-            )
-        # Take optimizer step.
-        self.optimizer.step()
+        self._share_gradients()
+        # Perform gradient processing if required.
+        if self._perform_grad_processing:
+            # Clip gradients if requested.
+            if self.max_grad_norm is not None:
+                pytorch.nn.utils.clip_grad_norm_(
+                    self.policy_model.parameters(),
+                    max_norm=self.max_grad_norm,
+                    norm_type=self.grad_norm_p,
+                )
+            # Clip gradients by value if requested.
+            if self.clip_grad_value is not None:
+                pytorch.nn.utils.clip_grad_value_(
+                    self.policy_model.parameters(), clip_value=self.clip_grad_value
+                )
+        # Take optimizer step if required.
+        if self._take_optimizer_step:
+            if not self._take_backward_step:
+                raise AgentError("Cannot take optimizer step without backward pass!")
+            self.optimizer.step()
         # Perform distributed parameter scattering if required.
-        if self._distributed_param_scatter_method is not None:
-            self._distributed_param_scatter_method()
+        self._share_parameters()
         # Take an LR Scheduler step if required.
         if (
             self.lr_scheduler is not None
             and min([*self.lr_scheduler.get_last_lr()]) > self.lr_threshold
+            and self._take_lr_scheduler_step
         ):
             self.lr_scheduler.step()
 
     @pytorch.no_grad()
     def _grad_mean_reduction(self) -> None:
         """
-        Performs mean reduction and assigns the policy model's parameter the mean reduced gradients.
+        Performs mean reduction for accumulated gradients and assigns the policy model's parameter the mean reduced
+        gradients.
         """
         reduced_parameters = self._grad_accumulator.mean_reduce()
         # Assign average parameters to model.
         for key, param in self.policy_model.named_parameters():
             if param.requires_grad:
-                param.grad = reduced_parameters[key] / self.grad_accumulation_rounds
+                param.grad = reduced_parameters[key]
 
-    def _compute_advantage(
-        self, returns: pytorch.Tensor, state_current_values: pytorch.Tensor
-    ) -> pytorch.Tensor:
+    def _clear_rollout_buffer(self) -> None:
         """
-        Computes the advantage from returns and state values
-        @param returns: pytorch.Tensor: The discounted returns; computed from _compute_returns method
-        @param state_current_values: pytorch.Tensor: The corresponding state values
-        @return pytorch.Tensor: The advantage for the given returns and state values
+        Protected void method to clear the rollout buffer (transitions and policy outputs)
         """
-        advantage = returns - state_current_values
-        if self._advantage_norm_code in self.apply_norm_to:
-            advantage = self._normalization.apply_normalization(advantage)
-        return advantage
+        self._rollout_buffer.clear_transitions()
+        self._rollout_buffer.clear_policy_outputs()
 
-    def _clear(self) -> None:
+    def _get_action_sample_shape(self) -> pytorch.Size:
         """
-        Protected void method to clear the lists of rewards, action_log_probs and state_values.
-        """
-        #
-        self._rollout_buffer.clear()
-
-    def _get_action_sample_shape_for_continuous(self) -> pytorch.Size:
-        """
-        Gets the action sample shape to be sampled from continuous distribution.
+        Gets the action sample shape to be sampled from distribution.
         @return pytorch.Size: Sample shape of to-be sampled tensor from continuous distribution
         """
         if self.is_continuous_action_space:
@@ -564,9 +668,7 @@ class ActorCriticAgent(Agent):
             if self.action_space[-1] is None:
                 return pytorch.Size([])
             return pytorch.Size(self.action_space[-1])
-        raise ValueError(
-            "`_get_action_sample_shape_for_continuous` must only be called for continuous action spaces"
-        )
+        return pytorch.Size([])
 
     def _create_action_distribution(
         self,
@@ -603,18 +705,59 @@ class ActorCriticAgent(Agent):
                 )
         return distribution
 
-    def _create_noise_distribution(self) -> pytorch_distributions.Normal:
+    def _action_from_distribution(
+        self, distribution: pytorch_distributions.Distribution, reparametrize=False
+    ) -> pytorch.Tensor:
+        if not self.is_continuous_action_space:
+            action = distribution.sample(self._get_action_sample_shape())
+        else:
+            sample_shape = self._get_action_sample_shape()
+            if not reparametrize:
+                action = distribution.sample(sample_shape=sample_shape)
+            else:
+                action = distribution.rsample(sample_shape=sample_shape)
+        return action
+
+    @staticmethod
+    def _is_done(done: Union[bool, int]) -> bool:
         """
-        Create the standard Gaussian Distribution object for adding noise to sampled actions.
+        A basic utility function to know if episode has terminated if there are different types of `done`
+        @param done: Union[bool, int]: The done flag from OpenAI gym.
+        @return: bool: The done flag in boolean
         """
-        _mean = pytorch.nn.Parameter(
-            pytorch.tensor(0.0, device=self.device, dtype=self.dtype),
-            requires_grad=False,
-        )
-        _std = pytorch.nn.Parameter(
-            pytorch.tensor(1.0, device=self.device, dtype=self.dtype),
-            requires_grad=False,
-        )
-        # The PyTorch Normal distribution object initialized with standard mean and std.
-        gaussian_noise = pytorch_distributions.Normal(_mean, _std)
-        return gaussian_noise
+        is_done = False
+        if isinstance(done, bool):
+            if done:
+                is_done = True
+        elif isinstance(done, int):
+            if done == 1:
+                is_done = True
+        else:
+            raise TypeError(
+                f"Expected `done` argument to be of type {bool} or {int} but received {type(done)}!"
+            )
+        return is_done
+
+    @staticmethod
+    def _get_rollout_buffer_size(
+        training_frequency: Union[int, None], exploration_steps: Union[int, None]
+    ) -> int:
+        """
+        A utility function to obtain the size of rollout buffer. Note that space is reserved as per buffer size and
+        exceeding buffer size can often make the program prone to error. If both arguments are None, this will be
+        initialized to 1024.
+
+        @param training_frequency: Union[int, None]: The `training_frequency` passed in ActorCriticAgent.__init__.
+        @param exploration_steps: Union[int, None] The `exploration_steps` passed in ActorCriticAgent.__init__.
+        @return: int: The buffer size set.
+        """
+        # Initializing with constant default of 1024.
+        rollout_buffer_size = 1024
+        if training_frequency is not None:
+            if exploration_steps is not None:
+                rollout_buffer_size = exploration_steps + training_frequency
+        else:
+            if exploration_steps is not None:
+                if exploration_steps > rollout_buffer_size:
+                    rollout_buffer_size = exploration_steps
+        return rollout_buffer_size
