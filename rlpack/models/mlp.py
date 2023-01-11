@@ -18,7 +18,7 @@ Following packages are part of models:
 from typing import List
 
 from rlpack import pytorch
-from rlpack.models.utils._mlp_feature_extractor import _MlpFeatureExtractor
+from rlpack.models.utils.mlp_feature_extractor import MlpFeatureExtractor
 from rlpack.utils import Activation
 
 
@@ -45,8 +45,8 @@ class Mlp(pytorch.nn.Module):
         @param dropout: float: The dropout to be used in the final Linear (FC) layer.
         """
         super(Mlp, self).__init__()
-        ## The feature extractor instance of rlpack.models._mlp_feature_extractor._MlpFeatureExtractor. @I{# noqa: E266}
-        self.mlp_feature_extractor = _MlpFeatureExtractor(
+        ## The feature extractor instance of rlpack.models._mlp_feature_extractor.MlpFeatureExtractor. @I{# noqa: E266}
+        self.mlp_feature_extractor = MlpFeatureExtractor(
             sequence_length=sequence_length,
             hidden_sizes=hidden_sizes,
             activation=activation,

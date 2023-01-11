@@ -15,6 +15,5 @@ var searchData=
   ['model_5fargs_12',['model_args',['../classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a9ed360dc38d2f83fa33eb3c180d676f1',1,'rlpack::utils::base::registers::register::Register']]],
   ['model_5fargs_5fdefault_13',['model_args_default',['../classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#afab5f8a0ba3251dcba7d1363fd779e7f',1,'rlpack::utils::base::registers::register::Register']]],
   ['model_5fargs_5fto_5foptimize_14',['model_args_to_optimize',['../classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a45852466f2be6add3e0e93aa4125b8dc',1,'rlpack::utils::base::registers::register::Register']]],
-  ['model_5finit_5fargs_15',['model_init_args',['../classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a03e261bd59e96fdac2e69df23a631125',1,'rlpack::utils::base::registers::register::Register']]],
-  ['models_16',['models',['../classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a450e8f8af5ffcc5e4b4ef3493c6a24fa',1,'rlpack::utils::base::registers::register::Register']]]
+  ['models_15',['models',['../classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a450e8f8af5ffcc5e4b4ef3493c6a24fa',1,'rlpack::utils::base::registers::register::Register']]]
 ];

@@ -4,7 +4,7 @@ var classrlpack_1_1utils_1_1base_1_1agent_1_1_agent =
     [ "__getstate__", "classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#accaa47a12b6f65fee88824d3018b8c8e", null ],
     [ "__setstate__", "classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a04286fc7bb9ca0a64bce5eaf3620db7b", null ],
     [ "_adjust_dims_for_tensor", "classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#aa003e2c6797ee7b97e436a5e66cfca57", null ],
-    [ "_cast_to_tensor", "classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#ae1ffee66f17423838610e6fa57642127", null ],
+    [ "_cast_to_tensor", "classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#a101fe2af7ee468562ef25098a9045db3", null ],
     [ "load", "classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#ac493d40ce8bd5562822a01aba0265181", null ],
     [ "policy", "classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#ab5e3e4db83e80ef7bb422a148cd3e1f6", null ],
     [ "save", "classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html#aa61ea2248a43a7bbc9b7c9ab7c240564", null ],

@@ -1,11 +1,11 @@
 var searchData=
 [
   ['p_0',['p',['../classrlpack_1_1utils_1_1normalization_1_1_normalization.html#ad2eff658b77621100a1de86cc714949d',1,'rlpack::utils::normalization::Normalization']]],
-  ['p_5ffor_5fnorm_1',['p_for_norm',['../classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#acde06241652873c70e7d4d9523eab0b0',1,'rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent.p_for_norm()'],['../classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#a39767402c4bcefc900d2d195bf4eb30f',1,'rlpack.dqn.utils.dqn_agent.DqnAgent.p_for_norm()']]],
-  ['parameterkeys_5f_2',['parameterKeys_',['../class_c___grad_accumulator.html#ae8f64a55b669647e78887385540ebd64',1,'C_GradAccumulator']]],
-  ['parent_5f_3',['parent_',['../class_sum_tree_node.html#a45871a699c06ac513a4e6fda1432623a',1,'SumTreeNode']]],
-  ['policy_5fmodel_4',['policy_model',['../classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a3c0e7b3a8cc0a96cebe026d304c5590c',1,'rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent.policy_model()'],['../classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#a501920ba5f69749d398b245f1748d3bf',1,'rlpack.dqn.utils.dqn_agent.DqnAgent.policy_model()']]],
-  ['policy_5fmodel_5fupdate_5frate_5',['policy_model_update_rate',['../classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#a0a09fff80f52f0550f9431c9c025a797',1,'rlpack::dqn::utils::dqn_agent::DqnAgent']]],
+  ['parameterkeys_5f_1',['parameterKeys_',['../class_c___grad_accumulator.html#ae8f64a55b669647e78887385540ebd64',1,'C_GradAccumulator']]],
+  ['parent_5f_2',['parent_',['../class_sum_tree_node.html#a45871a699c06ac513a4e6fda1432623a',1,'SumTreeNode']]],
+  ['policy_5fmodel_3',['policy_model',['../classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a3c0e7b3a8cc0a96cebe026d304c5590c',1,'rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent.policy_model()'],['../classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#a501920ba5f69749d398b245f1748d3bf',1,'rlpack.dqn.utils.dqn_agent.DqnAgent.policy_model()']]],
+  ['policy_5fmodel_5fupdate_5frate_4',['policy_model_update_rate',['../classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#a0a09fff80f52f0550f9431c9c025a797',1,'rlpack::dqn::utils::dqn_agent::DqnAgent']]],
+  ['policyoutputdata_5f_5',['policyOutputData_',['../group__rollout__buffer__group.html#gad84c8e4c3020a76dea1b916c4e0ea860',1,'RolloutBufferContainer']]],
   ['priorities_5f_6',['priorities_',['../class_c___replay_buffer.html#a6fff9071499ed1415f293c56d88cc5cc',1,'C_ReplayBuffer']]],
   ['prioritiesfloat_5f_7',['prioritiesFloat_',['../class_c___replay_buffer.html#a4865d8755086628c1b7dc983a130c56a',1,'C_ReplayBuffer']]],
   ['prioritiesfloatreference_5f_8',['prioritiesFloatReference_',['../class_c___replay_buffer_data.html#aa40e92b508f4e3b3f28359a60b419871',1,'C_ReplayBufferData']]],
@@ -15,6 +15,7 @@ var searchData=
   ['prioritizationstrategycode_5f_12',['prioritizationStrategyCode_',['../class_c___replay_buffer.html#af0845111ca0caa4eb62625d20bd02404',1,'C_ReplayBuffer']]],
   ['priorityfrequencies_5f_13',['priorityFrequencies_',['../class_offload.html#a5e7be56fe3c2f531fab7577bc9019d58',1,'Offload']]],
   ['probabilities_5f_14',['probabilities_',['../class_c___replay_buffer.html#aea23167e40c71c2de4d8ff4728bcfd41',1,'C_ReplayBuffer']]],
-  ['py_5flogger_15',['py_logger',['../classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a91d5a6165951e90a574d398f102b9d70',1,'rlpack::utils::base::trainer_base::TrainerBase']]],
-  ['pytorch_5fdtype_5fmap_16',['pytorch_dtype_map',['../classrlpack_1_1utils_1_1base_1_1registers_1_1internal__code__register_1_1_internal_code_register.html#a283b7a4edf854a3d53cfa4e86f49dd71',1,'rlpack::utils::base::registers::internal_code_register::InternalCodeRegister']]]
+  ['processgroup_5f_15',['processGroup_',['../class_c___rollout_buffer.html#a1227cf506fd45c481bd091bd28d9240f',1,'C_RolloutBuffer']]],
+  ['py_5flogger_16',['py_logger',['../classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a91d5a6165951e90a574d398f102b9d70',1,'rlpack::utils::base::trainer_base::TrainerBase']]],
+  ['pytorch_5fdtype_5fmap_17',['pytorch_dtype_map',['../classrlpack_1_1utils_1_1base_1_1registers_1_1internal__code__register_1_1_internal_code_register.html#a283b7a4edf854a3d53cfa4e86f49dd71',1,'rlpack::utils::base::registers::internal_code_register::InternalCodeRegister']]]
 ];

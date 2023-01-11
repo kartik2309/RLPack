@@ -125,10 +125,10 @@ class Trainer(TrainerBase):
                 observation_next, reward, terminated, truncated, info = self.env.step(
                     action=action
                 )
-                if terminated or truncated:
-                    done = True
                 state_current = self.reshape_func(observation_current, self.new_shape)
                 state_next = self.reshape_func(observation_next, self.new_shape)
+                if terminated or truncated:
+                    done = True
                 action = self.agent.train(
                     state_current=state_current,
                     state_next=state_next,

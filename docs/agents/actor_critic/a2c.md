@@ -1,4 +1,4 @@
-# Synchronized Actor-Critic (A2C) {#a2c}
+# Advantage Actor-Critic (A2C) {#a2c}
 
 `A2C` is implemented as `rlpack.actor_critic.a2c.A2C`. It inherits from
 `ActorCriticAgent` class defined as `rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent`.

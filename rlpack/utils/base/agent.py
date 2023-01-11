@@ -106,7 +106,7 @@ class Agent(ABC):
 
     @staticmethod
     def _cast_to_tensor(
-        data: Union[List, Tuple, np.ndarray, pytorch.Tensor]
+        data: Union[List, Tuple, np.ndarray, pytorch.Tensor, int, float]
     ) -> pytorch.Tensor:
         """
         Helper function to cast data to tensor.
@@ -117,7 +117,7 @@ class Agent(ABC):
             tensor = data
         elif isinstance(data, np.ndarray):
             tensor = pytorch.from_numpy(data)
-        elif isinstance(data, (list, tuple)):
+        elif isinstance(data, (list, tuple, int, float)):
             tensor = pytorch.tensor(data)
         else:
             raise TypeError(

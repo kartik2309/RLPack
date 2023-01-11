@@ -1,4 +1,4 @@
-# Asynchronized Actor-Critic (A3C) {#a3c}
+# Asynchronized Advantage Actor-Critic (A3C) {#a3c}
 
 `A3C` is implemented as `rlpack.actor_critic.a3c.A3C`. It inherits from
 `ActorCriticAgent` class defined as `rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent`.

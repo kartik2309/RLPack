@@ -1,5 +1,7 @@
 <map id="rlpack.exploration.utils.exploration.Exploration" name="rlpack.exploration.utils.exploration.Exploration">
-<area shape="rect" id="node1" title=" " alt="" coords="5,79,228,119"/>
-<area shape="rect" id="node3" href="$classrlpack_1_1exploration_1_1gaussian__noise_1_1_gaussian_noise.html" title="Exploration tool to produce gaussian noise." alt="" coords="27,167,207,207"/>
-<area shape="rect" id="node2" title=" " alt="" coords="91,5,142,31"/>
+<area shape="rect" id="node1" title=" " alt="" coords="191,53,413,93"/>
+<area shape="rect" id="node4" href="$classrlpack_1_1exploration_1_1gaussian__noise__exploration_1_1_gaussian_noise_exploration.html" title="Exploration tool to produce gaussian noise." alt="" coords="479,5,701,60"/>
+<area shape="rect" id="node5" href="$classrlpack_1_1exploration_1_1state__dependent__exploration_1_1_state_dependent_exploration.html" title=" " alt="" coords="461,84,719,139"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,35,143,60"/>
+<area shape="rect" id="node3" title=" " alt="" coords="49,84,99,109"/>
 </map>

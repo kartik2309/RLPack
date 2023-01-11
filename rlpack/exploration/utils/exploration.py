@@ -17,13 +17,18 @@ from abc import ABC, abstractmethod
 from rlpack import pytorch
 
 
-class Exploration(ABC):
+class Exploration(pytorch.nn.Module, ABC):
     @abstractmethod
     def __init__(self, *args, **kwargs):
+        super(Exploration, self).__init__()
         pass
 
     @abstractmethod
     def sample(self, *args, **kwargs) -> pytorch.Tensor:
+        pass
+
+    @abstractmethod
+    def rsample(self, *args, **kwargs) -> pytorch.Tensor:
         pass
 
     @abstractmethod

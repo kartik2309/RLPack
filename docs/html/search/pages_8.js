@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['synchronized_20actor_2dcritic_20_28a2c_29_0',['Synchronized Actor-Critic (A2C)',['../a2c.html',1,'']]]
+  ['rlpack_0',['RLPack',['../index.html',1,'']]],
+  ['rlpack_20documentation_1',['RLPack Documentation',['../intro.html',1,'']]]
 ];

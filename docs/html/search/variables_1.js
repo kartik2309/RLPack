@@ -1,11 +1,11 @@
 var searchData=
 [
   ['action_5fspace_0',['action_space',['../classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a31e3fa147ea1d19490fb388ffe61aee3',1,'rlpack::actor_critic::utils::actor_critic_agent::ActorCriticAgent']]],
-  ['actionlogprobabilities_5f_1',['actionLogProbabilities_',['../class_c___rollout_buffer.html#a0ef1283285078a9a3fcb3b04465118fc',1,'C_RolloutBuffer']]],
-  ['actions_5f_2',['actions_',['../class_c___replay_buffer.html#ab25ac33a16fcd6ad717d652ca19ec4cb',1,'C_ReplayBuffer']]],
-  ['activation_3',['activation',['../classrlpack_1_1models_1_1utils_1_1__mlp__feature__extractor_1_1___mlp_feature_extractor.html#a038fdccf859d78a268d09c5b859c64c2',1,'rlpack::models::utils::_mlp_feature_extractor::_MlpFeatureExtractor']]],
-  ['activation_5fcore_4',['activation_core',['../classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a72f824bdfbbed6b7392003193f29526d',1,'rlpack::models::actor_critic_mlp_policy::ActorCriticMlpPolicy']]],
-  ['activation_5finit_5fargs_5',['activation_init_args',['../classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#acd9c32c82b3756a8dc8e09c29da823e0',1,'rlpack::utils::base::registers::register::Register']]],
+  ['actionlogprobabilities_5f_1',['actionLogProbabilities_',['../group__rollout__buffer__group.html#gad1ba8eac11414853b4f4d3380aaacca1',1,'RolloutBufferContainer']]],
+  ['actionlogprobability_2',['actionLogProbability',['../class_rollout_buffer_data.html#a5601943f0ed42864d718d4655e223029',1,'RolloutBufferData']]],
+  ['actions_5f_3',['actions_',['../class_c___replay_buffer.html#ab25ac33a16fcd6ad717d652ca19ec4cb',1,'C_ReplayBuffer']]],
+  ['activation_4',['activation',['../classrlpack_1_1models_1_1utils_1_1mlp__feature__extractor_1_1_mlp_feature_extractor.html#a59a6026d90a3654833a3d51950ce30a2',1,'rlpack::models::utils::mlp_feature_extractor::MlpFeatureExtractor']]],
+  ['activation_5fcore_5',['activation_core',['../classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a72f824bdfbbed6b7392003193f29526d',1,'rlpack::models::actor_critic_mlp_policy::ActorCriticMlpPolicy']]],
   ['activation_5fmap_6',['activation_map',['../classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a07d171c895e38a539cffe0292a447033',1,'rlpack::utils::base::registers::register::Register']]],
   ['actor_5factivation_7',['actor_activation',['../classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a72b8e01161f5c361e73a872ed9adf713',1,'rlpack::models::actor_critic_mlp_policy::ActorCriticMlpPolicy']]],
   ['actor_5ffeature_5fextractor_8',['actor_feature_extractor',['../classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#aa5cf6dc54f85cb7adb659dcef3cf6302',1,'rlpack::models::actor_critic_mlp_policy::ActorCriticMlpPolicy']]],
@@ -17,8 +17,8 @@ var searchData=
   ['agent_5finit_5fargs_14',['agent_init_args',['../classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a899188f070f591ea1442c79edf493b39',1,'rlpack::utils::base::registers::register::Register']]],
   ['agent_5fmodel_5fargs_15',['agent_model_args',['../classrlpack_1_1simulator_1_1_simulator.html#a9f3aa79430b1b011f71da46b8c7bf30c',1,'rlpack::simulator::Simulator']]],
   ['agents_16',['agents',['../classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#ae9079e44adcf62f56340ec96668f48cc',1,'rlpack::utils::base::registers::register::Register']]],
-  ['anneal_5ffunc_17',['anneal_func',['../classrlpack_1_1exploration_1_1gaussian__noise_1_1_gaussian_noise.html#a97d0c5a0b0427c8f752ac9302c614b20',1,'rlpack::exploration::gaussian_noise::GaussianNoise']]],
-  ['apply_5fnorm_18',['apply_norm',['../classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#aff3d0599e56caa4b5b0b36cccbf684b1',1,'rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent.apply_norm()'],['../classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#a2d426aa971444cee2c9f17a1c3adcb67',1,'rlpack.dqn.utils.dqn_agent.DqnAgent.apply_norm()'],['../classrlpack_1_1utils_1_1normalization_1_1_normalization.html#a5275a7ca69df6236d014e40eef044cef',1,'rlpack.utils.normalization.Normalization.apply_norm()']]],
+  ['anneal_5ffunc_17',['anneal_func',['../classrlpack_1_1exploration_1_1gaussian__noise__exploration_1_1_gaussian_noise_exploration.html#a1dbdd218e21fdf11a5178209c65abe29',1,'rlpack::exploration::gaussian_noise_exploration::GaussianNoiseExploration']]],
+  ['apply_5fnorm_18',['apply_norm',['../classrlpack_1_1utils_1_1normalization_1_1_normalization.html#a5275a7ca69df6236d014e40eef044cef',1,'rlpack::utils::normalization::Normalization']]],
   ['apply_5fnorm_5fto_19',['apply_norm_to',['../classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a7e6b39931e27a1d569945fdb177d40cc',1,'rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent.apply_norm_to()'],['../classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html#a2e3eae10934f5ef3687b5d0f01d8933c',1,'rlpack.dqn.utils.dqn_agent.DqnAgent.apply_norm_to()']]],
   ['args_20',['args',['../classrlpack_1_1utils_1_1sanity__check_1_1_sanity_check.html#afc3ec029166966042816043bebc40353',1,'rlpack::utils::sanity_check::SanityCheck']]]
 ];

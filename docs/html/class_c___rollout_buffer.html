@@ -98,6 +98,7 @@ $(document).ready(function(){initNavTree('class_c___rollout_buffer.html',''); in
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a>  </div>
   <div class="headertitle"><div class="title">C_RolloutBuffer Class Reference<div class="ingroups"><a class="el" href="group__binaries__group.html">binaries</a> &raquo; <a class="el" href="group__rollout__buffer__group.html">rollout_buffer</a></div></div></div>
 </div><!--header-->
@@ -107,62 +108,87 @@ $(document).ready(function(){initNavTree('class_c___rollout_buffer.html',''); in
  <a href="class_c___rollout_buffer.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="_c___rollout_buffer_8h_source.html">C_RolloutBuffer.h</a>&gt;</code></p>
+<div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Collaboration diagram for C_RolloutBuffer:</div>
+<div id="dynsection-0-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-0-content" class="dyncontent" style="display:none;">
+<div class="center"><img src="class_c___rollout_buffer__coll__graph.png" border="0" usemap="#a_c___rollout_buffer_coll__map" alt="Collaboration graph"/></div>
+<map name="a_c___rollout_buffer_coll__map" id="a_c___rollout_buffer_coll__map">
+<area shape="rect" title="The class C_RolloutBuffer is the class that implements the C++ backend for Rollout Buffer...." alt="" coords="25,93,140,119"/>
+<area shape="rect" href="class_rollout_buffer_container.html" title="The class RolloutBufferContainer is the main backend container that is used in C_RolloutBuffer...." alt="" coords="5,5,160,31"/>
+</map>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac4a0e18b78b1abf2e0bce866820d5527"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#ac4a0e18b78b1abf2e0bce866820d5527">C_RolloutBuffer</a> (int64_t bufferSize, std::string &amp;device, std::string &amp;dtype)</td></tr>
-<tr class="separator:ac4a0e18b78b1abf2e0bce866820d5527"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa249ed0bc9626ee139fdda3ed13b9176"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#aa249ed0bc9626ee139fdda3ed13b9176">clear</a> ()</td></tr>
-<tr class="separator:aa249ed0bc9626ee139fdda3ed13b9176"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab88727d166f0abd43425137a5456abd2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#ab88727d166f0abd43425137a5456abd2">C_RolloutBuffer</a> (int64_t bufferSize, std::string &amp;device, std::string &amp;dtype, std::map&lt; std::string, c10::intrusive_ptr&lt; c10d::ProcessGroup &gt; &gt; &amp;processGroupMap, const std::chrono::duration&lt; int32_t &gt; &amp;barrierTimeoutDuration=std::chrono::duration&lt; int32_t &gt;(120), const std::chrono::duration&lt; int32_t &gt; &amp;workTimeoutDuration=std::chrono::duration&lt; int32_t &gt;(30))</td></tr>
+<tr class="separator:ab88727d166f0abd43425137a5456abd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6688e63ed6b81b72e324097e306415f0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a6688e63ed6b81b72e324097e306415f0">clear_policy_outputs</a> ()</td></tr>
+<tr class="separator:a6688e63ed6b81b72e324097e306415f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d7329ae83788c6abdfd97e7bf65d24f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a3d7329ae83788c6abdfd97e7bf65d24f">clear_transitions</a> ()</td></tr>
+<tr class="separator:a3d7329ae83788c6abdfd97e7bf65d24f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb2ac0c8ffb12fb423b851013134e8be"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#aeb2ac0c8ffb12fb423b851013134e8be">compute_returns</a> (float_t gamma)</td></tr>
 <tr class="separator:aeb2ac0c8ffb12fb423b851013134e8be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e4541bcd75daf31012ea961f3b5316b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a6e4541bcd75daf31012ea961f3b5316b">extend_transitions</a> ()</td></tr>
+<tr class="separator:a6e4541bcd75daf31012ea961f3b5316b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb842c456059fb4eacb728259f197c1d"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#aeb842c456059fb4eacb728259f197c1d">get_stacked_action_log_probabilities</a> ()</td></tr>
 <tr class="separator:aeb842c456059fb4eacb728259f197c1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae867164b2f37aaa3becb98869e2e769f"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#ae867164b2f37aaa3becb98869e2e769f">get_stacked_dones</a> ()</td></tr>
+<tr class="separator:ae867164b2f37aaa3becb98869e2e769f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6db4b52e8668ec29c03ce694670bd06"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#ac6db4b52e8668ec29c03ce694670bd06">get_stacked_entropies</a> ()</td></tr>
 <tr class="separator:ac6db4b52e8668ec29c03ce694670bd06"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ac46b846924e49fb0d7aa8f0e826e72"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a9ac46b846924e49fb0d7aa8f0e826e72">get_stacked_rewards</a> ()</td></tr>
 <tr class="separator:a9ac46b846924e49fb0d7aa8f0e826e72"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb4f5e54a312a96e9c37565add2af9e2"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#acb4f5e54a312a96e9c37565add2af9e2">get_stacked_state_current_values</a> ()</td></tr>
 <tr class="separator:acb4f5e54a312a96e9c37565add2af9e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aad015699f88dccd58db22f6d34ee5c60"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#aad015699f88dccd58db22f6d34ee5c60">insert</a> (std::map&lt; std::string, torch::Tensor &gt; &amp;inputMap)</td></tr>
-<tr class="separator:aad015699f88dccd58db22f6d34ee5c60"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b4e5f383f292623fbc316a468871cba"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a0b4e5f383f292623fbc316a468871cba">size</a> ()</td></tr>
-<tr class="separator:a0b4e5f383f292623fbc316a468871cba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a373ba6bdf959906f03049935ab009b73"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a373ba6bdf959906f03049935ab009b73">get_stacked_states_current</a> ()</td></tr>
+<tr class="separator:a373ba6bdf959906f03049935ab009b73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d0792ab3d7fcb31b3f31ce7ecc15692"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a8d0792ab3d7fcb31b3f31ce7ecc15692">get_states_statistics</a> ()</td></tr>
+<tr class="separator:a8d0792ab3d7fcb31b3f31ce7ecc15692"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a610469447ea8a72912d9ba0117809363"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a610469447ea8a72912d9ba0117809363">insert_policy_output</a> (std::map&lt; std::string, torch::Tensor &gt; &amp;inputMap)</td></tr>
+<tr class="separator:a610469447ea8a72912d9ba0117809363"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5fbca4648d964a43337ac3829f431d32"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a5fbca4648d964a43337ac3829f431d32">insert_transition</a> (std::map&lt; std::string, torch::Tensor &gt; &amp;inputMap)</td></tr>
+<tr class="separator:a5fbca4648d964a43337ac3829f431d32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5284a2ebc2e6253db04d450cfc9aeb44"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a5284a2ebc2e6253db04d450cfc9aeb44">policy_output_at</a> (int64_t index)</td></tr>
+<tr class="separator:a5284a2ebc2e6253db04d450cfc9aeb44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a093e49743312b416b8434d6b45cdd92d"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a093e49743312b416b8434d6b45cdd92d">size_policy_outputs</a> ()</td></tr>
+<tr class="separator:a093e49743312b416b8434d6b45cdd92d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a9d2cbccfe1125bbfca61f1f96a0819"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a5a9d2cbccfe1125bbfca61f1f96a0819">size_transitions</a> ()</td></tr>
+<tr class="separator:a5a9d2cbccfe1125bbfca61f1f96a0819"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8560d499a1e55925018289c07387cd1d"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a8560d499a1e55925018289c07387cd1d">transition_at</a> (int64_t index)</td></tr>
+<tr class="separator:a8560d499a1e55925018289c07387cd1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1f54e17e15693a455a89aa8fc92a6691"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a1f54e17e15693a455a89aa8fc92a6691">~C_RolloutBuffer</a> ()</td></tr>
 <tr class="separator:a1f54e17e15693a455a89aa8fc92a6691"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:af1dfbaa0427c39c6a2bf929b33236218"><td class="memItemLeft" align="right" valign="top">std::vector&lt; torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#af1dfbaa0427c39c6a2bf929b33236218">gather_with_process_group_</a> (torch::Tensor &amp;inputTensor, bool unbindTensors)</td></tr>
+<tr class="separator:af1dfbaa0427c39c6a2bf929b33236218"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:a0ef1283285078a9a3fcb3b04465118fc"><td class="memItemLeft" align="right" valign="top">std::vector&lt; torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a0ef1283285078a9a3fcb3b04465118fc">actionLogProbabilities_</a></td></tr>
-<tr class="memdesc:a0ef1283285078a9a3fcb3b04465118fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector of action log probabilities.  <a href="class_c___rollout_buffer.html#a0ef1283285078a9a3fcb3b04465118fc">More...</a><br /></td></tr>
-<tr class="separator:a0ef1283285078a9a3fcb3b04465118fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe88ba0d9b4fc4c9ba9abe9324c7ada6"><td class="memItemLeft" align="right" valign="top">int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#afe88ba0d9b4fc4c9ba9abe9324c7ada6">bufferSize_</a></td></tr>
-<tr class="memdesc:afe88ba0d9b4fc4c9ba9abe9324c7ada6"><td class="mdescLeft">&#160;</td><td class="mdescRight">The buffer size that is going to be used.  <a href="class_c___rollout_buffer.html#afe88ba0d9b4fc4c9ba9abe9324c7ada6">More...</a><br /></td></tr>
-<tr class="separator:afe88ba0d9b4fc4c9ba9abe9324c7ada6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a199bba23efd9f47c37194558a60f80f2"><td class="memItemLeft" align="right" valign="top">torch::DeviceType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a199bba23efd9f47c37194558a60f80f2">device_</a></td></tr>
-<tr class="memdesc:a199bba23efd9f47c37194558a60f80f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The device that is to be used for PyTorch tensors.  <a href="class_c___rollout_buffer.html#a199bba23efd9f47c37194558a60f80f2">More...</a><br /></td></tr>
-<tr class="separator:a199bba23efd9f47c37194558a60f80f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e63b70d536c23ff93aab45178441508"><td class="memItemLeft" align="right" valign="top">torch::Dtype&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a6e63b70d536c23ff93aab45178441508">dtype_</a></td></tr>
-<tr class="memdesc:a6e63b70d536c23ff93aab45178441508"><td class="mdescLeft">&#160;</td><td class="mdescRight">The datatype to be used for PyTorch tensors.  <a href="class_c___rollout_buffer.html#a6e63b70d536c23ff93aab45178441508">More...</a><br /></td></tr>
-<tr class="separator:a6e63b70d536c23ff93aab45178441508"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ebb6cfee5428fd65d685db5465e4fa3"><td class="memItemLeft" align="right" valign="top">std::vector&lt; torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a8ebb6cfee5428fd65d685db5465e4fa3">entropies_</a></td></tr>
-<tr class="memdesc:a8ebb6cfee5428fd65d685db5465e4fa3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector of entropies of current distribution.  <a href="class_c___rollout_buffer.html#a8ebb6cfee5428fd65d685db5465e4fa3">More...</a><br /></td></tr>
-<tr class="separator:a8ebb6cfee5428fd65d685db5465e4fa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a248c56bd887156d962bce0cacb85b898"><td class="memItemLeft" align="right" valign="top">std::vector&lt; torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a248c56bd887156d962bce0cacb85b898">rewards_</a></td></tr>
-<tr class="memdesc:a248c56bd887156d962bce0cacb85b898"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector of accumulated rewards.  <a href="class_c___rollout_buffer.html#a248c56bd887156d962bce0cacb85b898">More...</a><br /></td></tr>
-<tr class="separator:a248c56bd887156d962bce0cacb85b898"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b73c1f79d5b70bab66e2ce11d22d4c0"><td class="memItemLeft" align="right" valign="top">std::vector&lt; torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a9b73c1f79d5b70bab66e2ce11d22d4c0">stateCurrentValues_</a></td></tr>
-<tr class="memdesc:a9b73c1f79d5b70bab66e2ce11d22d4c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector of current state values.  <a href="class_c___rollout_buffer.html#a9b73c1f79d5b70bab66e2ce11d22d4c0">More...</a><br /></td></tr>
-<tr class="separator:a9b73c1f79d5b70bab66e2ce11d22d4c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae313cf4df9778bb868d68b629d84a588"><td class="memItemLeft" align="right" valign="top">std::chrono::seconds&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#ae313cf4df9778bb868d68b629d84a588">barrierTimeoutDuration_</a> {}</td></tr>
+<tr class="memdesc:ae313cf4df9778bb868d68b629d84a588"><td class="mdescLeft">&#160;</td><td class="mdescRight">The chrono duration for barrier timeout before any <code>allgather</code> calls.  <a href="class_c___rollout_buffer.html#ae313cf4df9778bb868d68b629d84a588">More...</a><br /></td></tr>
+<tr class="separator:ae313cf4df9778bb868d68b629d84a588"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1227cf506fd45c481bd091bd28d9240f"><td class="memItemLeft" align="right" valign="top">c10::intrusive_ptr&lt; c10d::ProcessGroup &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a1227cf506fd45c481bd091bd28d9240f">processGroup_</a></td></tr>
+<tr class="memdesc:a1227cf506fd45c481bd091bd28d9240f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The intrusive pointer to ProcessGroup in PyTorch.  <a href="class_c___rollout_buffer.html#a1227cf506fd45c481bd091bd28d9240f">More...</a><br /></td></tr>
+<tr class="separator:a1227cf506fd45c481bd091bd28d9240f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab341d2908b3beef02dc8679fc4a7e4e6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_rollout_buffer_container.html">RolloutBufferContainer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#ab341d2908b3beef02dc8679fc4a7e4e6">rolloutBufferContainer_</a></td></tr>
+<tr class="memdesc:ab341d2908b3beef02dc8679fc4a7e4e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">The pointer to dynamically allocated <a class="el" href="class_rollout_buffer_container.html" title="The class RolloutBufferContainer is the main backend container that is used in C_RolloutBuffer....">RolloutBufferContainer</a> object.  <a href="class_c___rollout_buffer.html#ab341d2908b3beef02dc8679fc4a7e4e6">More...</a><br /></td></tr>
+<tr class="separator:ab341d2908b3beef02dc8679fc4a7e4e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a321dd6b9f34f49dfa2639cfe34f13974"><td class="memItemLeft" align="right" valign="top">torch::TensorOptions&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a321dd6b9f34f49dfa2639cfe34f13974">tensorOptions_</a></td></tr>
 <tr class="memdesc:a321dd6b9f34f49dfa2639cfe34f13974"><td class="mdescLeft">&#160;</td><td class="mdescRight">The tensor options to be used for PyTorch tensors; constructed with device_ and dtype_.  <a href="class_c___rollout_buffer.html#a321dd6b9f34f49dfa2639cfe34f13974">More...</a><br /></td></tr>
 <tr class="separator:a321dd6b9f34f49dfa2639cfe34f13974"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad291a48bd30025894ef93d85d8a355b6"><td class="memItemLeft" align="right" valign="top">std::chrono::minutes&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#ad291a48bd30025894ef93d85d8a355b6">workTimeoutDuration_</a> {}</td></tr>
+<tr class="memdesc:ad291a48bd30025894ef93d85d8a355b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">The chrono duration for work timeout to wait for all processes to complete <code>allgather</code>.  <a href="class_c___rollout_buffer.html#ad291a48bd30025894ef93d85d8a355b6">More...</a><br /></td></tr>
+<tr class="separator:ad291a48bd30025894ef93d85d8a355b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >The class <a class="el" href="class_c___rollout_buffer.html" title="The class C_RolloutBuffer is the class that implements the C++ backend for Rollout Buffer....">C_RolloutBuffer</a> is the class that implements the C++ backend for Rollout Buffer. Tensors are moved to C++ backend via PyBind11 and are kept opaque with std::map, hence, tensors are moved between Python and C++ only by references. <code><a class="el" href="class_c___rollout_buffer.html" title="The class C_RolloutBuffer is the class that implements the C++ backend for Rollout Buffer....">C_RolloutBuffer</a></code> is hence autograd safe. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ac4a0e18b78b1abf2e0bce866820d5527" name="ac4a0e18b78b1abf2e0bce866820d5527"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac4a0e18b78b1abf2e0bce866820d5527">&#9670;&#160;</a></span>C_RolloutBuffer()</h2>
+<a id="ab88727d166f0abd43425137a5456abd2" name="ab88727d166f0abd43425137a5456abd2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab88727d166f0abd43425137a5456abd2">&#9670;&#160;</a></span>C_RolloutBuffer()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -183,7 +209,25 @@ Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::string &amp;&#160;</td>
-          <td class="paramname"><em>dtype</em>&#160;</td>
+          <td class="paramname"><em>dtype</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::map&lt; std::string, c10::intrusive_ptr&lt; c10d::ProcessGroup &gt; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>processGroupMap</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::chrono::duration&lt; int32_t &gt; &amp;&#160;</td>
+          <td class="paramname"><em>barrierTimeoutDuration</em> = <code>std::chrono::duration&lt;int32_t&gt;(&#160;120&#160;)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::chrono::duration&lt; int32_t &gt; &amp;&#160;</td>
+          <td class="paramname"><em>workTimeoutDuration</em> = <code>std::chrono::duration&lt;int32_t&gt;(&#160;30&#160;)</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -197,7 +241,10 @@ Private Attributes</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">bufferSize</td><td>The buffer size to be used. </td></tr>
     <tr><td class="paramname">device</td><td>The device on which PyTorch tensors are to be processed. </td></tr>
-    <tr><td class="paramname">dtype</td><td>The datatype which is to be used for PyTorch tensors.</td></tr>
+    <tr><td class="paramname">dtype</td><td>The datatype which is to be used for PyTorch tensors. </td></tr>
+    <tr><td class="paramname">processGroupMap</td><td>The map of process group's intrusive pointer from Python to perform collective operations if required. If the RolloutBuffer is not being used in distributed setting, this can be passed as a map of nullptr like: {{"process_group", nullptr}}. This map must contain the ProcessGroup with the key <code>process_group</code>. A map is being used to take <code>TensorMap</code> objected which is opaque and binded to avoid casting and easy pass by reference. </td></tr>
+    <tr><td class="paramname">barrierTimeoutDuration</td><td>If a valid <code>processGroupMap</code> is being passed, this argument is relevant and indicates the barrier timeout duration in seconds. This barrier is applied before inputs for all gather is prepared. Default is set to 120 seconds. </td></tr>
+    <tr><td class="paramname">workTimeoutDuration</td><td>If a valid <code>processGroupMap</code> is being passed, this argument is relevant and indicates the work timeout duration in minutes. The work instrusive pointer explicitly calls wait to ensure synchronization. Default is set to 30 seconds.</td></tr>
   </table>
   </dd>
 </dl>
@@ -209,9 +256,6 @@ Private Attributes</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">C_RolloutBuffer::~C_RolloutBuffer </td>
@@ -220,32 +264,90 @@ Private Attributes</h2></td></tr>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">default</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <p >Default destructor <a class="el" href="class_c___rollout_buffer.html" title="The class C_RolloutBuffer is the class that implements the C++ backend for Rollout Buffer....">C_RolloutBuffer</a> </p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="aa249ed0bc9626ee139fdda3ed13b9176" name="aa249ed0bc9626ee139fdda3ed13b9176"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa249ed0bc9626ee139fdda3ed13b9176">&#9670;&#160;</a></span>clear()</h2>
+<a id="af1dfbaa0427c39c6a2bf929b33236218" name="af1dfbaa0427c39c6a2bf929b33236218"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af1dfbaa0427c39c6a2bf929b33236218">&#9670;&#160;</a></span>gather_with_process_group_()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; torch::Tensor &gt; C_RolloutBuffer::gather_with_process_group_ </td>
+          <td>(</td>
+          <td class="paramtype">torch::Tensor &amp;&#160;</td>
+          <td class="paramname"><em>inputTensor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>unbindTensors</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p >Performs all gather with the initialized process group. This method will throw a runtime error if process group is not defined.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">inputTensor</td><td>: The input tensor which is to be used for input in gather. This tensor is broadcasted to other processes in the group and receives the same tensor instances from other groups. </td></tr>
+    <tr><td class="paramname">unbindTensors</td><td>: Whether to unbind the tensors after performing all gather. Default is true. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>: A vector of tensors is returned from groups. The vector will have tensors from other processes only.</dd></dl>
+
+</div>
+</div>
+<a id="a6688e63ed6b81b72e324097e306415f0" name="a6688e63ed6b81b72e324097e306415f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6688e63ed6b81b72e324097e306415f0">&#9670;&#160;</a></span>clear_policy_outputs()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void C_RolloutBuffer::clear </td>
+          <td class="memname">void C_RolloutBuffer::clear_policy_outputs </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Clears the relevant vectors</p>
+<p >Clears the policy output vectors</p>
+
+</div>
+</div>
+<a id="a3d7329ae83788c6abdfd97e7bf65d24f" name="a3d7329ae83788c6abdfd97e7bf65d24f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d7329ae83788c6abdfd97e7bf65d24f">&#9670;&#160;</a></span>clear_transitions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void C_RolloutBuffer::clear_transitions </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Clears the transition vectors.</p>
 
 </div>
 </div>
@@ -275,6 +377,24 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a6e4541bcd75daf31012ea961f3b5316b" name="a6e4541bcd75daf31012ea961f3b5316b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e4541bcd75daf31012ea961f3b5316b">&#9670;&#160;</a></span>extend_transitions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void C_RolloutBuffer::extend_transitions </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >This method extends the transitions by performing all gather for transition quantities. This method will throw a runtime error if process group is not defined.</p>
+
+</div>
+</div>
 <a id="aeb842c456059fb4eacb728259f197c1d" name="aeb842c456059fb4eacb728259f197c1d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aeb842c456059fb4eacb728259f197c1d">&#9670;&#160;</a></span>get_stacked_action_log_probabilities()</h2>
 
@@ -291,6 +411,23 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Stacks the accumulated action log probabilities and moves them to correct tensor options (for device and datatype).</p>
 <dl class="section return"><dt>Returns</dt><dd>A map of PyTorch tensor of log of action probabilities, keyed "action_log_probabilities".</dd></dl>
+
+</div>
+</div>
+<a id="ae867164b2f37aaa3becb98869e2e769f" name="ae867164b2f37aaa3becb98869e2e769f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae867164b2f37aaa3becb98869e2e769f">&#9670;&#160;</a></span>get_stacked_dones()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::map&lt; std::string, torch::Tensor &gt; C_RolloutBuffer::get_stacked_dones </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -351,14 +488,48 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aad015699f88dccd58db22f6d34ee5c60" name="aad015699f88dccd58db22f6d34ee5c60"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aad015699f88dccd58db22f6d34ee5c60">&#9670;&#160;</a></span>insert()</h2>
+<a id="a373ba6bdf959906f03049935ab009b73" name="a373ba6bdf959906f03049935ab009b73"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a373ba6bdf959906f03049935ab009b73">&#9670;&#160;</a></span>get_stacked_states_current()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void C_RolloutBuffer::insert </td>
+          <td class="memname">std::map&lt; std::string, torch::Tensor &gt; C_RolloutBuffer::get_stacked_states_current </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8d0792ab3d7fcb31b3f31ce7ecc15692" name="a8d0792ab3d7fcb31b3f31ce7ecc15692"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d0792ab3d7fcb31b3f31ce7ecc15692">&#9670;&#160;</a></span>get_states_statistics()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::map&lt; std::string, torch::Tensor &gt; C_RolloutBuffer::get_states_statistics </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a610469447ea8a72912d9ba0117809363" name="a610469447ea8a72912d9ba0117809363"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a610469447ea8a72912d9ba0117809363">&#9670;&#160;</a></span>insert_policy_output()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void C_RolloutBuffer::insert_policy_output </td>
           <td>(</td>
           <td class="paramtype">std::map&lt; std::string, torch::Tensor &gt; &amp;&#160;</td>
           <td class="paramname"><em>inputMap</em></td><td>)</td>
@@ -366,11 +537,10 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Insertion method to insert quantities into Rollout Buffer.</p>
+<p >Insertion method to insert policy outputs into Rollout Buffer.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">inputMap</td><td>The input map of tensors with quantities to insert into the rollout buffer. The map must contain the following keys:<ul>
-<li>reward: The reward obtained by the agent.</li>
+    <tr><td class="paramname">inputMap</td><td>The input map of tensors with quantities to insert_policy_output into the rollout buffer. The map must contain the following keys:<ul>
 <li>action_log_probability: The log probability of the sampled action in the given distribution.</li>
 <li>state_current_value: Current state value.</li>
 <li>entropy: Current entropy of the distribution.</li>
@@ -383,14 +553,76 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a0b4e5f383f292623fbc316a468871cba" name="a0b4e5f383f292623fbc316a468871cba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0b4e5f383f292623fbc316a468871cba">&#9670;&#160;</a></span>size()</h2>
+<a id="a5fbca4648d964a43337ac3829f431d32" name="a5fbca4648d964a43337ac3829f431d32"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5fbca4648d964a43337ac3829f431d32">&#9670;&#160;</a></span>insert_transition()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">size_t C_RolloutBuffer::size </td>
+          <td class="memname">void C_RolloutBuffer::insert_transition </td>
+          <td>(</td>
+          <td class="paramtype">std::map&lt; std::string, torch::Tensor &gt; &amp;&#160;</td>
+          <td class="paramname"><em>inputMap</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Insertion method to insert transitions into Rollout Buffer.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">inputMap</td><td>The input map of tensors with quantities to insert into the rollout buffer. The map must contain the following keys:<ul>
+<li>state_current: The current state.</li>
+<li>done: The current done flag for episode termination/truncation.</li>
+<li>reward: The reward obtained by the agent.</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>For more information, please refer <a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html">rlpack._C.rollout_buffer.RolloutBuffer</a> and rlpack.actor_critic.base.ActorCriticAgent</p>
+
+</div>
+</div>
+<a id="a5284a2ebc2e6253db04d450cfc9aeb44" name="a5284a2ebc2e6253db04d450cfc9aeb44"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5284a2ebc2e6253db04d450cfc9aeb44">&#9670;&#160;</a></span>policy_output_at()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::map&lt; std::string, torch::Tensor &gt; C_RolloutBuffer::policy_output_at </td>
+          <td>(</td>
+          <td class="paramtype">int64_t&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Obtain the policy output at a given index.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>: The index of the policy output buffer. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>: The map with policy output quantities viz:<ul>
+<li>action_log_probability</li>
+<li>state_current_value</li>
+<li>entropy</li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a id="a093e49743312b416b8434d6b45cdd92d" name="a093e49743312b416b8434d6b45cdd92d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a093e49743312b416b8434d6b45cdd92d">&#9670;&#160;</a></span>size_policy_outputs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t C_RolloutBuffer::size_policy_outputs </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -401,9 +633,58 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a5a9d2cbccfe1125bbfca61f1f96a0819" name="a5a9d2cbccfe1125bbfca61f1f96a0819"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a9d2cbccfe1125bbfca61f1f96a0819">&#9670;&#160;</a></span>size_transitions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t C_RolloutBuffer::size_transitions </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Returns the size of Rollout Buffer.</p>
+
+</div>
+</div>
+<a id="a8560d499a1e55925018289c07387cd1d" name="a8560d499a1e55925018289c07387cd1d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8560d499a1e55925018289c07387cd1d">&#9670;&#160;</a></span>transition_at()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::map&lt; std::string, torch::Tensor &gt; C_RolloutBuffer::transition_at </td>
+          <td>(</td>
+          <td class="paramtype">int64_t&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Obtain the transitions at a given index.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>: The index of the transitions buffer. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>: The map with transitions quantities viz:<ul>
+<li>state_current</li>
+<li>reward</li>
+<li>done</li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
 <h2 class="groupheader">Field Documentation</h2>
-<a id="a0ef1283285078a9a3fcb3b04465118fc" name="a0ef1283285078a9a3fcb3b04465118fc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0ef1283285078a9a3fcb3b04465118fc">&#9670;&#160;</a></span>actionLogProbabilities_</h2>
+<a id="ae313cf4df9778bb868d68b629d84a588" name="ae313cf4df9778bb868d68b629d84a588"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae313cf4df9778bb868d68b629d84a588">&#9670;&#160;</a></span>barrierTimeoutDuration_</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -412,7 +693,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;torch::Tensor&gt; C_RolloutBuffer::actionLogProbabilities_</td>
+          <td class="memname">std::chrono::seconds C_RolloutBuffer::barrierTimeoutDuration_ {}</td>
         </tr>
       </table>
   </td>
@@ -422,12 +703,12 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>The vector of action log probabilities. </p>
+<p>The chrono duration for barrier timeout before any <code>allgather</code> calls. </p>
 
 </div>
 </div>
-<a id="afe88ba0d9b4fc4c9ba9abe9324c7ada6" name="afe88ba0d9b4fc4c9ba9abe9324c7ada6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afe88ba0d9b4fc4c9ba9abe9324c7ada6">&#9670;&#160;</a></span>bufferSize_</h2>
+<a id="a1227cf506fd45c481bd091bd28d9240f" name="a1227cf506fd45c481bd091bd28d9240f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1227cf506fd45c481bd091bd28d9240f">&#9670;&#160;</a></span>processGroup_</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -436,7 +717,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int64_t C_RolloutBuffer::bufferSize_</td>
+          <td class="memname">c10::intrusive_ptr&lt;c10d::ProcessGroup&gt; C_RolloutBuffer::processGroup_</td>
         </tr>
       </table>
   </td>
@@ -446,12 +727,12 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>The buffer size that is going to be used. </p>
+<p>The intrusive pointer to ProcessGroup in PyTorch. </p>
 
 </div>
 </div>
-<a id="a199bba23efd9f47c37194558a60f80f2" name="a199bba23efd9f47c37194558a60f80f2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a199bba23efd9f47c37194558a60f80f2">&#9670;&#160;</a></span>device_</h2>
+<a id="ab341d2908b3beef02dc8679fc4a7e4e6" name="ab341d2908b3beef02dc8679fc4a7e4e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab341d2908b3beef02dc8679fc4a7e4e6">&#9670;&#160;</a></span>rolloutBufferContainer_</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -460,7 +741,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">torch::DeviceType C_RolloutBuffer::device_</td>
+          <td class="memname"><a class="el" href="class_rollout_buffer_container.html">RolloutBufferContainer</a>* C_RolloutBuffer::rolloutBufferContainer_</td>
         </tr>
       </table>
   </td>
@@ -470,103 +751,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>The device that is to be used for PyTorch tensors. </p>
-
-</div>
-</div>
-<a id="a6e63b70d536c23ff93aab45178441508" name="a6e63b70d536c23ff93aab45178441508"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6e63b70d536c23ff93aab45178441508">&#9670;&#160;</a></span>dtype_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">torch::Dtype C_RolloutBuffer::dtype_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>The datatype to be used for PyTorch tensors. </p>
-
-</div>
-</div>
-<a id="a8ebb6cfee5428fd65d685db5465e4fa3" name="a8ebb6cfee5428fd65d685db5465e4fa3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8ebb6cfee5428fd65d685db5465e4fa3">&#9670;&#160;</a></span>entropies_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;torch::Tensor&gt; C_RolloutBuffer::entropies_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>The vector of entropies of current distribution. </p>
-
-</div>
-</div>
-<a id="a248c56bd887156d962bce0cacb85b898" name="a248c56bd887156d962bce0cacb85b898"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a248c56bd887156d962bce0cacb85b898">&#9670;&#160;</a></span>rewards_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;torch::Tensor&gt; C_RolloutBuffer::rewards_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>The vector of accumulated rewards. </p>
-
-</div>
-</div>
-<a id="a9b73c1f79d5b70bab66e2ce11d22d4c0" name="a9b73c1f79d5b70bab66e2ce11d22d4c0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9b73c1f79d5b70bab66e2ce11d22d4c0">&#9670;&#160;</a></span>stateCurrentValues_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;torch::Tensor&gt; C_RolloutBuffer::stateCurrentValues_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>The vector of current state values. </p>
+<p>The pointer to dynamically allocated <a class="el" href="class_rollout_buffer_container.html" title="The class RolloutBufferContainer is the main backend container that is used in C_RolloutBuffer....">RolloutBufferContainer</a> object. </p>
 
 </div>
 </div>
@@ -591,6 +776,30 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The tensor options to be used for PyTorch tensors; constructed with device_ and dtype_. </p>
+
+</div>
+</div>
+<a id="ad291a48bd30025894ef93d85d8a355b6" name="ad291a48bd30025894ef93d85d8a355b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad291a48bd30025894ef93d85d8a355b6">&#9670;&#160;</a></span>workTimeoutDuration_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::chrono::minutes C_RolloutBuffer::workTimeoutDuration_ {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The chrono duration for work timeout to wait for all processes to complete <code>allgather</code>. </p>
 
 </div>
 </div>

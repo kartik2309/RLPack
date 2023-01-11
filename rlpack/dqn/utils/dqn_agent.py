@@ -59,11 +59,8 @@ class DqnAgent(Agent):
         prioritization_params: Optional[Dict[str, Any]] = None,
         force_terminal_state_selection_prob: float = 0.0,
         tau: float = 1.0,
-        apply_norm: Union[int, str] = -1,
+        normalization_tool: Union[Normalization, None] = None,
         apply_norm_to: Union[List[int], List[str]] = -1,
-        eps_for_norm: float = 5e-12,
-        p_for_norm: int = 2,
-        dim_for_norm: int = 0,
         max_grad_norm: Optional[float] = None,
         grad_norm_p: float = 2.0,
         clip_grad_value: Optional[float] = None,
@@ -104,16 +101,12 @@ class DqnAgent(Agent):
             in a batch. Default: 0.0.
         @param tau: float: The weighted update of weights from policy_model to target_model. This is done by formula
             target_weight = tau * policy_weight +: 1 - tau) * target_weight/. Default: -1.
-        @param apply_norm: Union[int, str]: The code to select the normalization procedure to be applied on
-            selected quantities; selected by `apply_norm_to`: see below)). Direct string can also be
-            passed as per accepted keys. Refer below in Notes to see the accepted values. Default: -1
-        @param apply_norm_to:  Union[List[int], List[str]]: The code to select the quantity to which normalization is
+        @param normalization_tool: Union[Normalization, None]: The normalization tool to be used. This must be an
+            instance of rlpack.utils.normalization.Normalization if passed. By default, is initialized to None and
+            no normalization takes place. If passed, make sure a valid `apply_norm_to` is passed.
+        @param apply_norm_to: Union[int, List[str]]: The code to select the quantity to which normalization is
             to be applied. Direct list of quantities can also be passed as per accepted keys. Refer
             below in Notes to see the accepted values. Default: -1.
-        @param eps_for_norm: float: Epsilon value for normalization: for numeric stability. For min-max normalization
-            and standardized normalization. Default: 5e-12.
-        @param p_for_norm: int: The p value for p-normalization. Default: 2: L2 Norm.
-        @param dim_for_norm: int: The dimension across which normalization is to be performed. Default: 0.
         @param max_grad_norm: Optional[float]: The max norm for gradients for gradient clipping. Default: None
         @param grad_norm_p: Optional[float]: The p-value for p-normalization of gradients. Default: 2.0.
         @param clip_grad_value: Optional[float]: The gradient value for clipping gradients by value. Default: None
@@ -122,11 +115,15 @@ class DqnAgent(Agent):
         **Notes**
 
 
-        The values accepted for `apply_norm` are: -
-            - No Normalization: -1; `"none"`
-            - Min-Max Normalization: 0; `"min_max"`
-            - Standardization: 1; `"standardize"`
-            - P-Normalization: 2; `"p_norm"`
+        For prioritization_params, when None: the default is passed, prioritized memory is not used. To use
+            prioritized memory, pass a dictionary with keys `alpha` and `beta`. You can also pass `alpha_decay_rate`
+            and `beta_decay_rate` additionally.
+
+
+        The code for prioritization strategies are:
+            - Uniform: 0; `uniform`
+            - Proportional: 1; `proportional`
+            - Rank-Based: 2; `rank-based`
 
 
         The value accepted for `apply_norm_to` are as follows and must be passed in a list:
@@ -215,22 +212,12 @@ class DqnAgent(Agent):
             )
         ## The input `tau`; indicating the soft update used to update @ref target_model parameters. @I{# noqa: E266}
         self.tau = float(tau)
-        if isinstance(apply_norm, str):
-            apply_norm = setup.get_apply_norm_mode_code(apply_norm)
-        setup.check_validity_of_apply_norm_code(apply_norm)
-        ## The input `apply_norm` argument; indicating the normalisation to be used. @I{# noqa: E266}
-        self.apply_norm = apply_norm
+        # CHeck sanity and validity for `apply_norm_to`.
         if isinstance(apply_norm_to, (str, list)):
             apply_norm_to = setup.get_apply_norm_to_mode_code(apply_norm_to)
         setup.check_validity_of_apply_norm_to_codes(apply_norm_to)
         ## The input `apply_norm_to` argument; indicating the quantity to normalise. @I{# noqa: E266}
         self.apply_norm_to = apply_norm_to
-        ## The input `eps_for_norm` argument; indicating epsilon to be used for normalisation. @I{# noqa: E266}
-        self.eps_for_norm = eps_for_norm
-        ## The input `p_for_norm` argument; indicating p-value for p-normalisation. @I{# noqa: E266}
-        self.p_for_norm = p_for_norm
-        ## The input `dim_for_norm` argument; indicating dimension along which we wish to normalise. @I{# noqa: E266}
-        self.dim_for_norm = dim_for_norm
         ## The input `max_grad_norm`; indicating the maximum gradient norm for gradient clippings. @I{# noqa: E266}
         self.max_grad_norm = max_grad_norm
         ## The input `grad_norm_p`; indicating the p-value for p-normalisation for gradient clippings. @I{# noqa: E266}
@@ -258,9 +245,7 @@ class DqnAgent(Agent):
             p.requires_grad = False
         ## The normalisation tool to be used for agent. @I{# noqa: E266}
         ## An instance of rlpack.utils.normalization.Normalization. @I{# noqa: E266}
-        self._normalization = Normalization(
-            apply_norm=apply_norm, eps=eps_for_norm, p=p_for_norm, dim=dim_for_norm
-        )
+        self._normalization = normalization_tool
 
     def train(
         self,

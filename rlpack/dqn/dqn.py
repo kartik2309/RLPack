@@ -26,6 +26,7 @@ from rlpack.dqn.dqn_rank_based_agent import DqnRankBasedAgent
 from rlpack.dqn.dqn_uniform_agent import DqnUniformAgent
 from rlpack.dqn.utils.process_prioritization_params import ProcessPrioritizationParams
 from rlpack.utils import LossFunction, LRScheduler
+from rlpack.utils.normalization import Normalization
 
 
 class Dqn:
@@ -60,11 +61,8 @@ class Dqn:
         prioritization_params: Optional[Dict[str, Any]] = None,
         force_terminal_state_selection_prob: float = 0.0,
         tau: float = 1.0,
-        apply_norm: Union[int, str] = -1,
+        normalization_tool: Union[Normalization, None] = None,
         apply_norm_to: Union[int, List[str]] = -1,
-        eps_for_norm: float = 5e-12,
-        p_for_norm: int = 2,
-        dim_for_norm: int = 0,
         max_grad_norm: Optional[float] = None,
         grad_norm_p: float = 2.0,
         clip_grad_value: Optional[float] = None,
@@ -105,16 +103,12 @@ class Dqn:
             in a batch. Default: 0.0.
         @param tau: float: The weighted update of weights from policy_model to target_model. This is done by formula
             target_weight = tau * policy_weight +: 1 - tau) * target_weight/. Default: -1.
-        @param apply_norm: Union[int, str]: The code to select the normalization procedure to be applied on
-            selected quantities; selected by `apply_norm_to`: see below)). Direct string can also be
-            passed as per accepted keys. Refer below in Notes to see the accepted values. Default: -1
+        @param normalization_tool: Union[Normalization, None]: The normalization tool to be used. This must be an
+            instance of rlpack.utils.normalization.Normalization if passed. By default, is initialized to None and
+            no normalization takes place. If passed, make sure a valid `apply_norm_to` is passed.
         @param apply_norm_to: Union[int, List[str]]: The code to select the quantity to which normalization is
             to be applied. Direct list of quantities can also be passed as per accepted keys. Refer
             below in Notes to see the accepted values. Default: -1.
-        @param eps_for_norm: float: Epsilon value for normalization: for numeric stability. For min-max normalization
-            and standardized normalization. Default: 5e-12.
-        @param p_for_norm: int: The p value for p-normalization. Default: 2: L2 Norm.
-        @param dim_for_norm: int: The dimension across which normalization is to be performed. Default: 0.
         @param max_grad_norm: Optional[float]: The max norm for gradients for gradient clipping. Default: None
         @param grad_norm_p: Optional[float]: The p-value for p-normalization of gradients. Default: 2.0.
         @param clip_grad_value: Optional[float]: The gradient value for clipping gradients by value. Default: None
@@ -132,13 +126,6 @@ class Dqn:
             - Uniform: 0; `uniform`
             - Proportional: 1; `proportional`
             - Rank-Based: 2; `rank-based`
-
-
-        The values accepted for `apply_norm` are: -
-            - No Normalization: -1; `"none"`
-            - Min-Max Normalization: 0; `"min_max"`
-            - Standardization: 1; `"standardize"`
-            - P-Normalization: 2; `"p_norm"`
 
 
         The value accepted for `apply_norm_to` are as follows and must be passed in a list:
@@ -192,11 +179,8 @@ class Dqn:
             prioritization_params,
             force_terminal_state_selection_prob,
             tau,
-            apply_norm,
+            normalization_tool,
             apply_norm_to,
-            eps_for_norm,
-            p_for_norm,
-            dim_for_norm,
             max_grad_norm,
             grad_norm_p,
             clip_grad_value,

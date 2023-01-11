@@ -15,7 +15,7 @@ import torch.multiprocessing as pytorch_multiprocessing
 from torch.utils.tensorboard import SummaryWriter
 
 # Import CPP Backend
-from rlpack.lib import C_GradAccumulator, C_ReplayBuffer, C_RolloutBuffer
+from rlpack.lib import C_GradAccumulator, C_ReplayBuffer, C_RolloutBuffer, StlBindings
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Function Definitions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #

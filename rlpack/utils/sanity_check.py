@@ -36,6 +36,7 @@ import logging
 import re
 from typing import Any, Dict, List
 
+from rlpack import pytorch
 from rlpack.utils.base.registers.register import Register
 
 
@@ -67,23 +68,33 @@ class SanityCheck(Register):
     def check_model_init_sanity(self) -> bool:
         """
         Checks the sanity of model arguments, either custom or in-built. When in-built is to be used, both
-        `model_name` and `model_args` must be passed. If both are not passed, it will try to check if there is a
-        custom model that is passed. Custom models' names must correspond to their target agent's keyword argument
+        model keyword arguments in agent and `model_args` must be passed. If both are not passed, it will try to check
+        if there is a custom model that is passed. Custom models' names must correspond to their
+        target agent's keyword argument
         name.
 
         @return A flag indicating if we use a custom model or an in-built model.
         """
-        present_model_init_args = [k in self.args for k in self.model_init_args]
         custom_model = False
+        agent_model_args = list(
+            self.model_args_to_optimize[self.input_config["agent"]].keys()
+        )
+        present_model_init_args = [
+            agent_model_arg in self.input_config["agent_args"]
+            and isinstance(
+                self.input_config["agent_args"][agent_model_arg], pytorch.nn.Module
+            )
+            for agent_model_arg in agent_model_args
+        ]
         # Checks if we are passing custom model or not.
-        if not all(present_model_init_args):
+        if all(present_model_init_args):
             custom_model = True
             logging.debug("Incomplete `model_init_args``")
             logging.info("Trying to find custom model if being passed ...")
         # If not a custom model, check with `model_args` to see if all arguments are received for in-built model.
         # If a custom model, check with `agent_args` to see if all the model related arguments are received for agent.
         if not custom_model:
-            model_name = self.input_config.get("model_name")
+            model_name = self.input_config.get("model")
             if not isinstance(model_name, str):
                 raise TypeError(
                     f"Expected `model_name` to be of type {str} but received type {type(model_name)}"
@@ -127,7 +138,7 @@ class SanityCheck(Register):
                 f"Cannot Initialize requested Agent; "
                 f"{self._error_message('agent_init_args', present_agent_init_args)}"
             )
-        agent_name = self.input_config.get("agent_name")
+        agent_name = self.input_config.get("agent")
         if not isinstance(agent_name, str):
             raise TypeError(
                 f"Expected `agent_name` to be of type {str} but received type {type(agent_name)}"
@@ -162,26 +173,10 @@ class SanityCheck(Register):
         If invalid arguments are passed, error will be raised by PyTorch.
         """
         # If only activation name is passed but not the activation_args, will default to an empty dictionary.
-        if (
-            self.activation_init_args[0] in self.args
-            and self.activation_init_args[1] not in self.args
-        ):
-            self.args.append(self.activation_init_args[1])
-        present_activation_init_args = [
-            k in self.args for k in self.activation_init_args
-        ]
-        if (
-            not all(present_activation_init_args)
-            and not present_activation_init_args[1]
-        ):
-            raise ValueError(
-                f"Cannot Initialize requested Activation for the given Agent; "
-                f"{self._error_message('activation_init_args', present_activation_init_args)}"
-            )
-        activation_name = self.input_config["activation_name"]
+        activation_name = self.input_config["model_args"].get("activation")
         if not isinstance(activation_name, (str, list)):
             raise TypeError(
-                f"Expected `activation_name` to be of type {str} but received type {type(activation_name)}"
+                f"Expected `activation` to be of type {str} or {list} but received type {type(activation_name)}"
             )
         if isinstance(activation_name, str):
             if activation_name not in self.activation_map.keys():
@@ -195,7 +190,7 @@ class SanityCheck(Register):
             ]
             if not all(not_implemented_activations):
                 raise NotImplementedError(
-                    f"The requested activation {activation_name} is not supported; "
+                    f"The requested activation {activation_name} is not supported to be used with keywords in rlpack; "
                     f"refer the boolean map: {not_implemented_activations}"
                 )
 
@@ -205,20 +200,16 @@ class SanityCheck(Register):
         the given optimizer args even if optimizer is valid.
         If invalid arguments are passed, error will be raised by PyTorch.
         """
-        present_optimizer_init_args = [k in self.args for k in self.optimizer_init_args]
-        if not all(present_optimizer_init_args):
-            raise ValueError(
-                f"Cannot Initialize requested Optimizer for the given Agent; "
-                f"{self._error_message('optimizer_init_args', present_optimizer_init_args)}"
-            )
-        optimizer_name = self.input_config["optimizer_name"]
+        optimizer_name = self.input_config["agent_args"].get("optimizer")
+        if optimizer_name is None:
+            raise ValueError("No optimizer has been passed!")
         if not isinstance(optimizer_name, str):
             raise TypeError(
-                f"Expected `optimizer_name` to be of type {str} but received type {type(optimizer_name)}"
+                f"Expected `optimizer` to be of type {str} but received type {type(optimizer_name)}"
             )
         if optimizer_name not in self.optimizer_map.keys():
             raise NotImplementedError(
-                f"The requested optimizer {optimizer_name} is not supported."
+                f"The requested optimizer {optimizer_name} is not supported to be used with keywords in rlpack"
             )
 
     def check_lr_scheduler_init_sanity(self) -> None:
@@ -228,44 +219,27 @@ class SanityCheck(Register):
         If invalid arguments are passed, error will be raised by PyTorch.
         """
         # If not LR Scheduler is requested, no sanity check is to be done.
-        if (
-            self.lr_scheduler_init_args[0] not in self.args
-            and self.lr_scheduler_init_args[1] not in self.args
-        ):
+        lr_scheduler_name = self.input_config["agent_args"].get("lr_scheduler")
+        if lr_scheduler_name is None:
             return
-        present_lr_scheduler_init_args = [
-            k in self.args for k in self.lr_scheduler_init_args
-        ]
-        if (
-            not all(present_lr_scheduler_init_args)
-            and not present_lr_scheduler_init_args[1]
-        ):
-            raise ValueError(
-                f"Cannot Initialize requested LR Scheduler for the given Agent; "
-                f"{self._error_message('lr_scheduler_init', present_lr_scheduler_init_args)}"
+        if not isinstance(lr_scheduler_name, str):
+            raise TypeError(
+                f"Expected `lr_scheduler` to be of type {str} but received type {type(lr_scheduler_name)}"
             )
-        if all(present_lr_scheduler_init_args):
-            lr_scheduler_name = self.input_config["lr_scheduler_name"]
-            if not isinstance(lr_scheduler_name, str):
-                raise TypeError(
-                    f"Expected `lr_scheduler_name` to be of type {str} but received type {type(lr_scheduler_name)}"
-                )
-            if lr_scheduler_name not in self.lr_scheduler_map.keys():
-                raise NotImplementedError(
-                    f"The requested lr_scheduler {lr_scheduler_name} is not supported."
-                )
+        if lr_scheduler_name not in self.lr_scheduler_map.keys():
+            raise NotImplementedError(
+                f"The requested lr_scheduler {lr_scheduler_name} is not supported."
+            )
 
-    def check_distribution_sanity(self) -> bool:
+    def check_distribution_sanity(self):
         """
         For agents with requirements of the argument `distribution`, checks if valid distribution is being passed.
         If agent requires distribution argument and valid argument is passed, True is returned.
         If agent doesn't require distribution argument returns False.
-
-        @return bool: Flag indicating if agent requires `distribution` argument or not.
         """
-        agent_name = self.input_config["agent_name"]
+        agent_name = self.input_config["agent"]
         if agent_name not in self.mandatory_distribution_required_agents:
-            return False
+            return
         distribution = self.input_config["agent_args"].get("distribution")
         if distribution is None:
             raise ValueError(
@@ -275,13 +249,30 @@ class SanityCheck(Register):
             raise NotImplementedError(
                 "The passed distribution is either invalid or has not been implemented/registered in rlpack"
             )
-        return True
+
+    def check_exploration_tool_sanity(self):
+        exploration_tool_for_model = self.input_config["model_args"].get(
+            "exploration_tool"
+        )
+        exploration_tool_for_agent = self.input_config["agent_args"].get(
+            "exploration_tool"
+        )
+        if exploration_tool_for_model is not None:
+            if exploration_tool_for_model not in self.explorations_map.keys():
+                raise ValueError(
+                    "Given `exploration_tool` for model is either invalid or not has been implemented in rlpack`"
+                )
+        if exploration_tool_for_agent is not None:
+            if exploration_tool_for_agent not in self.explorations_map.keys():
+                raise ValueError(
+                    "Given `exploration_tool` for agent is either invalid or not has been implemented in rlpack`"
+                )
 
     def check_if_valid_agent_for_simulator(self) -> None:
         """
         Checks if agent is valid for rlpack.simulator.Simulator (single process agent).
         """
-        agent_name = self.input_config["agent_name"]
+        agent_name = self.input_config["agent"]
         if agent_name in self.mandatory_distributed_agents:
             raise ValueError(
                 "Provided `agent_name` must be used with rlpack.simulator.SimulatorDistributed"
@@ -291,7 +282,7 @@ class SanityCheck(Register):
         """
         Checks if agent is valid for rlpack.simulator_distributed.SimulatorDistributed (multi process agent).
         """
-        agent_name = self.input_config["agent_name"]
+        agent_name = self.input_config["agent"]
         if agent_name not in self.mandatory_distributed_agents:
             raise ValueError(
                 "Provided `agent_name` must be used with rlpack.simulator.Simulator"

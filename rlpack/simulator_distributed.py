@@ -2,7 +2,7 @@ import logging
 import os
 from typing import Any, Dict
 
-from rlpack import pytorch_distributed, pytorch_multiprocessing
+from rlpack import pytorch, pytorch_distributed, pytorch_multiprocessing
 from rlpack.simulator import Simulator
 from rlpack.utils import RunFuncSignature
 
@@ -22,11 +22,14 @@ class SimulatorDistributed:
         @param config: Dict[str, Any]: The configuration to be used.
         @param backend: str: The PyTorch multiprocessing backend to be used. Default: "gloo"; the Gloo backend. More
             information can be found
-            [here](https://pytorch.org/docs/stable/pytorch_distributedributed.html#module-torch.pytorch_distributedributed)
+            [here](https://pytorch.org/docs/stable/distributed.html#module-torch.pytorch_distributed)
         """
         self.n_procs = n_procs
         self.config = config
         self.backend = backend
+        pytorch.manual_seed(1912)
+        # Set start method to spawn
+        pytorch_multiprocessing.set_start_method("spawn")
 
     @staticmethod
     def init_process(
@@ -38,11 +41,11 @@ class SimulatorDistributed:
         **kwargs,
     ) -> None:
         """
-        Initialized the pytorch_distributedributed environment to run the given func.
+        Initialized the pytorch_distributed environment to run the given func.
         @param process_rank: int: The process rank of the initialized process.
         @param world_size: int: Total number of processes launched or to be launched.
         @param func: RunFuncSignature: A function with given signature to be launched
-            in pytorch_distributedributed setting on processes.
+            in pytorch_distributed setting on processes.
         @param config: Dict[str, Any]: The configuration to be used.
         @param backend: str: The PyTorch multiprocessing backend to be used.
         @param kwargs: Other keyword arguments for `func`.
@@ -57,7 +60,7 @@ class SimulatorDistributed:
         process_rank: int, world_size: int, config: Dict[str, Any], **kwargs
     ) -> None:
         """
-        Launches the rlpack.simulator.Simulator in pytorch_distributedributed setting.
+        Launches the rlpack.simulator.Simulator in pytorch_distributed setting.
         @param process_rank: int: The process rank of the initialized process.
         @param world_size: int: Total number of processes launched or to be launched.
         @param config: Dict[str, Any]: The configuration to be used.
@@ -76,7 +79,7 @@ class SimulatorDistributed:
 
     def run(self, **kwargs):
         """
-        Runs the simulation in pytorch_distributedributed setting.
+        Runs the simulation in pytorch_distributed setting.
         @param kwargs: Other keyword arguments corresponding to
             rlpack.environments.environments.Environments.train method.
         """
@@ -89,8 +92,6 @@ class SimulatorDistributed:
             os.environ["MASTER_PORT"] = "29500"
         if "WORLD_SIZE" not in os.environ.keys():
             os.environ["WORLD_SIZE"] = f"{self.n_procs}"
-        # Set start method to spawn
-        pytorch_multiprocessing.set_start_method("spawn")
         config = self.config.copy()
         # Start each process
         for rank in range(self.n_procs):

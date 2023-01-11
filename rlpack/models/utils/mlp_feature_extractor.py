@@ -15,7 +15,7 @@ from rlpack import pytorch
 from rlpack.utils import Activation
 
 
-class _MlpFeatureExtractor(pytorch.nn.Module):
+class MlpFeatureExtractor(pytorch.nn.Module):
     """
     This class is a PyTorch Model implementing the MLP based feature extractor for 1-D or 2-D state values.
     """
@@ -33,7 +33,7 @@ class _MlpFeatureExtractor(pytorch.nn.Module):
         @param activation: Activation: The activation function class for the model. Must be an initialized
             activation object from PyTorch's nn (torch.nn) module.
         """
-        super(_MlpFeatureExtractor, self).__init__()
+        super(MlpFeatureExtractor, self).__init__()
         ## The input sequence length of expected tensor. @I{# noqa: E266}
         self.sequence_length = sequence_length
         ## The input hidden sizes for each layer. @I{# noqa: E266}

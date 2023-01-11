@@ -107,14 +107,14 @@ $(document).ready(function(){initNavTree('classrlpack_1_1dqn_1_1dqn_1_1_dqn.html
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a704e8805e6f55ccae621d424d02d3a22"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1dqn_1_1dqn_1_1_dqn.html#a704e8805e6f55ccae621d424d02d3a22">__new__</a> (cls, pytorch.nn.Module target_model, pytorch.nn.Module policy_model, pytorch.optim.Optimizer optimizer, Union[<a class="el" href="classrlpack_1_1utils_1_1typing__hints_1_1_l_r_scheduler.html">LRScheduler</a>, None] lr_scheduler, <a class="el" href="classrlpack_1_1utils_1_1typing__hints_1_1_loss_function.html">LossFunction</a> loss_function, float gamma, float epsilon, float min_epsilon, float epsilon_decay_rate, int epsilon_decay_frequency, int memory_buffer_size, int target_model_update_rate, int policy_model_update_rate, int backup_frequency, float lr_threshold, int batch_size, int num_actions, str save_path, int bootstrap_rounds=1, str device=&quot;cpu&quot;, str dtype=&quot;float32&quot;, Optional[Dict[str, Any]] prioritization_params=None, float force_terminal_state_selection_prob=0.0, float tau=1.0, Union[int, str] apply_norm=-1, Union[int, List[str]] apply_norm_to=-1, float eps_for_norm=5e-12, int p_for_norm=2, int dim_for_norm=0, Optional[float] max_grad_norm=None, float grad_norm_p=2.0, Optional[float] clip_grad_value=None)</td></tr>
-<tr class="separator:a704e8805e6f55ccae621d424d02d3a22"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe226207ed1afee2d4bb707867fa7860"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1dqn_1_1dqn_1_1_dqn.html#afe226207ed1afee2d4bb707867fa7860">__new__</a> (cls, pytorch.nn.Module target_model, pytorch.nn.Module policy_model, pytorch.optim.Optimizer optimizer, Union[<a class="el" href="classrlpack_1_1utils_1_1typing__hints_1_1_l_r_scheduler.html">LRScheduler</a>, None] lr_scheduler, <a class="el" href="classrlpack_1_1utils_1_1typing__hints_1_1_loss_function.html">LossFunction</a> loss_function, float gamma, float epsilon, float min_epsilon, float epsilon_decay_rate, int epsilon_decay_frequency, int memory_buffer_size, int target_model_update_rate, int policy_model_update_rate, int backup_frequency, float lr_threshold, int batch_size, int num_actions, str save_path, int bootstrap_rounds=1, str device=&quot;cpu&quot;, str dtype=&quot;float32&quot;, Optional[Dict[str, Any]] prioritization_params=None, float force_terminal_state_selection_prob=0.0, float tau=1.0, Union[<a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html">Normalization</a>, None] normalization_tool=None, Union[int, List[str]] apply_norm_to=-1, Optional[float] max_grad_norm=None, float grad_norm_p=2.0, Optional[float] clip_grad_value=None)</td></tr>
+<tr class="separator:afe226207ed1afee2d4bb707867fa7860"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >This is a helper class that selects the correct the variant of DQN implementations based on prioritization strategy determined by the argument <code>prioritization_params</code>. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a704e8805e6f55ccae621d424d02d3a22" name="a704e8805e6f55ccae621d424d02d3a22"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a704e8805e6f55ccae621d424d02d3a22">&#9670;&#160;</a></span>__new__()</h2>
+<a id="afe226207ed1afee2d4bb707867fa7860" name="afe226207ed1afee2d4bb707867fa7860"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe226207ed1afee2d4bb707867fa7860">&#9670;&#160;</a></span>__new__()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -272,32 +272,14 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Union[int, str] &#160;</td>
-          <td class="paramname"><em>apply_norm</em> = <code>-1</code>, </td>
+          <td class="paramtype">Union[<a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html">Normalization</a>, None] &#160;</td>
+          <td class="paramname"><em>normalization_tool</em> = <code>None</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">Union[int, List[str]] &#160;</td>
           <td class="paramname"><em>apply_norm_to</em> = <code>-1</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float &#160;</td>
-          <td class="paramname"><em>eps_for_norm</em> = <code>5e-12</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int &#160;</td>
-          <td class="paramname"><em>p_for_norm</em> = <code>2</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int &#160;</td>
-          <td class="paramname"><em>dim_for_norm</em> = <code>0</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -350,11 +332,8 @@ Public Member Functions</h2></td></tr>
     <tr><td class="paramname">prioritization_params</td><td>Optional[Dict[str, Any]]: The parameters for prioritization in prioritized memory: or relay buffer). Default: None. </td></tr>
     <tr><td class="paramname">force_terminal_state_selection_prob</td><td>float: The probability for forcefully selecting a terminal state in a batch. Default: 0.0. </td></tr>
     <tr><td class="paramname">tau</td><td>float: The weighted update of weights from policy_model to target_model. This is done by formula target_weight = tau * policy_weight +: 1 - tau) * target_weight/. Default: -1. </td></tr>
-    <tr><td class="paramname">apply_norm</td><td>Union[int, str]: The code to select the normalization procedure to be applied on selected quantities; selected by <code>apply_norm_to</code>: see below)). Direct string can also be passed as per accepted keys. Refer below in Notes to see the accepted values. Default: -1 </td></tr>
+    <tr><td class="paramname">normalization_tool</td><td>Union[Normalization, None]: The normalization tool to be used. This must be an instance of <a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html" title="Normalization class providing methods for normalization techniques.">rlpack.utils.normalization.Normalization</a> if passed. By default, is initialized to None and no normalization takes place. If passed, make sure a valid <code>apply_norm_to</code> is passed. </td></tr>
     <tr><td class="paramname">apply_norm_to</td><td>Union[int, List[str]]: The code to select the quantity to which normalization is to be applied. Direct list of quantities can also be passed as per accepted keys. Refer below in Notes to see the accepted values. Default: -1. </td></tr>
-    <tr><td class="paramname">eps_for_norm</td><td>float: Epsilon value for normalization: for numeric stability. For min-max normalization and standardized normalization. Default: 5e-12. </td></tr>
-    <tr><td class="paramname">p_for_norm</td><td>int: The p value for p-normalization. Default: 2: L2 Norm. </td></tr>
-    <tr><td class="paramname">dim_for_norm</td><td>int: The dimension across which normalization is to be performed. Default: 0. </td></tr>
     <tr><td class="paramname">max_grad_norm</td><td>Optional[float]: The max norm for gradients for gradient clipping. Default: None </td></tr>
     <tr><td class="paramname">grad_norm_p</td><td>Optional[float]: The p-value for p-normalization of gradients. Default: 2.0. </td></tr>
     <tr><td class="paramname">clip_grad_value</td><td>Optional[float]: The gradient value for clipping gradients by value. Default: None</td></tr>
@@ -367,12 +346,6 @@ Public Member Functions</h2></td></tr>
 <li>Uniform: 0; <code>uniform</code></li>
 <li>Proportional: 1; <code>proportional</code></li>
 <li>Rank-Based: 2; <code>rank-based</code></li>
-</ul>
-<p >The values accepted for <code>apply_norm</code> are: -</p><ul>
-<li>No Normalization: -1; <code>"none"</code></li>
-<li>Min-Max Normalization: 0; <code>"min_max"</code></li>
-<li>Standardization: 1; <code>"standardize"</code></li>
-<li>P-Normalization: 2; <code>"p_norm"</code></li>
 </ul>
 <p >The value accepted for <code>apply_norm_to</code> are as follows and must be passed in a list:</p><ul>
 <li><code>"none"</code>: -1; Don't apply normalization to any quantity.</li>

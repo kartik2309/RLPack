@@ -8,6 +8,8 @@
         <tab type="user" url="@ref get_started" title="Get Started"/>
         <tab type="usergroup" url="@ref distributions" title="Distributions">
         </tab>
+        <tab type="usergroup" url="@ref explorations" title="Explorations">
+        </tab>
         <tab type="usergroup" url="@ref models" title="Models">
             <tab type="usergroup" url="@ref in_build_models" title="In-Built Models">
                 <tab type="user" url="@ref mlp" title="MLP"/>

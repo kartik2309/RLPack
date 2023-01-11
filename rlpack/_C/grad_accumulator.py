@@ -15,7 +15,7 @@ Currently following classes have been implemented:
 
 from typing import Iterable, List
 
-from rlpack import C_GradAccumulator
+from rlpack import C_GradAccumulator, StlBindings
 
 
 class GradAccumulator:
@@ -33,8 +33,8 @@ class GradAccumulator:
         self.c_grad_accumulator = C_GradAccumulator.C_GradAccumulator(
             parameter_keys, bootstrap_rounds
         )
-        ## The instance of MapOfTensors; the custom object used by C++ backend. @I{# noqa: E266}
-        self.map_of_tensors = C_GradAccumulator.MapOfTensors()
+        ## The instance of TensorMap; the custom object used by C++ backend. @I{# noqa: E266}
+        self.map_of_tensors = StlBindings.TensorMap()
 
     def accumulate(self, named_parameters: Iterable) -> None:
         """
@@ -45,18 +45,18 @@ class GradAccumulator:
             self.map_of_tensors[name] = param
         self.c_grad_accumulator.accumulate(self.map_of_tensors)
 
-    def mean_reduce(self) -> C_GradAccumulator.MapOfTensors:
+    def mean_reduce(self) -> StlBindings.TensorMap:
         """
         Performs the mean reduction of accumulated gradients.
-        @return MapOfTensors: The custom map object from C++ backend with mean of gradient of parameters for each key.
+        @return TensorMap: The custom map object from C++ backend with mean of gradient of parameters for each key.
         """
         mean_reduced_params = self.c_grad_accumulator.mean_reduce()
         return mean_reduced_params
 
-    def sum_reduce(self) -> C_GradAccumulator.MapOfTensors:
+    def sum_reduce(self) -> StlBindings.TensorMap:
         """
         Performs the sum reduction of accumulated gradients.
-        @return MapOfTensors: The custom map object from C++ backend with sum of gradient of parameters for each key.
+        @return TensorMap: The custom map object from C++ backend with sum of gradient of parameters for each key.
         """
         sum_reduced_params = self.c_grad_accumulator.sum_reduce()
         return sum_reduced_params
@@ -67,11 +67,11 @@ class GradAccumulator:
         """
         self.c_grad_accumulator.clear()
 
-    def __getitem__(self, index: int) -> C_GradAccumulator.MapOfTensors:
+    def __getitem__(self, index: int) -> StlBindings.TensorMap:
         """
         Retrieve named parameter gradients at a given index.
         @param index: int: The index at which we wish to obtain the gradient values.
-        @return MapOfTensors: The custom map object from C++ backend with gradient of parameters for each key.
+        @return TensorMap: The custom map object from C++ backend with gradient of parameters for each key.
         """
         return self.c_grad_accumulator.get_item(index)
 

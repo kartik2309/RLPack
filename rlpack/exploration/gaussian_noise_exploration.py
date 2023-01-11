@@ -4,9 +4,9 @@
 
 
 Currently following classes have been implemented:
-    - `GaussianNoise`: This class implements the gaussian noise exploration tool with optional weights for
+    - `GaussianNoiseExploration`: This class implements the gaussian noise exploration tool with optional weights for
         samples and annealing of distribution parameters. Implemented as
-        rlpack.exploration.gaussian_noise.GaussianNoise
+        rlpack.exploration.gaussian_noise_exploration.GaussianNoiseExploration
 
 
 Following packages are part of exploration:
@@ -21,7 +21,7 @@ from rlpack.exploration.utils.exploration import Exploration
 from rlpack.exploration.utils.typing_hints import GaussianAnnealFuncSignature
 
 
-class GaussianNoise(Exploration):
+class GaussianNoiseExploration(Exploration):
     """
     Exploration tool to produce gaussian noise.
     """
@@ -34,7 +34,7 @@ class GaussianNoise(Exploration):
         weight: Union[pytorch.Tensor, None] = None,
     ):
         """
-        Initialization Method for GaussianNoise
+        Initialization Method for GaussianNoiseExploration
         @param loc: pytorch.Tensor: The `loc` parameter for Normal distribution; the mean. Also called `mu`.
         @param scale: pytorch.Tensor: The `scale` parameter for Normal distribution;
             the standard deviation. Also called `sigma`.
@@ -51,10 +51,19 @@ class GaussianNoise(Exploration):
         else:
             self.weight = weight
         self.normal_distribution = pytorch_distributions.Normal(loc, scale)
+        super(GaussianNoiseExploration, self).__init__()
 
-    def sample(self):
+    @pytorch.no_grad()
+    def sample(self, *args, **kwargs) -> pytorch.Tensor:
         return self.weight * self.normal_distribution.sample()
 
+    def rsample(self, *args, **kwargs) -> pytorch.Tensor:
+        raise NotImplementedError(
+            "`rsample` method has not been implemented for GaussianNoiseExploration! "
+            "It should be called in a Model!"
+        )
+
+    @pytorch.no_grad()
     def reset(self):
         if self.anneal_func is not None:
             self.loc, self.scale, self.weight = self.anneal_func(

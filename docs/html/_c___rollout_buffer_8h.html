@@ -97,12 +97,13 @@ $(document).ready(function(){initNavTree('_c___rollout_buffer_8h.html',''); init
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Data Structures</a>  </div>
+<a href="#nested-classes">Data Structures</a> &#124;
+<a href="#define-members">Macros</a>  </div>
   <div class="headertitle"><div class="title">C_RolloutBuffer.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;torch/extension.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="maps_8h_source.html">../utils/maps.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &lt;torch/csrc/distributed/c10d/ProcessGroup.hpp&gt;</code><br />
+<code>#include &quot;<a class="el" href="_rollout_buffer_container_8h_source.html">rollout_buffer_container/RolloutBufferContainer.h</a>&quot;</code><br />
 </div><div class="textblock"><div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Include dependency graph for C_RolloutBuffer.h:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
@@ -110,9 +111,12 @@ $(document).ready(function(){initNavTree('_c___rollout_buffer_8h.html',''); init
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="_c___rollout_buffer_8h__incl.png" border="0" usemap="#a_2_users_2kartikrajeshwaran_2_library_2_cloud_storage_2_google_drive-kartikrajeshwaran_8kr_0dgmail_8com_2_my_01_drive_2_projects_2_python_2_r_l_pack_2binaries_2rollout__buffer_2_c___rollout_buffer_8h" alt=""/></div>
 <map name="a_2_users_2kartikrajeshwaran_2_library_2_cloud_storage_2_google_drive-kartikrajeshwaran_8kr_0dgmail_8com_2_my_01_drive_2_projects_2_python_2_r_l_pack_2binaries_2rollout__buffer_2_c___rollout_buffer_8h" id="a_2_users_2kartikrajeshwaran_2_library_2_cloud_storage_2_google_drive-kartikrajeshwaran_8kr_0dgmail_8com_2_my_01_drive_2_projects_2_python_2_r_l_pack_2binaries_2rollout__buffer_2_c___rollout_buffer_8h">
-<area shape="rect" title=" " alt="" coords="5,5,263,89"/>
-<area shape="rect" title=" " alt="" coords="73,211,195,236"/>
-<area shape="rect" href="maps_8h.html" title=" " alt="" coords="127,137,232,163"/>
+<area shape="rect" title=" " alt="" coords="56,5,313,89"/>
+<area shape="rect" title=" " alt="" coords="5,137,172,177"/>
+<area shape="rect" href="_rollout_buffer_container_8h.html" title=" " alt="" coords="197,137,365,177"/>
+<area shape="rect" title=" " alt="" coords="219,313,342,339"/>
+<area shape="rect" href="maps_8h.html" title=" " alt="" coords="222,233,339,258"/>
+<area shape="rect" href="_rollout_buffer_data_8h.html" title=" " alt="" coords="364,225,509,265"/>
 </map>
 </div>
 </div><div class="textblock"><div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -135,7 +139,43 @@ Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html">C_RolloutBuffer</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The class <a class="el" href="class_c___rollout_buffer.html" title="The class C_RolloutBuffer is the class that implements the C++ backend for Rollout Buffer....">C_RolloutBuffer</a> is the class that implements the C++ backend for Rollout Buffer. Tensors are moved to C++ backend via PyBind11 and are kept opaque with std::map, hence, tensors are moved between Python and C++ only by references. <code><a class="el" href="class_c___rollout_buffer.html" title="The class C_RolloutBuffer is the class that implements the C++ backend for Rollout Buffer....">C_RolloutBuffer</a></code> is hence autograd safe.  <a href="class_c___rollout_buffer.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a7ac68a7f13e3bbf52844694937d3bd8c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_c___rollout_buffer_8h.html#a7ac68a7f13e3bbf52844694937d3bd8c">GATHER_BARRIER_TIMEOUT</a>&#160;&#160;&#160;120</td></tr>
+<tr class="separator:a7ac68a7f13e3bbf52844694937d3bd8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2924b577a6f90b83d26a59457293f28e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_c___rollout_buffer_8h.html#a2924b577a6f90b83d26a59457293f28e">GATHER_WORK_TIMEOUT</a>&#160;&#160;&#160;30</td></tr>
+<tr class="separator:a2924b577a6f90b83d26a59457293f28e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a7ac68a7f13e3bbf52844694937d3bd8c" name="a7ac68a7f13e3bbf52844694937d3bd8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7ac68a7f13e3bbf52844694937d3bd8c">&#9670;&#160;</a></span>GATHER_BARRIER_TIMEOUT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define GATHER_BARRIER_TIMEOUT&#160;&#160;&#160;120</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2924b577a6f90b83d26a59457293f28e" name="a2924b577a6f90b83d26a59457293f28e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2924b577a6f90b83d26a59457293f28e">&#9670;&#160;</a></span>GATHER_WORK_TIMEOUT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define GATHER_WORK_TIMEOUT&#160;&#160;&#160;30</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

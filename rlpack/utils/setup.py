@@ -33,13 +33,15 @@ Following typing hints have been defined:
 
 
 import re
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Type, Union
 
 from rlpack import pytorch, pytorch_distributions
+from rlpack.exploration.utils.exploration import Exploration
 from rlpack.utils import Activation, LossFunction, LRScheduler
 from rlpack.utils.base.agent import Agent
 from rlpack.utils.base.registers.internal_code_register import InternalCodeRegister
 from rlpack.utils.base.registers.register import Register
+from rlpack.utils.normalization import Normalization
 
 
 class Setup(Register, InternalCodeRegister):
@@ -186,6 +188,42 @@ class Setup(Register, InternalCodeRegister):
         return loss_function
 
     def get_distribution_class(
-        self, distribution: str
-    ) -> pytorch_distributions.Distribution:
-        return self.distributions_map[distribution]
+        self, distribution_name: str
+    ) -> Type[pytorch_distributions.Distribution]:
+        """
+        Returns the class type for given distribution.
+        @param distribution_name: str: The distribution name as mentioned in [here](@ref distribution/index.md)
+        @return: Type[pytorch_distributions.Distribution]: The distribution class
+        """
+        return self.distributions_map[distribution_name]
+
+    def get_exploration_tool(
+        self, exploration_tool_name: str, exploration_tool_args: Dict[str, Any]
+    ) -> Exploration:
+        """
+        Creates an exploration tool for agents/models.
+        @param exploration_tool_name: str: The exploration tool name as mentioned in [here](@ref exploration/index.md).
+        @param exploration_tool_args: Dict[str, Any]. Valid arguments for the exploration tool. Checkout the
+            docstrings for the exploration tool you intend to use.
+        @return: Exploration: An instance of exploration tool
+        """
+        return self.explorations_map[exploration_tool_name](**exploration_tool_args)
+
+    def get_normalization_tool(
+        self, normalization: Union[str, int], normalization_args: Dict[str, Any]
+    ) -> Normalization:
+        """
+        Creates the normalization tool for agents.
+        @param normalization: Union[str, int]: The normalization technique to be used.
+        @param normalization_args: Valid arguments for rlpack.utils.normalization.Normalization.
+        @return: An instance of Normalization
+
+
+        The values accepted for `apply_norm` are: -
+            - No Normalization: -1; `"none"`
+            - Min-Max Normalization: 0; `"min_max"`
+            - Standardization: 1; `"standardize"`
+            - P-Normalization: 2; `"p_norm"`
+
+        """
+        return Normalization(apply_norm=normalization, **normalization_args)

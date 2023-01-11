@@ -108,9 +108,11 @@ $(document).ready(function(){initNavTree('classrlpack_1_1exploration_1_1utils_1_
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="classrlpack_1_1exploration_1_1utils_1_1exploration_1_1_exploration__inherit__graph.png" border="0" usemap="#arlpack_8exploration_8utils_8exploration_8_exploration_inherit__map" alt="Inheritance graph"/></div>
 <map name="arlpack_8exploration_8utils_8exploration_8_exploration_inherit__map" id="arlpack_8exploration_8utils_8exploration_8_exploration_inherit__map">
-<area shape="rect" title=" " alt="" coords="5,79,228,119"/>
-<area shape="rect" href="classrlpack_1_1exploration_1_1gaussian__noise_1_1_gaussian_noise.html" title="Exploration tool to produce gaussian noise." alt="" coords="27,167,207,207"/>
-<area shape="rect" title=" " alt="" coords="91,5,142,31"/>
+<area shape="rect" title=" " alt="" coords="191,53,413,93"/>
+<area shape="rect" href="classrlpack_1_1exploration_1_1gaussian__noise__exploration_1_1_gaussian_noise_exploration.html" title="Exploration tool to produce gaussian noise." alt="" coords="479,5,701,60"/>
+<area shape="rect" href="classrlpack_1_1exploration_1_1state__dependent__exploration_1_1_state_dependent_exploration.html" title=" " alt="" coords="461,84,719,139"/>
+<area shape="rect" title=" " alt="" coords="5,35,143,60"/>
+<area shape="rect" title=" " alt="" coords="49,84,99,109"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -120,8 +122,9 @@ $(document).ready(function(){initNavTree('classrlpack_1_1exploration_1_1utils_1_
 <div id="dynsection-1-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="classrlpack_1_1exploration_1_1utils_1_1exploration_1_1_exploration__coll__graph.png" border="0" usemap="#arlpack_8exploration_8utils_8exploration_8_exploration_coll__map" alt="Collaboration graph"/></div>
 <map name="arlpack_8exploration_8utils_8exploration_8_exploration_coll__map" id="arlpack_8exploration_8utils_8exploration_8_exploration_coll__map">
-<area shape="rect" title=" " alt="" coords="5,79,228,119"/>
-<area shape="rect" title=" " alt="" coords="91,5,142,31"/>
+<area shape="rect" title=" " alt="" coords="21,79,244,119"/>
+<area shape="rect" title=" " alt="" coords="5,5,143,31"/>
+<area shape="rect" title=" " alt="" coords="167,5,218,31"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -131,6 +134,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a56e3f8021c52c7afc37f9d5c61ddb071"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4aea501b49823431eefc0f416c577c26"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1exploration_1_1utils_1_1exploration_1_1_exploration.html#a4aea501b49823431eefc0f416c577c26">reset</a> (self, *args, **kwargs)</td></tr>
 <tr class="separator:a4aea501b49823431eefc0f416c577c26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f993be5658185db56a19ea815c749b2"><td class="memItemLeft" align="right" valign="top">pytorch.Tensor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1exploration_1_1utils_1_1exploration_1_1_exploration.html#a4f993be5658185db56a19ea815c749b2">rsample</a> (self, *args, **kwargs)</td></tr>
+<tr class="separator:a4f993be5658185db56a19ea815c749b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a39610792ee8dd9dbd5a1119d7b1b1317"><td class="memItemLeft" align="right" valign="top">pytorch.Tensor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1exploration_1_1utils_1_1exploration_1_1_exploration.html#a39610792ee8dd9dbd5a1119d7b1b1317">sample</a> (self, *args, **kwargs)</td></tr>
 <tr class="separator:a39610792ee8dd9dbd5a1119d7b1b1317"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -167,7 +172,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classrlpack_1_1exploration_1_1gaussian__noise_1_1_gaussian_noise.html#a4e856a9ecf4897a1054fa6b3b25fde27">rlpack.exploration.gaussian_noise.GaussianNoise</a>.</p>
+<p>Reimplemented in <a class="el" href="classrlpack_1_1exploration_1_1state__dependent__exploration_1_1_state_dependent_exploration.html#a80009292b9916f59a5a123bbb04f2f7d">rlpack.exploration.state_dependent_exploration.StateDependentExploration</a>, and <a class="el" href="classrlpack_1_1exploration_1_1gaussian__noise__exploration_1_1_gaussian_noise_exploration.html#af4e94f5c45dfadfd106b4ba42614622d">rlpack.exploration.gaussian_noise_exploration.GaussianNoiseExploration</a>.</p>
 
 </div>
 </div>
@@ -204,7 +209,43 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classrlpack_1_1exploration_1_1gaussian__noise_1_1_gaussian_noise.html#a64d6ee0171adfff94551940ca09099a0">rlpack.exploration.gaussian_noise.GaussianNoise</a>.</p>
+<p>Reimplemented in <a class="el" href="classrlpack_1_1exploration_1_1gaussian__noise__exploration_1_1_gaussian_noise_exploration.html#a79599388eb3f494bc21926cac21db7b3">rlpack.exploration.gaussian_noise_exploration.GaussianNoiseExploration</a>, and <a class="el" href="classrlpack_1_1exploration_1_1state__dependent__exploration_1_1_state_dependent_exploration.html#a2745cd7875f5b65cb7bc1d7a84d510a7">rlpack.exploration.state_dependent_exploration.StateDependentExploration</a>.</p>
+
+</div>
+</div>
+<a id="a4f993be5658185db56a19ea815c749b2" name="a4f993be5658185db56a19ea815c749b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4f993be5658185db56a19ea815c749b2">&#9670;&#160;</a></span>rsample()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> pytorch.Tensor rlpack.exploration.utils.exploration.Exploration.rsample </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">*&#160;</td>
+          <td class="paramname"><em>args</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">**&#160;</td>
+          <td class="paramname"><em>kwargs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classrlpack_1_1exploration_1_1gaussian__noise__exploration_1_1_gaussian_noise_exploration.html#aef61c4e0e6499f7ab5db16758b216727">rlpack.exploration.gaussian_noise_exploration.GaussianNoiseExploration</a>, and <a class="el" href="classrlpack_1_1exploration_1_1state__dependent__exploration_1_1_state_dependent_exploration.html#a5642e5b1de10c53fad75bffe9807ab09">rlpack.exploration.state_dependent_exploration.StateDependentExploration</a>.</p>
 
 </div>
 </div>
@@ -240,7 +281,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classrlpack_1_1exploration_1_1gaussian__noise_1_1_gaussian_noise.html#ac758f908acd229aab17d514a91d11576">rlpack.exploration.gaussian_noise.GaussianNoise</a>.</p>
+<p>Reimplemented in <a class="el" href="classrlpack_1_1exploration_1_1gaussian__noise__exploration_1_1_gaussian_noise_exploration.html#ab045e35eebd07b7c0cb4227d52a2d6fb">rlpack.exploration.gaussian_noise_exploration.GaussianNoiseExploration</a>, and <a class="el" href="classrlpack_1_1exploration_1_1state__dependent__exploration_1_1_state_dependent_exploration.html#a30b184872cccff39a67264cebb4f2ea9">rlpack.exploration.state_dependent_exploration.StateDependentExploration</a>.</p>
 
 </div>
 </div>

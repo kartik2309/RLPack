@@ -287,31 +287,29 @@ class ActorCriticAgent(Agent):
             else:
                 if self._is_done(done):
                     self._train_policy_model()
-        if (
-            self._state_norm_code in self.apply_norm_to
-            and self._normalization is not None
-        ):
-            state_current = self._normalization.apply_normalization_pre(
-                state_current, "states"
-            )
         # Backup model every `backup_frequency` steps.
         self._call_to_save()
         # Increment `step_counter` and use policy model to get next action.
         self.step_counter += 1
-        # Apply normalization to state current if required
-        if (
-            self._state_norm_code in self.apply_norm_to
-            and self._normalization is not None
-        ):
-            state_current = self._normalization.apply_normalization_pre_silent(
-                state_current, "states"
-            )
+        # Run in PyTorch No-Grad.
         with pytorch.no_grad():
+            # Apply normalization to state current if required
+            if (
+                    self._state_norm_code in self.apply_norm_to
+                    and self._normalization is not None
+            ):
+                state_current = self._normalization.apply_normalization_pre_silent(
+                    state_current, "states"
+                )
             # Perform forward pass with policy model.
             action_values, _ = self.policy_model(state_current)
+            # Create action distribution from action values.
             distribution = self._create_action_distribution(action_values)
+            # Create action from distribution by sampling
             action = self._action_from_distribution(distribution)
+            # Add noise to the given action.
             action = self._add_noise_to_actions(action)
+            # Move action tensor to CPU and convert to NumPy.
             action = action.cpu().numpy()
         return action
 

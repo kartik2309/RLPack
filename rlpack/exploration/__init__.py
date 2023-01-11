@@ -12,3 +12,6 @@ Currently following classes have been implemented:
 Following packages are part of exploration:
     - `utils`: A package utilities for exploration package.
 """
+
+from rlpack.exploration.gaussian_noise_exploration import GaussianNoiseExploration
+from rlpack.exploration.state_dependent_exploration import StateDependentExploration

@@ -97,7 +97,9 @@ $(document).ready(function(){initNavTree('group__rollout__buffer__group.html',''
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Data Structures</a>  </div>
+<a href="#nested-classes">Data Structures</a> &#124;
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">rollout_buffer<div class="ingroups"><a class="el" href="group__binaries__group.html">binaries</a></div></div></div>
 </div><!--header-->
 <div class="contents">
@@ -121,9 +123,849 @@ Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html">C_RolloutBuffer</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The class <a class="el" href="class_c___rollout_buffer.html" title="The class C_RolloutBuffer is the class that implements the C++ backend for Rollout Buffer....">C_RolloutBuffer</a> is the class that implements the C++ backend for Rollout Buffer. Tensors are moved to C++ backend via PyBind11 and are kept opaque with std::map, hence, tensors are moved between Python and C++ only by references. <code><a class="el" href="class_c___rollout_buffer.html" title="The class C_RolloutBuffer is the class that implements the C++ backend for Rollout Buffer....">C_RolloutBuffer</a></code> is hence autograd safe.  <a href="class_c___rollout_buffer.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_rollout_buffer_container.html">RolloutBufferContainer</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The class <a class="el" href="class_rollout_buffer_container.html" title="The class RolloutBufferContainer is the main backend container that is used in C_RolloutBuffer....">RolloutBufferContainer</a> is the main backend container that is used in <a class="el" href="class_c___rollout_buffer.html" title="The class C_RolloutBuffer is the class that implements the C++ backend for Rollout Buffer....">C_RolloutBuffer</a>. This container stores the data and tracks the references with <a class="el" href="class_rollout_buffer_data.html" title="The class RolloutBufferData keeps the reference of each tensor of RolloutBufferContainer and provides...">RolloutBufferData</a> objects to keep transitions and policy outputs seperated. It also provides necessary methods to manipulate the buffer and get its properties.  <a href="class_rollout_buffer_container.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_rollout_buffer_data.html">RolloutBufferData</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The class <a class="el" href="class_rollout_buffer_data.html" title="The class RolloutBufferData keeps the reference of each tensor of RolloutBufferContainer and provides...">RolloutBufferData</a> keeps the reference of each tensor of <a class="el" href="class_rollout_buffer_container.html" title="The class RolloutBufferContainer is the main backend container that is used in C_RolloutBuffer....">RolloutBufferContainer</a> and provides necessary methods to ship tensors to Python.  <a href="class_rollout_buffer_data.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:gabdb7dd174051c6bddae9a55e10e15fce"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#gabdb7dd174051c6bddae9a55e10e15fce">RolloutBufferContainer::clear_policy_outputs</a> ()</td></tr>
+<tr class="separator:gabdb7dd174051c6bddae9a55e10e15fce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacb71962c1453279cdbb499738f41c5ae"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#gacb71962c1453279cdbb499738f41c5ae">RolloutBufferContainer::clear_transitions</a> ()</td></tr>
+<tr class="separator:gacb71962c1453279cdbb499738f41c5ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7963a1bfd06380dc7a297ca47b12e085"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#ga7963a1bfd06380dc7a297ca47b12e085">RolloutBufferContainer::extend_transitions</a> (std::map&lt; std::string, std::vector&lt; torch::Tensor &gt; &gt; &amp;extensionMap)</td></tr>
+<tr class="separator:ga7963a1bfd06380dc7a297ca47b12e085"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga23611b2a76e836d7cfc4c1c4ba2d18fe"><td class="memItemLeft" align="right" valign="top">std::vector&lt; torch::Tensor &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#ga23611b2a76e836d7cfc4c1c4ba2d18fe">RolloutBufferContainer::get_action_log_probabilities_reference</a> ()</td></tr>
+<tr class="separator:ga23611b2a76e836d7cfc4c1c4ba2d18fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaae032b4339ac938f13e7a8e950d8844e"><td class="memItemLeft" align="right" valign="top">int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#gaae032b4339ac938f13e7a8e950d8844e">RolloutBufferContainer::get_buffer_size</a> () const</td></tr>
+<tr class="separator:gaae032b4339ac938f13e7a8e950d8844e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab398513c76357811323b7d61a3658655"><td class="memItemLeft" align="right" valign="top">std::vector&lt; torch::Tensor &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#gab398513c76357811323b7d61a3658655">RolloutBufferContainer::get_dones_reference</a> ()</td></tr>
+<tr class="separator:gab398513c76357811323b7d61a3658655"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga388df30c76bb3fde531c87164a6ccc1d"><td class="memItemLeft" align="right" valign="top">std::vector&lt; torch::Tensor &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#ga388df30c76bb3fde531c87164a6ccc1d">RolloutBufferContainer::get_entropies_reference</a> ()</td></tr>
+<tr class="separator:ga388df30c76bb3fde531c87164a6ccc1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad0e1a8fb2f47a751c6e086dc114b387b"><td class="memItemLeft" align="right" valign="top">std::vector&lt; torch::Tensor &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#gad0e1a8fb2f47a751c6e086dc114b387b">RolloutBufferContainer::get_rewards_reference</a> ()</td></tr>
+<tr class="separator:gad0e1a8fb2f47a751c6e086dc114b387b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadb2ab9d5cca08849da40670449622c08"><td class="memItemLeft" align="right" valign="top">std::vector&lt; torch::Tensor &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#gadb2ab9d5cca08849da40670449622c08">RolloutBufferContainer::get_state_current_values_reference</a> ()</td></tr>
+<tr class="separator:gadb2ab9d5cca08849da40670449622c08"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4be9b16c52764ca93a19993965d8f4a7"><td class="memItemLeft" align="right" valign="top">std::vector&lt; torch::Tensor &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#ga4be9b16c52764ca93a19993965d8f4a7">RolloutBufferContainer::get_states_current_reference</a> ()</td></tr>
+<tr class="separator:ga4be9b16c52764ca93a19993965d8f4a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga96583dfb3318966df81e0df7728a2647"><td class="memItemLeft" align="right" valign="top">torch::TensorOptions&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#ga96583dfb3318966df81e0df7728a2647">RolloutBufferContainer::get_tensor_options</a> ()</td></tr>
+<tr class="separator:ga96583dfb3318966df81e0df7728a2647"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga122a86755938e7e92c4711fb54bb5a3f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#ga122a86755938e7e92c4711fb54bb5a3f">RolloutBufferContainer::insert_policy_output</a> (torch::Tensor &amp;actionLogProbability, torch::Tensor &amp;stateCurrentValue, torch::Tensor &amp;entropy)</td></tr>
+<tr class="separator:ga122a86755938e7e92c4711fb54bb5a3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga821fcd75a84b05515f8b029b595b87be"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#ga821fcd75a84b05515f8b029b595b87be">RolloutBufferContainer::insert_transition</a> (torch::Tensor &amp;stateCurrent, torch::Tensor &amp;reward, torch::Tensor &amp;done)</td></tr>
+<tr class="separator:ga821fcd75a84b05515f8b029b595b87be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac69d4923577f4de99594e213140582d2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_rollout_buffer_data.html">RolloutBufferData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#gac69d4923577f4de99594e213140582d2">RolloutBufferContainer::policy_output_at</a> (int64_t index)</td></tr>
+<tr class="separator:gac69d4923577f4de99594e213140582d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac8ee6efdccd008d252977f6a2710add1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#gac8ee6efdccd008d252977f6a2710add1">RolloutBufferContainer::RolloutBufferContainer</a> (int64_t bufferSize, std::string &amp;device, std::string &amp;dtype)</td></tr>
+<tr class="separator:gac8ee6efdccd008d252977f6a2710add1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafc94f33e98ed225be8d14e95cb6b4bc5"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#gafc94f33e98ed225be8d14e95cb6b4bc5">RolloutBufferContainer::size_policy_outputs</a> ()</td></tr>
+<tr class="separator:gafc94f33e98ed225be8d14e95cb6b4bc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga72a0803c0ed265cc738ea37fea0d6978"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#ga72a0803c0ed265cc738ea37fea0d6978">RolloutBufferContainer::size_transitions</a> ()</td></tr>
+<tr class="separator:ga72a0803c0ed265cc738ea37fea0d6978"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf5d4d2854c9f29c526e6e4c76348d381"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_rollout_buffer_data.html">RolloutBufferData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#gaf5d4d2854c9f29c526e6e4c76348d381">RolloutBufferContainer::transition_at</a> (int64_t index)</td></tr>
+<tr class="separator:gaf5d4d2854c9f29c526e6e4c76348d381"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga12f2d932ea35f0053cabd449e0535b7c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#ga12f2d932ea35f0053cabd449e0535b7c">RolloutBufferContainer::~RolloutBufferContainer</a> ()</td></tr>
+<tr class="separator:ga12f2d932ea35f0053cabd449e0535b7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:gad1ba8eac11414853b4f4d3380aaacca1"><td class="memItemLeft" align="right" valign="top">std::vector&lt; torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#gad1ba8eac11414853b4f4d3380aaacca1">RolloutBufferContainer::actionLogProbabilities_</a></td></tr>
+<tr class="memdesc:gad1ba8eac11414853b4f4d3380aaacca1"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector of action log probabilities.  <a href="group__rollout__buffer__group.html#gad1ba8eac11414853b4f4d3380aaacca1">More...</a><br /></td></tr>
+<tr class="separator:gad1ba8eac11414853b4f4d3380aaacca1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacfba9f16125bba6c80430fd575fd8ecf"><td class="memItemLeft" align="right" valign="top">int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#gacfba9f16125bba6c80430fd575fd8ecf">RolloutBufferContainer::bufferSize_</a></td></tr>
+<tr class="memdesc:gacfba9f16125bba6c80430fd575fd8ecf"><td class="mdescLeft">&#160;</td><td class="mdescRight">The buffer size that is going to be used.  <a href="group__rollout__buffer__group.html#gacfba9f16125bba6c80430fd575fd8ecf">More...</a><br /></td></tr>
+<tr class="separator:gacfba9f16125bba6c80430fd575fd8ecf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga157a67081310c78d63fdda585fa8c791"><td class="memItemLeft" align="right" valign="top">torch::DeviceType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#ga157a67081310c78d63fdda585fa8c791">RolloutBufferContainer::device_</a></td></tr>
+<tr class="memdesc:ga157a67081310c78d63fdda585fa8c791"><td class="mdescLeft">&#160;</td><td class="mdescRight">The device that is to be used for PyTorch tensors.  <a href="group__rollout__buffer__group.html#ga157a67081310c78d63fdda585fa8c791">More...</a><br /></td></tr>
+<tr class="separator:ga157a67081310c78d63fdda585fa8c791"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadd6586537155e96c9472d92d42d9d46b"><td class="memItemLeft" align="right" valign="top">std::vector&lt; torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#gadd6586537155e96c9472d92d42d9d46b">RolloutBufferContainer::dones_</a></td></tr>
+<tr class="memdesc:gadd6586537155e96c9472d92d42d9d46b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector of dones.  <a href="group__rollout__buffer__group.html#gadd6586537155e96c9472d92d42d9d46b">More...</a><br /></td></tr>
+<tr class="separator:gadd6586537155e96c9472d92d42d9d46b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4304d628a107c2027345a376ab05e943"><td class="memItemLeft" align="right" valign="top">torch::Dtype&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#ga4304d628a107c2027345a376ab05e943">RolloutBufferContainer::dtype_</a></td></tr>
+<tr class="memdesc:ga4304d628a107c2027345a376ab05e943"><td class="mdescLeft">&#160;</td><td class="mdescRight">The datatype to be used for PyTorch tensors.  <a href="group__rollout__buffer__group.html#ga4304d628a107c2027345a376ab05e943">More...</a><br /></td></tr>
+<tr class="separator:ga4304d628a107c2027345a376ab05e943"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7749b0ec7545fa56b1ee0d870bdaf07e"><td class="memItemLeft" align="right" valign="top">std::vector&lt; torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#ga7749b0ec7545fa56b1ee0d870bdaf07e">RolloutBufferContainer::entropies_</a></td></tr>
+<tr class="memdesc:ga7749b0ec7545fa56b1ee0d870bdaf07e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector of entropies of current distribution.  <a href="group__rollout__buffer__group.html#ga7749b0ec7545fa56b1ee0d870bdaf07e">More...</a><br /></td></tr>
+<tr class="separator:ga7749b0ec7545fa56b1ee0d870bdaf07e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad84c8e4c3020a76dea1b916c4e0ea860"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="class_rollout_buffer_data.html">RolloutBufferData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#gad84c8e4c3020a76dea1b916c4e0ea860">RolloutBufferContainer::policyOutputData_</a></td></tr>
+<tr class="memdesc:gad84c8e4c3020a76dea1b916c4e0ea860"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector of <a class="el" href="class_rollout_buffer_data.html" title="The class RolloutBufferData keeps the reference of each tensor of RolloutBufferContainer and provides...">RolloutBufferData</a> pointers for policy outputs.  <a href="group__rollout__buffer__group.html#gad84c8e4c3020a76dea1b916c4e0ea860">More...</a><br /></td></tr>
+<tr class="separator:gad84c8e4c3020a76dea1b916c4e0ea860"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5ee394e06ccb92499fa0844269f2906c"><td class="memItemLeft" align="right" valign="top">std::vector&lt; torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#ga5ee394e06ccb92499fa0844269f2906c">RolloutBufferContainer::rewards_</a></td></tr>
+<tr class="memdesc:ga5ee394e06ccb92499fa0844269f2906c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector of accumulated rewards.  <a href="group__rollout__buffer__group.html#ga5ee394e06ccb92499fa0844269f2906c">More...</a><br /></td></tr>
+<tr class="separator:ga5ee394e06ccb92499fa0844269f2906c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8aacc26bdea7c40f1b461c3edf0a153e"><td class="memItemLeft" align="right" valign="top">std::vector&lt; torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#ga8aacc26bdea7c40f1b461c3edf0a153e">RolloutBufferContainer::stateCurrentValues_</a></td></tr>
+<tr class="memdesc:ga8aacc26bdea7c40f1b461c3edf0a153e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector of current state values.  <a href="group__rollout__buffer__group.html#ga8aacc26bdea7c40f1b461c3edf0a153e">More...</a><br /></td></tr>
+<tr class="separator:ga8aacc26bdea7c40f1b461c3edf0a153e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf00e121340cd3c04af2bf1be2bed38d6"><td class="memItemLeft" align="right" valign="top">std::vector&lt; torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#gaf00e121340cd3c04af2bf1be2bed38d6">RolloutBufferContainer::statesCurrent_</a></td></tr>
+<tr class="memdesc:gaf00e121340cd3c04af2bf1be2bed38d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector of current state.  <a href="group__rollout__buffer__group.html#gaf00e121340cd3c04af2bf1be2bed38d6">More...</a><br /></td></tr>
+<tr class="separator:gaf00e121340cd3c04af2bf1be2bed38d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaaabd59001915f2dc60a2e1196e3cf46d"><td class="memItemLeft" align="right" valign="top">torch::TensorOptions&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#gaaabd59001915f2dc60a2e1196e3cf46d">RolloutBufferContainer::tensorOptions_</a></td></tr>
+<tr class="memdesc:gaaabd59001915f2dc60a2e1196e3cf46d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The tensor options to be used for PyTorch tensors; constructed with device_ and dtype_.  <a href="group__rollout__buffer__group.html#gaaabd59001915f2dc60a2e1196e3cf46d">More...</a><br /></td></tr>
+<tr class="separator:gaaabd59001915f2dc60a2e1196e3cf46d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga32c70b9d28a1852de9c6c492b2a9e3c4"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="class_rollout_buffer_data.html">RolloutBufferData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#ga32c70b9d28a1852de9c6c492b2a9e3c4">RolloutBufferContainer::transitionData_</a></td></tr>
+<tr class="memdesc:ga32c70b9d28a1852de9c6c492b2a9e3c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector of <a class="el" href="class_rollout_buffer_data.html" title="The class RolloutBufferData keeps the reference of each tensor of RolloutBufferContainer and provides...">RolloutBufferData</a> pointers for transition data.  <a href="group__rollout__buffer__group.html#ga32c70b9d28a1852de9c6c492b2a9e3c4">More...</a><br /></td></tr>
+<tr class="separator:ga32c70b9d28a1852de9c6c492b2a9e3c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p >Rollout Buffer is the C++ backend for the class <a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html">rlpack._C.rollout_buffer.RolloutBuffer</a>. This module implements necessary classes to provide necessary functionalities and bindings to provide exposure to Python. </p>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="gabdb7dd174051c6bddae9a55e10e15fce" name="gabdb7dd174051c6bddae9a55e10e15fce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gabdb7dd174051c6bddae9a55e10e15fce">&#9670;&#160;</a></span>clear_policy_outputs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RolloutBufferContainer::clear_policy_outputs </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Clears the policy output vectors</p>
+
+</div>
+</div>
+<a id="gacb71962c1453279cdbb499738f41c5ae" name="gacb71962c1453279cdbb499738f41c5ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gacb71962c1453279cdbb499738f41c5ae">&#9670;&#160;</a></span>clear_transitions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RolloutBufferContainer::clear_transitions </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Clears the transition vectors.</p>
+
+</div>
+</div>
+<a id="ga7963a1bfd06380dc7a297ca47b12e085" name="ga7963a1bfd06380dc7a297ca47b12e085"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7963a1bfd06380dc7a297ca47b12e085">&#9670;&#160;</a></span>extend_transitions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RolloutBufferContainer::extend_transitions </td>
+          <td>(</td>
+          <td class="paramtype">std::map&lt; std::string, std::vector&lt; torch::Tensor &gt; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>extensionMap</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Extends the transitions as per given extension map.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">extensionMap</td><td>The map of transition quantities with corresponding vectors to be used to extend the transitions. The extentionMap must contain the mandatory keys viz:<ul>
+<li>states_current</li>
+<li>rewards</li>
+<li>dones</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga23611b2a76e836d7cfc4c1c4ba2d18fe" name="ga23611b2a76e836d7cfc4c1c4ba2d18fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga23611b2a76e836d7cfc4c1c4ba2d18fe">&#9670;&#160;</a></span>get_action_log_probabilities_reference()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; torch::Tensor &gt; &amp; RolloutBufferContainer::get_action_log_probabilities_reference </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Gets the reference of <code>action_log_probabilities</code> buffer.</p>
+<dl class="section return"><dt>Returns</dt><dd>: The reference to <code>action_log_probabilities</code></dd></dl>
+
+</div>
+</div>
+<a id="gaae032b4339ac938f13e7a8e950d8844e" name="gaae032b4339ac938f13e7a8e950d8844e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaae032b4339ac938f13e7a8e950d8844e">&#9670;&#160;</a></span>get_buffer_size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int64_t RolloutBufferContainer::get_buffer_size </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Gets the current buffer size. This also indicates the capacity.</p>
+<dl class="section return"><dt>Returns</dt><dd>: The buffer size.</dd></dl>
+
+</div>
+</div>
+<a id="gab398513c76357811323b7d61a3658655" name="gab398513c76357811323b7d61a3658655"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab398513c76357811323b7d61a3658655">&#9670;&#160;</a></span>get_dones_reference()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; torch::Tensor &gt; &amp; RolloutBufferContainer::get_dones_reference </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Gets the reference of <code>dones</code> buffer.</p>
+<dl class="section return"><dt>Returns</dt><dd>: The reference to <code>dones</code></dd></dl>
+
+</div>
+</div>
+<a id="ga388df30c76bb3fde531c87164a6ccc1d" name="ga388df30c76bb3fde531c87164a6ccc1d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga388df30c76bb3fde531c87164a6ccc1d">&#9670;&#160;</a></span>get_entropies_reference()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; torch::Tensor &gt; &amp; RolloutBufferContainer::get_entropies_reference </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Gets the reference of <code>entropies</code> buffer.</p>
+<dl class="section return"><dt>Returns</dt><dd>: The reference to <code>entropies</code></dd></dl>
+
+</div>
+</div>
+<a id="gad0e1a8fb2f47a751c6e086dc114b387b" name="gad0e1a8fb2f47a751c6e086dc114b387b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad0e1a8fb2f47a751c6e086dc114b387b">&#9670;&#160;</a></span>get_rewards_reference()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; torch::Tensor &gt; &amp; RolloutBufferContainer::get_rewards_reference </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Gets the reference of <code>rewards</code> buffer.</p>
+<dl class="section return"><dt>Returns</dt><dd>: The reference to <code>rewards</code></dd></dl>
+
+</div>
+</div>
+<a id="gadb2ab9d5cca08849da40670449622c08" name="gadb2ab9d5cca08849da40670449622c08"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gadb2ab9d5cca08849da40670449622c08">&#9670;&#160;</a></span>get_state_current_values_reference()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; torch::Tensor &gt; &amp; RolloutBufferContainer::get_state_current_values_reference </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Gets the reference of <code>state_current_values</code> buffer.</p>
+<dl class="section return"><dt>Returns</dt><dd>: The reference to <code>state_current_values</code></dd></dl>
+
+</div>
+</div>
+<a id="ga4be9b16c52764ca93a19993965d8f4a7" name="ga4be9b16c52764ca93a19993965d8f4a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4be9b16c52764ca93a19993965d8f4a7">&#9670;&#160;</a></span>get_states_current_reference()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; torch::Tensor &gt; &amp; RolloutBufferContainer::get_states_current_reference </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Gets the reference of <code>states_current</code> buffer.</p>
+<dl class="section return"><dt>Returns</dt><dd>: The reference to <code>states current</code></dd></dl>
+
+</div>
+</div>
+<a id="ga96583dfb3318966df81e0df7728a2647" name="ga96583dfb3318966df81e0df7728a2647"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga96583dfb3318966df81e0df7728a2647">&#9670;&#160;</a></span>get_tensor_options()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">torch::TensorOptions RolloutBufferContainer::get_tensor_options </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Gets the tensor options being used.</p>
+<dl class="section return"><dt>Returns</dt><dd>: The TensorOptions object.</dd></dl>
+
+</div>
+</div>
+<a id="ga122a86755938e7e92c4711fb54bb5a3f" name="ga122a86755938e7e92c4711fb54bb5a3f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga122a86755938e7e92c4711fb54bb5a3f">&#9670;&#160;</a></span>insert_policy_output()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RolloutBufferContainer::insert_policy_output </td>
+          <td>(</td>
+          <td class="paramtype">torch::Tensor &amp;&#160;</td>
+          <td class="paramname"><em>actionLogProbability</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch::Tensor &amp;&#160;</td>
+          <td class="paramname"><em>stateCurrentValue</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch::Tensor &amp;&#160;</td>
+          <td class="paramname"><em>entropy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Insertion method to insert policy outputs into Rollout Buffer Container.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">actionLogProbability</td><td>The log probability of the sampled action in the given distribution. </td></tr>
+    <tr><td class="paramname">stateCurrentValue</td><td>Current state value. </td></tr>
+    <tr><td class="paramname">entropy</td><td>Current entropy of the distribution.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>For more information, please refer <a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html">rlpack._C.rollout_buffer.RolloutBuffer</a> and rlpack.actor_critic.base.ActorCriticAgent</p>
+
+</div>
+</div>
+<a id="ga821fcd75a84b05515f8b029b595b87be" name="ga821fcd75a84b05515f8b029b595b87be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga821fcd75a84b05515f8b029b595b87be">&#9670;&#160;</a></span>insert_transition()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RolloutBufferContainer::insert_transition </td>
+          <td>(</td>
+          <td class="paramtype">torch::Tensor &amp;&#160;</td>
+          <td class="paramname"><em>stateCurrent</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch::Tensor &amp;&#160;</td>
+          <td class="paramname"><em>reward</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch::Tensor &amp;&#160;</td>
+          <td class="paramname"><em>done</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Insertion method to insert transitions into Rollout Buffer Container.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">state_current</td><td>The current state. </td></tr>
+    <tr><td class="paramname">reward</td><td>The reward obtained by the agent. </td></tr>
+    <tr><td class="paramname">done</td><td>The current done flag for episode termination/truncation.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>For more information, please refer <a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html">rlpack._C.rollout_buffer.RolloutBuffer</a> and rlpack.actor_critic.base.ActorCriticAgent</p>
+
+</div>
+</div>
+<a id="gac69d4923577f4de99594e213140582d2" name="gac69d4923577f4de99594e213140582d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac69d4923577f4de99594e213140582d2">&#9670;&#160;</a></span>policy_output_at()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_rollout_buffer_data.html">RolloutBufferData</a> RolloutBufferContainer::policy_output_at </td>
+          <td>(</td>
+          <td class="paramtype">int64_t&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Obtain the policy output at a given index.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>: The index of the policy output buffer. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>: An instance of <a class="el" href="class_rollout_buffer_data.html" title="The class RolloutBufferData keeps the reference of each tensor of RolloutBufferContainer and provides...">RolloutBufferData</a> with correct instances set.</dd></dl>
+
+</div>
+</div>
+<a id="gac8ee6efdccd008d252977f6a2710add1" name="gac8ee6efdccd008d252977f6a2710add1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac8ee6efdccd008d252977f6a2710add1">&#9670;&#160;</a></span>RolloutBufferContainer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">RolloutBufferContainer::RolloutBufferContainer </td>
+          <td>(</td>
+          <td class="paramtype">int64_t&#160;</td>
+          <td class="paramname"><em>bufferSize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string &amp;&#160;</td>
+          <td class="paramname"><em>device</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string &amp;&#160;</td>
+          <td class="paramname"><em>dtype</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Class constructor for <a class="el" href="class_rollout_buffer_container.html" title="The class RolloutBufferContainer is the main backend container that is used in C_RolloutBuffer....">RolloutBufferContainer</a>. This will allocate necessary memory as per input, and set relevant attributes.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">bufferSize</td><td>The buffer size to be used. </td></tr>
+    <tr><td class="paramname">device</td><td>The device on which PyTorch tensors are to be processed. </td></tr>
+    <tr><td class="paramname">dtype</td><td>The datatype which is to be used for PyTorch tensors.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="gafc94f33e98ed225be8d14e95cb6b4bc5" name="gafc94f33e98ed225be8d14e95cb6b4bc5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gafc94f33e98ed225be8d14e95cb6b4bc5">&#9670;&#160;</a></span>size_policy_outputs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t RolloutBufferContainer::size_policy_outputs </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >The size of policy outputs buffer.</p>
+<dl class="section return"><dt>Returns</dt><dd>: The policy outputs' buffer size.</dd></dl>
+
+</div>
+</div>
+<a id="ga72a0803c0ed265cc738ea37fea0d6978" name="ga72a0803c0ed265cc738ea37fea0d6978"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga72a0803c0ed265cc738ea37fea0d6978">&#9670;&#160;</a></span>size_transitions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t RolloutBufferContainer::size_transitions </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >The size of transitions buffer.</p>
+<dl class="section return"><dt>Returns</dt><dd>: The transitions buffer size.</dd></dl>
+
+</div>
+</div>
+<a id="gaf5d4d2854c9f29c526e6e4c76348d381" name="gaf5d4d2854c9f29c526e6e4c76348d381"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf5d4d2854c9f29c526e6e4c76348d381">&#9670;&#160;</a></span>transition_at()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_rollout_buffer_data.html">RolloutBufferData</a> RolloutBufferContainer::transition_at </td>
+          <td>(</td>
+          <td class="paramtype">int64_t&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Obtain the transitions at a given index.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>: The index of the transitions buffer. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>: An instance of <a class="el" href="class_rollout_buffer_data.html" title="The class RolloutBufferData keeps the reference of each tensor of RolloutBufferContainer and provides...">RolloutBufferData</a> with correct instances set.</dd></dl>
+
+</div>
+</div>
+<a id="ga12f2d932ea35f0053cabd449e0535b7c" name="ga12f2d932ea35f0053cabd449e0535b7c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga12f2d932ea35f0053cabd449e0535b7c">&#9670;&#160;</a></span>~RolloutBufferContainer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">RolloutBufferContainer::~RolloutBufferContainer </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="gad1ba8eac11414853b4f4d3380aaacca1" name="gad1ba8eac11414853b4f4d3380aaacca1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad1ba8eac11414853b4f4d3380aaacca1">&#9670;&#160;</a></span>actionLogProbabilities_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;torch::Tensor&gt; RolloutBufferContainer::actionLogProbabilities_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The vector of action log probabilities. </p>
+
+</div>
+</div>
+<a id="gacfba9f16125bba6c80430fd575fd8ecf" name="gacfba9f16125bba6c80430fd575fd8ecf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gacfba9f16125bba6c80430fd575fd8ecf">&#9670;&#160;</a></span>bufferSize_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int64_t RolloutBufferContainer::bufferSize_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The buffer size that is going to be used. </p>
+
+</div>
+</div>
+<a id="ga157a67081310c78d63fdda585fa8c791" name="ga157a67081310c78d63fdda585fa8c791"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga157a67081310c78d63fdda585fa8c791">&#9670;&#160;</a></span>device_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">torch::DeviceType RolloutBufferContainer::device_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The device that is to be used for PyTorch tensors. </p>
+
+</div>
+</div>
+<a id="gadd6586537155e96c9472d92d42d9d46b" name="gadd6586537155e96c9472d92d42d9d46b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gadd6586537155e96c9472d92d42d9d46b">&#9670;&#160;</a></span>dones_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;torch::Tensor&gt; RolloutBufferContainer::dones_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The vector of dones. </p>
+
+</div>
+</div>
+<a id="ga4304d628a107c2027345a376ab05e943" name="ga4304d628a107c2027345a376ab05e943"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4304d628a107c2027345a376ab05e943">&#9670;&#160;</a></span>dtype_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">torch::Dtype RolloutBufferContainer::dtype_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The datatype to be used for PyTorch tensors. </p>
+
+</div>
+</div>
+<a id="ga7749b0ec7545fa56b1ee0d870bdaf07e" name="ga7749b0ec7545fa56b1ee0d870bdaf07e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7749b0ec7545fa56b1ee0d870bdaf07e">&#9670;&#160;</a></span>entropies_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;torch::Tensor&gt; RolloutBufferContainer::entropies_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The vector of entropies of current distribution. </p>
+
+</div>
+</div>
+<a id="gad84c8e4c3020a76dea1b916c4e0ea860" name="gad84c8e4c3020a76dea1b916c4e0ea860"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad84c8e4c3020a76dea1b916c4e0ea860">&#9670;&#160;</a></span>policyOutputData_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;<a class="el" href="class_rollout_buffer_data.html">RolloutBufferData</a>&gt; RolloutBufferContainer::policyOutputData_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The vector of <a class="el" href="class_rollout_buffer_data.html" title="The class RolloutBufferData keeps the reference of each tensor of RolloutBufferContainer and provides...">RolloutBufferData</a> pointers for policy outputs. </p>
+
+</div>
+</div>
+<a id="ga5ee394e06ccb92499fa0844269f2906c" name="ga5ee394e06ccb92499fa0844269f2906c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5ee394e06ccb92499fa0844269f2906c">&#9670;&#160;</a></span>rewards_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;torch::Tensor&gt; RolloutBufferContainer::rewards_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The vector of accumulated rewards. </p>
+
+</div>
+</div>
+<a id="ga8aacc26bdea7c40f1b461c3edf0a153e" name="ga8aacc26bdea7c40f1b461c3edf0a153e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8aacc26bdea7c40f1b461c3edf0a153e">&#9670;&#160;</a></span>stateCurrentValues_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;torch::Tensor&gt; RolloutBufferContainer::stateCurrentValues_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The vector of current state values. </p>
+
+</div>
+</div>
+<a id="gaf00e121340cd3c04af2bf1be2bed38d6" name="gaf00e121340cd3c04af2bf1be2bed38d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf00e121340cd3c04af2bf1be2bed38d6">&#9670;&#160;</a></span>statesCurrent_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;torch::Tensor&gt; RolloutBufferContainer::statesCurrent_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The vector of current state. </p>
+
+</div>
+</div>
+<a id="gaaabd59001915f2dc60a2e1196e3cf46d" name="gaaabd59001915f2dc60a2e1196e3cf46d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaaabd59001915f2dc60a2e1196e3cf46d">&#9670;&#160;</a></span>tensorOptions_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">torch::TensorOptions RolloutBufferContainer::tensorOptions_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The tensor options to be used for PyTorch tensors; constructed with device_ and dtype_. </p>
+
+</div>
+</div>
+<a id="ga32c70b9d28a1852de9c6c492b2a9e3c4" name="ga32c70b9d28a1852de9c6c492b2a9e3c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga32c70b9d28a1852de9c6c492b2a9e3c4">&#9670;&#160;</a></span>transitionData_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;<a class="el" href="class_rollout_buffer_data.html">RolloutBufferData</a>&gt; RolloutBufferContainer::transitionData_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The vector of <a class="el" href="class_rollout_buffer_data.html" title="The class RolloutBufferData keeps the reference of each tensor of RolloutBufferContainer and provides...">RolloutBufferData</a> pointers for transition data. </p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

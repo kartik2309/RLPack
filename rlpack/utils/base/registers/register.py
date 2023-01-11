@@ -22,6 +22,7 @@ from rlpack.distributions import (
     NormalLogStd,
 )
 from rlpack.dqn import Dqn
+from rlpack.exploration import GaussianNoiseExploration, StateDependentExploration
 from rlpack.models.actor_critic_mlp_policy import ActorCriticMlpPolicy
 from rlpack.models.mlp import Mlp
 
@@ -35,21 +36,13 @@ class Register:
         ## The tuple for mandatory keys (or keyword arguments) always expected. @I{# noqa: E266}
         self.mandatory_keys = (
             "mode",
-            "env_name",
-            "agent_name",
+            "env",
+            "agent",
             "num_episodes",
             "agent_args",
         )
-        ## The model initialization arguments when using [in-built](@ref models/index.md) models. @I{# noqa: E266}
-        self.model_init_args = ("model_name", "model_args")
         ## The mandatory agent initialisation arguments @I{# noqa: E266}
-        self.agent_init_args = ("agent_name", "agent_args")
-        ## The activation initialization arguments when using [in-built](@ref models/index.md) models. @I{# noqa: E266}
-        self.activation_init_args = ("activation_name", "activation_args")
-        ## The optimizer initialization arguments for given models. @I{# noqa: E266}
-        self.optimizer_init_args = ("optimizer_name", "optimizer_args")
-        ## The LR Scheduler initialization arguments. @I{# noqa: E266}
-        self.lr_scheduler_init_args = ("lr_scheduler_name", "lr_scheduler_args")
+        self.agent_init_args = ("agent", "agent_args")
         ## The mapping between given keyword and PyTorch optimizer class. @I{# noqa: E266}
         self.optimizer_map = {
             "adam": pytorch.optim.Adam,
@@ -62,6 +55,7 @@ class Register:
             "huber_loss": pytorch.nn.HuberLoss,
             "mse": pytorch.nn.MSELoss,
             "smooth_l1_loss": pytorch.nn.SmoothL1Loss,
+            "gaussian_nll_loss": pytorch.nn.GaussianNLLLoss,
         }
         ## The mapping between given keyword and PyTorch activation function class. @I{# noqa: E266}
         self.activation_map = {
@@ -90,7 +84,7 @@ class Register:
             "linear_lr": pytorch.optim.lr_scheduler.LinearLR,
             "cyclic_lr": pytorch.optim.lr_scheduler.CyclicLR,
         }
-        ## The mapping between given keyword and PyTorch Distribution class. @I{# noqa: E266}
+        ## The mapping between given keyword and Distribution class. @I{# noqa: E266}
         self.distributions_map = {
             "categorical": pytorch_distributions.Categorical,
             "bernoulli": pytorch_distributions.Bernoulli,
@@ -102,6 +96,11 @@ class Register:
             "multivariate_normal_log_std": MultivariateNormalLogStd,
             "gaussian_mixture": GaussianMixture,
             "gaussian_mixture_log_std": GaussianMixtureLogStd,
+        }
+        ## The mapping between given keyword and Exploration class. @I{# noqa: E266}
+        self.explorations_map = {
+            "gaussian_noise": GaussianNoiseExploration,
+            "state_dependent": StateDependentExploration,
         }
         ## The mapping between given keyword and [in-built](@ref models/index.md) models. @I{# noqa: E266}
         self.models = {"mlp": Mlp, "actor_critic_mlp_policy": ActorCriticMlpPolicy}
@@ -116,6 +115,7 @@ class Register:
                 "dropout",
                 "share_network",
                 "use_actor_projection",
+                "exploration_tool",
                 "use_diagonal_embedding_on_projection",
             ),
         }
@@ -140,59 +140,59 @@ class Register:
                 "prioritization_params",
                 "force_terminal_state_selection_prob",
                 "tau",
-                "apply_norm",
+                "normalization_tool",
                 "apply_norm_to",
-                "eps_for_norm",
-                "p_for_norm",
-                "dim_for_norm",
                 "max_grad_norm",
                 "grad_norm_p",
                 "clip_grad_value",
             ),
             "ac": (
+                "gae_lambda",
                 "exploration_tool",
-                "rollout_accumulation_size",
+                "exploration_steps",
                 "grad_accumulation_rounds",
+                "training_frequency",
                 "device",
                 "dtype",
                 "apply_norm",
+                "normalization_tool",
                 "apply_norm_to",
-                "eps_for_norm",
-                "p_for_norm",
-                "dim_for_norm",
                 "max_grad_norm",
                 "grad_norm_p",
                 "clip_grad_value",
+                "timeout",
             ),
             "a2c": (
+                "gae_lambda",
                 "exploration_tool",
-                "rollout_accumulation_size",
+                "exploration_steps",
                 "grad_accumulation_rounds",
+                "training_frequency",
                 "device",
                 "dtype",
                 "apply_norm",
+                "normalization_tool",
                 "apply_norm_to",
-                "eps_for_norm",
-                "p_for_norm",
-                "dim_for_norm",
                 "max_grad_norm",
                 "grad_norm_p",
                 "clip_grad_value",
+                "timeout",
             ),
             "a3c": (
+                "gae_lambda",
                 "exploration_tool",
-                "rollout_accumulation_size",
+                "exploration_steps",
                 "grad_accumulation_rounds",
+                "training_frequency",
                 "device",
                 "dtype",
                 "apply_norm",
+                "normalization_tool",
                 "apply_norm_to",
-                "eps_for_norm",
-                "p_for_norm",
-                "dim_for_norm",
                 "max_grad_norm",
                 "grad_norm_p",
                 "clip_grad_value",
+                "timeout",
             ),
         }
         ## The mapping between given keyword and [agent](@ref agents/index.md) agents' arguments. @I{# noqa: E266}

@@ -90,12 +90,12 @@ class Simulator:
         self.sanity_check.check_agent_init_sanity()
         self.sanity_check.check_optimizer_init_sanity()
         self.sanity_check.check_lr_scheduler_init_sanity()
-        requires_distribution = self.sanity_check.check_distribution_sanity()
+        self.sanity_check.check_distribution_sanity()
+        self.sanity_check.check_exploration_tool_sanity()
         agent_args_for_models = [
             arg
-            for arg in self.setup.agent_args[self.config["agent_name"]]
-            if arg
-            in self.setup.model_args_to_optimize[self.config["agent_name"]].keys()
+            for arg in self.setup.agent_args[self.config["agent"]]
+            if arg in self.setup.model_args_to_optimize[self.config["agent"]].keys()
         ]
         agent_model_kwargs = {
             arg: models[idx] for idx, arg in enumerate(agent_args_for_models)
@@ -103,14 +103,12 @@ class Simulator:
         trainable_models = [
             model
             for model_arg_name, model in agent_model_kwargs.items()
-            if self.setup.model_args_to_optimize[self.config["agent_name"]][
-                model_arg_name
-            ]
+            if self.setup.model_args_to_optimize[self.config["agent"]][model_arg_name]
         ]
         optimizers = [
             self.setup.get_optimizer(
                 params=model.parameters(),
-                optimizer_name=self.config["optimizer_name"],
+                optimizer_name=self.config["agent_args"]["optimizer"],
                 optimizer_args=self.config["optimizer_args"],
             )
             for model in trainable_models
@@ -118,14 +116,14 @@ class Simulator:
         lr_schedulers = [
             self.setup.get_lr_scheduler(
                 optimizer=optimizer,
-                lr_scheduler_name=self.config.get("lr_scheduler_name"),
+                lr_scheduler_name=self.config["agent_args"].get("lr_scheduler"),
                 lr_scheduler_args=self.config.get("lr_scheduler_args"),
             )
             for optimizer in optimizers
         ]
         default_model_args = {
             arg: self.config["agent_args"].get(arg)
-            for arg in self.setup.agent_args_default[self.config["agent_name"]]
+            for arg in self.setup.agent_args_default[self.config["agent"]]
             if self.config["agent_args"].get(arg) is not None
         }
         processed_agent_args = dict(
@@ -133,33 +131,47 @@ class Simulator:
             optimizer=optimizers[0] if len(optimizers) == 1 else optimizers,
             lr_scheduler=lr_schedulers[0] if len(lr_schedulers) == 1 else lr_schedulers,
             loss_function=self.setup.get_loss_function(
-                loss_function_name=self.config["loss_function_name"],
+                loss_function_name=self.config["agent_args"]["loss_function"],
                 loss_function_args=self.config["loss_function_args"],
             ),
             save_path=self.config["agent_args"]["save_path"],
         )
         # Add distribution object to arguments if required by agent.
-        if requires_distribution:
+        if "distribution" in self.config["agent_args"]:
             distribution_kwargs = dict(
                 distribution=self.setup.get_distribution_class(
                     self.config["agent_args"]["distribution"]
                 )
             )
             processed_agent_args.update(distribution_kwargs)
+        if "exploration_tool" in self.config["agent_args"]:
+            exploration_tool_kwargs = dict(
+                exploration_tool=self.setup.get_exploration_tool(
+                    self.config["agent_args"]["exploration_tool"],
+                    self.config.get("exploration_tool_args", dict()),
+                )
+            )
+            processed_agent_args.update(exploration_tool_kwargs)
+        if "normalization_tool" in self.config["agent_args"]:
+            normalization_tool = dict(
+                normalization_tool=self.setup.get_normalization_tool(
+                    self.config["agent_args"]["normalization_tool"],
+                    self.config.get("normalization_tool_args", dict()),
+                )
+            )
+            processed_agent_args.update(normalization_tool)
         agent_args_from_config = {
             k: v
             for k, v in self.config["agent_args"].items()
             if k not in processed_agent_args.keys()
-            and k in self.setup.agent_args[self.config["agent_name"]]
+            and k in self.setup.agent_args[self.config["agent"]]
         }
         agent_kwargs = {
+            **default_model_args,
             **processed_agent_args,
             **agent_args_from_config,
-            **default_model_args,
         }
-        agent = self.setup.get_agent(
-            agent_name=self.config["agent_name"], **agent_kwargs
-        )
+        agent = self.setup.get_agent(agent_name=self.config["agent"], **agent_kwargs)
         config = self.config.copy()
         if self.is_custom_model and len(self.agent_model_args) > 0:
             for k in self.agent_model_args:
@@ -181,24 +193,33 @@ class Simulator:
             model_kwargs = {
                 key: value
                 for key, value in self.config["model_args"].items()
-                if key in self.setup.get_model_args(self.config["model_name"])
+                if key in self.setup.get_model_args(self.config["model"])
             }
-            if "activation" not in model_kwargs.keys():
+            if "activation" in model_kwargs.keys():
                 activation = self.setup.get_activation(
-                    activation_name=self.config.get(
-                        "activation_name", pytorch.nn.ReLU()
+                    activation_name=self.config["model_args"].get(
+                        "activation", pytorch.nn.ReLU()
                     ),
                     activation_args=self.config.get("activation_args"),
                 )
                 model_kwargs["activation"] = activation
+            if "exploration_tool" in model_kwargs:
+                self.sanity_check.check_exploration_tool_sanity()
+                exploration_tool = self.setup.get_exploration_tool(
+                    exploration_tool_name=self.config["model_args"].get(
+                        "exploration_tool"
+                    ),
+                    exploration_tool_args=self.config["exploration_tool_args"],
+                )
+                model_kwargs["exploration_tool"] = exploration_tool
             models = self.setup.get_models(
-                model_name=self.config["model_name"],
-                agent_name=self.config["agent_name"],
+                model_name=self.config["model"],
+                agent_name=self.config["agent"],
                 **model_kwargs,
             )
         else:
             self.agent_model_args = self.setup.get_agent_model_args(
-                agent_name=self.config["agent_name"]
+                agent_name=self.config["agent"]
             )
             models = [
                 self.config["agent_args"][agent_model_arg]
@@ -207,16 +228,10 @@ class Simulator:
         return models
 
     def setup_environment(self):
-        if self.config.get("env") is None:
-            assert self.config.get("env_name") is not None, (
-                "Either `env` (for gym environment) or `env_name` (for env name registered with gym)"
-                " must be passed in config"
-            )
-            env_name = self.config["env_name"]
+        env = self.config["env"]
+        if isinstance(env, str):
             env_args = self.config.get("env_args", dict())
-            env = gym.make(env_name, **env_args)
-        else:
-            env = self.config["env"]
+            env = gym.make(env, **env_args)
         return env
 
     @staticmethod

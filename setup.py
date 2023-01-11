@@ -55,6 +55,7 @@ class BuildExternal(build_ext):
             "binaries/replay_buffer",
             "binaries/grad_accumulator",
             "binaries/rollout_buffer",
+            "binaries/stl_bindings",
         ]
 
         config = "Debug" if self.debug else "Release"

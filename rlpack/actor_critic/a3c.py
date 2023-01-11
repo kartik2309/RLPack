@@ -16,6 +16,8 @@ Following packages are part of actor_critic:
 """
 
 
+from abc import ABC
+from datetime import timedelta
 from typing import List, Optional, Tuple, Type, Union
 
 from rlpack import pytorch, pytorch_distributed, pytorch_distributions
@@ -23,9 +25,10 @@ from rlpack.actor_critic.utils.actor_critic_agent import ActorCriticAgent
 from rlpack.exploration.utils.exploration import Exploration
 from rlpack.utils import LossFunction, LRScheduler
 from rlpack.utils.exceptions import AgentError
+from rlpack.utils.normalization import Normalization
 
 
-class A3C(ActorCriticAgent):
+class A3C(ActorCriticAgent, ABC):
     """
     The A3C class implements the asynchronous Actor-Critic method. This uses PyTorch's multiprocessing for
     gradient all-reduce operations. In this implementation master process' policy model is assumed to be
@@ -46,19 +49,19 @@ class A3C(ActorCriticAgent):
         action_space: Union[int, Tuple[int, Union[List[int], None]]],
         backup_frequency: int,
         save_path: str,
-        rollout_accumulation_size: Union[int, None] = None,
+        gae_lambda: float = 1.0,
+        exploration_steps: Union[int, None] = None,
         grad_accumulation_rounds: int = 1,
+        training_frequency: Union[int, None] = None,
         exploration_tool: Union[Exploration, None] = None,
         device: str = "cpu",
         dtype: str = "float32",
-        apply_norm: Union[int, str] = -1,
+        normalization_tool: Union[Normalization, None] = None,
         apply_norm_to: Union[int, List[str]] = -1,
-        eps_for_norm: float = 5e-12,
-        p_for_norm: int = 2,
-        dim_for_norm: int = 0,
         max_grad_norm: Optional[float] = None,
         grad_norm_p: float = 2.0,
         clip_grad_value: Optional[float] = None,
+        timeout: timedelta = timedelta(minutes=30),
     ):
         """!
         @param policy_model: *pytorch.nn.Module*: The policy model to be used. Policy model must return a tuple of
@@ -81,40 +84,33 @@ class A3C(ActorCriticAgent):
                 element can be an empty list, if you wish to sample the default no. of samples.
         @param backup_frequency: int: The timesteps after which policy model, optimizer states and lr
             scheduler states are backed up.
-        @param exploration_tool: Union[Exploration, None]: Exploration tool to be used to explore the environment.
-            These tools can be found in `rlpack.exploration`.
         @param save_path: str: The path where policy model, optimizer states and lr scheduler states are to be saved.
-        @param rollout_accumulation_size: Union[int, None]: The size of rollout buffer before performing optimizer
+        @param gae_lambda: float: The Generalized Advantage Estimation coefficient (referred to as lambda), indicating
+            the bias-variance trade-off.
+        @param exploration_steps: Union[int, None]: The size of rollout buffer before performing optimizer
             step. Whole rollout buffer is used to fit the policy model and is cleared. By default, after every episode.
              Default: None.
         @param grad_accumulation_rounds: int: The number of rounds until which gradients are to be accumulated before
             performing calling optimizer step. Gradients are mean reduced for grad_accumulation_rounds > 1. Default: 1.
+        @param training_frequency: Union[int, None]: The number of timesteps after which policy model is to be trained.
+            By default, training is done at the end of an episode: Default: None.
+        @param exploration_tool: Union[Exploration, None]: Exploration tool to be used to explore the environment.
+            These tools can be found in `rlpack.exploration`.
         @param device: str: The device on which models are run. Default: "cpu".
-        @param dtype: str: The datatype for model parameters. Default: "float32"
-        @param apply_norm: Union[int, str]: The code to select the normalization procedure to be applied on
-            selected quantities; selected by `apply_norm_to`: see below)). Direct string can also be
-            passed as per accepted keys. Refer below in Notes to see the accepted values. Default: -1
+        @param dtype: str: The datatype for model parameters. Default: "float32".
+        @param normalization_tool: Union[Normalization, None]: The normalization tool to be used. This must be an
+            instance of rlpack.utils.normalization.Normalization if passed. By default, is initialized to None and
+            no normalization takes place. If passed, make sure a valid `apply_norm_to` is passed.
         @param apply_norm_to: Union[int, List[str]]: The code to select the quantity to which normalization is
             to be applied. Direct list of quantities can also be passed as per accepted keys. Refer
             below in Notes to see the accepted values. Default: -1.
-        @param eps_for_norm: float: Epsilon value for normalization; for numeric stability. For min-max normalization
-            and standardized normalization. Default: 5e-12.
-        @param p_for_norm: int: The p value for p-normalization. Default: 2; L2 Norm.
-        @param dim_for_norm: int: The dimension across which normalization is to be performed. Default: 0.
         @param max_grad_norm: Optional[float]: The max norm for gradients for gradient clipping. Default: None
         @param grad_norm_p: float: The p-value for p-normalization of gradients. Default: 2.0
         @param clip_grad_value: Optional[float]: The gradient value for clipping gradients by value. Default: None
+        @param timeout: timedelta: The timeout for synchronous calls. Default is 30 minutes.
 
 
         **Notes**
-
-
-        The values accepted for `apply_norm` are: -
-            - No Normalization: -1; `"none"`
-            - Min-Max Normalization: 0; `"min_max"`
-            - Standardization: 1; `"standardize"`
-            - P-Normalization: 2; `"p_norm"`
-
 
         The value accepted for `apply_norm_to` are as follows and must be passed in a list:
             - `"none"`: -1; Don't apply normalization to any quantity.
@@ -144,30 +140,39 @@ class A3C(ActorCriticAgent):
             action_space,
             backup_frequency,
             save_path,
-            rollout_accumulation_size,
+            gae_lambda,
+            exploration_steps,
             grad_accumulation_rounds,
+            training_frequency,
             exploration_tool,
-            device,
-            dtype,
-            apply_norm,
-            apply_norm_to,
-            eps_for_norm,
-            p_for_norm,
-            dim_for_norm,
-            max_grad_norm,
-            grad_norm_p,
-            clip_grad_value,
+            device=device,
+            dtype=dtype,
+            normalization_tool=normalization_tool,
+            apply_norm_to=apply_norm_to,
+            max_grad_norm=max_grad_norm,
+            grad_norm_p=grad_norm_p,
+            clip_grad_value=clip_grad_value,
+            timeout=timeout,
         )
         if not pytorch_distributed.is_initialized():
             raise AgentError("A3C can only be launched in distributed setting!")
-        ## The callable method for gradient reduction in distributed environment.@I{# noqa: E266}
-        self._distributed_grad_reduce_method = self._async_grad_all_reduce
-        ## The callable method for parameter scattering in distributed environment. @I{# noqa: E266}
-        self._distributed_param_scatter_method = self._async_param_scatter
-        ## The process rank for A3C worker. @I{# noqa: E266}
+
+    def _set_attribute_custom_values(self) -> None:
+        # The process rank for A3C worker.
         self._process_rank = pytorch_distributed.get_rank()
-        ## The world size for A3C workers @I{# noqa: E266}
+        # The world size for A3C workers.
         self._world_size = pytorch_distributed.get_world_size()
+        # The process group to current World.
+        self._process_group = pytorch_distributed.group.WORLD
+        # Disable gradient processing, optimizer step and lr scheduler step for all workers.
+        if self._process_rank != self._master_process_rank:
+            # The flag indicating weather to perform gradient processing (normalization and clipping).
+            # Initialized to False for workers.
+            self._perform_grad_processing = False
+            # The flag indicating weather to take optimizer step. Initialized to False for workers.
+            self._take_optimizer_step = False
+            # The flag indicating weather to take LR scheduler step. Initialized to False for workers.
+            self._take_lr_scheduler_step = False
 
     def _call_to_save(self) -> None:
         """
@@ -179,31 +184,33 @@ class A3C(ActorCriticAgent):
             self.save()
 
     @pytorch.no_grad()
-    def _async_grad_all_reduce(self) -> None:
+    def _call_to_extend_transitions(self) -> None:
+        """
+        Method to extend the transitions with all gather. Here the method does nothing and returns immediately.
+        """
+        return
+
+    @pytorch.no_grad()
+    def _share_gradients(self) -> None:
         """
         Asynchronously averages the gradients across the world_size (number of processes) using non-blocking
-        all-reduce method.
+        reduce method to share gradients to master process. Here the method is implemented with reduce operation
+        at master process.
         """
         for param in self.policy_model.parameters():
             if param.requires_grad:
-                pytorch_distributed.reduce(
-                    param.grad,
-                    dst=self._master_process_rank,
+                self._process_group.reduce(
+                    tensor=param.grad,
+                    root=self._master_process_rank,
                     op=pytorch_distributed.ReduceOp.SUM,
-                    async_op=True,
                 )
                 param.grad /= self._world_size
 
     @pytorch.no_grad()
-    def _async_param_scatter(self):
+    def _share_parameters(self):
+        """
+        Method to share parameters from a single model. This must typically implement scatter collective communication
+        operation. Here the method is implemented by scattering parameters from master process to other processes.
+        """
         for param in self.policy_model.parameters():
-            if self._process_rank != self._master_process_rank:
-                scatter_list = None
-            else:
-                scatter_list = [param] * self._world_size
-            pytorch_distributed.scatter(
-                param,
-                scatter_list=scatter_list,
-                src=self._master_process_rank,
-                async_op=True,
-            )
+            self._process_group.broadcast(tensor=param, root=self._master_process_rank)

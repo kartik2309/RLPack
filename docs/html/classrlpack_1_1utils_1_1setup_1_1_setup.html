@@ -141,8 +141,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6c4c9addf30255fea16d0182f332600f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a88b91132eb3ee55188dadebc404a058d"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1setup_1_1_setup.html#a88b91132eb3ee55188dadebc404a058d">get_agent_model_args</a> (self, str agent_name)</td></tr>
 <tr class="separator:a88b91132eb3ee55188dadebc404a058d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af178a455747d9909d760cbe49af760a4"><td class="memItemLeft" align="right" valign="top">pytorch_distributions.Distribution&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1setup_1_1_setup.html#af178a455747d9909d760cbe49af760a4">get_distribution_class</a> (self, str distribution)</td></tr>
-<tr class="separator:af178a455747d9909d760cbe49af760a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1cefa0ff19f59893368f86ac9fcdcea3"><td class="memItemLeft" align="right" valign="top">Type[pytorch_distributions.Distribution]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1setup_1_1_setup.html#a1cefa0ff19f59893368f86ac9fcdcea3">get_distribution_class</a> (self, str distribution_name)</td></tr>
+<tr class="memdesc:a1cefa0ff19f59893368f86ac9fcdcea3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the class type for given distribution.  <a href="classrlpack_1_1utils_1_1setup_1_1_setup.html#a1cefa0ff19f59893368f86ac9fcdcea3">More...</a><br /></td></tr>
+<tr class="separator:a1cefa0ff19f59893368f86ac9fcdcea3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c8f81a47262595a98757443d6fc84dd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classrlpack_1_1exploration_1_1utils_1_1exploration_1_1_exploration.html">Exploration</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1setup_1_1_setup.html#a0c8f81a47262595a98757443d6fc84dd">get_exploration_tool</a> (self, str exploration_tool_name, Dict[str, Any] exploration_tool_args)</td></tr>
+<tr class="memdesc:a0c8f81a47262595a98757443d6fc84dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an exploration tool for agents/models.  <a href="classrlpack_1_1utils_1_1setup_1_1_setup.html#a0c8f81a47262595a98757443d6fc84dd">More...</a><br /></td></tr>
+<tr class="separator:a0c8f81a47262595a98757443d6fc84dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e793e9b2999ea425f7ee23c1dad55ef"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classrlpack_1_1utils_1_1typing__hints_1_1_loss_function.html">LossFunction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1setup_1_1_setup.html#a7e793e9b2999ea425f7ee23c1dad55ef">get_loss_function</a> (self, str loss_function_name, Dict[str, Any] loss_function_args)</td></tr>
 <tr class="memdesc:a7e793e9b2999ea425f7ee23c1dad55ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method retrieves the Loss Function to be supplied for the models.  <a href="classrlpack_1_1utils_1_1setup_1_1_setup.html#a7e793e9b2999ea425f7ee23c1dad55ef">More...</a><br /></td></tr>
 <tr class="separator:a7e793e9b2999ea425f7ee23c1dad55ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -154,6 +158,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae8bbccfa5f70d4162a59af6a9fdb7370"><td class="memItemLeft" align="right" valign="top">List[pytorch.nn.Module]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1setup_1_1_setup.html#ae8bbccfa5f70d4162a59af6a9fdb7370">get_models</a> (self, str model_name, str agent_name, *args, **kwargs)</td></tr>
 <tr class="memdesc:ae8bbccfa5f70d4162a59af6a9fdb7370"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method automatically retrieves the given model(s) required by the agent.  <a href="classrlpack_1_1utils_1_1setup_1_1_setup.html#ae8bbccfa5f70d4162a59af6a9fdb7370">More...</a><br /></td></tr>
 <tr class="separator:ae8bbccfa5f70d4162a59af6a9fdb7370"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4c1a5db3ec04e0bca7d851f30faaf35"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html">Normalization</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1setup_1_1_setup.html#ae4c1a5db3ec04e0bca7d851f30faaf35">get_normalization_tool</a> (self, Union[str, int] normalization, Dict[str, Any] normalization_args)</td></tr>
+<tr class="memdesc:ae4c1a5db3ec04e0bca7d851f30faaf35"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the normalization tool for agents.  <a href="classrlpack_1_1utils_1_1setup_1_1_setup.html#ae4c1a5db3ec04e0bca7d851f30faaf35">More...</a><br /></td></tr>
+<tr class="separator:ae4c1a5db3ec04e0bca7d851f30faaf35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac5b236ba7fac5045d9dcc94ac74f1458"><td class="memItemLeft" align="right" valign="top">pytorch.optim.Optimizer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1setup_1_1_setup.html#ac5b236ba7fac5045d9dcc94ac74f1458">get_optimizer</a> (self, List[pytorch.Tensor] params, str optimizer_name, Dict[str, Any] optimizer_args)</td></tr>
 <tr class="memdesc:ac5b236ba7fac5045d9dcc94ac74f1458"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method retrieves the optimizer given by the "optimizer" key in the argument optimizer_args.  <a href="classrlpack_1_1utils_1_1setup_1_1_setup.html#ac5b236ba7fac5045d9dcc94ac74f1458">More...</a><br /></td></tr>
 <tr class="separator:ac5b236ba7fac5045d9dcc94ac74f1458"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -165,9 +172,6 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register')"><img src="closed.png" alt="-"/>&#160;Data Fields inherited from <a class="el" href="classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html">rlpack.utils.base.registers.register.Register</a></td></tr>
-<tr class="memitem:acd9c32c82b3756a8dc8e09c29da823e0 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#acd9c32c82b3756a8dc8e09c29da823e0">activation_init_args</a></td></tr>
-<tr class="memdesc:acd9c32c82b3756a8dc8e09c29da823e0 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="mdescLeft">&#160;</td><td class="mdescRight">The activation initialization arguments when using <a class="el" href="models.html#md_models_index">in-built</a> models.  <a href="classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#acd9c32c82b3756a8dc8e09c29da823e0">More...</a><br /></td></tr>
-<tr class="separator:acd9c32c82b3756a8dc8e09c29da823e0 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a07d171c895e38a539cffe0292a447033 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a07d171c895e38a539cffe0292a447033">activation_map</a></td></tr>
 <tr class="memdesc:a07d171c895e38a539cffe0292a447033 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="mdescLeft">&#160;</td><td class="mdescRight">The mapping between given keyword and PyTorch activation function class.  <a href="classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a07d171c895e38a539cffe0292a447033">More...</a><br /></td></tr>
 <tr class="separator:a07d171c895e38a539cffe0292a447033 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -184,14 +188,14 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memdesc:ae9079e44adcf62f56340ec96668f48cc inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="mdescLeft">&#160;</td><td class="mdescRight">The mapping between given keyword and <a class="el" href="agents.html#md_agents_index">agents</a> models.  <a href="classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#ae9079e44adcf62f56340ec96668f48cc">More...</a><br /></td></tr>
 <tr class="separator:ae9079e44adcf62f56340ec96668f48cc inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af8516a4cbd5ce628d1b9a4dc58c6f592 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#af8516a4cbd5ce628d1b9a4dc58c6f592">distributions_map</a></td></tr>
-<tr class="memdesc:af8516a4cbd5ce628d1b9a4dc58c6f592 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="mdescLeft">&#160;</td><td class="mdescRight">The mapping between given keyword and PyTorch Distribution class.  <a href="classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#af8516a4cbd5ce628d1b9a4dc58c6f592">More...</a><br /></td></tr>
+<tr class="memdesc:af8516a4cbd5ce628d1b9a4dc58c6f592 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="mdescLeft">&#160;</td><td class="mdescRight">The mapping between given keyword and Distribution class.  <a href="classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#af8516a4cbd5ce628d1b9a4dc58c6f592">More...</a><br /></td></tr>
 <tr class="separator:af8516a4cbd5ce628d1b9a4dc58c6f592 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98bc0cd30df0a56775ac9f3ed83e1d58 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a98bc0cd30df0a56775ac9f3ed83e1d58">explorations_map</a></td></tr>
+<tr class="memdesc:a98bc0cd30df0a56775ac9f3ed83e1d58 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="mdescLeft">&#160;</td><td class="mdescRight">The mapping between given keyword and Exploration class.  <a href="classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a98bc0cd30df0a56775ac9f3ed83e1d58">More...</a><br /></td></tr>
+<tr class="separator:a98bc0cd30df0a56775ac9f3ed83e1d58 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a21dc8871a21ce75a92035986a11038db inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a21dc8871a21ce75a92035986a11038db">loss_function_map</a></td></tr>
 <tr class="memdesc:a21dc8871a21ce75a92035986a11038db inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="mdescLeft">&#160;</td><td class="mdescRight">The mapping between given keyword and PyTorch loss function class.  <a href="classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a21dc8871a21ce75a92035986a11038db">More...</a><br /></td></tr>
 <tr class="separator:a21dc8871a21ce75a92035986a11038db inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a33b4e4e22e082b3909777596a4ad4886 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a33b4e4e22e082b3909777596a4ad4886">lr_scheduler_init_args</a></td></tr>
-<tr class="memdesc:a33b4e4e22e082b3909777596a4ad4886 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="mdescLeft">&#160;</td><td class="mdescRight">The LR Scheduler initialization arguments.  <a href="classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a33b4e4e22e082b3909777596a4ad4886">More...</a><br /></td></tr>
-<tr class="separator:a33b4e4e22e082b3909777596a4ad4886 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a51a30d4eb116951e6d9f85e06d724664 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a51a30d4eb116951e6d9f85e06d724664">lr_scheduler_map</a></td></tr>
 <tr class="memdesc:a51a30d4eb116951e6d9f85e06d724664 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="mdescLeft">&#160;</td><td class="mdescRight">The mapping between given keyword and PyTorch LR Scheduler class.  <a href="classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a51a30d4eb116951e6d9f85e06d724664">More...</a><br /></td></tr>
 <tr class="separator:a51a30d4eb116951e6d9f85e06d724664 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -213,15 +217,9 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:a45852466f2be6add3e0e93aa4125b8dc inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a45852466f2be6add3e0e93aa4125b8dc">model_args_to_optimize</a></td></tr>
 <tr class="memdesc:a45852466f2be6add3e0e93aa4125b8dc inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="mdescLeft">&#160;</td><td class="mdescRight">The mapping between keyword and agents' model arguments to wrap optimizer with.  <a href="classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a45852466f2be6add3e0e93aa4125b8dc">More...</a><br /></td></tr>
 <tr class="separator:a45852466f2be6add3e0e93aa4125b8dc inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a03e261bd59e96fdac2e69df23a631125 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a03e261bd59e96fdac2e69df23a631125">model_init_args</a></td></tr>
-<tr class="memdesc:a03e261bd59e96fdac2e69df23a631125 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="mdescLeft">&#160;</td><td class="mdescRight">The model initialization arguments when using <a class="el" href="models.html#md_models_index">in-built</a> models.  <a href="classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a03e261bd59e96fdac2e69df23a631125">More...</a><br /></td></tr>
-<tr class="separator:a03e261bd59e96fdac2e69df23a631125 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a450e8f8af5ffcc5e4b4ef3493c6a24fa inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a450e8f8af5ffcc5e4b4ef3493c6a24fa">models</a></td></tr>
 <tr class="memdesc:a450e8f8af5ffcc5e4b4ef3493c6a24fa inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="mdescLeft">&#160;</td><td class="mdescRight">The mapping between given keyword and <a class="el" href="models.html#md_models_index">in-built</a> models.  <a href="classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a450e8f8af5ffcc5e4b4ef3493c6a24fa">More...</a><br /></td></tr>
 <tr class="separator:a450e8f8af5ffcc5e4b4ef3493c6a24fa inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1dfcae45bfdf82ef6e11ef5244c53c01 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a1dfcae45bfdf82ef6e11ef5244c53c01">optimizer_init_args</a></td></tr>
-<tr class="memdesc:a1dfcae45bfdf82ef6e11ef5244c53c01 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="mdescLeft">&#160;</td><td class="mdescRight">The optimizer initialization arguments for given models.  <a href="classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a1dfcae45bfdf82ef6e11ef5244c53c01">More...</a><br /></td></tr>
-<tr class="separator:a1dfcae45bfdf82ef6e11ef5244c53c01 inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a61f3fe7db0b994b77be3ff82a5b728cd inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a61f3fe7db0b994b77be3ff82a5b728cd">optimizer_map</a></td></tr>
 <tr class="memdesc:a61f3fe7db0b994b77be3ff82a5b728cd inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="mdescLeft">&#160;</td><td class="mdescRight">The mapping between given keyword and PyTorch optimizer class.  <a href="classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register.html#a61f3fe7db0b994b77be3ff82a5b728cd">More...</a><br /></td></tr>
 <tr class="separator:a61f3fe7db0b994b77be3ff82a5b728cd inherit pub_attribs_classrlpack_1_1utils_1_1base_1_1registers_1_1register_1_1_register"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -386,14 +384,14 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="af178a455747d9909d760cbe49af760a4" name="af178a455747d9909d760cbe49af760a4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af178a455747d9909d760cbe49af760a4">&#9670;&#160;</a></span>get_distribution_class()</h2>
+<a id="a1cefa0ff19f59893368f86ac9fcdcea3" name="a1cefa0ff19f59893368f86ac9fcdcea3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1cefa0ff19f59893368f86ac9fcdcea3">&#9670;&#160;</a></span>get_distribution_class()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"> pytorch_distributions.Distribution rlpack.utils.setup.Setup.get_distribution_class </td>
+          <td class="memname"> Type[pytorch_distributions.Distribution] rlpack.utils.setup.Setup.get_distribution_class </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><em>self</em>, </td>
@@ -403,7 +401,7 @@ Additional Inherited Members</h2></td></tr>
           <td></td>
           <td class="paramtype">str
     &#160;</td>
-          <td class="paramname"><em>distribution</em>&#160;</td>
+          <td class="paramname"><em>distribution_name</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -412,6 +410,60 @@ Additional Inherited Members</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns the class type for given distribution. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">distribution_name</td><td>str: The distribution name as mentioned in here </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>: Type[pytorch_distributions.Distribution]: The distribution class </dd></dl>
+
+</div>
+</div>
+<a id="a0c8f81a47262595a98757443d6fc84dd" name="a0c8f81a47262595a98757443d6fc84dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c8f81a47262595a98757443d6fc84dd">&#9670;&#160;</a></span>get_exploration_tool()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <a class="el" href="classrlpack_1_1exploration_1_1utils_1_1exploration_1_1_exploration.html">Exploration</a> rlpack.utils.setup.Setup.get_exploration_tool </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>exploration_tool_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, Any]
+    &#160;</td>
+          <td class="paramname"><em>exploration_tool_args</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates an exploration tool for agents/models. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">exploration_tool_name</td><td>str: The exploration tool name as mentioned in <a class="el" href="explorations.html#md_exploration_index">here</a>. </td></tr>
+    <tr><td class="paramname">exploration_tool_args</td><td>Dict[str, Any]. Valid arguments for the exploration tool. Checkout the docstrings for the exploration tool you intend to use. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>: Exploration: An instance of exploration tool </dd></dl>
 
 </div>
 </div>
@@ -600,6 +652,57 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>List[pytorch.nn.Module]: The list of models required by the supplied agent. </dd></dl>
+
+</div>
+</div>
+<a id="ae4c1a5db3ec04e0bca7d851f30faaf35" name="ae4c1a5db3ec04e0bca7d851f30faaf35"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4c1a5db3ec04e0bca7d851f30faaf35">&#9670;&#160;</a></span>get_normalization_tool()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html">Normalization</a> rlpack.utils.setup.Setup.get_normalization_tool </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Union[str, int]&#160;</td>
+          <td class="paramname"><em>normalization</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, Any]
+    &#160;</td>
+          <td class="paramname"><em>normalization_args</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates the normalization tool for agents. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">normalization</td><td>Union[str, int]: The normalization technique to be used. </td></tr>
+    <tr><td class="paramname">normalization_args</td><td>Valid arguments for <a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html" title="Normalization class providing methods for normalization techniques.">rlpack.utils.normalization.Normalization</a>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>: An instance of Normalization</dd></dl>
+<p>The values accepted for <code>apply_norm</code> are: -</p><ul>
+<li>No Normalization: -1; <code>"none"</code></li>
+<li>Min-Max Normalization: 0; <code>"min_max"</code></li>
+<li>Standardization: 1; <code>"standardize"</code></li>
+<li>P-Normalization: 2; <code>"p_norm"</code> </li>
+</ul>
 
 </div>
 </div>

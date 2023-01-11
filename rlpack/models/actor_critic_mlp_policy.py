@@ -18,7 +18,8 @@ Following packages are part of models:
 from typing import List, Tuple, Union
 
 from rlpack import pytorch
-from rlpack.models.utils._mlp_feature_extractor import _MlpFeatureExtractor
+from rlpack.exploration.utils.exploration import Exploration
+from rlpack.models.utils.mlp_feature_extractor import MlpFeatureExtractor
 from rlpack.utils import Activation
 
 
@@ -36,6 +37,7 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         dropout: float = 0.5,
         share_network: bool = False,
         use_actor_projection: bool = False,
+        exploration_tool: Union[Exploration, None] = None,
         use_diagonal_embedding_on_projection: bool = False,
     ):
         """
@@ -55,7 +57,10 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         @param share_network: bool: Flag indicating whether to use the shared network for actor and critic or
             separate networks. Default: False
         @param use_actor_projection: bool: Flag indicating whether to use projection for actor. Projection is applied
-            to output of feature extractor of actor model. Default: False
+            to output of feature extractor of actor model. Default: False.
+        @param exploration_tool: Union[Exploration, None]: The exploration tool to be used for exploring the
+            environment. The noise can be obtained using `get_noise` method and exploration tool must have
+            `rsample` method implemented.
         @param use_diagonal_embedding_on_projection: bool: The flag indicating whether to perform diagonal embedding
             on projected action values from actor i.e. create a diagonal covariance matrix. This is only active
             when `use_actor_projection` is True. Default: False
@@ -67,11 +72,9 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         self.use_actor_projection = use_actor_projection
         ## The input `use_diagonal_embedding_on_projection`. @I{# noqa: E266}
         self.use_diagonal_embedding_on_projection = use_diagonal_embedding_on_projection
-        ## Flag indicating whether to apply activation to output of actor head or not. @I{# noqa: E266}
-        self._apply_actor_activation = False
-        ## Flag indicating whether to apply activation to output of critic head or not. @I{# noqa: E266}
-        self._apply_critic_activation = False
-        ## The feature extractor instance of rlpack.models._mlp_feature_extractor._MlpFeatureExtractor. @I{# noqa: E266}
+        ## The input `exploration_tool`. @I{# noqa: E266}
+        self.exploration_tool = exploration_tool
+        ## The feature extractor instance of rlpack.models._mlp_feature_extractor.MlpFeatureExtractor. @I{# noqa: E266}
         ## This will be None if network is not shared. @I{# noqa: E266}
         self.mlp_feature_extractor = None
         ## The feature extractor for actor model. This will always be None if network is shared. @I{# noqa: E266}
@@ -80,6 +83,12 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         self.critic_feature_extractor = None
         ## The projection vector for actor. This will be None if `use_actor_projection` is False. @I{# noqa: E266}
         self.actor_projector = None
+        ## Flag indicating whether to apply activation to output of actor head or not. @I{# noqa: E266}
+        self._apply_actor_activation = False
+        ## Flag indicating whether to apply activation to output of critic head or not. @I{# noqa: E266}
+        self._apply_critic_activation = False
+        ## Flag indicating whether to use exploration tool. @I{# noqa: E266}
+        self._use_exploration_tool = True if exploration_tool is not None else False
         # Process `activation`
         activation = self._process_activation(activation, use_actor_projection)
         # Process `action_space`
@@ -122,6 +131,8 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         self.flatten = pytorch.nn.Flatten(start_dim=1, end_dim=-1)
         ## The input dropout probability. @I{# noqa: E266}
         self.dropout = pytorch.nn.Dropout(dropout)
+        ## The noise values for each timestep. @I{# noqa: E266}
+        self._noise = list()
 
     def forward(
         self, x: pytorch.Tensor
@@ -138,9 +149,35 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         ]: The tuple of actor and critic outputs.
         """
         if not self.share_network:
-            action_outputs, state_value = self._run_non_shared_forward(x)
+            action_features, state_value_features = self._run_non_shared_forward(x)
+            action_values, state_values = self._apply_heads(
+                action_features, state_value_features
+            )
         else:
-            action_outputs, state_value = self._run_shared_forward(x)
+            action_features = self._run_shared_forward(x)
+            action_values, state_values = self._apply_heads(action_features, None)
+        if self._use_exploration_tool:
+            self._noise.append(self.exploration_tool.rsample(action_features))
+        return action_values, state_values
+
+    def get_noise(self) -> pytorch.Tensor:
+        return self._noise[-1]
+
+    def clear_noise(self) -> None:
+        self._noise.clear()
+
+    def _apply_heads(
+        self, features, state_features
+    ) -> Union[
+        Tuple[List[pytorch.Tensor], pytorch.Tensor],
+        Tuple[pytorch.Tensor, pytorch.Tensor],
+    ]:
+        if self.share_network:
+            action_outputs, state_value = self._run_shared_forward_final(features)
+        else:
+            action_outputs, state_value = self._run_non_shared_forward_final(
+                features, state_features
+            )
         if self._apply_actor_activation:
             if self.use_actor_projection:
                 action_outputs = [
@@ -150,25 +187,20 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
                     )
                 ]
                 if self.use_diagonal_embedding_on_projection:
-                    action_outputs[1] = pytorch.diag_embed(action_outputs[1])
+                    action_outputs[-1] = pytorch.diag_embed(action_outputs[-1])
             else:
                 action_outputs = self.actor_activation[0](action_outputs)
         if self._apply_critic_activation:
             state_value = self.value_activation(state_value)
         return action_outputs, state_value
 
-    def _run_shared_forward(
-        self, x: pytorch.Tensor
-    ) -> Union[
-        Tuple[List[pytorch.Tensor], pytorch.Tensor],
-        Tuple[pytorch.Tensor, pytorch.Tensor],
-    ]:
+    def _run_shared_forward(self, x: pytorch.Tensor) -> pytorch.Tensor:
         """
         The forwards method of the nn.Module when actor and critic share network
         @param x: pytorch.Tensor: The model input.
         @return  Union[
-            Tuple[List[pytorch.Tensor], pytorch.Tensor],
-            Tuple[pytorch.Tensor, pytorch.Tensor],
+            Tuple[List[pytorch.Tensor], pytorch.Tensor, pytorch.Tensor],
+            Tuple[pytorch.Tensor, pytorch.Tensor, pytorch.Tensor],
         ]: The tuple of actor and critic outputs.
         """
         # Extract features from input.
@@ -176,6 +208,13 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         features = self.activation_core(features)
         # Apply dropout on features.
         features = self.dropout(features)
+        # Pass the features through the respective heads.
+        return features
+
+    def _run_shared_forward_final(
+        self, features: pytorch.Tensor
+    ) -> Tuple[pytorch.Tensor, pytorch.Tensor]:
+
         # Pass the features through the respective heads.
         action_outputs = self.actor_head(features)
         state_value = self.critic_head(features)
@@ -195,16 +234,13 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
 
     def _run_non_shared_forward(
         self, x: pytorch.Tensor
-    ) -> Union[
-        Tuple[List[pytorch.Tensor], pytorch.Tensor],
-        Tuple[pytorch.Tensor, pytorch.Tensor],
-    ]:
+    ) -> Tuple[pytorch.Tensor, pytorch.Tensor]:
         """
         The forwards method of the nn.Module when actor and critic do not share network
         @param x: pytorch.Tensor: The model input.
         @return  Union[
-            Tuple[List[pytorch.Tensor], pytorch.Tensor],
-            Tuple[pytorch.Tensor, pytorch.Tensor],
+            Tuple[List[pytorch.Tensor], pytorch.Tensor, pytorch.Tensor],
+            Tuple[pytorch.Tensor, pytorch.Tensor, pytorch.Tensor],
         ]: The tuple of actor and critic outputs.
         """
         # Extract features from input.
@@ -213,6 +249,11 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         # Apply dropout on features.
         action_features = self.dropout(action_features)
         state_value_features = self.dropout(state_value_features)
+        return action_features, state_value_features
+
+    def _run_non_shared_forward_final(
+        self, action_features: pytorch.Tensor, state_value_features: pytorch.Tensor
+    ) -> Tuple[Union[List[pytorch.Tensor], pytorch.Tensor], pytorch.Tensor]:
         # Pass the features through the respective heads.
         action_outputs = self.actor_head(action_features)
         state_value = self.critic_head(state_value_features)
@@ -242,7 +283,7 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         @param hidden_sizes: List[int]: The list of hidden sizes for each layer.
         @param activation: List[Activation]: List of activations to be used.
         """
-        self.mlp_feature_extractor = _MlpFeatureExtractor(
+        self.mlp_feature_extractor = MlpFeatureExtractor(
             sequence_length=sequence_length,
             hidden_sizes=hidden_sizes,
             activation=activation[0],
@@ -260,12 +301,12 @@ class ActorCriticMlpPolicy(pytorch.nn.Module):
         @param hidden_sizes: List[int]: The list of hidden sizes for each layer.
         @param activation: List[Activation]: List of activations to be used.
         """
-        self.actor_feature_extractor = _MlpFeatureExtractor(
+        self.actor_feature_extractor = MlpFeatureExtractor(
             sequence_length=sequence_length,
             hidden_sizes=hidden_sizes,
             activation=activation[0],
         )
-        self.critic_feature_extractor = _MlpFeatureExtractor(
+        self.critic_feature_extractor = MlpFeatureExtractor(
             sequence_length=sequence_length,
             hidden_sizes=hidden_sizes,
             activation=activation[0],

@@ -64,7 +64,9 @@ class TrainerBase(ABC):
         # Check if is_distributed valid
         if is_distributed:
             if not pytorch_distributed.is_initialized():
-                raise Exception("Passed `is_distributed` but PyTorch distributed has not been initialized!")
+                raise Exception(
+                    "Passed `is_distributed` but PyTorch distributed has not been initialized!"
+                )
         ## The input `is_distributed` indicating if TrainerBase is launched in multiprocessing setting. @I{# noqa: E266}
         self.is_distributed = is_distributed
         ## The python logger for logging metrics. This is saved in input `save_path` as trainer.log. @I{# noqa: E266}
@@ -272,7 +274,9 @@ class TrainerBase(ABC):
         Logs header line for block separation.
         """
         if self.is_distributed:
-            message = f"\n{'~' * 30} Process {pytorch_distributed.get_rank()} {'~' * 30}"
+            message = (
+                f"\n{'~' * 30} Process {pytorch_distributed.get_rank()} {'~' * 30}"
+            )
         else:
             message = f"\n{'~' * 60}"
         self.py_logger.info(message)

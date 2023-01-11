@@ -98,7 +98,8 @@ $(document).ready(function(){initNavTree('classrlpack_1_1utils_1_1normalization_
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Data Fields</a>  </div>
+<a href="#pub-attribs">Data Fields</a> &#124;
+<a href="#pri-attribs">Private Attributes</a>  </div>
   <div class="headertitle"><div class="title">rlpack.utils.normalization.Normalization Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -108,21 +109,41 @@ $(document).ready(function(){initNavTree('classrlpack_1_1utils_1_1normalization_
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac535747743bc459213a75e8cddde7b3a"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#ac535747743bc459213a75e8cddde7b3a">__init__</a> (self, int <a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#a5275a7ca69df6236d014e40eef044cef">apply_norm</a>, Optional[Tuple[int, int]] <a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#aa8a4fbdb92f9ef40b19eff1f81e16466">custom_min_max</a>=None, float <a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#acf37fa5a72d0a5089e6835b41e66d090">eps</a>=5e-12, int <a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#ad2eff658b77621100a1de86cc714949d">p</a>=2, int <a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#a7db1fd84cfcf5900c6bc00b55684e000">dim</a>=0)</td></tr>
-<tr class="memdesc:ac535747743bc459213a75e8cddde7b3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize <a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html" title="Normalization class providing methods for normalization techniques.">Normalization</a> class.  <a href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#ac535747743bc459213a75e8cddde7b3a">More...</a><br /></td></tr>
-<tr class="separator:ac535747743bc459213a75e8cddde7b3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb5f9a16bd6500b5fce37846bd9d4d52"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#adb5f9a16bd6500b5fce37846bd9d4d52">__init__</a> (self, Union[int, str] <a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#a5275a7ca69df6236d014e40eef044cef">apply_norm</a>, Optional[Tuple[int, int]] <a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#aa8a4fbdb92f9ef40b19eff1f81e16466">custom_min_max</a>=None, float <a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#acf37fa5a72d0a5089e6835b41e66d090">eps</a>=5e-12, int <a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#ad2eff658b77621100a1de86cc714949d">p</a>=2, int <a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#a7db1fd84cfcf5900c6bc00b55684e000">dim</a>=0)</td></tr>
+<tr class="memdesc:adb5f9a16bd6500b5fce37846bd9d4d52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize <a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html" title="Normalization class providing methods for normalization techniques.">Normalization</a> class.  <a href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#adb5f9a16bd6500b5fce37846bd9d4d52">More...</a><br /></td></tr>
+<tr class="separator:adb5f9a16bd6500b5fce37846bd9d4d52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e4168ef44188c40092f265152275e9a"><td class="memItemLeft" align="right" valign="top">pytorch.Tensor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#a8e4168ef44188c40092f265152275e9a">apply_normalization</a> (self, pytorch.Tensor tensor)</td></tr>
 <tr class="memdesc:a8e4168ef44188c40092f265152275e9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">All encompassing function to perform normalization depending on the instance's apply_norm code.  <a href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#a8e4168ef44188c40092f265152275e9a">More...</a><br /></td></tr>
 <tr class="separator:a8e4168ef44188c40092f265152275e9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc4b36c553ab4ce2daa6bc8daffe774e"><td class="memItemLeft" align="right" valign="top">pytorch.Tensor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#afc4b36c553ab4ce2daa6bc8daffe774e">apply_normalization_pre</a> (self, pytorch.Tensor tensor, str quantity)</td></tr>
+<tr class="memdesc:afc4b36c553ab4ce2daa6bc8daffe774e"><td class="mdescLeft">&#160;</td><td class="mdescRight">All encompassing function to perform normalization depending on the instance's apply_norm code.  <a href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#afc4b36c553ab4ce2daa6bc8daffe774e">More...</a><br /></td></tr>
+<tr class="separator:afc4b36c553ab4ce2daa6bc8daffe774e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a638b078a5f2fb1780a5b22faf7c7cded"><td class="memItemLeft" align="right" valign="top">pytorch.Tensor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#a638b078a5f2fb1780a5b22faf7c7cded">apply_normalization_pre_silent</a> (self, pytorch.Tensor tensor, str quantity)</td></tr>
+<tr class="memdesc:a638b078a5f2fb1780a5b22faf7c7cded"><td class="mdescLeft">&#160;</td><td class="mdescRight">All encompassing function to perform normalization depending on the instance's apply_norm code.  <a href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#a638b078a5f2fb1780a5b22faf7c7cded">More...</a><br /></td></tr>
+<tr class="separator:a638b078a5f2fb1780a5b22faf7c7cded"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:accddf3d7598d1311e77860a0e11ab62b"><td class="memItemLeft" align="right" valign="top">Dict[str, Any]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#accddf3d7598d1311e77860a0e11ab62b">get_state_dict</a> (self)</td></tr>
+<tr class="memdesc:accddf3d7598d1311e77860a0e11ab62b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The getstate method to get the dictionary of attributes.  <a href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#accddf3d7598d1311e77860a0e11ab62b">More...</a><br /></td></tr>
+<tr class="separator:accddf3d7598d1311e77860a0e11ab62b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add0156846dc9dea4538ab36f79cd7e91"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#add0156846dc9dea4538ab36f79cd7e91">load_state_dict</a> (self, Dict[str, Any] state)</td></tr>
+<tr class="memdesc:add0156846dc9dea4538ab36f79cd7e91"><td class="mdescLeft">&#160;</td><td class="mdescRight">setstate method for setting attributes for the <a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html" title="Normalization class providing methods for normalization techniques.">Normalization</a> class  <a href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#add0156846dc9dea4538ab36f79cd7e91">More...</a><br /></td></tr>
+<tr class="separator:add0156846dc9dea4538ab36f79cd7e91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:affd65d9d3997be4285188078c0f29e6b"><td class="memItemLeft" align="right" valign="top">pytorch.Tensor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#affd65d9d3997be4285188078c0f29e6b">min_max_normalization</a> (self, pytorch.Tensor tensor)</td></tr>
 <tr class="memdesc:affd65d9d3997be4285188078c0f29e6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to apply min-max normalization.  <a href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#affd65d9d3997be4285188078c0f29e6b">More...</a><br /></td></tr>
 <tr class="separator:affd65d9d3997be4285188078c0f29e6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77998bca211eefd5ca34e3e1d262f2f5"><td class="memItemLeft" align="right" valign="top">pytorch.Tensor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#a77998bca211eefd5ca34e3e1d262f2f5">min_max_normalization_pre</a> (self, pytorch.Tensor tensor, str quantity)</td></tr>
+<tr class="memdesc:a77998bca211eefd5ca34e3e1d262f2f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to apply min-max normalization with pre-computed statistics.  <a href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#a77998bca211eefd5ca34e3e1d262f2f5">More...</a><br /></td></tr>
+<tr class="separator:a77998bca211eefd5ca34e3e1d262f2f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a32fb1e281a2e9c66a1ef629fa92ab511"><td class="memItemLeft" align="right" valign="top">pytorch.Tensor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#a32fb1e281a2e9c66a1ef629fa92ab511">p_normalization</a> (self, pytorch.Tensor tensor)</td></tr>
 <tr class="memdesc:a32fb1e281a2e9c66a1ef629fa92ab511"><td class="mdescLeft">&#160;</td><td class="mdescRight">The p-normalization method.  <a href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#a32fb1e281a2e9c66a1ef629fa92ab511">More...</a><br /></td></tr>
 <tr class="separator:a32fb1e281a2e9c66a1ef629fa92ab511"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a85727ae96856128f5266bb0ed2607fe6"><td class="memItemLeft" align="right" valign="top">pytorch.Tensor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#a85727ae96856128f5266bb0ed2607fe6">standardization</a> (self, pytorch.Tensor tensor)</td></tr>
 <tr class="memdesc:a85727ae96856128f5266bb0ed2607fe6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to standardize the input tensor.  <a href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#a85727ae96856128f5266bb0ed2607fe6">More...</a><br /></td></tr>
 <tr class="separator:a85727ae96856128f5266bb0ed2607fe6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a717def011cc4e85ad523b1dd7681fa2a"><td class="memItemLeft" align="right" valign="top">pytorch.Tensor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#a717def011cc4e85ad523b1dd7681fa2a">standardization_pre</a> (self, pytorch.Tensor tensor, str quantity)</td></tr>
+<tr class="memdesc:a717def011cc4e85ad523b1dd7681fa2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to standardize the input tensor with pre-computed statistics.  <a href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#a717def011cc4e85ad523b1dd7681fa2a">More...</a><br /></td></tr>
+<tr class="separator:a717def011cc4e85ad523b1dd7681fa2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91d242ae61edd648fcf0f124b74d8f63"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#a91d242ae61edd648fcf0f124b74d8f63">update_statistics</a> (self, str quantity, Dict[str, pytorch.Tensor] <a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#abbd378c7051f52c928679cf86892bead">statistics</a>)</td></tr>
+<tr class="separator:a91d242ae61edd648fcf0f124b74d8f63"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
@@ -141,12 +162,20 @@ Data Fields</h2></td></tr>
 <tr class="memitem:ad2eff658b77621100a1de86cc714949d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#ad2eff658b77621100a1de86cc714949d">p</a></td></tr>
 <tr class="memdesc:ad2eff658b77621100a1de86cc714949d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>p</code> argument; indicating p-value for p-normalisation.  <a href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#ad2eff658b77621100a1de86cc714949d">More...</a><br /></td></tr>
 <tr class="separator:ad2eff658b77621100a1de86cc714949d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abbd378c7051f52c928679cf86892bead"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#abbd378c7051f52c928679cf86892bead">statistics</a></td></tr>
+<tr class="memdesc:abbd378c7051f52c928679cf86892bead"><td class="mdescLeft">&#160;</td><td class="mdescRight">The statistics dictionary to store useful statistics for each quantity.  <a href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#abbd378c7051f52c928679cf86892bead">More...</a><br /></td></tr>
+<tr class="separator:abbd378c7051f52c928679cf86892bead"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a2bc7a91481246fd9ebe9ace05ea71fbe"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html#a2bc7a91481246fd9ebe9ace05ea71fbe">__dict__</a></td></tr>
+<tr class="separator:a2bc7a91481246fd9ebe9ace05ea71fbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p ><a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html" title="Normalization class providing methods for normalization techniques.">Normalization</a> class providing methods for normalization techniques. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ac535747743bc459213a75e8cddde7b3a" name="ac535747743bc459213a75e8cddde7b3a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac535747743bc459213a75e8cddde7b3a">&#9670;&#160;</a></span>__init__()</h2>
+<a id="adb5f9a16bd6500b5fce37846bd9d4d52" name="adb5f9a16bd6500b5fce37846bd9d4d52"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb5f9a16bd6500b5fce37846bd9d4d52">&#9670;&#160;</a></span>__init__()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -160,7 +189,7 @@ Data Fields</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">Union[int, str]&#160;</td>
           <td class="paramname"><em>apply_norm</em>, </td>
         </tr>
         <tr>
@@ -198,7 +227,7 @@ Data Fields</h2></td></tr>
 <p>Initialize <a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html" title="Normalization class providing methods for normalization techniques.">Normalization</a> class. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">apply_norm</td><td>int: apply_norm code for normalization. (Refer <a class="el" href="classrlpack_1_1utils_1_1setup_1_1_setup.html" title="This class sets up all the necessary objects that are required to run any configuration.">rlpack.utils.setup.Setup</a> for more information). </td></tr>
+    <tr><td class="paramname">apply_norm</td><td>Union[int, str]: apply_norm code for normalization. (Refer <a class="el" href="classrlpack_1_1utils_1_1setup_1_1_setup.html" title="This class sets up all the necessary objects that are required to run any configuration.">rlpack.utils.setup.Setup</a> for more information). </td></tr>
     <tr><td class="paramname">custom_min_max</td><td>Optional[Tuple[int, int]]: Tuple of custom min and max value for min-max normalization. Default: None. </td></tr>
     <tr><td class="paramname">eps</td><td>float: The epsilon value for normalization (small value for numerical stability). Default: 5e-12. </td></tr>
     <tr><td class="paramname">p</td><td>int: The p-value for p-normalization. Default: 2. </td></tr>
@@ -247,6 +276,153 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
+<a id="afc4b36c553ab4ce2daa6bc8daffe774e" name="afc4b36c553ab4ce2daa6bc8daffe774e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc4b36c553ab4ce2daa6bc8daffe774e">&#9670;&#160;</a></span>apply_normalization_pre()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> pytorch.Tensor rlpack.utils.normalization.Normalization.apply_normalization_pre </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">pytorch.Tensor&#160;</td>
+          <td class="paramname"><em>tensor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str
+    &#160;</td>
+          <td class="paramname"><em>quantity</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>All encompassing function to perform normalization depending on the instance's apply_norm code. </p>
+<p >Applies normalization as per pre-computed statistics. Note that this method cannot be applied to p-normalization. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tensor</td><td>pytorch.Tensor: The tensor to apply normalization on. </td></tr>
+    <tr><td class="paramname">quantity</td><td>str: The quantity for which is being normalized. This must be present in <code>statistics_dict</code> with corresponding statistics. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>pytorch.Tensor: The normalized tensor. </dd></dl>
+
+</div>
+</div>
+<a id="a638b078a5f2fb1780a5b22faf7c7cded" name="a638b078a5f2fb1780a5b22faf7c7cded"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a638b078a5f2fb1780a5b22faf7c7cded">&#9670;&#160;</a></span>apply_normalization_pre_silent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> pytorch.Tensor rlpack.utils.normalization.Normalization.apply_normalization_pre_silent </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">pytorch.Tensor&#160;</td>
+          <td class="paramname"><em>tensor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str
+    &#160;</td>
+          <td class="paramname"><em>quantity</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>All encompassing function to perform normalization depending on the instance's apply_norm code. </p>
+<p >This method is silent version of <code>apply_normalization_pre</code> and performs no normalization if pre-computed statistics are not present in <code>statistics_dict</code> at the moment. Note that this will still raise an error if p-normalization is used. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tensor</td><td>pytorch.Tensor: The tensor to apply normalization on. </td></tr>
+    <tr><td class="paramname">quantity</td><td>str: The quantity for which is being normalized. This must be present in <code>statistics_dict</code> with corresponding statistics. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>pytorch.Tensor: The normalized tensor. </dd></dl>
+
+</div>
+</div>
+<a id="accddf3d7598d1311e77860a0e11ab62b" name="accddf3d7598d1311e77860a0e11ab62b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#accddf3d7598d1311e77860a0e11ab62b">&#9670;&#160;</a></span>get_state_dict()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, Any] rlpack.utils.normalization.Normalization.get_state_dict </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The getstate method to get the dictionary of attributes. </p>
+<dl class="section return"><dt>Returns</dt><dd>: Dict[str, Any]: The dictionary of current attributes. </dd></dl>
+
+</div>
+</div>
+<a id="add0156846dc9dea4538ab36f79cd7e91" name="add0156846dc9dea4538ab36f79cd7e91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add0156846dc9dea4538ab36f79cd7e91">&#9670;&#160;</a></span>load_state_dict()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> None rlpack.utils.normalization.Normalization.load_state_dict </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, Any]&#160;</td>
+          <td class="paramname"><em>state</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>setstate method for setting attributes for the <a class="el" href="classrlpack_1_1utils_1_1normalization_1_1_normalization.html" title="Normalization class providing methods for normalization techniques.">Normalization</a> class </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">state</td><td>Dict[str, Any]: The dictionary of attributes and their corresponding values. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="affd65d9d3997be4285188078c0f29e6b" name="affd65d9d3997be4285188078c0f29e6b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#affd65d9d3997be4285188078c0f29e6b">&#9670;&#160;</a></span>min_max_normalization()</h2>
 
@@ -277,6 +453,51 @@ Data Fields</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tensor</td><td>pytorch.Tensor: The input tensor to be min-max normalized. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>(pytorch.Tensor): The normalized tensor. </dd></dl>
+
+</div>
+</div>
+<a id="a77998bca211eefd5ca34e3e1d262f2f5" name="a77998bca211eefd5ca34e3e1d262f2f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a77998bca211eefd5ca34e3e1d262f2f5">&#9670;&#160;</a></span>min_max_normalization_pre()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> pytorch.Tensor rlpack.utils.normalization.Normalization.min_max_normalization_pre </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">pytorch.Tensor&#160;</td>
+          <td class="paramname"><em>tensor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str
+    &#160;</td>
+          <td class="paramname"><em>quantity</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Method to apply min-max normalization with pre-computed statistics. </p>
+<p >If <code>custom_min_max</code> was passed, it will be used for normalization. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tensor</td><td>pytorch.Tensor: The input tensor to be min-max normalized. </td></tr>
+    <tr><td class="paramname">quantity</td><td>str: The quantity for which is being normalized. This must be present in <code>statistics_dict</code> with corresponding min and max value. </td></tr>
   </table>
   </dd>
 </dl>
@@ -358,7 +579,108 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
+<a id="a717def011cc4e85ad523b1dd7681fa2a" name="a717def011cc4e85ad523b1dd7681fa2a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a717def011cc4e85ad523b1dd7681fa2a">&#9670;&#160;</a></span>standardization_pre()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> pytorch.Tensor rlpack.utils.normalization.Normalization.standardization_pre </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">pytorch.Tensor&#160;</td>
+          <td class="paramname"><em>tensor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str
+    &#160;</td>
+          <td class="paramname"><em>quantity</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Method to standardize the input tensor with pre-computed statistics. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tensor</td><td>pytorch.Tensor: he input tensor to be standardized. </td></tr>
+    <tr><td class="paramname">quantity</td><td>str: The quantity for which is being normalized. This must be present in <code>statistics_dict</code> with corresponding mean and std values. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>pytorch.Tensor: The standardized tensor. </dd></dl>
+
+</div>
+</div>
+<a id="a91d242ae61edd648fcf0f124b74d8f63" name="a91d242ae61edd648fcf0f124b74d8f63"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a91d242ae61edd648fcf0f124b74d8f63">&#9670;&#160;</a></span>update_statistics()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def rlpack.utils.normalization.Normalization.update_statistics </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>quantity</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, pytorch.Tensor]&#160;</td>
+          <td class="paramname"><em>statistics</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Field Documentation</h2>
+<a id="a2bc7a91481246fd9ebe9ace05ea71fbe" name="a2bc7a91481246fd9ebe9ace05ea71fbe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2bc7a91481246fd9ebe9ace05ea71fbe">&#9670;&#160;</a></span>__dict__</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">rlpack.utils.normalization.Normalization.__dict__</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a5275a7ca69df6236d014e40eef044cef" name="a5275a7ca69df6236d014e40eef044cef"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5275a7ca69df6236d014e40eef044cef">&#9670;&#160;</a></span>apply_norm</h2>
 
@@ -388,8 +710,7 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The input <code>custom_min_max</code> argument. </p>
-<p ><br  />
- Indicating the custom min-max values for min-max normalisation to be used. </p>
+<p >## Indicating the custom min-max values for min-max normalisation to be used. </p>
 
 </div>
 </div>
@@ -438,6 +759,22 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The input <code>p</code> argument; indicating p-value for p-normalisation. </p>
+
+</div>
+</div>
+<a id="abbd378c7051f52c928679cf86892bead" name="abbd378c7051f52c928679cf86892bead"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abbd378c7051f52c928679cf86892bead">&#9670;&#160;</a></span>statistics</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">rlpack.utils.normalization.Normalization.statistics</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The statistics dictionary to store useful statistics for each quantity. </p>
 
 </div>
 </div>

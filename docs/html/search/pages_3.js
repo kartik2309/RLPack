@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['in_2dbuilt_20models_0',['In-Built Models',['../in_build_models.html',1,'']]]
+  ['general_20structure_0',['General structure',['../overview.html',1,'']]],
+  ['get_20started_1',['Get started',['../get_started.html',1,'']]]
 ];
