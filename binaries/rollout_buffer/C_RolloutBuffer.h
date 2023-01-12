@@ -5,8 +5,14 @@
 #ifndef RLPACK_BINARIES_ROLLOUT_BUFFER_CROLLOUTBUFFER_H_
 #define RLPACK_BINARIES_ROLLOUT_BUFFER_CROLLOUTBUFFER_H_
 
-#include <torch/extension.h>
-#include "../utils/maps.h"
+#define GATHER_WORK_TIMEOUT 900000
+#define MASTER_PROCESS_RANK 0
+
+#include <torch/csrc/distributed/c10d/ProcessGroup.hpp>
+
+#include "rollout_buffer_batch/RolloutBufferBatch.h"
+#include "rollout_buffer_batch_transform/RolloutBufferBatchTransform.h"
+#include "rollout_buffer_container/RolloutBufferContainer.h"
 
 /*!
  * @addtogroup binaries_group binaries
@@ -26,35 +32,57 @@
 class C_RolloutBuffer {
 
 public:
-    C_RolloutBuffer(int64_t bufferSize, std::string &device, std::string &dtype);
+    //! The Torch DataLoader unique pointer type for RolloutBuffer.
+    using DataLoader = torch::disable_if_t<
+            false,
+            std::unique_ptr<torch::data::StatelessDataLoader<
+                    torch::data::datasets::MapDataset<RolloutBufferBatch, RolloutBufferBatchTransform>,
+                    torch::data::samplers::SequentialSampler>>>;
+
+    C_RolloutBuffer(int64_t bufferSize,
+                    std::string& device,
+                    std::string& dtype,
+                    std::map<std::string, c10::intrusive_ptr<c10d::ProcessGroup>>& processGroupMap,
+                    const std::chrono::duration<int32_t>& workTimeoutDuration);
     ~C_RolloutBuffer();
 
-    void insert(std::map<std::string, torch::Tensor> &inputMap);
+    void insert_transition(std::map<std::string, torch::Tensor>& inputMap);
+    void insert_policy_output(std::map<std::string, torch::Tensor>& inputMap);
     std::map<std::string, torch::Tensor> compute_returns(float_t gamma);
+    std::map<std::string, torch::Tensor> compute_discounted_td_residuals(float_t gamma);
+    std::map<std::string, torch::Tensor> compute_generalized_advantage_estimates(float_t gamma, float_t gaeLambda);
+    std::map<std::string, torch::Tensor> get_stacked_states_current();
+    std::map<std::string, torch::Tensor> get_stacked_states_next();
+    std::map<std::string, torch::Tensor> get_states_statistics();
     std::map<std::string, torch::Tensor> get_stacked_rewards();
+    std::map<std::string, torch::Tensor> get_stacked_dones();
     std::map<std::string, torch::Tensor> get_stacked_action_log_probabilities();
     std::map<std::string, torch::Tensor> get_stacked_state_current_values();
+    std::map<std::string, torch::Tensor> get_stacked_state_next_values();
     std::map<std::string, torch::Tensor> get_stacked_entropies();
-    void clear();
-    size_t size();
+    std::map<std::string, torch::Tensor> transition_at(int64_t index);
+    std::map<std::string, torch::Tensor> policy_output_at(int64_t index);
+    void clear_transitions();
+    void clear_policy_outputs();
+    size_t size_transitions();
+    size_t size_policy_outputs();
+    void extend_transitions();
+    void set_transitions_iterator(int64_t batchSize);
+    DataLoader& get_dataloader_reference();
 
 private:
-    //! The buffer size that is going to be used.
-    int64_t bufferSize_;
-    //! The device that is to be used for PyTorch tensors.
-    torch::DeviceType device_;
-    //! The datatype to be used for PyTorch tensors.
-    torch::Dtype dtype_;
+    //! The pointer to dynamically allocated RolloutBufferContainer object.
+    RolloutBufferContainer* rolloutBufferContainer_;
     //! The tensor options to be used for PyTorch tensors; constructed with device_ and dtype_.
     torch::TensorOptions tensorOptions_;
-    //! The vector of accumulated rewards.
-    std::vector<torch::Tensor> rewards_;
-    //! The vector of action log probabilities.
-    std::vector<torch::Tensor> actionLogProbabilities_;
-    //! The vector of current state values.
-    std::vector<torch::Tensor> stateCurrentValues_;
-    //! The vector of entropies of current distribution.
-    std::vector<torch::Tensor> entropies_;
+    //! The intrusive pointer to ProcessGroup in PyTorch.
+    c10::intrusive_ptr<c10d::ProcessGroup> processGroup_;
+    //! The chrono duration for work timeout to wait for all processes to complete `gather`.
+    std::chrono::milliseconds workTimeoutDuration_ = std::chrono::milliseconds(GATHER_WORK_TIMEOUT);
+    //! The DataLoader object. This is initialized to nullptr until `set_transitions_iterator` is called.
+    DataLoader dataloader_ = nullptr;
+
+    std::vector<torch::Tensor> gather_with_process_group_(torch::Tensor& inputTensor);
 };
 /*!
  * @} @I{ // End group rollout_buffer_group }

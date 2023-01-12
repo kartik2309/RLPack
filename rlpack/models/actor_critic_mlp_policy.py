@@ -90,17 +90,11 @@ class ActorCriticMlpPolicy(Model):
         self._apply_actor_activation = False
         ## Flag indicating whether to apply activation to output of critic head or not. @I{# noqa: E266}
         self._apply_critic_activation = False
-        # Process `activation`
-        activation = self._process_activation(activation, use_actor_projection)
+        ## The activations from input `activation`. @I{# noqa: E266}
+        self._activations = self._process_activation(activation, use_actor_projection)
         # Process `action_space`
-        out_features = self._process_action_space(action_space)
-        ## The core activation function to be used. This will be used in feature extractor @I{# noqa: E266}
-        ## and between feature extractor and heads. @I{# noqa: E266}
-        self.activation_core = activation[0]
-        ## The activation function for the actor's output. @I{# noqa: E266}
-        self.actor_activation = None
-        ## The activation function for the critic's output. @I{# noqa: E266}
-        self.value_activation = None
+        ## The output action space dimension as per given `action_space`. @I{# noqa: E266}
+        self._action_space_dim = self._process_action_space(action_space)
         if not share_network:
             self._set_non_shared_network_attributes(
                 sequence_length, hidden_sizes, activation
@@ -112,21 +106,19 @@ class ActorCriticMlpPolicy(Model):
         ## The final head for actor; creates logits/parameters for actions. @I{# noqa: E266}
         self.actor_head = pytorch.nn.Linear(
             in_features=hidden_sizes[-1],
-            out_features=out_features,
+            out_features=self._action_space_dim,
         )
         if use_actor_projection:
             self.actor_projector = pytorch.nn.Linear(
-                in_features=hidden_sizes[-1], out_features=out_features
+                in_features=hidden_sizes[-1], out_features=self._action_space_dim
             )
         ## The final head for critic; creates the state value. @I{# noqa: E266}
         self.critic_head = pytorch.nn.Linear(
             in_features=hidden_sizes[-1], out_features=1
         )
         if len(activation) > 1:
-            self.actor_activation = activation[1]
             self._apply_actor_activation = True
         if len(activation) > 2:
-            self.value_activation = activation[2]
             self._apply_critic_activation = True
         ## The object to flatten the output fo feature extractor. @I{# noqa: E266}
         self.flatten = pytorch.nn.Flatten(start_dim=1, end_dim=-1)
@@ -184,15 +176,15 @@ class ActorCriticMlpPolicy(Model):
                 action_outputs = [
                     actor_activation(action_output)
                     for action_output, actor_activation in zip(
-                        action_outputs, self.actor_activation
+                        action_outputs, self._activations[1]
                     )
                 ]
                 if self.use_diagonal_embedding_on_projection:
                     action_outputs[-1] = pytorch.diag_embed(action_outputs[-1])
             else:
-                action_outputs = self.actor_activation[0](action_outputs)
+                action_outputs = self.actor_activation[1](action_outputs)
         if self._apply_critic_activation:
-            state_value = self.value_activation(state_value)
+            state_value = self._activations[2](state_value)
         return action_outputs, state_value
 
     def _run_shared_forward(self, x: pytorch.Tensor) -> pytorch.Tensor:

@@ -122,14 +122,14 @@ class Register:
         }
         ## The mapping between given keyword and [agent](@ref agents/index.md) agent's default arguments. @I{# noqa: E266}
         self.agent_args_default = {
-            "dqn": Dqn.__init__.__code__.co_varnames[-len(Dqn.__init__.__defaults__) :],
+            "dqn": Dqn.__new__.__code__.co_varnames[-len(Dqn.__new__.__defaults__) :],
             "ac": AC.__init__.__code__.co_varnames[-len(AC.__init__.__defaults__) :],
             "a2c": A2C.__init__.__code__.co_varnames[-len(A2C.__init__.__defaults__) :],
-            "a3c": A3C.__init__.__code__.co_varnames[-len(A2C.__init__.__defaults__) :],
+            "a3c": A3C.__init__.__code__.co_varnames[-len(A3C.__init__.__defaults__) :],
         }
         ## The mapping between given keyword and [agent](@ref agents/index.md) agents' arguments. @I{# noqa: E266}
         self.agent_args = {
-            "dqn": Dqn.__init__.__code__.co_varnames[1:],
+            "dqn": Dqn.__new__.__code__.co_varnames[1:],
             "ac": AC.__init__.__code__.co_varnames[1:],
             "a2c": A2C.__init__.__code__.co_varnames[1:],
             "a3c": A3C.__init__.__code__.co_varnames[1:],

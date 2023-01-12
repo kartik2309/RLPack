@@ -2,28 +2,60 @@
 // Created by Kartik Rajeshwaran on 2022-12-26.
 //
 
-#include <pybind11/stl_bind.h>
 
+#include "../stl_bindings/StlBindings.h"
 #include "C_RolloutBuffer.h"
 
-PYBIND11_MAKE_OPAQUE(std::map<std::string, torch::Tensor>)
 PYBIND11_MODULE(C_RolloutBuffer, m) {
+    /*!
+     * Python bindings for C_RolloutBuffer. Only relevant public methods are exposed to Python.
+     */
     m.doc() = "Module to provide Python binding for RolloutBuffer class";
     pybind11::class_<C_RolloutBuffer>(m, "C_RolloutBuffer")
-            .def(pybind11::init<int64_t, std::string &, std::string &>(),
+            .def(pybind11::init<int64_t,
+                                std::string &,
+                                std::string &,
+                                std::map<std::string, c10::intrusive_ptr<c10d::ProcessGroup>> &,
+                                const std::chrono::duration<int32_t> &>(),
                  "Class constructor for C_RolloutBuffer.",
                  pybind11::arg("buffer_size"),
                  pybind11::arg("device"),
-                 pybind11::arg("dtype"))
-            .def("insert",
-                 &C_RolloutBuffer::insert,
+                 pybind11::arg("dtype"),
+                 pybind11::arg("process_group_map"),
+                 pybind11::arg("work_timeout"))
+            .def("insert_transition",
+                 &C_RolloutBuffer::insert_transition,
+                 pybind11::arg("input_map"))
+            .def("insert_policy_output",
+                 &C_RolloutBuffer::insert_policy_output,
                  pybind11::arg("input_map"))
             .def("compute_returns",
                  &C_RolloutBuffer::compute_returns,
                  pybind11::arg("gamma"),
                  pybind11::return_value_policy::reference)
+            .def("compute_discounted_td_residuals",
+                 &C_RolloutBuffer::compute_discounted_td_residuals,
+                 pybind11::arg("gamma"),
+                 pybind11::return_value_policy::reference)
+            .def("compute_generalized_advantage_estimates",
+                 &C_RolloutBuffer::compute_generalized_advantage_estimates,
+                 pybind11::arg("gamma"),
+                 pybind11::arg("gae_lambda"),
+                 pybind11::return_value_policy::reference)
+            .def("get_stacked_states_current",
+                 &C_RolloutBuffer::get_stacked_states_current,
+                 pybind11::return_value_policy::reference)
+            .def("get_stacked_states_next",
+                 &C_RolloutBuffer::get_stacked_states_next,
+                 pybind11::return_value_policy::reference)
+            .def("get_states_statistics",
+                 &C_RolloutBuffer::get_states_statistics,
+                 pybind11::return_value_policy::reference)
             .def("get_stacked_rewards",
                  &C_RolloutBuffer::get_stacked_rewards,
+                 pybind11::return_value_policy::reference)
+            .def("get_stacked_dones",
+                 &C_RolloutBuffer::get_stacked_dones,
                  pybind11::return_value_policy::reference)
             .def("get_stacked_action_log_probabilities",
                  &C_RolloutBuffer::get_stacked_action_log_probabilities,
@@ -31,51 +63,43 @@ PYBIND11_MODULE(C_RolloutBuffer, m) {
             .def("get_stacked_state_current_values",
                  &C_RolloutBuffer::get_stacked_state_current_values,
                  pybind11::return_value_policy::reference)
+            .def("get_stacked_state_next_values",
+                 &C_RolloutBuffer::get_stacked_state_next_values,
+                 pybind11::return_value_policy::reference)
             .def("get_stacked_entropies",
                  &C_RolloutBuffer::get_stacked_entropies,
                  pybind11::return_value_policy::reference)
-            .def("clear",
-                 &C_RolloutBuffer::clear)
-            .def("size",
-                 &C_RolloutBuffer::size);
+            .def("transition_at",
+                 &C_RolloutBuffer::transition_at,
+                 pybind11::arg("index"),
+                 pybind11::return_value_policy::reference)
+            .def("policy_output_at",
+                 &C_RolloutBuffer::policy_output_at,
+                 pybind11::arg("index"),
+                 pybind11::return_value_policy::reference)
+            .def("clear_transitions",
+                 &C_RolloutBuffer::clear_transitions)
+            .def("clear_policy_outputs",
+                 &C_RolloutBuffer::clear_policy_outputs)
+            .def("size_transitions",
+                 &C_RolloutBuffer::size_transitions,
+                 pybind11::return_value_policy::reference)
+            .def("size_policy_outputs",
+                 &C_RolloutBuffer::size_policy_outputs,
+                 pybind11::return_value_policy::reference)
+            .def("extend_transitions",
+                 &C_RolloutBuffer::extend_transitions)
+            .def("get_transitions_iterator",
+                 [](C_RolloutBuffer &rolloutBuffer, int64_t batchSize){
+                        rolloutBuffer.set_transitions_iterator(batchSize);
+                        return pybind11::make_iterator(rolloutBuffer.get_dataloader_reference()->begin(),
+                                                       rolloutBuffer.get_dataloader_reference()->end());
+                    },
+                    pybind11::arg("batch_size"),
+                    pybind11::keep_alive<0, 1>()
+                 );
 
-    /*
-     * Binding the opaque object std::map<std::string, torch::Tensor> to Python.
-     * This will be exposed as MapOfTensors to Python.
-     */
-    pybind11::bind_map<std::map<std::string, torch::Tensor>>(m, "MapOfTensors")
-            .def(
-                    "__repr__", [](std::map<std::string, torch::Tensor> &mapOfTensors) {
-                        std::string reprString;
-                        std::stringstream ss;
-                        ss << &mapOfTensors;
-                        reprString = "<MapOfTensors object at " + ss.str() + ">";
-                        return reprString;
-                    },
-                    pybind11::return_value_policy::reference)
-            .def(
-                    "__str__", [](std::map<std::string, torch::Tensor> &mapOfTensors) {
-                        std::string strString;
-                        std::stringstream tensorString;
-                        strString.append("{\n");
-                        for (auto &pair: mapOfTensors) {
-                            tensorString << pair.second;
-                            strString.append("\t" + pair.first + ":" + tensorString.str() + "\n");
-                            tensorString.clear();
-                        }
-                        strString.append("}");
-                        return strString;
-                    },
-                    pybind11::return_value_policy::reference)
-            .def(pybind11::pickle([](std::map<std::string, torch::Tensor> &mapOfTensors) {
-                     pybind11::dict mapOfTensorsDict;
-                     for (auto &pair : mapOfTensors) {
-                         mapOfTensorsDict[pair.first.c_str()] = pair.second;
-                     }
-                     return mapOfTensorsDict; }, [](pybind11::dict &init) {
-                     std::map<std::string, torch::Tensor> mapOfTensors;
-                     for (auto &pair : init) {
-                         mapOfTensors[pair.first.cast<std::string>()] = pair.second.cast<torch::Tensor>();
-                     }
-                     return mapOfTensors; }), "Pickle method for MapOfTensors.", pybind11::return_value_policy::reference);
+    // Bind relevant StlBinding objects
+    pybind11::bind_map<std::map<std::string, torch::Tensor>>(m, "TensorMap");
+    pybind11::bind_map<std::map<std::string, c10::intrusive_ptr<c10d::ProcessGroup>>>(m, "ProcessGroupMap");
 }

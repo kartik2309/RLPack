@@ -105,9 +105,9 @@ class SanityCheck(Register):
                     f"{model_name} is not supported."
                 )
             model_args = [
-                agent_arg
-                for agent_arg in self.model_args[model_name]
-                if agent_arg not in self.model_args_default[model_name]
+                model_arg
+                for model_arg in self.model_args[model_name]
+                if model_arg not in self.model_args_default[model_name]
             ]
             model_args_from_input_config = list(
                 self.input_config.get("model_args", list())

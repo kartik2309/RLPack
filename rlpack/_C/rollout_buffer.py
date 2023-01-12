@@ -244,6 +244,9 @@ class RolloutBuffer:
         """
         self.c_rollout_buffer.extend_transitions()
 
+    def get_transitions_iterator(self, batch_size: int):
+        return self.c_rollout_buffer.get_transitions_iterator(batch_size)
+
     def __len__(self) -> int:
         """
         Gets the total length of Rollout Buffer.

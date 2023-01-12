@@ -3,7 +3,6 @@ project(C_RolloutBuffer CXX)
 # ----------------------------------- Includes for CMAKE ----------------------------------- #
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
-
 # ----------------------------- Set Global Variables for CMAKE ----------------------------- #
 set(CMAKE_CXX_STANDARD 17)
 if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.0)
@@ -34,9 +33,17 @@ set(TORCH_USE_RTLD_GLOBAL YES)
 
 pybind11_add_module(
         C_RolloutBuffer
+        rollout_buffer_container/RolloutBufferContainer.cpp
+        rollout_buffer_container/RolloutBufferContainer.h
+        rollout_buffer_data/RolloutBufferData.cpp
+        rollout_buffer_data/RolloutBufferData.h
+        rollout_buffer_batch/RolloutBufferBatch.cpp
+        rollout_buffer_batch/RolloutBufferBatch.h
+        rollout_buffer_batch_transform/RolloutBufferBatchTransform.cpp
+        rollout_buffer_batch_transform/RolloutBufferBatchTransform.h
         C_RolloutBuffer.cpp
-        ${CMAKE_SOURCE_DIR}/binaries/utils/maps.h
         C_RolloutBuffer.h
+        ${CMAKE_SOURCE_DIR}/binaries/utils/maps.h
         Binding.cpp
 )
 
