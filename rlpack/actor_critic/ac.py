@@ -48,6 +48,7 @@ class AC(ActorCriticAgent, ABC):
         backup_frequency: int,
         save_path: str,
         gae_lambda: float = 1.0,
+        batch_size: int = 1,
         exploration_steps: Union[int, None] = None,
         grad_accumulation_rounds: int = 1,
         training_frequency: Union[int, None] = None,
@@ -85,6 +86,7 @@ class AC(ActorCriticAgent, ABC):
         @param save_path: str: The path where policy model, optimizer states and lr scheduler states are to be saved.
         @param gae_lambda: float: The Generalized Advantage Estimation coefficient (referred to as lambda), indicating
             the bias-variance trade-off.
+        @param batch_size: int: The batch size to be used while training policy model. Default: 1
         @param exploration_steps: Union[int, None]: The size of rollout buffer before performing optimizer
             step. Whole rollout buffer is used to fit the policy model and is cleared. By default, after every episode.
              Default: None.
@@ -139,10 +141,11 @@ class AC(ActorCriticAgent, ABC):
             backup_frequency,
             save_path,
             gae_lambda,
-            exploration_steps,
-            grad_accumulation_rounds,
-            training_frequency,
-            exploration_tool,
+            batch_size=batch_size,
+            exploration_steps=exploration_steps,
+            grad_accumulation_rounds=grad_accumulation_rounds,
+            training_frequency=training_frequency,
+            exploration_tool=exploration_tool,
             device=device,
             dtype=dtype,
             normalization_tool=normalization_tool,
@@ -154,6 +157,9 @@ class AC(ActorCriticAgent, ABC):
         )
 
     def _set_attribute_custom_values(self) -> None:
+        """
+        Overriding abstract method to return None.
+        """
         return
 
     def _call_to_save(self) -> None:

@@ -48,6 +48,7 @@ class ActorCriticAgent(Agent):
         backup_frequency: int,
         save_path: str,
         gae_lambda: float = 1.0,
+        batch_size: int = 1,
         exploration_steps: Union[int, None] = None,
         grad_accumulation_rounds: int = 1,
         training_frequency: Union[int, None] = None,
@@ -85,6 +86,7 @@ class ActorCriticAgent(Agent):
         @param save_path: str: The path where policy model, optimizer states and lr scheduler states are to be saved.
         @param gae_lambda: float: The Generalized Advantage Estimation coefficient (referred to as lambda), indicating
             the bias-variance trade-off.
+        @param batch_size: int: The batch size to be used while training policy model. Default: 1
         @param exploration_steps: Union[int, None]: The size of rollout buffer before performing optimizer
             step. Whole rollout buffer is used to fit the policy model and is cleared. By default, after every episode.
              Default: None.
@@ -155,8 +157,19 @@ class ActorCriticAgent(Agent):
         self.backup_frequency = backup_frequency
         ## The input save path for backing up agent models. @I{# noqa: E266}
         self.save_path = save_path
-        ## The input GAE Lambda (from argument `gae_lambda). @I{# noqa: E266}
+        ## The input GAE Lambda (from argument `gae_lambda`). @I{# noqa: E266}
         self.gae_lambda = gae_lambda
+        # Check sanity of `batch_size`.
+        if training_frequency is None:
+            assert (
+                batch_size == 1
+            ), "`batch_size` must be 1 if `training_frequency` is not passed or None is passed!"
+        else:
+            assert (
+                batch_size <= training_frequency
+            ), "`batch_size` must be smaller than or equal to `training_frequency`"
+        ## The input batch size (from argument `batch_size`). @I{# noqa: E266}
+        self.batch_size = batch_size
         # Check sanity of `grad_accumulation_rounds`
         assert (
             grad_accumulation_rounds > 0
@@ -192,11 +205,16 @@ class ActorCriticAgent(Agent):
         self.is_continuous_action_space = True
         if isinstance(self.action_space, int):
             self.is_continuous_action_space = False
+        ## Flag indicating the agent has an exploration initialized. @I{# noqa: E266}
         self._agent_has_exploration_tool = (
             True if self.exploration_tool is not None else False
         )
-        self._policy_model_has_exploration_tool = False
-        self._check_if_policy_model_has_exploration_tool()
+        ## Flag indicating the model has an exploration initialized. @I{# noqa: E266}
+        self._policy_model_has_exploration_tool = self.policy_model.has_exploration_tool
+        ## Flag indicating whether to perform post-forward exploration (for exploring policy outputs). @I{# noqa: E266}
+        self._policy_outputs_exploration = (
+            True if self.exploration_steps is not None else False
+        )
         # Parameter keys of the model.
         keys = list(dict(self.policy_model.named_parameters()).keys())
         ## The list of gradients from each backward call. @I{# noqa: E266}
@@ -267,19 +285,7 @@ class ActorCriticAgent(Agent):
         # Run exploration until `exploration_steps` if not None.
         if self.exploration_steps is not None:
             if (self.step_counter + 1) % self.exploration_steps == 0:
-                # If states are to be normalized. compute the state statistics of explored states.
-                if (
-                    self._state_norm_code in self.apply_norm_to
-                    and self._normalization is not None
-                ):
-                    states_current_statistics = (
-                        self._rollout_buffer.get_states_statistics()
-                    )
-                    # Update the statistics for current state in dictionary
-                    self._normalization.update_statistics(
-                        "states", dict(states_current_statistics)
-                    )
-                self.exploration_steps = None
+                self._finish_transitions_exploration()
         # Run training as per `training_frequency`
         else:
             if self.training_frequency is not None:
@@ -422,6 +428,9 @@ class ActorCriticAgent(Agent):
 
     @abstractmethod
     def _set_attribute_custom_values(self) -> None:
+        """
+        Method to set attributes for ActorCriticAgent with custom values. This method is called in __init__.
+        """
         pass
 
     @abstractmethod
@@ -462,78 +471,165 @@ class ActorCriticAgent(Agent):
         self._call_to_extend_transitions()
         # Perform forward pass in policy model if required.
         if self._take_forward_step:
-            for index in range(self._rollout_buffer.size_transitions()):
-                transition = self._rollout_buffer.transition_at(index)
-                state_next = transition["state_next"]
-                state_current = transition["state_current"]
-                if self._state_norm_code in self.apply_norm_to:
-                    state_next = self._normalization.apply_normalization_pre(
-                        state_next, "states"
-                    )
-                    state_current = self._normalization.apply_normalization_pre(
-                        state_current, "states"
-                    )
-                # Compute state_next_value.
-                _, state_next_value = self.policy_model(state_next)
-                # Compute action values and state_current_values.
-                action_value, state_current_value = self.policy_model(state_current)
-                # Create distribution from action values.
-                distribution = self._create_action_distribution(action_value)
-                # Create action from distribution by sampling.
-                action = self._get_action_from_distribution(
-                    distribution, reparametrize=True
-                )
-                # Add noise to actions.
-                action = self._add_noise_to_actions(action)
-                # Accumulate policy outputs.
-                self._rollout_buffer.insert_policy_output(
-                    action_log_probability=distribution.log_prob(action),
-                    state_current_value=state_current_value,
-                    state_next_value=state_next_value,
-                    entropy=distribution.entropy(),
-                )
+            self._forward_pass()
+        if self._policy_outputs_exploration and self._take_forward_step:
+            self._finish_policy_outputs_exploration()
         # Perform backward pass if required.
         if self._take_backward_step:
-            if not self._take_forward_step:
-                raise AgentError(
-                    "Cannot take backward pass without having done forward pass!"
-                )
-            loss = self._compute_loss()
-            # Prepare for optimizer step by setting zero grads.
-            self.optimizer.zero_grad()
-            # Backward call.
-            loss.backward()
-            # Clear the buffer values.
-            self._clear_rollout_buffer()
-            # Append loss to list.
-            self.loss.append(loss.item())
-            # Accumulate gradients if required.
-            if self.grad_accumulation_rounds > 1:
-                # When `grad_accumulation_rounds` is greater than 1; accumulate gradients if no. of rounds
-                # specified by `grad_accumulation_rounds` have not been completed and return.
-                # If no. of rounds have been completed, perform mean reduction and proceed with optimizer step.
-                if len(self._grad_accumulator) < self.grad_accumulation_rounds:
-                    self._grad_accumulator.accumulate(
-                        self.policy_model.named_parameters()
-                    )
-                    return
-                else:
-                    # Perform mean reduction.
-                    self._grad_mean_reduction()
-                    # Clear Accumulated Gradient buffer.
-                    self._grad_accumulator.clear()
-        # Reset exploration tool.
-        self._reset_exploration_tool()
+            control_flag = self._backward_pass()
+            # Reset exploration tool.
+            self._reset_exploration_tool()
+            if control_flag:
+                return
         # Run optimizer.
         self._run_optimizer()
 
-    def _check_if_policy_model_has_exploration_tool(self) -> None:
+    def _forward_pass(self) -> None:
         """
-        Checks if policy model has a valid exploration tool.
+        Method to perform forward pass. This method will iterate through batches of transitions and accumulate
+        policy outputs in rollout buffer.
         """
-        if self.policy_model.has_exploration_tool:
-            if self.policy_model.exploration_tool is not None:
-                self._policy_model_has_exploration_tool = True
+        # Obtain the transitions iterator from rollout buffer.
+        transition_iteration = self._rollout_buffer.get_transitions_iterator(
+            self.batch_size
+        )
+        for transition in transition_iteration:
+            state_next = transition["state_next"]
+            state_current = transition["state_current"]
+            if self._state_norm_code in self.apply_norm_to:
+                state_next = self._normalization.apply_normalization_pre_silent(
+                    state_next, "states"
+                )
+                state_current = self._normalization.apply_normalization_pre_silent(
+                    state_current, "states"
+                )
+            # Compute state_next_value.
+            _, state_next_value = self.policy_model(state_next)
+            # Compute action values and state_current_values.
+            action_value, state_current_value = self.policy_model(state_current)
+            # Create distribution from action values.
+            distribution = self._create_action_distribution(action_value)
+            # Create action from distribution by sampling.
+            action = self._get_action_from_distribution(
+                distribution, reparametrize=True
+            )
+            # Add noise to actions.
+            action = self._add_noise_to_actions(action)
+            # Accumulate policy outputs.
+            self._rollout_buffer.insert_policy_output(
+                action_log_probability=distribution.log_prob(action),
+                state_current_value=state_current_value,
+                state_next_value=state_next_value,
+                entropy=distribution.entropy(),
+            )
+        # Delete the transitions iterator. This will delete the object which is kept alive by C++.
+        del transition_iteration
+
+    def _backward_pass(self) -> bool:
+        """
+        Method to perform backward pass. This method will compute gradients and accumulate gradients if
+        required.
+        @return bool: Indicates if gradients were accumulated when True; False if accumulated gradients
+            were reduced and loaded into policy model.
+        """
+        if not self._take_forward_step:
+            raise AgentError(
+                "Cannot take backward pass without having done forward pass!"
+            )
+        loss = self._compute_loss()
+        # Prepare for optimizer step by setting zero grads.
+        self.optimizer.zero_grad()
+        # Backward call.
+        loss.backward()
+        # Clear the buffer values.
+        self._clear_rollout_buffer()
+        # Append loss to list.
+        self.loss.append(loss.item())
+        # Accumulate gradients if required.
+        if self.grad_accumulation_rounds > 1:
+            # When `grad_accumulation_rounds` is greater than 1; accumulate gradients if no. of rounds
+            # specified by `grad_accumulation_rounds` have not been completed and return.
+            # If no. of rounds have been completed, perform mean reduction and proceed with optimizer step.
+            if len(self._grad_accumulator) < self.grad_accumulation_rounds:
+                self._grad_accumulator.accumulate(self.policy_model.named_parameters())
+                return True
+            else:
+                # Perform mean reduction.
+                self._grad_mean_reduction()
+                # Clear Accumulated Gradient buffer.
+                self._grad_accumulator.clear()
+        return False
+
+    @pytorch.no_grad()
+    def _finish_transitions_exploration(self):
+        """
+        Finishes exploration in transitions and sets the necessary statistics if requested for normalization.
+        Sets the attribute `exploration_steps` to None
+        """
+        # If states are to be normalized. compute the state statistics of explored states.
+        if (
+            self._state_norm_code in self.apply_norm_to
+            and self._normalization is not None
+        ):
+            states_statistics = self._rollout_buffer.get_states_statistics()
+            # Update the statistics for states in dictionary
+            self._normalization.update_statistics("states", dict(states_statistics))
+        if self._normalization is not None:
+            self._normalization.all_reduce_statistics(self._process_group, self.timeout)
+        self.exploration_steps = None
+
+    @pytorch.no_grad()
+    def _finish_policy_outputs_exploration(self):
+        """
+        Finishes exploration in policy outputs and sets the necessary statistics if requested for
+        normalization. Sets the attribute `exploration_steps` to None. Sets the attribute `_policy_outputs_exploration`
+        to False.
+        """
+        # If advantages are to be normalized. compute the advantage statistics in explored space.
+        if (
+            self._advantage_norm_code in self.apply_norm_to
+            and self._normalization is not None
+        ):
+            advantages_statistics = self._rollout_buffer.get_advantage_statistics(
+                self.gamma, self.gae_lambda
+            )
+            # Update the statistics for advantages in dictionary
+            self._normalization.update_statistics(
+                "advantages", dict(advantages_statistics)
+            )
+        # If state values are to be normalized. compute the state value statistics in explored space.
+        if (
+            self._state_value_norm_code in self.apply_norm_to
+            and self._normalization is not None
+        ):
+            state_values_statistics = self._rollout_buffer.get_state_values_statistics()
+            # Update the statistics for state values in dictionary
+            self._normalization.update_statistics(
+                "state_values", dict(state_values_statistics)
+            )
+        # If action log probabilities are to be normalized, compute the state value statistics in explored space.
+        if (
+            self._action_log_probability_norm_code in self.apply_norm_to
+            and self._normalization is not None
+        ):
+            action_log_probability_statistics = (
+                self._rollout_buffer.get_action_log_probabilities_statistics()
+            )
+            # Update the statistics for action log probabilities in dictionary
+            self._normalization.update_statistics(
+                "action_log_probabilities", dict(action_log_probability_statistics)
+            )
+        # If entropies are to be normalized, compute the state value statistics in explored space.
+        if (
+            self._entropy_norm_code in self.apply_norm_to
+            and self._normalization is not None
+        ):
+            entropy_statistics = self._rollout_buffer.get_entropy_statistics()
+            # Update the statistics for entropies in dictionary
+            self._normalization.update_statistics("entropies", dict(entropy_statistics))
+        if self._normalization is not None:
+            self._normalization.all_reduce_statistics(self._process_group, self.timeout)
+        self._policy_outputs_exploration = False
 
     def _reset_exploration_tool(self) -> None:
         """
@@ -577,8 +673,8 @@ class ActorCriticAgent(Agent):
             self._state_value_norm_code in self.apply_norm_to
             and self._normalization is not None
         ):
-            state_current_values = self._normalization.apply_normalization(
-                state_current_values
+            state_current_values = self._normalization.apply_normalization_pre_silent(
+                state_current_values, "state_values", fallback=True
             )
         # Compute Advantage Values and normalize if required.
         advantage = self._rollout_buffer.compute_generalized_advantage_estimates(
@@ -588,19 +684,21 @@ class ActorCriticAgent(Agent):
             self._advantage_norm_code in self.apply_norm_to
             and self._normalization is not None
         ):
-            advantage = self._normalization.apply_normalization(advantage)
-        # Compute Policy Losses
-        policy_losses = (-action_log_probabilities * advantage) + (
+            advantage = self._normalization.apply_normalization_pre_silent(
+                advantage, "advantages", fallback=True
+            )
+        # Compute Actor Losses.
+        actor_losses = (-action_log_probabilities * advantage) + (
             self.entropy_coefficient * entropy
         )
-        # Compute Mean for policy losses
-        policy_loss = policy_losses.mean()
-        # Compute Value Losses
-        value_loss = self.state_value_coefficient * self.loss_function(
+        # Compute Mean for Actor Losses.
+        actor_loss = actor_losses.mean()
+        # Compute Critic Loss.
+        critic_loss = self.state_value_coefficient * self.loss_function(
             state_current_values, advantage
         )
         # Compute final loss
-        loss = policy_loss + value_loss
+        loss = actor_loss + critic_loss
         return loss
 
     def _run_optimizer(self) -> None:
@@ -691,12 +789,6 @@ class ActorCriticAgent(Agent):
                     f"but got list of length {len(action_values)}.\n"
                     "HINT: Check your policy model's output."
                 )
-                action_values = [
-                    action_value.squeeze(0)
-                    if action_value.size(0) == 1
-                    else action_value
-                    for action_value in action_values
-                ]
                 distribution = self.distribution(*action_values)
             else:
                 raise TypeError(
@@ -706,8 +798,16 @@ class ActorCriticAgent(Agent):
         return distribution
 
     def _get_action_from_distribution(
-        self, distribution: pytorch_distributions.Distribution, reparametrize=False
+        self, distribution: pytorch_distributions.Distribution, reparametrize: bool = False
     ) -> pytorch.Tensor:
+        """
+        Creates action from the given distribution by sampling.
+        @param distribution: pytorch_distributions.Distribution: The distribution object to be used.
+        @param reparametrize: bool: Whether to use reparametrization trick while sampling. When set to True,
+            operations are attached to computation graph. This is only valid for continuous action spaces.
+            Default: False
+        @return pytorch.Tensor: The sampled action tensor.
+        """
         if not self.is_continuous_action_space:
             action = distribution.sample(self._get_action_sample_shape())
         else:
