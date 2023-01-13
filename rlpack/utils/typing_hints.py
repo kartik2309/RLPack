@@ -56,11 +56,9 @@ class LossFunction(pytorch.nn.Module):
     The Typing variable for Loss Functions.
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self):
         """
         __init__ method to define the initialization parameters of Loss Function.
-        @param *args: Positional arguments for the initialization.
-        @param **kwargs: Keyword arguments for the initialization
         """
         super().__init__()
 
@@ -78,11 +76,9 @@ class Activation(pytorch.nn.Module):
     The Typing variable for Activations.
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self):
         """
         __init__ method to define the initialization parameters of Activation.
-        @param *args: Positional arguments for the initialization.
-        @param **kwargs: Keyword arguments for the initialization
         """
         super(Activation, self).__init__()
 
