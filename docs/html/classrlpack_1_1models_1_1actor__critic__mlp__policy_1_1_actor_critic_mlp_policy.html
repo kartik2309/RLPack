@@ -396,8 +396,9 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Applies final heads to input by using actor head and critic head. </p>
-<p >:param features: pytorch.Tensor: The pytorch tensor of features. When using non-shared actor-critic, this refers to actor features. When using shared actor-critic, this refers to features from common feature extractor. </p><dl class="params"><dt>Parameters</dt><dd>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
+    <tr><td class="paramname">features</td><td>pytorch.Tensor: The pytorch tensor of features. When using non-shared actor-critic, this refers to actor features. When using shared actor-critic, this refers to features from common feature extractor. </td></tr>
     <tr><td class="paramname">state_features</td><td>Union[pytorch.Tensor, None]: The state features if using non-shared actor-critic. If using shared, must be None. Default: None </td></tr>
   </table>
   </dd>
