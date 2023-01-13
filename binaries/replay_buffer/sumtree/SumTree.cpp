@@ -52,7 +52,7 @@ void SumTree::create_tree(std::deque<float_t> &priorities,
         auto rightPriority = prioritiesForTree[index + 1];
         auto sum = leftPriority + rightPriority;
         prioritiesSum.push_back(sum);
-        if (!children.has_value()) {
+        if (not children.has_value()) {
             auto parent = new SumTreeNode(nullptr, sum, (int64_t) sumTree_.size() + 2);
             auto leftNode = new SumTreeNode(parent, leftPriority, (int64_t) sumTree_.size(), index);
             auto rightNode = new SumTreeNode(parent,
