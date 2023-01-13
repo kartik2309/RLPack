@@ -6,6 +6,7 @@
 Currently following base classes have been implemented:
     - `Agent`: Base class for all agents, implemented as rlpack.utils.base.agent.Agent.
     - `TrainerBase`: BAse class for all trainers, implemented as rlpack.utils.base.trainer.Trainer.
+    - `Model`: Base class for all models, implemented as rlpack.utils.base.model.Model.
 
 Following packages are part of utils:
     - `registers`: A package for base classes for registers. Implemented in rlpack.utils.base.registers.
@@ -43,6 +44,10 @@ class Agent(ABC):
         self._td_norm_code = 4
         ## The Advantage normalisation code; indicating the code to normalise Advantages. @I{# noqa: E266}
         self._advantage_norm_code = 5
+        ## The Action Log Probability normalisation code; indicating the code to normalise Action Log Probabilities. @I{# noqa: E266}
+        self._action_log_probability_norm_code = 6
+        ## The Entropy normalisation code; indicating the code to normalise Entropies. @I{# noqa: E266}
+        self._entropy_norm_code = 7
         ## The list of losses accumulated after each backward call. @I{# noqa: E266}
         self.loss = list()
         ## The path to save agent states and models. @I{# noqa: E266}
