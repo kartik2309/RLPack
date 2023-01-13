@@ -52,7 +52,28 @@ PYBIND11_MODULE(StlBindings, m) {
                     "Pickle method for TensorMap.",
                     pybind11::return_value_policy::reference);
 
-    pybind11::bind_map<std::map<std::string, c10::intrusive_ptr<c10d::ProcessGroup>>>(m, "ProcessGroupMap");
+    /*
+     * Binding the opaque object std::map<std::string, c10::intrusive_ptr<c10d::ProcessGroup>> to Python.
+     * This will be exposed as ProcessGroupMap in Python.
+     */
+    pybind11::bind_map<std::map<std::string, c10::intrusive_ptr<c10d::ProcessGroup>>>(m, "ProcessGroupMap")
+            .def(
+                    "__repr__",
+                    [](std::map<std::string, c10::intrusive_ptr<c10d::ProcessGroup>> &processGroupMap) {
+                        std::string reprString;
+                        std::stringstream ss;
+                        ss << &processGroupMap;
+                        reprString = "<ProcessGroupMap object at " + ss.str() + ">";
+                        return reprString;
+                    },
+                    pybind11::return_value_policy::reference)
+            .def(
+                    "__setitem__",
+                    [](std::map<std::string, c10::intrusive_ptr<c10d::ProcessGroup>> &processGroupMap,
+                       std::string &key,
+                       pybind11::object &processGroupObject) {
+                        processGroupMap[key] = processGroupObject.cast<c10::intrusive_ptr<c10d::ProcessGroup>>();
+                    });
 
     /*
      * Binding the opaque object std::map<std::string, std::deque<torch::Tensor>> to Python.
