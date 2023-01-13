@@ -798,7 +798,9 @@ class ActorCriticAgent(Agent):
         return distribution
 
     def _get_action_from_distribution(
-        self, distribution: pytorch_distributions.Distribution, reparametrize: bool = False
+        self,
+        distribution: pytorch_distributions.Distribution,
+        reparametrize: bool = False,
     ) -> pytorch.Tensor:
         """
         Creates action from the given distribution by sampling.

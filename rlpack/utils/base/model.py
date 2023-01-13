@@ -22,6 +22,7 @@ class Model(pytorch.nn.Module):
     """
     Base class for all Models in RLPack. This class inherits from pytorch.nn.Module.
     """
+
     @abstractmethod
     def __init__(self):
         """
