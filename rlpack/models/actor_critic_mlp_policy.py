@@ -148,23 +148,74 @@ class ActorCriticMlpPolicy(Model):
             )
         else:
             action_features = self._run_shared_forward(x)
-            action_values, state_values = self._apply_heads(action_features, None)
+            action_values, state_values = self._apply_heads(action_features)
         if self.has_exploration_tool:
             self._noise.append(self.exploration_tool.rsample(features=action_features))
         return action_values, state_values
 
     def get_noise(self, at: int = -1) -> pytorch.Tensor:
+        """
+        Obtains the noise from `ActorCriticMlpPolicy._noise` list.
+        @param at: int: Index from which we wish to retrieve the noise from noise list. By default, retrieves the
+            last noise tensor. Default: -1
+        @return: pytorch.Tensor: The noise tensor.
+        """
         return self._noise[at]
 
     def clear_noise(self) -> None:
+        """
+        Clears the accumulated noise.
+        """
         self._noise.clear()
 
+    def get_actor_parameters(self) -> List[pytorch.Tensor]:
+        """
+        Obtains the parameters for actor model.
+        @return: List[pytorch.Tensor]: The list of parameters for actor.
+        """
+        parameters = list()
+        if not self.share_network:
+            parameters.extend(self.actor_feature_extractor.parameters())
+        else:
+            parameters.extend(self.mlp_feature_extractor.parameters())
+        if self.use_actor_projection:
+            parameters.extend(self.actor_projector.parameters())
+        if self.has_exploration_tool:
+            parameters.extend(self.exploration_tool.parameters())
+        parameters.extend(self.actor_head.parameters())
+        return parameters
+
+    def get_critic_parameters(self) -> List[pytorch.Tensor]:
+        """
+        Obtains the parameters for critic model.
+        @return: List[pytorch.Tensor]: The list of parameters for critic.
+        """
+        parameters = list()
+        if not self.share_network:
+            parameters.extend(self.critic_feature_extractor.parameters())
+        parameters.extend(self.critic_head.parameters())
+        return parameters
+
     def _apply_heads(
-        self, features, state_features
+        self,
+        features: pytorch.Tensor,
+        state_features: Union[pytorch.Tensor, None] = None,
     ) -> Union[
         Tuple[List[pytorch.Tensor], pytorch.Tensor],
         Tuple[pytorch.Tensor, pytorch.Tensor],
     ]:
+        """
+        Applies final heads to input by using actor head and critic head.
+        :param features: pytorch.Tensor: The pytorch tensor of features. When using non-shared actor-critic, this
+            refers to actor features. When using shared actor-critic, this refers to features from common feature
+            extractor.
+        @param state_features: Union[pytorch.Tensor, None]: The state features if using non-shared actor-critic. If
+            using shared, must be None. Default: None
+        @return: Union[
+                Tuple[List[pytorch.Tensor], pytorch.Tensor],
+                Tuple[pytorch.Tensor, pytorch.Tensor],
+            ]: The tuple of tensors for actor and critic.
+        """
         if self.share_network:
             action_outputs, state_value = self._run_shared_forward_final(features)
         else:
@@ -198,32 +249,11 @@ class ActorCriticMlpPolicy(Model):
         """
         # Extract features from input.
         features = self.mlp_feature_extractor(x)
-        features = self.activation_core(features)
+        features = self._activations[0](features)
         # Apply dropout on features.
         features = self.dropout(features)
         # Pass the features through the respective heads.
         return features
-
-    def _run_shared_forward_final(
-        self, features: pytorch.Tensor
-    ) -> Tuple[pytorch.Tensor, pytorch.Tensor]:
-
-        # Pass the features through the respective heads.
-        action_outputs = self.actor_head(features)
-        state_value = self.critic_head(features)
-        # Flatten action and state value outputs required.
-        if action_outputs.dim() > 1:
-            action_outputs = self.flatten(action_outputs)
-        if state_value.dim() > 1:
-            state_value = self.flatten(state_value)
-        if self.use_actor_projection:
-            # When actor projection is to be used, pass through actor_projector.
-            action_projection = self.actor_projector(features)
-            # Flatten action projection if required.
-            if action_projection.dim() > 1:
-                action_projection = self.flatten(action_projection)
-            action_outputs = [action_outputs, action_projection]
-        return action_outputs, state_value
 
     def _run_non_shared_forward(
         self, x: pytorch.Tensor
@@ -243,26 +273,6 @@ class ActorCriticMlpPolicy(Model):
         action_features = self.dropout(action_features)
         state_value_features = self.dropout(state_value_features)
         return action_features, state_value_features
-
-    def _run_non_shared_forward_final(
-        self, action_features: pytorch.Tensor, state_value_features: pytorch.Tensor
-    ) -> Tuple[Union[List[pytorch.Tensor], pytorch.Tensor], pytorch.Tensor]:
-        # Pass the features through the respective heads.
-        action_outputs = self.actor_head(action_features)
-        state_value = self.critic_head(state_value_features)
-        # Flatten action and state value outputs required.
-        if action_outputs.dim() > 1:
-            action_outputs = self.flatten(action_outputs)
-        if state_value.dim() > 1:
-            state_value = self.flatten(state_value)
-        if self.use_actor_projection:
-            # When actor projection is to be used, pass through actor_projector.
-            action_projection = self.actor_projector(action_features)
-            # Flatten action projection if required.
-            if action_projection.dim() > 1:
-                action_projection = self.flatten(action_projection)
-            action_outputs = [action_outputs, action_projection]
-        return action_outputs, state_value
 
     def _set_shared_network_attributes(
         self,
