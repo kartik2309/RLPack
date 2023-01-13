@@ -36,6 +36,7 @@ pybind11_add_module(
         C_GradAccumulator
         C_GradAccumulator.cpp
         C_GradAccumulator.h
+        ${CMAKE_SOURCE_DIR}/binaries/stl_bindings
         Binding.cpp
 )
 

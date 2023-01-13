@@ -48,9 +48,6 @@ PYBIND11_MODULE(C_RolloutBuffer, m) {
             .def("get_stacked_states_next",
                  &C_RolloutBuffer::get_stacked_states_next,
                  pybind11::return_value_policy::reference)
-            .def("get_states_statistics",
-                 &C_RolloutBuffer::get_states_statistics,
-                 pybind11::return_value_policy::reference)
             .def("get_stacked_rewards",
                  &C_RolloutBuffer::get_stacked_rewards,
                  pybind11::return_value_policy::reference)
@@ -68,6 +65,23 @@ PYBIND11_MODULE(C_RolloutBuffer, m) {
                  pybind11::return_value_policy::reference)
             .def("get_stacked_entropies",
                  &C_RolloutBuffer::get_stacked_entropies,
+                 pybind11::return_value_policy::reference)
+            .def("get_states_statistics",
+                 &C_RolloutBuffer::get_states_statistics,
+                 pybind11::return_value_policy::reference)
+            .def("get_advantage_statistics",
+                 &C_RolloutBuffer::get_advantage_statistics,
+                 pybind11::arg("gamma"),
+                 pybind11::arg("gae_lambda"),
+                 pybind11::return_value_policy::reference)
+            .def("get_action_log_probabilities_statistics",
+                 &C_RolloutBuffer::get_action_log_probabilities_statistics,
+                 pybind11::return_value_policy::reference)
+            .def("get_state_values_statistics",
+                 &C_RolloutBuffer::get_state_values_statistics,
+                 pybind11::return_value_policy::reference)
+            .def("get_entropy_statistics",
+                 &C_RolloutBuffer::get_entropy_statistics,
                  pybind11::return_value_policy::reference)
             .def("transition_at",
                  &C_RolloutBuffer::transition_at,

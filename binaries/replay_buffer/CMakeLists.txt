@@ -24,24 +24,9 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 find_package(CUDAToolkit QUIET)
 if (NOT CUDAToolkit_FOUND)
-    message("-- CUDA was not found.")
     set_source_files_properties(C_ReplayBuffer.cu PROPERTIES LANGUAGE CXX)
     set_source_files_properties(Binding.cu PROPERTIES LANGUAGE CXX)
-else ()
-    add_compile_definitions(__CUDA_AVAILABLE__)
-    message("-- CUDA was found.")
-    enable_language(CUDA)
-
 endif ()
-if (NOT EXISTS "${Torch_PACKAGE_DIR}/kineto/")
-    execute_process(
-            COMMAND sh "${CMAKE_SOURCE_DIR}/install_cpp_requirements.sh"
-            "${Torch_PACKAGE_DIR}" "${CUDAToolkit_TARGET_DIR}"
-            WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/"
-            COMMAND_ECHO STDOUT
-    )
-endif ()
-set(kineto_LIBRARY "${Torch_PACKAGE_DIR}/kineto/libkineto/build/libkineto.a")
 find_package(Torch QUIET)
 if (NOT Torch_FOUND)
     message(FATAL_ERROR "Cannot find a valid PyTorch installation!")
@@ -58,8 +43,6 @@ pybind11_add_module(
         sumtree_node/SumTreeNode.h
         sumtree/SumTree.cpp
         sumtree/SumTree.h
-        ${CMAKE_SOURCE_DIR}/binaries/utils/ops/arg_mergesort.cuh
-        ${CMAKE_SOURCE_DIR}/binaries/utils/maps.h
         offload/CudaOffload.cuh
         offload/HostOffload.tpp
         offload/Offload.h
@@ -67,6 +50,9 @@ pybind11_add_module(
         replay_buffer_data/C_ReplayBufferData.h
         C_ReplayBuffer.cu
         C_ReplayBuffer.cuh
+        ${CMAKE_SOURCE_DIR}/binaries/utils/ops/arg_mergesort.cuh
+        ${CMAKE_SOURCE_DIR}/binaries/utils/maps.h
+        ${CMAKE_SOURCE_DIR}/binaries/stl_bindings/
         Binding.cu
 )
 
