@@ -103,5 +103,25 @@ var group__rollout__buffer__group =
       [ "stateCurrentValue", "class_rollout_buffer_data.html#a0f33b43493aa469c4beca5885379857f", null ],
       [ "stateNext", "class_rollout_buffer_data.html#a5485e9d027ae05585f917cdd06b637bb", null ],
       [ "stateNextValue", "class_rollout_buffer_data.html#aa1f56f15ef1552e0dad4403ac65000bf", null ]
-    ] ]
+    ] ],
+    [ "ACTION_LOG_PROBABILITIES", "group__rollout__buffer__group.html#ga33c89f8dda0de6749cefc4f52c5edf26", null ],
+    [ "ACTION_LOG_PROBABILITY", "group__rollout__buffer__group.html#ga15a4afa00362546a20d9c2e7a5447736", null ],
+    [ "ADVANTAGES", "group__rollout__buffer__group.html#ga3b5f53226a67092ac6ee47470f57a400", null ],
+    [ "ALL_GATHER_WORK_TIMEOUT", "group__rollout__buffer__group.html#gaeeea9088c0cdb876174b6c7c426cd3e7", null ],
+    [ "DONE", "group__rollout__buffer__group.html#gabe6b865c045f3e7c6892ef4f15ff5779", null ],
+    [ "DONES", "group__rollout__buffer__group.html#ga13f1b9aec463b7208342aabe47d20858", null ],
+    [ "ENTROPIES", "group__rollout__buffer__group.html#gae593b3cc578d662ca93856fb536f7bd0", null ],
+    [ "ENTROPY", "group__rollout__buffer__group.html#gacc5d2406e022f82c2e588416e313e86b", null ],
+    [ "RETURNS", "group__rollout__buffer__group.html#ga346d7bdb038b1c193fb0cde2b5de8b24", null ],
+    [ "REWARD", "group__rollout__buffer__group.html#ga3ab36a8e73192e834dde2d3a282bd7b7", null ],
+    [ "REWARDS", "group__rollout__buffer__group.html#ga7015700ecb95d9808d4a618988441155", null ],
+    [ "STATE_CURRENT", "group__rollout__buffer__group.html#gae9a8ca05d01c948db6bea7fd1f59ea32", null ],
+    [ "STATE_CURRENT_VALUE", "group__rollout__buffer__group.html#gafe9245fd8cdb431ae6c2bf0e9d6a6101", null ],
+    [ "STATE_CURRENT_VALUES", "group__rollout__buffer__group.html#gafe3c8772cf9d608b98a6cda070fd0210", null ],
+    [ "STATE_NEXT", "group__rollout__buffer__group.html#gaf12a0a10c8e9491e0c9ed2f11351f5ee", null ],
+    [ "STATE_NEXT_VALUE", "group__rollout__buffer__group.html#ga473ce8cf6b7e169ab73cd5730df0f091", null ],
+    [ "STATE_NEXT_VALUES", "group__rollout__buffer__group.html#gaf1b126e6bfe95dfb41310e08f9817ac7", null ],
+    [ "STATES_CURRENT", "group__rollout__buffer__group.html#ga14a3606ae5164615db50d898f7d1b658", null ],
+    [ "STATES_NEXT", "group__rollout__buffer__group.html#gaad234c78c7cc159478bedda0e88a951f", null ],
+    [ "TD_RESIDUALS", "group__rollout__buffer__group.html#ga029b83f0e3f7f85deacc068ce4696ff1", null ]
 ];

@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['entropies_0',['ENTROPIES',['../_rollout_buffer_data_8h.html#ae593b3cc578d662ca93856fb536f7bd0',1,'RolloutBufferData.h']]],
+  ['entropies_0',['ENTROPIES',['../group__rollout__buffer__group.html#gae593b3cc578d662ca93856fb536f7bd0',1,'RolloutBufferData.h']]],
   ['entropies_5f_1',['entropies_',['../class_rollout_buffer_container.html#a7749b0ec7545fa56b1ee0d870bdaf07e',1,'RolloutBufferContainer']]],
   ['entropy_2',['entropy',['../class_rollout_buffer_data.html#aaf2489d3797d69d247a352cc8ad538c0',1,'RolloutBufferData']]],
-  ['entropy_3',['ENTROPY',['../_rollout_buffer_data_8h.html#acc5d2406e022f82c2e588416e313e86b',1,'RolloutBufferData.h']]],
+  ['entropy_3',['ENTROPY',['../group__rollout__buffer__group.html#gacc5d2406e022f82c2e588416e313e86b',1,'RolloutBufferData.h']]],
   ['entropy_5fcoefficient_4',['entropy_coefficient',['../classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#affc2a52ddeb68b4c0a6c05793fa58261',1,'rlpack::actor_critic::utils::actor_critic_agent::ActorCriticAgent']]],
   ['env_5',['env',['../classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html#a4e4a1eaf19a960b09af6d831e393c8bd',1,'rlpack::utils::base::trainer_base::TrainerBase']]],
   ['eps_6',['eps',['../classrlpack_1_1utils_1_1normalization_1_1_normalization.html#acf37fa5a72d0a5089e6835b41e66d090',1,'rlpack::utils::normalization::Normalization']]],
