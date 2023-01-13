@@ -5,6 +5,21 @@
 #ifndef RLPACK_BINARIES_ROLLOUT_BUFFER_ROLLOUT_BUFFER_DATA_ROLLOUTBUFFERDATA_H_
 #define RLPACK_BINARIES_ROLLOUT_BUFFER_ROLLOUT_BUFFER_DATA_ROLLOUTBUFFERDATA_H_
 
+#include <torch/extension.h>
+
+/*!
+ * @addtogroup binaries_group binaries
+ * @brief Binaries Module consists of C++ backend exposed via pybind11 to rlpack via rlpack._C. These modules are
+ * optimized to perform heavier workloads.
+ * @{
+ * @addtogroup rollout_buffer_group rollout_buffer
+ * @brief Rollout Buffer is the C++ backend for the class rlpack._C.rollout_buffer.RolloutBuffer. This module implements
+ * necessary classes to provide necessary functionalities and bindings to provide exposure to Python.
+ * @{
+ */
+/*!
+ * @brief Macro definitions for common keys for TensorMaps.
+ */
 #define STATES_CURRENT "states_current"
 #define STATE_CURRENT "state_current"
 #define STATES_NEXT "states_next"
@@ -25,18 +40,6 @@
 #define TD_RESIDUALS "td_residuals"
 #define ADVANTAGES "advantages"
 
-#include <torch/extension.h>
-
-/*!
- * @addtogroup binaries_group binaries
- * @brief Binaries Module consists of C++ backend exposed via pybind11 to rlpack via rlpack._C. These modules are
- * optimized to perform heavier workloads.
- * @{
- * @addtogroup rollout_buffer_group rollout_buffer
- * @brief Rollout Buffer is the C++ backend for the class rlpack._C.rollout_buffer.RolloutBuffer. This module implements
- * necessary classes to provide necessary functionalities and bindings to provide exposure to Python.
- * @{
- */
 /*!
   * @brief The class RolloutBufferData keeps the reference of each tensor of RolloutBufferContainer and provides necessary
   * methods to ship tensors to Python

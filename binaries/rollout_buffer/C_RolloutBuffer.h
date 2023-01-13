@@ -5,9 +5,6 @@
 #ifndef RLPACK_BINARIES_ROLLOUT_BUFFER_CROLLOUTBUFFER_H_
 #define RLPACK_BINARIES_ROLLOUT_BUFFER_CROLLOUTBUFFER_H_
 
-#define GATHER_WORK_TIMEOUT 900000
-#define MASTER_PROCESS_RANK 0
-
 #include <torch/csrc/distributed/c10d/ProcessGroup.hpp>
 
 #include "rollout_buffer_batch/RolloutBufferBatch.h"
@@ -24,6 +21,10 @@
  * necessary classes to provide necessary functionalities and bindings to provide exposure to Python.
  * @{
  */
+
+//! The macro to define All-gather work timeout in milliseconds.
+#define ALL_GATHER_WORK_TIMEOUT 900000
+
 /*!
   * @brief The class C_RolloutBuffer is the class that implements the C++ backend for Rollout Buffer. Tensors are moved
   * to C++ backend via PyBind11 and are kept opaque with std::map, hence, tensors are moved between Python and C++ only
@@ -82,7 +83,7 @@ private:
     //! The intrusive pointer to ProcessGroup in PyTorch.
     c10::intrusive_ptr<c10d::ProcessGroup> processGroup_;
     //! The chrono duration for work timeout to wait for all processes to complete `gather`.
-    std::chrono::milliseconds workTimeoutDuration_ = std::chrono::milliseconds(GATHER_WORK_TIMEOUT);
+    std::chrono::milliseconds workTimeoutDuration_ = std::chrono::milliseconds(ALL_GATHER_WORK_TIMEOUT);
     //! The DataLoader object. This is initialized to nullptr until `set_transitions_iterator` is called.
     DataLoader dataloader_ = nullptr;
 
