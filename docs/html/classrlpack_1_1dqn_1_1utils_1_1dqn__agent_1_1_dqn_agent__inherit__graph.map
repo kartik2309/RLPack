@@ -1,8 +1,0 @@
-<map id="rlpack.dqn.utils.dqn_agent.DqnAgent" name="rlpack.dqn.utils.dqn_agent.DqnAgent">
-<area shape="rect" id="node1" title="The DqnAgent is the base class for DQN methods." alt="" coords="309,69,444,109"/>
-<area shape="rect" id="node4" href="$classrlpack_1_1dqn_1_1dqn__proportional__agent_1_1_dqn_proportional_agent.html" title="This class implements the DQN with Proportional prioritization strategy." alt="" coords="513,5,705,45"/>
-<area shape="rect" id="node5" href="$classrlpack_1_1dqn_1_1dqn__rank__based__agent_1_1_dqn_rank_based_agent.html" title="This class implements the DQN with Rank&#45;Based prioritization strategy." alt="" coords="492,69,725,109"/>
-<area shape="rect" id="node6" href="$classrlpack_1_1dqn_1_1dqn__uniform__agent_1_1_dqn_uniform_agent.html" title="This class implements the basic DQN methodology, i.e." alt="" coords="524,133,693,173"/>
-<area shape="rect" id="node2" href="$classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html" title="The base class for all agents." alt="" coords="104,69,261,109"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,77,56,102"/>
-</map>

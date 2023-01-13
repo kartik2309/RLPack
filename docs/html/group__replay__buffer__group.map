@@ -1,5 +1,0 @@
-<map id="replay_buffer" name="replay_buffer">
-<area shape="rect" id="node1" href="$group__binaries__group.html" title="Binaries Module consists of C++ backend exposed via pybind11 to rlpack via rlpack...." alt="" coords="5,5,72,31"/>
-<area shape="rect" id="node3" title="The C++ backend for rlpack._C.replay_buffer.ReplayBuffer class. Heavier workloads have been optimized..." alt="" coords="120,5,217,31"/>
-<area shape="rect" id="node2" href="$group__offload__group.html" title="Template class to offload some heavier computation to specialised hardware. Functions will be execute..." alt="" coords="265,5,327,31"/>
-</map>

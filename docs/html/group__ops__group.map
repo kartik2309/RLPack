@@ -1,4 +1,0 @@
-<map id="ops" name="ops">
-<area shape="rect" id="node1" title="Ops modules provides operations useful across binaries in RLPack." alt="" coords="100,5,143,31"/>
-<area shape="rect" id="node2" href="$group__utils__group.html" title="Utils Module provides generic utilities to be used by all binaries in rlpack." alt="" coords="5,5,52,31"/>
-</map>
