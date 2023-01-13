@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.22)
 project(RLPack CXX)
+# ----------------------------- Set Global Variables for CMAKE ----------------------------- #
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(Python_VIRTUALENV FIRST)
 # ----------------------------- Preliminary check for packages ---------------------------- #
 if (NOT CUDAToolkit_FOUND)
     message("-- CUDA was not found.")
@@ -22,8 +26,3 @@ add_subdirectory(binaries/replay_buffer)
 add_subdirectory(binaries/grad_accumulator)
 add_subdirectory(binaries/rollout_buffer)
 add_subdirectory(binaries/stl_bindings)
-# ----------------------------- Set Global Variables for CMAKE ----------------------------- #
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(Python_VIRTUALENV FIRST)
-
