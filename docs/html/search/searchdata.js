@@ -1,0 +1,42 @@
+var indexSectionsWithContent =
+{
+  0: "_abcdefghilmnoprstuvw~",
+  1: "acdegilmnoprstv",
+  2: "r",
+  3: "_abcdeghilmnoprstv",
+  4: "_acdefghilmnoprstuv~",
+  5: "_abcdefghilmnoprstuvw",
+  6: "d",
+  7: "abdegmrst",
+  8: "bcgoru",
+  9: "adegilmor"
+};
+
+var indexSectionNames =
+{
+  0: "all",
+  1: "classes",
+  2: "namespaces",
+  3: "files",
+  4: "functions",
+  5: "variables",
+  6: "typedefs",
+  7: "defines",
+  8: "groups",
+  9: "pages"
+};
+
+var indexSectionLabels =
+{
+  0: "All",
+  1: "Data Structures",
+  2: "Namespaces",
+  3: "Files",
+  4: "Functions",
+  5: "Variables",
+  6: "Typedefs",
+  7: "Macros",
+  8: "Modules",
+  9: "Pages"
+};
+

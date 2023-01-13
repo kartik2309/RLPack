@@ -1,0 +1,5 @@
+<map id="rlpack.models.utils.mlp_feature_extractor.MlpFeatureExtractor" name="rlpack.models.utils.mlp_feature_extractor.MlpFeatureExtractor">
+<area shape="rect" id="node1" title="This class is a PyTorch Model implementing the MLP based feature extractor for 1&#45;D or 2&#45;D state value..." alt="" coords="5,167,200,221"/>
+<area shape="rect" id="node2" href="$classrlpack_1_1utils_1_1base_1_1model_1_1_model.html" title=" " alt="" coords="23,79,183,119"/>
+<area shape="rect" id="node3" title=" " alt="" coords="38,5,167,31"/>
+</map>

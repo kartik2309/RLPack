@@ -1,0 +1,4 @@
+<map id="rlpack.exploration.utils.variance_estimator.VarianceEstimator" name="rlpack.exploration.utils.variance_estimator.VarianceEstimator">
+<area shape="rect" id="node1" title="A utility pytorch.nn.Module which performs variance estimation by learning the standard deviation." alt="" coords="5,79,211,119"/>
+<area shape="rect" id="node2" title=" " alt="" coords="43,5,173,31"/>
+</map>

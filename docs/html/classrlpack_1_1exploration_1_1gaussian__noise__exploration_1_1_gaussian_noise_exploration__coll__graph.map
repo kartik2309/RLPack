@@ -1,0 +1,6 @@
+<map id="rlpack.exploration.gaussian_noise_exploration.GaussianNoiseExploration" name="rlpack.exploration.gaussian_noise_exploration.GaussianNoiseExploration">
+<area shape="rect" id="node1" title="Exploration tool to produce gaussian noise." alt="" coords="21,167,244,221"/>
+<area shape="rect" id="node2" href="$classrlpack_1_1exploration_1_1utils_1_1exploration_1_1_exploration.html" title="Exploration class is the base class for exploration tools in rlpack." alt="" coords="21,79,244,119"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,5,143,31"/>
+<area shape="rect" id="node4" title=" " alt="" coords="167,5,218,31"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="utils" name="utils">
+<area shape="rect" id="node1" href="$group__binaries__group.html" title="Binaries Module consists of C++ backend exposed via pybind11 to rlpack via rlpack...." alt="" coords="5,5,72,31"/>
+<area shape="rect" id="node3" title="Utils Module provides generic utilities to be used by all binaries in rlpack." alt="" coords="120,5,167,31"/>
+<area shape="rect" id="node2" href="$group__ops__group.html" title="Ops modules provides operations useful across binaries in RLPack." alt="" coords="215,5,257,31"/>
+</map>
