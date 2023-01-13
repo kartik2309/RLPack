@@ -53,13 +53,17 @@ public:
     std::map<std::string, torch::Tensor> compute_generalized_advantage_estimates(float_t gamma, float_t gaeLambda);
     std::map<std::string, torch::Tensor> get_stacked_states_current();
     std::map<std::string, torch::Tensor> get_stacked_states_next();
-    std::map<std::string, torch::Tensor> get_states_statistics();
     std::map<std::string, torch::Tensor> get_stacked_rewards();
     std::map<std::string, torch::Tensor> get_stacked_dones();
     std::map<std::string, torch::Tensor> get_stacked_action_log_probabilities();
     std::map<std::string, torch::Tensor> get_stacked_state_current_values();
     std::map<std::string, torch::Tensor> get_stacked_state_next_values();
     std::map<std::string, torch::Tensor> get_stacked_entropies();
+    std::map<std::string, torch::Tensor> get_states_statistics();
+    std::map<std::string, torch::Tensor> get_advantage_statistics(float_t gamma, float_t gae_lambda);
+    std::map<std::string, torch::Tensor> get_action_log_probabilities_statistics();
+    std::map<std::string, torch::Tensor> get_state_values_statistics();
+    std::map<std::string, torch::Tensor> get_entropy_statistics();
     std::map<std::string, torch::Tensor> transition_at(int64_t index);
     std::map<std::string, torch::Tensor> policy_output_at(int64_t index);
     void clear_transitions();
