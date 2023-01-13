@@ -17,27 +17,44 @@
  * necessary classes to provide necessary functionalities and bindings to provide exposure to Python.
  * @{
  */
-/*!
- * @brief Macro definitions for common keys for TensorMaps.
- */
+
+//! Macro for states current for easy use in tensor map.
 #define STATES_CURRENT "states_current"
+//! Macro for state current for easy use in tensor map.
 #define STATE_CURRENT "state_current"
+//! Macro for states next for easy use in tensor map.
 #define STATES_NEXT "states_next"
+//! Macro for state next for easy use in tensor map.
 #define STATE_NEXT "state_next"
+//! Macro for rewards for easy use in tensor map.
 #define REWARDS "rewards"
+//! Macro for reward for easy use in tensor map.
 #define REWARD "reward"
+//! Macro for dones for easy use in tensor map.
 #define DONES "dones"
+//! Macro for done for easy use in tensor map.
 #define DONE "done"
+//! Macro for action log probabilities for easy use in tensor map.
 #define ACTION_LOG_PROBABILITIES "action_log_probabilities"
+//! Macro for action log probability for easy use in tensor map.
 #define ACTION_LOG_PROBABILITY "action_log_probability"
+//! Macro for state current values for easy use in tensor map.
 #define STATE_CURRENT_VALUES "state_current_values"
+//! Macro for state current value for easy use in tensor map.
 #define STATE_CURRENT_VALUE "state_current_value"
+//! Macro for state next values for easy use in tensor map.
 #define STATE_NEXT_VALUES "state_next_values"
+//! Macro for state next value for easy use in tensor map.
 #define STATE_NEXT_VALUE "state_next_value"
+//! Macro for entropies for easy use in tensor map.
 #define ENTROPIES "entropies"
+//! Macro for entropy for easy use in tensor map.
 #define ENTROPY "entropy"
+//! Macro for returns for easy use in tensor map.
 #define RETURNS "returns"
+//! Macro for TD Rrsiduals for easy use in tensor map.
 #define TD_RESIDUALS "td_residuals"
+//! Macro for advantages for easy use in tensor map.
 #define ADVANTAGES "advantages"
 
 /*!
