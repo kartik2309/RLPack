@@ -60,8 +60,6 @@ class BuildExternal(build_ext):
 
         config = "Debug" if self.debug else "Release"
         cmake_args = [
-            "-DCMAKE_C_COMPILER=/usr/bin/clang",
-            "-DCMAKE_CXX_COMPILER=/usr/bin/clang++",
             f"-DCMAKE_BUILD_TYPE:STRING={config}",
             f"-DPython_ROOT_DIR={Path(sys.prefix)}",
             "-DBUILD_SHARED_LIBS:BOOL=TRUE",
