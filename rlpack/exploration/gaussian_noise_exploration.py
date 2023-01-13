@@ -55,9 +55,24 @@ class GaussianNoiseExploration(Exploration):
 
     @pytorch.no_grad()
     def sample(self, *args, **kwargs) -> pytorch.Tensor:
+        """
+        Samples a weighted gaussian noise with given parameters. This is run with No Grad Guard and operations are
+        not attached to computational graph
+        @param args: Arbitrary positional arguments.
+        @param kwargs: Arbitrary keyword arguments.
+        @return: pytorch.Tensor: The sampled weighed gaussian noise tensor.
+        """
         return self.weight * self.normal_distribution.sample()
 
     def rsample(self, *args, **kwargs) -> pytorch.Tensor:
+        """
+        The method has been overriden here to raise a `NotImplementedError`, since this exploration tool does not
+        have any learnable parameters and hence `sample` method must be used.
+        @param args: Arbitrary positional arguments.
+        @param kwargs: Arbitrary keyword arguments.
+        @return: pytorch.Tensor: The sampled weighed gaussian noise tensor. Note that this just shows the
+            signature of the method and is not valid if called.
+        """
         raise NotImplementedError(
             "`rsample` method has not been implemented for GaussianNoiseExploration! "
             "It should be called in a Model!"
@@ -65,6 +80,10 @@ class GaussianNoiseExploration(Exploration):
 
     @pytorch.no_grad()
     def reset(self):
+        """
+        Resets the exploration tool by calling anneal function (argument `anneal_func`). If no anneal function was
+        passed, does nothing.
+        """
         if self.anneal_func is not None:
             self.loc, self.scale, self.weight = self.anneal_func(
                 self.loc,
