@@ -12,9 +12,8 @@ Currently following classes have been implemented:
         C_RolloutBuffer class implemented in C++ and providing simple python methods to access it.
 """
 
-
 from datetime import timedelta
-from typing import Union
+from typing import Iterator, Union
 
 from rlpack import C_RolloutBuffer, pytorch, pytorch_distributed
 
@@ -139,9 +138,6 @@ class RolloutBuffer:
         """
         return self.c_rollout_buffer.get_stacked_states_next()["states_next"]
 
-    def get_states_statistics(self) -> C_RolloutBuffer.TensorMap:
-        return self.c_rollout_buffer.get_states_statistics()
-
     def get_stacked_rewards(self) -> pytorch.Tensor:
         """
         Gets the stacked rewards accumulated so far.
@@ -202,6 +198,74 @@ class RolloutBuffer:
         """
         self.c_rollout_buffer.clear_policy_outputs()
 
+    def get_states_statistics(self) -> C_RolloutBuffer.TensorMap:
+        """
+        The method to get statistics for accumulated states (both states_current and states_next are used
+        for computation. The statistics are computed along each dimension of states
+        @return: C_RolloutBuffer.TensorMap: The custom C++ object TensorMap with statistics computed. The
+            following statistics are computed and are present as a key:
+                - min: The minimum value across each state dimension.
+                - max: The maximum value across each state dimension.
+                - mean: The mean value across each state dimension.
+                - std: The std value across each state dimension.
+        """
+        return self.c_rollout_buffer.get_states_statistics()
+
+    def get_advantage_statistics(
+        self, gamma: float, gae_lambda: float
+    ) -> C_RolloutBuffer.TensorMap:
+        """
+        The method to compute statistics for computed advantages.
+        @param gamma: float: The discounting factor value.
+        @param gae_lambda: float: The GAE Lambda value which controls the bias-variance tradeoff.
+        @return: C_RolloutBuffer.TensorMap: The custom C++ object TensorMap with statistics computed. The
+            following statistics are computed and are present as a key:
+                - min: The minimum value.
+                - max: The maximum value.
+                - mean: The mean value.
+                - std: The std value.
+        """
+        return self.c_rollout_buffer.get_advantage_statistics(gamma, gae_lambda)
+
+    def get_action_log_probabilities_statistics(self) -> C_RolloutBuffer.TensorMap:
+        """
+        The method to get statistics for accumulated action log probabilities. The statistics are computed
+        along each dimension of action.
+        @return: C_RolloutBuffer.TensorMap: The custom C++ object TensorMap with statistics computed. The
+            following statistics are computed and are present as a key:
+                - min: The minimum value across each action dimension.
+                - max: The maximum value across each action dimension.
+                - mean: The mean value across each action dimension.
+                - std: The std value across each action dimension.
+        """
+        return self.c_rollout_buffer.get_action_log_probabilities_statistics()
+
+    def get_state_values_statistics(self) -> C_RolloutBuffer.TensorMap:
+        """
+        The method to compute statistics for accumulated state values (both state_current_values and
+        state_next_values are used).
+        @return: C_RolloutBuffer.TensorMap: The custom C++ object TensorMap with statistics computed. The
+            following statistics are computed and are present as a key:
+                - min: The minimum value.
+                - max: The maximum value.
+                - mean: The mean value.
+                - std: The std value.
+        """
+        return self.c_rollout_buffer.get_state_values_statistics()
+
+    def get_entropy_statistics(self) -> C_RolloutBuffer.TensorMap:
+        """
+        The method to get statistics for accumulated entropies. The statistics are computed along each
+        dimension of action.
+        @return: C_RolloutBuffer.TensorMap: The custom C++ object TensorMap with statistics computed. The
+            following statistics are computed and are present as a key:
+                - min: The minimum value across each action dimension.
+                - max: The maximum value across each action dimension.
+                - mean: The mean value across each action dimension.
+                - std: The std value across each action dimension.
+        """
+        return self.c_rollout_buffer.get_entropy_statistics()
+
     def transition_at(self, index: int) -> C_RolloutBuffer.TensorMap:
         """
         Returns the transitions at a given index
@@ -244,7 +308,13 @@ class RolloutBuffer:
         """
         self.c_rollout_buffer.extend_transitions()
 
-    def get_transitions_iterator(self, batch_size: int):
+    def get_transitions_iterator(self, batch_size: int) -> Iterator:
+        """
+        Creates the dataloader in C++ and provides a simple python iterator for batched transitions. This
+        iterator is kept alive until its C_RolloutBuffer's lifetime and hence must be deleted after use.
+        @param batch_size: int: The batch size to be used.
+        @return: Iterator: An iterator with each item containing given batch_size of items.
+        """
         return self.c_rollout_buffer.get_transitions_iterator(batch_size)
 
     def __len__(self) -> int:
