@@ -182,7 +182,7 @@ class Setup(Register, InternalCodeRegister):
         @param loss_function_name: str: The loss function's name to be used.
         @param loss_function_args: Dict[str, Any]: A dictionary with keyword arguments for to-be initialized
             loss function.
-        :return (LossFunction): The initialized loss function.
+        @return (LossFunction): The initialized loss function.
         """
         loss_function = self.loss_function_map[loss_function_name](**loss_function_args)
         return loss_function
