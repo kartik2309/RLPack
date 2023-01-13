@@ -27,6 +27,8 @@ class InternalCodeRegister:
             "returns": 3,
             "td": 4,
             "advantages": 5,
+            "action_log_probabilities": 6,
+            "entropies": 7,
         }
         ## The mapping between prioritization strategy keywords and prioritization strategy codes. @I{# noqa: E266}
         self.prioritization_strategy_codes = {
