@@ -32,9 +32,10 @@ Following typing hints have been defined:
 """
 
 
+from datetime import timedelta
 from typing import Any, Dict, Optional, Tuple, Union
 
-from rlpack import pytorch
+from rlpack import pytorch, pytorch_distributed
 from rlpack.utils.internal_code_setup import InternalCodeSetup
 
 
@@ -126,7 +127,7 @@ class Normalization:
             raise ValueError("Invalid value of normalization received!")
 
     def apply_normalization_pre_silent(
-        self, tensor: pytorch.Tensor, quantity: str
+        self, tensor: pytorch.Tensor, quantity: str, fallback: bool = False
     ) -> pytorch.Tensor:
         """
         All encompassing function to perform normalization depending on the instance's apply_norm code. This method
@@ -136,9 +137,13 @@ class Normalization:
         @param tensor: pytorch.Tensor: The tensor to apply normalization on.
         @param quantity: str: The quantity for which is being normalized. This must be present in `statistics_dict`
             with corresponding statistics.
+        @param fallback: bool: The parameter indicating whether to fall-back to perform normalization across
+            the sample.
         @return pytorch.Tensor: The normalized tensor.
         """
         if quantity not in self.statistics.keys():
+            if fallback:
+                tensor = self.apply_normalization(tensor)
             return tensor
         return self.apply_normalization_pre(tensor, quantity)
 
@@ -217,6 +222,29 @@ class Normalization:
         """
         tensor = pytorch.linalg.norm(tensor, dim=self.dim, ord=self.p)
         return tensor
+
+    def all_reduce_statistics(
+        self,
+        process_group: Union[pytorch_distributed.ProcessGroup, None],
+        timeout: Union[timedelta, None] = None,
+    ):
+        """
+        Performs all-reduce operation with mean for a given process group for the statistics currently updated. This
+        may be a blocking call depending on the argument `timeout`
+        @param process_group: Union[pytorch_distributed.ProcessGroup, None]: The current process group of the agent.
+            If passed
+        @param timeout: Union[timedelta, None]: The timeout for all reduce operation. If None is passed, no timeout
+            will be place and this call will be asynchronous. Default: None
+        """
+        if process_group is None:
+            return
+        for quantity, statistics in self.statistics.items():
+            for statistic, value in statistics.items():
+                work_pointer = process_group.allreduce(value)
+                if timeout is not None:
+                    work_pointer.wait(timeout)
+                value = value / process_group.size()
+                self.statistics[quantity][statistic] = value
 
     def get_state_dict(self) -> Dict[str, Any]:
         """
