@@ -206,7 +206,7 @@ class ActorCriticMlpPolicy(Model):
     ]:
         """
         Applies final heads to input by using actor head and critic head.
-        :param features: pytorch.Tensor: The pytorch tensor of features. When using non-shared actor-critic, this
+        @param features: pytorch.Tensor: The pytorch tensor of features. When using non-shared actor-critic, this
             refers to actor features. When using shared actor-critic, this refers to features from common feature
             extractor.
         @param state_features: Union[pytorch.Tensor, None]: The state features if using non-shared actor-critic. If
