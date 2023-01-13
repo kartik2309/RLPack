@@ -21,7 +21,7 @@ class CMakeExtension(Extension):
 
     def __init__(self, shell_script: str) -> None:
         """
-        :param: shell_script: str: The shell script to be passed to be run in the Extension.
+        @param: shell_script: str: The shell script to be passed to be run in the Extension.
         """
         super().__init__(shell_script, sources=[])
 
@@ -42,7 +42,7 @@ class BuildExternal(build_ext):
     def build_cmake(self, ext: Any) -> None:
         """
         Builds the binaries for RLPack backend with C++.
-        :param ext: Any: The external extensions to be used to build the cmake.
+        @param ext: Any: The external extensions to be used to build the cmake.
         """
         cwd = Path().absolute()
 
@@ -60,6 +60,8 @@ class BuildExternal(build_ext):
 
         config = "Debug" if self.debug else "Release"
         cmake_args = [
+            "-DCMAKE_C_COMPILER=/usr/bin/clang",
+            "-DCMAKE_CXX_COMPILER=/usr/bin/clang++",
             f"-DCMAKE_BUILD_TYPE:STRING={config}",
             f"-DPython_ROOT_DIR={Path(sys.prefix)}",
             "-DBUILD_SHARED_LIBS:BOOL=TRUE",
@@ -98,6 +100,7 @@ setup(
         "rlpack._C",
         "rlpack.actor_critic",
         "rlpack.actor_critic.utils",
+        "rlpack.bin",
         "rlpack.distributions",
         "rlpack.dqn",
         "rlpack.dqn.utils",
@@ -120,6 +123,7 @@ setup(
         "rlpack._C": "rlpack/_C",
         "rlpack.actor_critic": "rlpack/actor_critic",
         "rlpack.actor_critic.utils": "rlpack/actor_critic/utils",
+        "rlpack.bin": "rlpack/bin",
         "rlpack.distributions": "rlpack/distributions",
         "rlpack.dqn": "rlpack/dqn",
         "rlpack.dqn.utils": "rlpack/dqn/utils",
@@ -138,7 +142,7 @@ setup(
         "Operating System :: POSIX",
     ],
     license="MIT",
-    license_file="LICENSE.md",
+    license_files="LICENSE.md",
     python_requires=">=3.7",
     scripts=["rlpack/bin/simulator"],
     entry_points={
