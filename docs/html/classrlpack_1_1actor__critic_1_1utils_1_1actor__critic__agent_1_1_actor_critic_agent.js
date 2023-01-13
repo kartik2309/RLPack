@@ -11,7 +11,7 @@ var classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_crit
     [ "_finish_policy_outputs_exploration", "classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#adfa080bcb55a6011a736a143d6276cff", null ],
     [ "_finish_transitions_exploration", "classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#af2b590bfae29e2ba3f386d3c85208027", null ],
     [ "_forward_pass", "classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a19374ccf78639131b609c67e747561bc", null ],
-    [ "_get_action_from_distribution", "classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ac68fdc3d0b2dd953c8f17e78c4cb8054", null ],
+    [ "_get_action_from_distribution", "classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a3b095ff9e0f3527fa9e27d9aba3eed6a", null ],
     [ "_get_action_sample_shape", "classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ac8f1674df6616eb003161c69ae61c7d7", null ],
     [ "_get_rollout_buffer_size", "classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a37fcd54c6561401de77d211d7a9ec97f", null ],
     [ "_grad_mean_reduction", "classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#afef85f43b81e3743e774ca8b47265b72", null ],

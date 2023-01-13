@@ -61,7 +61,7 @@ var NAVTREEINDEX =
 "a2c.html",
 "classrlpack_1_1___c_1_1grad__accumulator_1_1_grad_accumulator.html#aa33876d63e03ff9a4d05d17326b86e82",
 "classrlpack_1_1dqn_1_1utils_1_1process__prioritization__params_1_1_process_prioritization_params.html",
-"classrlpack_1_1utils_1_1normalization_1_1_normalization.html#a8ab9129833499d6b31f9e403ba4a6928"
+"classrlpack_1_1utils_1_1normalization_1_1_normalization.html#a91d242ae61edd648fcf0f124b74d8f63"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
