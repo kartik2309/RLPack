@@ -2,8 +2,6 @@
 @package rlpack
 @brief Implementation of RL Algorithms built on top of PyTorch. Heavy workloads have
 been optimized with C++ backend.
-
-Init file initialized the necessary libraries and packages, initializing the RLPack.
 """
 
 # Import other packages

@@ -2,9 +2,6 @@
 @package rlpack
 @brief Implementation of RL Algorithms built on top of PyTorch. Heavy workloads have
 been optimized with C++ backend.
-
-SimulatorDistributed module is the module to simulate the agent in an environment for training or evaluation in
-distributed setting.
 """
 
 
