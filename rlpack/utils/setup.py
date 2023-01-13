@@ -192,7 +192,7 @@ class Setup(Register, InternalCodeRegister):
     ) -> Type[pytorch_distributions.Distribution]:
         """
         Returns the class type for given distribution.
-        @param distribution_name: str: The distribution name as mentioned in [here](@ref distribution/index.md)
+        @param distribution_name: str: The distribution name as mentioned in [here](@ref distributions/index.md)
         @return: Type[pytorch_distributions.Distribution]: The distribution class
         """
         return self.distributions_map[distribution_name]
@@ -209,8 +209,9 @@ class Setup(Register, InternalCodeRegister):
         """
         return self.explorations_map[exploration_tool_name](**exploration_tool_args)
 
+    @staticmethod
     def get_normalization_tool(
-        self, normalization: Union[str, int], normalization_args: Dict[str, Any]
+        normalization: Union[str, int], normalization_args: Dict[str, Any]
     ) -> Normalization:
         """
         Creates the normalization tool for agents.
