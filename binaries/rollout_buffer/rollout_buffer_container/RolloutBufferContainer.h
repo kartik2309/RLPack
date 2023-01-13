@@ -88,6 +88,9 @@ private:
     //! The vector of RolloutBufferData pointers for policy outputs
     std::vector<RolloutBufferData> policyOutputData_;
 };
-
+/*!
+ * @} @I{ // End group rollout_buffer_group }
+ * @} @I{ // End group binaries_group }
+ */
 
 #endif//RLPACK_BINARIES_ROLLOUT_BUFFER_ROLLOUT_BUFFER_CONTAINER_ROLLOUTBUFFERCONTAINER_H_

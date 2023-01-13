@@ -38,7 +38,7 @@ void RolloutBufferContainer::insert_transition(torch::Tensor &stateCurrent,
     /*!
      * Insertion method to insert transitions into Rollout Buffer Container.
      *
-     * @param state_current: The current state.
+     * @param stateCurrent: The current state.
      * @param stateNext: The next state.
      * @param reward: The reward obtained by the agent.
      * @param done: The current done flag for episode termination/truncation.
@@ -112,7 +112,7 @@ RolloutBufferData RolloutBufferContainer::transition_at(int64_t index) {
      * Obtain the transitions at a given index.
      *
      * @param index : The index of the transitions buffer.
-     * @return : An instance of RolloutBufferData with correct instances set.
+     * @return An instance of RolloutBufferData with correct instances set.
      */
     auto data = transitionData_[index];
     return data;
@@ -123,7 +123,7 @@ RolloutBufferData RolloutBufferContainer::policy_output_at(int64_t index) {
      * Obtain the policy output at a given index.
      *
      * @param index : The index of the policy output buffer.
-     * @return : An instance of RolloutBufferData with correct instances set.
+     * @return An instance of RolloutBufferData with correct instances set.
      */
     auto data = policyOutputData_[index];
     return data;
@@ -133,7 +133,7 @@ std::vector<torch::Tensor> &RolloutBufferContainer::get_states_current_reference
     /*!
      * Gets the reference of `states_current` buffer.
      * 
-     * @return : The reference to `states_current`
+     * @return The reference to `states_current`
      */
     return statesCurrent_;
 }
@@ -142,7 +142,7 @@ std::vector<torch::Tensor> &RolloutBufferContainer::get_states_next_reference() 
     /*!
      * Gets the reference of `states_next` buffer.
      *
-     * @return : The reference to `states_next`
+     * @return The reference to `states_next`
      */
     return statesNext_;
 }
@@ -151,7 +151,7 @@ std::vector<torch::Tensor> &RolloutBufferContainer::get_rewards_reference() {
     /*!
      * Gets the reference of `rewards` buffer.
      * 
-     * @return : The reference to `rewards`
+     * @return The reference to `rewards`
      */
     return rewards_;
 }
@@ -160,7 +160,7 @@ std::vector<torch::Tensor> &RolloutBufferContainer::get_dones_reference() {
     /*!
      * Gets the reference of `dones` buffer.
      * 
-     * @return : The reference to `dones`
+     * @return The reference to `dones`
      */
     return dones_;
 }
@@ -169,7 +169,7 @@ std::vector<torch::Tensor> &RolloutBufferContainer::get_action_log_probabilities
     /*!
      * Gets the reference of `action_log_probabilities` buffer.
      * 
-     * @return : The reference to `action_log_probabilities`
+     * @return The reference to `action_log_probabilities`
      */
     return actionLogProbabilities_;
 }
@@ -178,7 +178,7 @@ std::vector<torch::Tensor> &RolloutBufferContainer::get_state_current_values_ref
     /*!
      * Gets the reference of `state_current_values` buffer.
      * 
-     * @return : The reference to `state_current_values`
+     * @return The reference to `state_current_values`
      */
     return stateCurrentValues_;
 }
@@ -187,7 +187,7 @@ std::vector<torch::Tensor> &RolloutBufferContainer::get_state_next_values_refere
     /*!
      * Gets the reference of `state_next_values` buffer.
      *
-     * @return : The reference to `state_next_values`
+     * @return The reference to `state_next_values`
      */
     return stateNextValues_;
 }
@@ -196,7 +196,7 @@ std::vector<torch::Tensor> &RolloutBufferContainer::get_entropies_reference() {
     /*!
      * Gets the reference of `entropies` buffer.
      * 
-     * @return : The reference to `entropies`
+     * @return The reference to `entropies`
      */
     return entropies_;
 }
@@ -204,7 +204,7 @@ torch::TensorOptions RolloutBufferContainer::get_tensor_options() {
     /*!
      * Gets the tensor options being used.
      * 
-     * @return : The TensorOptions object.
+     * @return The TensorOptions object.
      */
     return tensorOptions_;
 }
@@ -213,7 +213,7 @@ int64_t RolloutBufferContainer::get_buffer_size() const {
     /*!
      * Gets the current buffer size. This also indicates the capacity.
      *
-     * @return : The buffer size.
+     * @return The buffer size.
      */
     return bufferSize_;
 }
@@ -222,7 +222,7 @@ size_t RolloutBufferContainer::size_transitions() {
     /*!
      * The size of transitions buffer.
      *
-     * @return : The transitions buffer size.
+     * @return The transitions buffer size.
      */
     return transitionData_.size();
 }
@@ -231,7 +231,7 @@ size_t RolloutBufferContainer::size_policy_outputs() {
     /*!
      * The size of policy outputs buffer.
      *
-     * @return : The policy outputs' buffer size.
+     * @return The policy outputs' buffer size.
      */
     return policyOutputData_.size();
 }

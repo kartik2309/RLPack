@@ -3,8 +3,15 @@
 //
 
 #include "RolloutBufferData.h"
+
+/*!
+ * Default constructor for class RolloutBufferData
+ */
 RolloutBufferData::RolloutBufferData() = default;
 
+/*!
+ * Default destructor for class RolloutBufferData
+ */
 RolloutBufferData::~RolloutBufferData() = default;
 
 std::map<std::string, torch::Tensor> RolloutBufferData::get_transition_data(torch::TensorOptions& tensorOptions) const {
@@ -14,7 +21,7 @@ std::map<std::string, torch::Tensor> RolloutBufferData::get_transition_data(torc
      *
      * @param tensorOptions : The tensor options to be applied to transition quantities.
      *
-     * @return : The map of transitions outputs.
+     * @return The map of transitions outputs.
      */
     if ((stateCurrent == nullptr) or (stateNext == nullptr) or (reward == nullptr) or (done == nullptr)) {
         throw std::runtime_error("One of the quantities required for getting transition data was null!");
@@ -37,7 +44,7 @@ std::map<std::string, torch::Tensor> RolloutBufferData::get_policy_output_data()
      * state_current_value and entropy. If valid pointers are not set, an error is raised. This method does not
      * apply tensor options to the tensors.
      *
-     * @return : The map of policy outputs.
+     * @return The map of policy outputs.
      */
     if ((actionLogProbability == nullptr) or (stateCurrentValue == nullptr) or (stateNextValue == nullptr) or (entropy == nullptr)) {
         throw std::runtime_error("One of the quantities required for getting policy output data was null!");
