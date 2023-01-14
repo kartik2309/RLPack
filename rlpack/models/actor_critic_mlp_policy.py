@@ -292,6 +292,58 @@ class ActorCriticMlpPolicy(Model):
             activation=activation[0],
         )
 
+    def _run_shared_forward_final(
+        self, features: pytorch.Tensor
+    ) -> Tuple[pytorch.Tensor, pytorch.Tensor]:
+        """
+        Runs the final heads for actor and critic.
+        @param features: The pytorch tensor of features from common feature extractor for actor and critic.
+        @return: Tuple[pytorch.Tensor, pytorch.Tensor]: Tuple of tensors for actor and critic.
+        """
+        # Pass the features through the respective heads.
+        action_outputs = self.actor_head(features)
+        state_value = self.critic_head(features)
+        # Flatten action and state value outputs required.
+        if action_outputs.dim() > 1:
+            action_outputs = self.flatten(action_outputs)
+        if state_value.dim() > 1:
+            state_value = self.flatten(state_value)
+        if self.use_actor_projection:
+            # When actor projection is to be used, pass through actor_projector.
+            action_projection = self.actor_projector(features)
+            # Flatten action projection if required.
+            if action_projection.dim() > 1:
+                action_projection = self.flatten(action_projection)
+            action_outputs = [action_outputs, action_projection]
+        return action_outputs, state_value
+
+    def _run_non_shared_forward_final(
+        self, action_features: pytorch.Tensor, state_value_features: pytorch.Tensor
+    ) -> Tuple[Union[List[pytorch.Tensor], pytorch.Tensor], pytorch.Tensor]:
+        """
+        Runs the final heads for actor and critic.
+        @param action_features: The pytorch tensor of features from action feature extractor.
+        @param state_value_features: The pytorch tensor of features from critic feature extractor.
+        @return: Tuple[Union[List[pytorch.Tensor], pytorch.Tensor], pytorch.Tensor]: Tuple of tensors
+            for actor and critic.
+        """
+        # Pass the features through the respective heads.
+        action_outputs = self.actor_head(action_features)
+        state_value = self.critic_head(state_value_features)
+        # Flatten action and state value outputs required.
+        if action_outputs.dim() > 1:
+            action_outputs = self.flatten(action_outputs)
+        if state_value.dim() > 1:
+            state_value = self.flatten(state_value)
+        if self.use_actor_projection:
+            # When actor projection is to be used, pass through actor_projector.
+            action_projection = self.actor_projector(action_features)
+            # Flatten action projection if required.
+            if action_projection.dim() > 1:
+                action_projection = self.flatten(action_projection)
+            action_outputs = [action_outputs, action_projection]
+        return action_outputs, state_value
+
     def _set_non_shared_network_attributes(
         self,
         sequence_length: int,
