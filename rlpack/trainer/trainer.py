@@ -12,7 +12,7 @@ This class also logs rewards and other metrics on the screen.
 import logging
 from typing import Callable, Optional, Tuple, Union
 
-import gym
+import gymnasium as gym
 import numpy as np
 
 from rlpack import SummaryWriter
