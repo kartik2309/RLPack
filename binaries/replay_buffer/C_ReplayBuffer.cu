@@ -23,8 +23,8 @@ C_ReplayBuffer::C_ReplayBuffer(int64_t bufferSize,
      *
      */
     bufferSize_ = bufferSize;
-    device_ = Maps::deviceMap[device];
-    dtype_ = Maps::dTypeMap[dtype];
+    device_ = UtilityMapping::deviceMap[device];
+    dtype_ = UtilityMapping::dTypeMap[dtype];
     prioritizationStrategyCode_ = prioritizationStrategyCode;
     batchSize_ = batchSize;
 }

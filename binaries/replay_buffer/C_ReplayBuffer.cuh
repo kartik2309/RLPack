@@ -11,7 +11,7 @@
 #include <random>
 #include <vector>
 
-#include "../utils/maps.h"
+#include "../utils/UtilityMapping.hpp"
 #include "offload/Offload.h"
 #include "replay_buffer_data/C_ReplayBufferData.h"
 #include "sumtree/SumTree.h"

@@ -1,6 +1,8 @@
 
-#include "../stl_bindings/StlBindings.h"
 #include "C_ReplayBuffer.cuh"
+#include "opaque_containers/Int64DequeMap.hpp"
+#include "opaque_containers/TensorDequeMap.hpp"
+#include "opaque_containers/TensorMap.hpp"
 
 
 /*!
@@ -155,11 +157,12 @@ PYBIND11_MODULE(C_ReplayBuffer, m) {
                            prioritiesDynamicallyAllocated->begin());
                  cReplayBufferData->set_priorities_reference(prioritiesDynamicallyAllocated);
                  return *cReplayBufferData; }), "Pickle method for C_ReplayBufferData.", pybind11::return_value_policy::reference);
-
-    // Bind relevant StlBinding objects
-    pybind11::bind_map<std::map<std::string, torch::Tensor>>(m, "TensorMap");
-    pybind11::bind_map<std::map<std::string, std::deque<torch::Tensor>>>(m, "TensorDequeMap");
-    pybind11::bind_map<std::map<std::string, std::deque<int64_t>>>(m, "Int64DequeMap");
+    // Bind TensorMap
+    bind_tensor_map(m);
+    // Bind Int64DequeMap
+    bind_int64_deque_map(m);
+    // Bind TensorDequeMap
+    bind_tensor_deque_map(m);
 }
 /*!
  * @} @I{ // End group replay_buffer_group }
