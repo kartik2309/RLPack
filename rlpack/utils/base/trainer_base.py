@@ -18,7 +18,7 @@ import os
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-import gym
+import gymnasium as gym
 import matplotlib.pyplot as plt
 import numpy as np
 

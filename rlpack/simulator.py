@@ -9,7 +9,7 @@ import os
 from pathlib import Path
 from typing import Any, Dict, List
 
-import gym
+import gymnasium as gym
 import yaml
 
 from rlpack import SummaryWriter, pytorch
@@ -172,10 +172,7 @@ class Simulator:
             **agent_args_from_config,
         }
         agent = self.setup.get_agent(agent_name=self.config["agent"], **agent_kwargs)
-        config = self.config.copy()
-        if self.is_custom_model and len(self.agent_model_args) > 0:
-            for k in self.agent_model_args:
-                config["agent_args"].pop(k)
+        config = self.prepare_config_to_save(self.config.copy())
         with open(
             os.path.join(self.config["agent_args"]["save_path"], "config.yaml"), "w"
         ) as conf:
@@ -257,6 +254,39 @@ class Simulator:
             os.makedirs(save_path, exist_ok=True)
             summary_writer = SummaryWriter(log_dir=save_path)
         return summary_writer
+
+    @staticmethod
+    def prepare_config_to_save(config: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Prepares config for saving as a YAML file. This removes all values except
+        str, int, bool, list, tuple, dict from the dictionary.
+        @param config: Dict[str, Any]: The config dictionary.
+        @return: Dict[str, Any]: The prepared dictionary
+        """
+        to_save_config = dict()
+        # Iterate through dictionary.
+        for key, value in config.items():
+            # Check if of valid datatypes.
+            if not isinstance(value, (str, bool, int, list, tuple, dict)):
+                continue
+            # If list or tuple, call the function recursively to check for each item.
+            if isinstance(value, (list, tuple)):
+                if len(value) > 0:
+                    values_from_recursion = list()
+                    for item in value:
+                        rec = Simulator.prepare_config_to_save({"rec": item})
+                        if len(rec) != 0:
+                            values_from_recursion.append(item)
+                    if len(values_from_recursion) == 0:
+                        continue
+            # If dictionary, call function recursively to check for each item.
+            if isinstance(value, dict):
+                value = Simulator.prepare_config_to_save(value)
+                if len(value) == 0:
+                    continue
+            # Save accepted values to dictionary
+            to_save_config[key] = value
+        return to_save_config
 
     def run(self, metrics_logging_frequency: int, **kwargs) -> None:
         """
