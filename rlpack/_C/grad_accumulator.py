@@ -15,7 +15,7 @@ Currently following classes have been implemented:
 
 from typing import Iterable, List
 
-from rlpack import C_GradAccumulator, StlBindings
+from rlpack import C_GradAccumulator
 
 
 class GradAccumulator:
@@ -34,7 +34,7 @@ class GradAccumulator:
             parameter_keys, bootstrap_rounds
         )
         ## The instance of TensorMap; the custom object used by C++ backend. @I{# noqa: E266}
-        self.map_of_tensors = StlBindings.TensorMap()
+        self.map_of_tensors = C_GradAccumulator.TensorMap()
 
     def accumulate(self, named_parameters: Iterable) -> None:
         """
@@ -45,7 +45,7 @@ class GradAccumulator:
             self.map_of_tensors[name] = param
         self.c_grad_accumulator.accumulate(self.map_of_tensors)
 
-    def mean_reduce(self) -> StlBindings.TensorMap:
+    def mean_reduce(self) -> C_GradAccumulator.TensorMap:
         """
         Performs the mean reduction of accumulated gradients.
         @return TensorMap: The custom map object from C++ backend with mean of gradient of parameters for each key.
@@ -53,7 +53,7 @@ class GradAccumulator:
         mean_reduced_params = self.c_grad_accumulator.mean_reduce()
         return mean_reduced_params
 
-    def sum_reduce(self) -> StlBindings.TensorMap:
+    def sum_reduce(self) -> C_GradAccumulator.TensorMap:
         """
         Performs the sum reduction of accumulated gradients.
         @return TensorMap: The custom map object from C++ backend with sum of gradient of parameters for each key.
@@ -67,7 +67,7 @@ class GradAccumulator:
         """
         self.c_grad_accumulator.clear()
 
-    def __getitem__(self, index: int) -> StlBindings.TensorMap:
+    def __getitem__(self, index: int) -> C_GradAccumulator.TensorMap:
         """
         Retrieve named parameter gradients at a given index.
         @param index: int: The index at which we wish to obtain the gradient values.

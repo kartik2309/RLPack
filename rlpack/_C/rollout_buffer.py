@@ -13,9 +13,10 @@ Currently following classes have been implemented:
 """
 
 from datetime import timedelta
-from typing import Iterator, Union
+from typing import Iterator, List, Union
 
 from rlpack import C_RolloutBuffer, pytorch, pytorch_distributed
+from rlpack.utils.internal_code_setup import InternalCodeSetup
 
 
 class RolloutBuffer:
@@ -26,6 +27,7 @@ class RolloutBuffer:
         dtype: str = "float32",
         process_group: Union[pytorch_distributed.ProcessGroup, None] = None,
         work_timeout: timedelta = timedelta(minutes=30),
+        master_process_rank: int = 0,
     ):
         """
         Initialization method for RolloutBuffer.
@@ -38,12 +40,26 @@ class RolloutBuffer:
         @param work_timeout: timedelta: The duration for work wait for all processes to complete the
             gather process when RolloutBuffer.extend_transitions is called in distributed setting.
             Default: 30 minutes.
+        @param master_process_rank: int: The master process rank to be considered. This will be root process.
+            Default: 0
         """
-        process_group_map = C_RolloutBuffer.ProcessGroupMap()
-        process_group_map["process_group"] = process_group
+        setup = InternalCodeSetup()
+        ## The instance of torch device on which tensors will be placed. @I{# noqa: E266}
+        self.device = pytorch.device(device)
+        ## The instance of torch dtype to which tensors will be casted. @I{# noqa: E266}
+        self.dtype = setup.get_torch_dtype(dtype)
+        ## The instance of process group being used. Will be None if not in distributed setting. @I{# noqa: E266}
+        self.process_group = process_group
+        ## The instance timedelta for work timeout in collective communication operations. @I{# noqa: E266}
+        self.work_timeout = work_timeout
+        ## The input `master_process_rank`. @I{# noqa: E266}
+        self.master_process_rank = master_process_rank
+        # Multiply buffer size with world size if distributed setting.
+        if process_group is not None:
+            buffer_size *= process_group.size()
         ## The instance of C_RolloutBuffer; the C++ backend of C_RolloutBuffer class. @I{# noqa: E266}
         self.c_rollout_buffer = C_RolloutBuffer.C_RolloutBuffer(
-            buffer_size, device, dtype, process_group_map, work_timeout
+            buffer_size, device, dtype
         )
         ## The instance of TensorMap; the custom object used by C++ backend. @I{# noqa: E266}
         self.map_of_tensors = C_RolloutBuffer.TensorMap()
@@ -306,7 +322,23 @@ class RolloutBuffer:
         The transitions are only extended for master process and this method will raise an error if called
         from non-distributed setting.
         """
-        self.c_rollout_buffer.extend_transitions()
+        # Declare a tensor map.
+        tensor_vector_map = C_RolloutBuffer.TensorVectorMap()
+        # Perform gather for master process for each transition quantities and add them to tensor map.
+        tensor_vector_map["states_current"] = self._gather_with_process_group(
+            self.get_stacked_states_current()
+        )
+        tensor_vector_map["states_next"] = self._gather_with_process_group(
+            self.get_stacked_states_next()
+        )
+        tensor_vector_map["rewards"] = self._gather_with_process_group(
+            self.get_stacked_rewards()
+        )
+        tensor_vector_map["dones"] = self._gather_with_process_group(
+            self.get_stacked_dones()
+        )
+        # Extend transitions with C++ call.
+        self.c_rollout_buffer.extend_transitions(tensor_vector_map)
 
     def get_transitions_iterator(self, batch_size: int) -> Iterator:
         """
@@ -316,6 +348,59 @@ class RolloutBuffer:
         @return: Iterator: An iterator with each item containing given batch_size of items.
         """
         return self.c_rollout_buffer.get_transitions_iterator(batch_size)
+
+    def _gather_with_process_group(
+        self, input_tensor: pytorch.Tensor
+    ) -> Union[List, List[pytorch.Tensor]]:
+        """
+        Performs gather process on master process synchronously. This is a blocking call and waits for all processes
+        to complete gather until the specified timeout during class initialization.
+        @param input_tensor: pytorch.Tensor: The input tensor for gather. This is the tensor received at master
+            process.
+        @return: Union[List, List[pytorch.Tensor]]: Either empty list; for non-master processes, and list of tensors
+            for master process with gathered and unbinded tensors collected from each process except itself.
+        """
+        if self.process_group is None:
+            raise RuntimeError(
+                "Encountered invalid process group! "
+                "Is the method being called in distributed setting?"
+            )
+        rank = self.process_group.rank()
+        world_size = self.process_group.size()
+        # Define gather options.
+        gather_options = pytorch_distributed.GatherOptions()
+        gather_options.rootRank = self.master_process_rank
+        # Encapsulate input tensor into a list.
+        input_tensor_ = [input_tensor]
+        # Result list initialization.
+        output_tensors_to_extend = list()
+        # Prepare output tensors to collect results.
+        if rank != self.master_process_rank:
+            # Output tensors as None for output at non-master processes.
+            output_tensors = list()
+        else:
+            # Initialize zero tensors to be filled with gathered tensors from each process.
+            output_tensors = [
+                [pytorch.zeros(input_tensor.size(), dtype=self.dtype)] * world_size
+            ]
+        # Call gather for with root as master process.
+        work_pointer = self.process_group.gather(
+            output_tensors=output_tensors,
+            input_tensors=input_tensor_,
+            opts=gather_options,
+        )
+        # Wait till timeout for gather to complete.
+        work_pointer.wait(self.work_timeout)
+        # Return empty list of not master process.
+        if rank != self.master_process_rank:
+            return output_tensors_to_extend
+        # Iterate output tensors collected and unbind and add them to result list for master process.
+        for index in range(world_size):
+            if index != rank:
+                output_tensors_to_extend.extend(
+                    pytorch.unbind(output_tensors[0][index])
+                )
+        return output_tensors_to_extend
 
     def __len__(self) -> int:
         """
