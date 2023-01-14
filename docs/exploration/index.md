@@ -9,5 +9,5 @@ Currently following exploration tools have been implemented:
 
 | Exploration Tool            | Description                                                                                                                                                                   | Keyword             |
 |-----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------|
-| `GaussianNoise`             | The tool to add gaussian noise to the desired output. Implemented as rlpack.exploration.gaussian_noise_exploration.GaussianNoise.                                             | `"gaussian_noise"`  |
+| `GaussianNoise`             | The tool to add gaussian noise to the desired output. Implemented as rlpack.exploration.gaussian_noise_exploration.GaussianNoiseExploration.                                  | `"gaussian_noise"`  |
 | `StateDependentExploration` | The tool to add SDE noise to actions. Note that this is a learnable exploration tool. Implemented as rlpack.exploration.state_dependent_exploration.StateDependentExploration | `"state_dependent"` |
