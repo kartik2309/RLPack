@@ -157,19 +157,21 @@ class A2C(ActorCriticAgent, ABC):
             clip_grad_value=clip_grad_value,
             timeout=timeout,
         )
-        if not pytorch_distributed.is_initialized():
-            raise AgentError("A2C can only be launched in distributed setting!")
 
     def _set_attribute_custom_values(self) -> None:
         """
         Overriding abstract method to implement the setting of attributes with custom values.
         """
+        if not pytorch_distributed.is_initialized():
+            raise AgentError("A2C can only be launched in distributed setting!")
         # The process rank for A2C worker.
         self._process_rank = pytorch_distributed.get_rank()
         # The world size for A2C workers.
         self._world_size = pytorch_distributed.get_world_size()
         # The process group to current World.
         self._process_group = pytorch_distributed.group.WORLD
+        # Disable policy output exploration for all processes.
+        self._policy_outputs_exploration = False
         # Disable gradient processing, optimizer step and lr scheduler step for all workers.
         if self._process_rank != self._master_process_rank:
             # The flag indicating weather to perform forward pass. Initialized to False for workers.
@@ -198,9 +200,9 @@ class A2C(ActorCriticAgent, ABC):
         Method to extend the transitions with gather for master process. Here the method is implemented by calling
         RolloutBuffer.extend_transitions method.
         """
+        self._rollout_buffer.extend_transitions()
         work_pointer = self._process_group.barrier()
         work_pointer.wait(self.timeout)
-        self._rollout_buffer.extend_transitions()
 
     @pytorch.no_grad()
     def _share_gradients(self) -> None:
@@ -217,8 +219,6 @@ class A2C(ActorCriticAgent, ABC):
         operation. This method is to be overriden by appropriate class. Here the method broadcasts the parameters
         from master to process to all other processes.
         """
-        work_pointer = self._process_group.barrier()
-        work_pointer.wait(self.timeout)
         for param in self.policy_model.parameters():
             work_pointer = self._process_group.broadcast(
                 tensor=param, root=self._master_process_rank

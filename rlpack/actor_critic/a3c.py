@@ -158,13 +158,13 @@ class A3C(ActorCriticAgent, ABC):
             clip_grad_value=clip_grad_value,
             timeout=timeout,
         )
-        if not pytorch_distributed.is_initialized():
-            raise AgentError("A3C can only be launched in distributed setting!")
 
     def _set_attribute_custom_values(self) -> None:
         """
         Overriding abstract method to implement the setting of attributes with custom values.
         """
+        if not pytorch_distributed.is_initialized():
+            raise AgentError("A3C can only be launched in distributed setting!")
         # The process rank for A3C worker.
         self._process_rank = pytorch_distributed.get_rank()
         # The world size for A3C workers.

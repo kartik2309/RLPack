@@ -242,10 +242,9 @@ class ActorCriticAgent(Agent):
         self._take_optimizer_step = True
         ## The flag indicating weather to take LR scheduler step. It is dangerous to modify this externally. @I{# noqa: E266}
         self._take_lr_scheduler_step = True
-        # Call to set
+        # Call to set attribute method.
         self._set_attribute_custom_values()
-        ## The rollout buffer to be used for agent to store necessary outputs. @I{# noqa: E266}
-        ## An instance of rlpack._C.rollout_buffer.RolloutBuffer @I{# noqa: E266}
+        ## The rollout buffer to be used for agent to store necessary outputs. An instance of rlpack._C.rollout_buffer.RolloutBuffer @I{# noqa: E266}
         self._rollout_buffer = RolloutBuffer(
             buffer_size=self._get_rollout_buffer_size(
                 training_frequency=training_frequency,
@@ -255,6 +254,7 @@ class ActorCriticAgent(Agent):
             dtype=dtype,
             process_group=self._process_group,
             work_timeout=timeout,
+            master_process_rank=self._master_process_rank,
         )
 
     def train(
@@ -300,6 +300,8 @@ class ActorCriticAgent(Agent):
         self.step_counter += 1
         # Run in PyTorch No-Grad.
         with pytorch.no_grad():
+            # Move state_current to correct device.
+            state_current = state_current.to(self.device)
             # Apply normalization to state current if required
             if (
                 self._state_norm_code in self.apply_norm_to
