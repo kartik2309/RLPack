@@ -12,7 +12,7 @@
 #include <cmath>
 #include <random>
 
-#include "../../utils/ops/arg_mergesort.cuh"
+#include "ops/arg_mergesort.cuh"
 
 /*!
  * @addtogroup binaries_group binaries

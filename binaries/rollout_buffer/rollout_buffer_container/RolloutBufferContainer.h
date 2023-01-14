@@ -6,8 +6,9 @@
 #define RLPACK_BINARIES_ROLLOUT_BUFFER_ROLLOUT_BUFFER_CONTAINER_ROLLOUTBUFFERCONTAINER_H_
 
 #include <torch/extension.h>
+#include <omp.h>
 
-#include "../../utils/maps.h"
+#include "../../utils/UtilityMapping.hpp"
 #include "../rollout_buffer_data/RolloutBufferData.h"
 
 /*!
@@ -20,6 +21,7 @@
  * necessary classes to provide necessary functionalities and bindings to provide exposure to Python.
  * @{
  */
+ #define OMP_PARALLELISM_THRESHOLD 8192
 /*!
   * @brief The class RolloutBufferContainer is the main backend container that is used in C_RolloutBuffer. This container stores
   * the data and tracks the references with RolloutBufferData objects to keep transitions and policy outputs seperated. It
@@ -54,8 +56,8 @@ public:
     std::vector<torch::Tensor> &get_entropies_reference();
     torch::TensorOptions get_tensor_options();
     [[nodiscard]] int64_t get_buffer_size() const;
-    size_t size_transitions();
-    size_t size_policy_outputs();
+    [[nodiscard]] uint64_t size_transitions() const;
+    [[nodiscard]] uint64_t size_policy_outputs() const;
     void extend_transitions(std::map<std::string, std::vector<torch::Tensor>> &extensionMap);
 
 private:
@@ -83,10 +85,18 @@ private:
     std::vector<torch::Tensor> stateNextValues_;
     //! The vector of entropies of current distribution.
     std::vector<torch::Tensor> entropies_;
+    //! The vector of tensors to pass reference.
+    std::vector<torch::Tensor> reference_;
     //! The vector of RolloutBufferData pointers for transition data
     std::vector<RolloutBufferData> transitionData_;
     //! The vector of RolloutBufferData pointers for policy outputs
     std::vector<RolloutBufferData> policyOutputData_;
+    //! The counter to track the insertions for transitions.
+    uint64_t transitionCounter_;
+    //! The counter to track the insertions for policy outputs..
+    uint64_t policyOutputCounter_;
+
+    void fill_reference_vector_(std::vector<torch::Tensor> &source, uint64_t size);
 };
 /*!
  * @} @I{ // End group rollout_buffer_group }

@@ -3,7 +3,7 @@ project(C_GradAccumulator CXX)
 # ----------------------------------- Includes for CMAKE ----------------------------------- #
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
-
+include_directories(${CMAKE_SOURCE_DIR}/binaries/utils)
 # ----------------------------- Set Global Variables for CMAKE ----------------------------- #
 set(CMAKE_CXX_STANDARD 17)
 if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.0)
@@ -36,7 +36,7 @@ pybind11_add_module(
         C_GradAccumulator
         C_GradAccumulator.cpp
         C_GradAccumulator.h
-        ${CMAKE_SOURCE_DIR}/binaries/stl_bindings
+        ${CMAKE_SOURCE_DIR}/binaries/utils/opaque_containers/TensorMap.hpp
         Binding.cpp
 )
 

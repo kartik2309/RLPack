@@ -13,22 +13,32 @@ RolloutBufferContainer::RolloutBufferContainer(int64_t bufferSize, std::string &
      * @param device: The device on which PyTorch tensors are to be processed.
      * @param dtype: The datatype which is to be used for PyTorch tensors.
      */
+    // Initialize private variables.
     bufferSize_ = bufferSize;
-    device_ = Maps::deviceMap[device];
-    dtype_ = Maps::dTypeMap[dtype];
+    device_ = UtilityMapping::deviceMap[device];
+    dtype_ = UtilityMapping::dTypeMap[dtype];
     tensorOptions_ = torch::TensorOptions().device(device_).dtype(dtype_);
-    rewards_.reserve(bufferSize_);
-    statesCurrent_.reserve(bufferSize_);
-    statesNext_.reserve(bufferSize_);
-    dones_.reserve(bufferSize_);
-    actionLogProbabilities_.reserve(bufferSize_);
-    stateCurrentValues_.reserve(bufferSize_);
-    stateNextValues_.reserve(bufferSize_);
-    entropies_.reserve(bufferSize_);
-    transitionData_.reserve(bufferSize_);
-    policyOutputData_.reserve(bufferSize);
+    // Initialize all vectors.
+    rewards_ = std::vector<torch::Tensor>(bufferSize_);
+    statesCurrent_ = std::vector<torch::Tensor>(bufferSize_);
+    statesNext_ = std::vector<torch::Tensor>(bufferSize_);
+    dones_ = std::vector<torch::Tensor>(bufferSize_);
+    actionLogProbabilities_ = std::vector<torch::Tensor>(bufferSize_);
+    stateCurrentValues_ = std::vector<torch::Tensor>(bufferSize_);
+    stateNextValues_ = std::vector<torch::Tensor>(bufferSize_);
+    entropies_ = std::vector<torch::Tensor>(bufferSize_);
+    transitionData_ = std::vector<RolloutBufferData>(bufferSize_);
+    policyOutputData_ = std::vector<RolloutBufferData>(bufferSize_);
+    // Initialize all counters.
+    transitionCounter_ = 0;
+    policyOutputCounter_ = 0;
+    // Reserve memory for reference vector.
+    reference_.reserve(bufferSize);
 }
 
+/*!
+ * Default destructor for RolloutBufferContainer
+ */
 RolloutBufferContainer::~RolloutBufferContainer() = default;
 
 void RolloutBufferContainer::insert_transition(torch::Tensor &stateCurrent,
@@ -47,15 +57,16 @@ void RolloutBufferContainer::insert_transition(torch::Tensor &stateCurrent,
      * rlpack.actor_critic.base.ActorCriticAgent
      */
     auto transitionData = RolloutBufferData();
-    statesCurrent_.push_back(stateCurrent);
-    statesNext_.push_back(stateNext);
-    rewards_.push_back(reward);
-    dones_.push_back(done);
-    transitionData.stateCurrent = &statesCurrent_.back();
-    transitionData.stateNext = &statesNext_.back();
-    transitionData.reward = &rewards_.back();
-    transitionData.done = &dones_.back();
-    transitionData_.push_back(transitionData);
+    statesCurrent_[transitionCounter_] = stateCurrent;
+    statesNext_[transitionCounter_] = stateNext;
+    rewards_[transitionCounter_] = reward;
+    dones_[transitionCounter_] = done;
+    transitionData.stateCurrent = &statesCurrent_[transitionCounter_];
+    transitionData.stateNext = &statesNext_[transitionCounter_];
+    transitionData.reward = &rewards_[transitionCounter_];
+    transitionData.done = &dones_[transitionCounter_];
+    transitionData_[transitionCounter_] = transitionData;
+    transitionCounter_ += 1;
 }
 
 void RolloutBufferContainer::insert_policy_output(torch::Tensor &actionLogProbability,
@@ -74,37 +85,32 @@ void RolloutBufferContainer::insert_policy_output(torch::Tensor &actionLogProbab
      * rlpack.actor_critic.base.ActorCriticAgent
      */
     auto policyOutputData = RolloutBufferData();
-    actionLogProbabilities_.push_back(actionLogProbability);
-    stateCurrentValues_.push_back(stateCurrentValue);
-    stateNextValues_.push_back(stateNextValue);
-    entropies_.push_back(entropy);
-    policyOutputData.actionLogProbability = &actionLogProbabilities_.back();
-    policyOutputData.stateCurrentValue = &stateCurrentValues_.back();
-    policyOutputData.stateCurrentValue = &stateNextValues_.back();
-    policyOutputData.entropy = &entropies_.back();
-    policyOutputData_.push_back(policyOutputData);
+    actionLogProbabilities_[policyOutputCounter_] = actionLogProbability;
+    stateCurrentValues_[policyOutputCounter_] = stateCurrentValue;
+    stateNextValues_[policyOutputCounter_] = stateNextValue;
+    entropies_[policyOutputCounter_] = entropy;
+    policyOutputData.actionLogProbability = &actionLogProbabilities_[policyOutputCounter_];
+    policyOutputData.stateCurrentValue = &stateCurrentValues_[policyOutputCounter_];
+    policyOutputData.stateCurrentValue = &stateNextValues_[policyOutputCounter_];
+    policyOutputData.entropy = &entropies_[policyOutputCounter_];
+    policyOutputData_[policyOutputCounter_] = policyOutputData;
+    policyOutputCounter_ += 1;
 }
 
 void RolloutBufferContainer::clear_transitions() {
     /*!
-     * Clears the transition vectors.
+     * Clears the transition vectors. Doesn't clear the vector but changes the index causing insertion
+     * operations to overwrite the previous values.
      */
-    rewards_.clear();
-    statesCurrent_.clear();
-    statesNext_.clear();
-    dones_.clear();
-    transitionData_.clear();
+    transitionCounter_ = 0;
 }
 
 void RolloutBufferContainer::clear_policy_outputs() {
     /*!
-     * Clears the policy output vectors
+     * Clears the policy output vectors. Doesn't clear the vector but changes the index causing insertion
+     * operations to overwrite the previous values.
      */
-    actionLogProbabilities_.clear();
-    stateCurrentValues_.clear();
-    stateNextValues_.clear();
-    entropies_.clear();
-    policyOutputData_.clear();
+    policyOutputCounter_ = 0;
 }
 
 RolloutBufferData RolloutBufferContainer::transition_at(int64_t index) {
@@ -114,6 +120,9 @@ RolloutBufferData RolloutBufferContainer::transition_at(int64_t index) {
      * @param index : The index of the transitions buffer.
      * @return An instance of RolloutBufferData with correct instances set.
      */
+    if (index > transitionCounter_) {
+        throw std::out_of_range("Given index is larger than the current size of RolloutBufferContainer!");
+    }
     auto data = transitionData_[index];
     return data;
 }
@@ -125,6 +134,9 @@ RolloutBufferData RolloutBufferContainer::policy_output_at(int64_t index) {
      * @param index : The index of the policy output buffer.
      * @return An instance of RolloutBufferData with correct instances set.
      */
+    if (index > policyOutputCounter_) {
+        throw std::out_of_range("Given index is larger than the current size of RolloutBufferContainer!");
+    }
     auto data = policyOutputData_[index];
     return data;
 }
@@ -135,7 +147,8 @@ std::vector<torch::Tensor> &RolloutBufferContainer::get_states_current_reference
      * 
      * @return The reference to `states_current`
      */
-    return statesCurrent_;
+    fill_reference_vector_(statesCurrent_, size_transitions());
+    return reference_;
 }
 
 std::vector<torch::Tensor> &RolloutBufferContainer::get_states_next_reference() {
@@ -144,7 +157,8 @@ std::vector<torch::Tensor> &RolloutBufferContainer::get_states_next_reference() 
      *
      * @return The reference to `states_next`
      */
-    return statesNext_;
+    fill_reference_vector_(statesNext_, size_transitions());
+    return reference_;
 }
 
 std::vector<torch::Tensor> &RolloutBufferContainer::get_rewards_reference() {
@@ -153,7 +167,8 @@ std::vector<torch::Tensor> &RolloutBufferContainer::get_rewards_reference() {
      * 
      * @return The reference to `rewards`
      */
-    return rewards_;
+    fill_reference_vector_(rewards_, size_transitions());
+    return reference_;
 }
 
 std::vector<torch::Tensor> &RolloutBufferContainer::get_dones_reference() {
@@ -162,7 +177,8 @@ std::vector<torch::Tensor> &RolloutBufferContainer::get_dones_reference() {
      * 
      * @return The reference to `dones`
      */
-    return dones_;
+    fill_reference_vector_(dones_, size_transitions());
+    return reference_;
 }
 
 std::vector<torch::Tensor> &RolloutBufferContainer::get_action_log_probabilities_reference() {
@@ -171,7 +187,8 @@ std::vector<torch::Tensor> &RolloutBufferContainer::get_action_log_probabilities
      * 
      * @return The reference to `action_log_probabilities`
      */
-    return actionLogProbabilities_;
+    fill_reference_vector_(actionLogProbabilities_, size_policy_outputs());
+    return reference_;
 }
 
 std::vector<torch::Tensor> &RolloutBufferContainer::get_state_current_values_reference() {
@@ -180,7 +197,8 @@ std::vector<torch::Tensor> &RolloutBufferContainer::get_state_current_values_ref
      * 
      * @return The reference to `state_current_values`
      */
-    return stateCurrentValues_;
+    fill_reference_vector_(stateCurrentValues_, size_policy_outputs());
+    return reference_;
 }
 
 std::vector<torch::Tensor> &RolloutBufferContainer::get_state_next_values_reference() {
@@ -189,7 +207,8 @@ std::vector<torch::Tensor> &RolloutBufferContainer::get_state_next_values_refere
      *
      * @return The reference to `state_next_values`
      */
-    return stateNextValues_;
+    fill_reference_vector_(stateNextValues_, size_policy_outputs());
+    return reference_;
 }
 
 std::vector<torch::Tensor> &RolloutBufferContainer::get_entropies_reference() {
@@ -198,7 +217,8 @@ std::vector<torch::Tensor> &RolloutBufferContainer::get_entropies_reference() {
      * 
      * @return The reference to `entropies`
      */
-    return entropies_;
+    fill_reference_vector_(entropies_, size_policy_outputs());
+    return reference_;
 }
 torch::TensorOptions RolloutBufferContainer::get_tensor_options() {
     /*!
@@ -218,22 +238,22 @@ int64_t RolloutBufferContainer::get_buffer_size() const {
     return bufferSize_;
 }
 
-size_t RolloutBufferContainer::size_transitions() {
+uint64_t RolloutBufferContainer::size_transitions() const {
     /*!
      * The size of transitions buffer.
      *
      * @return The transitions buffer size.
      */
-    return transitionData_.size();
+    return transitionCounter_;
 }
 
-size_t RolloutBufferContainer::size_policy_outputs() {
+uint64_t RolloutBufferContainer::size_policy_outputs() const {
     /*!
      * The size of policy outputs buffer.
      *
      * @return The policy outputs' buffer size.
      */
-    return policyOutputData_.size();
+    return policyOutputCounter_;
 }
 
 void RolloutBufferContainer::extend_transitions(std::map<std::string, std::vector<torch::Tensor>> &extensionMap) {
@@ -247,10 +267,38 @@ void RolloutBufferContainer::extend_transitions(std::map<std::string, std::vecto
      *      - rewards
      *      - dones
      */
-    for (uint64_t index = 0; index < extensionMap[DONES].size(); index++) {
-        insert_transition(extensionMap[STATES_CURRENT][index],
-                          extensionMap[STATES_NEXT][index],
-                          extensionMap[REWARDS][index],
-                          extensionMap[DONES][index]);
+    auto additionalSize = extensionMap[DONES].size();
+    auto enableParallelism = OMP_PARALLELISM_THRESHOLD < additionalSize;
+    {
+        // Parallel loop to extend transitions.
+#pragma omp parallel for if (enableParallelism) default(none) \
+        firstprivate(additionalSize)                                  \
+                shared(extensionMap, transitionCounter_, statesCurrent_, statesNext_, rewards_, dones_, transitionData_)
+        for (uint64_t index = 0; index < additionalSize; index++) {
+            auto transitionData = RolloutBufferData();
+            statesCurrent_[transitionCounter_ + index] = extensionMap[STATES_CURRENT][index];
+            statesNext_[transitionCounter_ + index] = extensionMap[STATES_NEXT][index];
+            rewards_[transitionCounter_ + index] = extensionMap[REWARDS][index];
+            dones_[transitionCounter_ + index] = extensionMap[DONES][index];
+            transitionData.stateCurrent = &statesCurrent_[index];
+            transitionData.stateNext = &statesNext_[index];
+            transitionData.reward = &rewards_[index];
+            transitionData.done = &dones_[index];
+            transitionData_[transitionCounter_ + index] = transitionData;
+        }
+    }
+    transitionCounter_ += additionalSize;
+}
+
+void RolloutBufferContainer::fill_reference_vector_(std::vector<torch::Tensor> &source, uint64_t size) {
+    /*!
+     * Private method to fill the reference container to obtain the requested references of correct size.
+     *
+     * @param source: The reference to input source vector.
+     * @param size: The current size of buffer (transition or policy output).
+     */
+    reference_.clear();
+    for (uint64_t index = 0; index != size; index++) {
+        reference_.push_back(source[index]);
     }
 }

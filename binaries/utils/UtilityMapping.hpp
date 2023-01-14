@@ -2,8 +2,8 @@
 // Created by Kartik Rajeshwaran on 2022-12-26.
 //
 
-#ifndef RLPACK_BINARIES_UTILS_MAPS_H_
-#define RLPACK_BINARIES_UTILS_MAPS_H_
+#ifndef RLPACK_BINARIES_UTILS_UTILITYMAPPING_HPP_
+#define RLPACK_BINARIES_UTILS_UTILITYMAPPING_HPP_
 
 #include <torch/extension.h>
 
@@ -16,10 +16,10 @@
  * @brief Utils Module provides generic utilities to be used by all binaries in rlpack.
  * @{
  */
- /*!
-  * @brief Maps class provides generic utility mappings for strings with various objects.
+/*!
+  * @brief UtilityMapping class provides generic utility mappings for strings with various objects.
   */
-class Maps {
+class UtilityMapping {
 public:
     //! The map between std::string and torch::DeviceType; mapping the device name in string to DeviceType.
     inline static std::map<std::string, torch::DeviceType> deviceMap{
@@ -37,4 +37,4 @@ public:
  * @} @I{ // End binary_group }
  */
 
-#endif//RLPACK_BINARIES_UTILS_MAPS_H_
+#endif//RLPACK_BINARIES_UTILS_UTILITYMAPPING_HPP_

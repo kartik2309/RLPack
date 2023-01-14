@@ -3,26 +3,23 @@
 //
 
 
-#include "../stl_bindings/StlBindings.h"
 #include "C_RolloutBuffer.h"
+#include "opaque_containers/TensorMap.hpp"
+#include "opaque_containers/TensorVectorMap.hpp"
 
 PYBIND11_MODULE(C_RolloutBuffer, m) {
-    /*!
+    /*
      * Python bindings for C_RolloutBuffer. Only relevant public methods are exposed to Python.
      */
     m.doc() = "Module to provide Python binding for RolloutBuffer class";
     pybind11::class_<C_RolloutBuffer>(m, "C_RolloutBuffer")
             .def(pybind11::init<int64_t,
                                 std::string &,
-                                std::string &,
-                                std::map<std::string, c10::intrusive_ptr<c10d::ProcessGroup>> &,
-                                const std::chrono::duration<int32_t> &>(),
+                                std::string &>(),
                  "Class constructor for C_RolloutBuffer.",
                  pybind11::arg("buffer_size"),
                  pybind11::arg("device"),
-                 pybind11::arg("dtype"),
-                 pybind11::arg("process_group_map"),
-                 pybind11::arg("work_timeout"))
+                 pybind11::arg("dtype"))
             .def("insert_transition",
                  &C_RolloutBuffer::insert_transition,
                  pybind11::arg("input_map"))
@@ -103,17 +100,17 @@ PYBIND11_MODULE(C_RolloutBuffer, m) {
                  pybind11::return_value_policy::reference)
             .def("extend_transitions",
                  &C_RolloutBuffer::extend_transitions)
-            .def("get_transitions_iterator",
-                 [](C_RolloutBuffer &rolloutBuffer, int64_t batchSize){
+            .def(
+                    "get_transitions_iterator",
+                    [](C_RolloutBuffer &rolloutBuffer, int64_t batchSize) {
                         rolloutBuffer.set_transitions_iterator(batchSize);
                         return pybind11::make_iterator(rolloutBuffer.get_dataloader_reference()->begin(),
                                                        rolloutBuffer.get_dataloader_reference()->end());
                     },
                     pybind11::arg("batch_size"),
-                    pybind11::keep_alive<0, 1>()
-                 );
-
-    // Bind relevant StlBinding objects
-    pybind11::bind_map<std::map<std::string, torch::Tensor>>(m, "TensorMap");
-    pybind11::bind_map<std::map<std::string, c10::intrusive_ptr<c10d::ProcessGroup>>>(m, "ProcessGroupMap");
+                    pybind11::keep_alive<0, 1>());
+    // Bind TensorMap
+    bind_tensor_map(m);
+    // Bind TensorVectorMap
+    bind_tensor_vector_map(m);
 }

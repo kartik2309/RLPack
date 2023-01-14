@@ -6,9 +6,7 @@
 
 C_RolloutBuffer::C_RolloutBuffer(int64_t bufferSize,
                                  std::string& device,
-                                 std::string& dtype,
-                                 std::map<std::string, c10::intrusive_ptr<c10d::ProcessGroup>>& processGroupMap,
-                                 const std::chrono::duration<int32_t>& workTimeoutDuration) {
+                                 std::string& dtype) {
     /*!
      * Class constructor for C_RolloutBuffer. This will allocate necessary memory as per input, and set relevant
      * attributes. This method is C++ backend for rlpack._C.rollout_buffer.RolloutBuffer.__init__.
@@ -17,28 +15,16 @@ C_RolloutBuffer::C_RolloutBuffer(int64_t bufferSize,
      * @param bufferSize: The buffer size to be used.
      * @param device: The device on which PyTorch tensors are to be processed.
      * @param dtype: The datatype which is to be used for PyTorch tensors.
-     * @param processGroupMap: The map of process group's intrusive pointer from Python to perform collective operations
-     *  if required. If the RolloutBuffer is not being used in distributed setting, this can be passed as a map of
-     *  nullptr like: {{"process_group", nullptr}}. This map must contain the ProcessGroup with the key `process_group`. A map
-     *  is being used to take `TensorMap`  objected which is opaque and binded to avoid casting and easy pass by reference.
-     * @param workTimeoutDuration: If a valid `processGroupMap` is being passed, this argument is relevant and indicates
-     *  the work timeout duration in minutes. The work instrusive pointer explicitly calls wait to ensure synchronization.
-     *  Default is set to 30 seconds.
      */
-    processGroup_ = processGroupMap["process_group"];
-    if (processGroup_.defined()) {
-        bufferSize *= processGroup_->getSize();
-    }
     rolloutBufferContainer_ = new RolloutBufferContainer(bufferSize, device, dtype);
     tensorOptions_ = rolloutBufferContainer_->get_tensor_options();
-    workTimeoutDuration_ = std::chrono::duration_cast<std::chrono::milliseconds>(workTimeoutDuration);
 }
 
 
 C_RolloutBuffer::~C_RolloutBuffer() {
     /*!
     * Default destructor C_RolloutBuffer. This deletes the rolloutBufferContainer_
-     * and deallocates the memory.
+    * and deallocates the memory.
     */
     delete rolloutBufferContainer_;
 }
@@ -425,25 +411,16 @@ size_t C_RolloutBuffer::size_policy_outputs() {
     return rolloutBufferContainer_->size_policy_outputs();
 }
 
-void C_RolloutBuffer::extend_transitions() {
+void C_RolloutBuffer::extend_transitions(std::map<std::string, std::vector<torch::Tensor>>& extensionMap) {
     /*!
      * This method extends the transitions by performing gather for transition quantities. This method will throw a
-     * runtime error if process group is not defined. This method is C++ backend for
-     * rlpack._C.rollout_buffer.RolloutBuffer.extend_transitions.
+     * runtime error if process group is not defined in Python. If extension map is empty, returns immediately. This
+     * method is C++ backend for rlpack._C.rollout_buffer.RolloutBuffer.extend_transitions.
      */
-    if (not processGroup_.defined()) {
-        throw std::runtime_error("Encountered nullptr for process group!");
-    }
-    auto statesCurrentGathered = gather_with_process_group_(get_stacked_states_current()[STATES_CURRENT]);
-    auto statesNextGathered = gather_with_process_group_(get_stacked_states_next()[STATES_NEXT]);
-    auto rewardsGathered = gather_with_process_group_(get_stacked_rewards()[REWARDS]);
-    auto donesGathered = gather_with_process_group_(get_stacked_dones()[DONES]);
-    // Directly create the extension map.
-    std::map<std::string, std::vector<torch::Tensor>> extensionMap = {{STATES_CURRENT, statesCurrentGathered},
-                                                                      {STATES_NEXT, statesNextGathered},
-                                                                      {REWARDS, rewardsGathered},
-                                                                      {DONES, donesGathered}};
-    if (extensionMap[STATES_CURRENT].empty()) {
+    if (extensionMap[STATES_CURRENT].empty() or
+        extensionMap[STATES_NEXT].empty() or
+        extensionMap[REWARDS].empty() or
+        extensionMap[DONES].empty()) {
         return;
     }
     rolloutBufferContainer_->extend_transitions(extensionMap);
@@ -470,54 +447,4 @@ C_RolloutBuffer::DataLoader& C_RolloutBuffer::get_dataloader_reference() {
      * pybind11.
      */
     return dataloader_;
-}
-
-std::vector<torch::Tensor> C_RolloutBuffer::gather_with_process_group_(torch::Tensor& inputTensor) {
-    /*!
-     * Performs gather with the initialized process group. This method will throw a runtime error
-     * if process group is not defined.
-     *
-     * @param inputTensor : The input tensor which is to be used for input in gather. This tensor is broadcasted to
-     *  other processes in the group and receives the same tensor instances from other groups.
-     * @return : A vector of tensors is returned from groups. The vector will have tensors from other processes only and will
-     * be unbinded.
-     */
-    if (not processGroup_.defined()) {
-        throw std::runtime_error("Encountered nullptr for process group!");
-    }
-    // Create result vector.
-    std::vector<torch::Tensor> gatherUnbindedTensors;
-    // Get current world size and rank.
-    auto worldSize = processGroup_->getSize();
-    auto rank = processGroup_->getRank();
-    // Prepare input tensors for gather operation.
-    std::vector<at::Tensor> inputTensors = {inputTensor};
-    // Define output tensor for gather operation.
-    std::vector<std::vector<at::Tensor>> outputTensors;
-    // Reserve memory in vector for master process.
-    gatherUnbindedTensors.reserve(rolloutBufferContainer_->get_buffer_size());
-    // Initialize output vector with size 1.
-    outputTensors = std::vector<std::vector<at::Tensor>>(1);
-    // Prepare placeholder tensor for outputs in gather in master process.
-    auto placeHolderZeroTensor = torch::zeros(inputTensor.sizes(), tensorOptions_);
-    // Initialize output vector with world size at zeroth index.
-    outputTensors[0] = std::vector<torch::Tensor>(worldSize);
-    // Place placeholder tensors in output vector.
-    for (uint64_t index = 0; index < worldSize; index++) {
-        outputTensors[0][index] = placeHolderZeroTensor;
-    }
-    // Call gather in process group.
-    auto workPointer = processGroup_->allgather(outputTensors, inputTensors);
-    // Use wait clause to force synchronization and wait for all processes to finish or raise an error.
-    workPointer->wait(workTimeoutDuration_);
-    // Fill the result vector with tensors for master process.
-    for (uint64_t index = 0; index < worldSize; index++) {
-        if (index != rank) {
-            auto unbindedVector = torch::unbind(outputTensors[0][index]);
-            for (uint64_t unbiddenIndex = 0; unbiddenIndex < unbindedVector.size(); unbiddenIndex++) {
-                gatherUnbindedTensors.push_back(unbindedVector[unbiddenIndex]);
-            }
-        }
-    }
-    return gatherUnbindedTensors;
 }

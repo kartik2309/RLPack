@@ -2,10 +2,8 @@
 // Created by Kartik Rajeshwaran on 2022-12-14.
 //
 
-
-#include "../stl_bindings/StlBindings.h"
 #include "C_GradAccumulator.h"
-
+#include "opaque_containers/TensorMap.hpp"
 
 /*!
  * @addtogroup binaries_group binaries
@@ -57,9 +55,8 @@ PYBIND11_MODULE(C_GradAccumulator, m) {
                  &C_GradAccumulator::size,
                  "Method to retrieve the size of the C_GradAccumulator i.e. the number of accumulated parameters")
             .def("clear", &C_GradAccumulator::clear, "Method to clear accumulated gradients.");
-
-    // Bind relevant StlBinding objects
-    pybind11::bind_map<std::map<std::string, torch::Tensor>>(m, "TensorMap");
+    // Bind TensorMap
+    bind_tensor_map(m);
 }
 /*!
  * @} @I{ // End group grad_accumulator_group }

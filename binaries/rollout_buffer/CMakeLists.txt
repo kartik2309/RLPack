@@ -3,6 +3,7 @@ project(C_RolloutBuffer CXX)
 # ----------------------------------- Includes for CMAKE ----------------------------------- #
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
+include_directories(${CMAKE_SOURCE_DIR}/binaries/utils)
 # ----------------------------- Set Global Variables for CMAKE ----------------------------- #
 set(CMAKE_CXX_STANDARD 17)
 if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.0)
@@ -43,7 +44,9 @@ pybind11_add_module(
         rollout_buffer_batch_transform/RolloutBufferBatchTransform.h
         C_RolloutBuffer.cpp
         C_RolloutBuffer.h
-        ${CMAKE_SOURCE_DIR}/binaries/utils/maps.h
+        ${CMAKE_SOURCE_DIR}/binaries/utils/UtilityMapping.hpp
+        ${CMAKE_SOURCE_DIR}/binaries/utils/opaque_containers/TensorMap.hpp
+        ${CMAKE_SOURCE_DIR}/binaries/utils/opaque_containers/TensorVectorMap.hpp
         Binding.cpp
 )
 

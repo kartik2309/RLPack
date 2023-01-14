@@ -5,8 +5,6 @@
 #ifndef RLPACK_BINARIES_ROLLOUT_BUFFER_CROLLOUTBUFFER_H_
 #define RLPACK_BINARIES_ROLLOUT_BUFFER_CROLLOUTBUFFER_H_
 
-#include <torch/csrc/distributed/c10d/ProcessGroup.hpp>
-
 #include "rollout_buffer_batch/RolloutBufferBatch.h"
 #include "rollout_buffer_batch_transform/RolloutBufferBatchTransform.h"
 #include "rollout_buffer_container/RolloutBufferContainer.h"
@@ -21,10 +19,6 @@
  * necessary classes to provide necessary functionalities and bindings to provide exposure to Python.
  * @{
  */
-
-//! The macro to define All-gather work timeout in milliseconds.
-#define ALL_GATHER_WORK_TIMEOUT 900000
-
 /*!
   * @brief The class C_RolloutBuffer is the class that implements the C++ backend for Rollout Buffer. Tensors are moved
   * to C++ backend via PyBind11 and are kept opaque with std::map, hence, tensors are moved between Python and C++ only
@@ -42,9 +36,7 @@ public:
 
     C_RolloutBuffer(int64_t bufferSize,
                     std::string& device,
-                    std::string& dtype,
-                    std::map<std::string, c10::intrusive_ptr<c10d::ProcessGroup>>& processGroupMap,
-                    const std::chrono::duration<int32_t>& workTimeoutDuration);
+                    std::string& dtype);
     ~C_RolloutBuffer();
 
     void insert_transition(std::map<std::string, torch::Tensor>& inputMap);
@@ -71,7 +63,7 @@ public:
     void clear_policy_outputs();
     size_t size_transitions();
     size_t size_policy_outputs();
-    void extend_transitions();
+    void extend_transitions(std::map<std::string, std::vector<torch::Tensor>>& extensionMap);
     void set_transitions_iterator(int64_t batchSize);
     DataLoader& get_dataloader_reference();
 
@@ -80,14 +72,8 @@ private:
     RolloutBufferContainer* rolloutBufferContainer_;
     //! The tensor options to be used for PyTorch tensors; constructed with device_ and dtype_.
     torch::TensorOptions tensorOptions_;
-    //! The intrusive pointer to ProcessGroup in PyTorch.
-    c10::intrusive_ptr<c10d::ProcessGroup> processGroup_;
-    //! The chrono duration for work timeout to wait for all processes to complete `gather`.
-    std::chrono::milliseconds workTimeoutDuration_ = std::chrono::milliseconds(ALL_GATHER_WORK_TIMEOUT);
     //! The DataLoader object. This is initialized to nullptr until `set_transitions_iterator` is called.
     DataLoader dataloader_ = nullptr;
-
-    std::vector<torch::Tensor> gather_with_process_group_(torch::Tensor& inputTensor);
 };
 /*!
  * @} @I{ // End group rollout_buffer_group }
