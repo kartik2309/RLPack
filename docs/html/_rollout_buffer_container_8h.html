@@ -97,12 +97,14 @@ $(document).ready(function(){initNavTree('_rollout_buffer_container_8h.html','')
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Data Structures</a>  </div>
+<a href="#nested-classes">Data Structures</a> &#124;
+<a href="#define-members">Macros</a>  </div>
   <div class="headertitle"><div class="title">RolloutBufferContainer.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;torch/extension.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="maps_8h_source.html">../../utils/maps.h</a>&quot;</code><br />
+<code>#include &lt;omp.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="_utility_mapping_8hpp_source.html">../../utils/UtilityMapping.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_rollout_buffer_data_8h_source.html">../rollout_buffer_data/RolloutBufferData.h</a>&quot;</code><br />
 </div><div class="textblock"><div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Include dependency graph for RolloutBufferContainer.h:</div>
@@ -112,9 +114,10 @@ $(document).ready(function(){initNavTree('_rollout_buffer_container_8h.html','')
 <div class="center"><img src="_rollout_buffer_container_8h__incl.png" border="0" usemap="#a_2_users_2kartikrajeshwaran_2_library_2_cloud_storage_2_google_drive-kartikrajeshwaran_8kr_0dgmail_8com_2_my_01_drive_2_projects_2_python_2_r_l_pack_2binaries_2rollout__buffer_2rollout__buffer__container_2_rollout_buffer_container_8h" alt=""/></div>
 <map name="a_2_users_2kartikrajeshwaran_2_library_2_cloud_storage_2_google_drive-kartikrajeshwaran_8kr_0dgmail_8com_2_my_01_drive_2_projects_2_python_2_r_l_pack_2binaries_2rollout__buffer_2rollout__buffer__container_2_rollout_buffer_container_8h" id="a_2_users_2kartikrajeshwaran_2_library_2_cloud_storage_2_google_drive-kartikrajeshwaran_8kr_0dgmail_8com_2_my_01_drive_2_projects_2_python_2_r_l_pack_2binaries_2rollout__buffer_2rollout__buffer__container_2_rollout_buffer_container_8h">
 <area shape="rect" title=" " alt="" coords="5,5,273,104"/>
-<area shape="rect" title=" " alt="" coords="78,240,201,265"/>
-<area shape="rect" href="maps_8h.html" title=" " alt="" coords="81,159,198,185"/>
-<area shape="rect" href="_rollout_buffer_data_8h.html" title=" " alt="" coords="222,152,363,192"/>
+<area shape="rect" title=" " alt="" coords="151,240,274,265"/>
+<area shape="rect" title=" " alt="" coords="38,159,97,185"/>
+<area shape="rect" href="_utility_mapping_8hpp.html" title=" " alt="" coords="121,159,304,185"/>
+<area shape="rect" href="_rollout_buffer_data_8h.html" title=" " alt="" coords="329,152,470,192"/>
 </map>
 </div>
 </div><div class="textblock"><div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -141,6 +144,11 @@ Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_rollout_buffer_container.html">RolloutBufferContainer</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The class <a class="el" href="class_rollout_buffer_container.html" title="The class RolloutBufferContainer is the main backend container that is used in C_RolloutBuffer....">RolloutBufferContainer</a> is the main backend container that is used in <a class="el" href="class_c___rollout_buffer.html" title="The class C_RolloutBuffer is the class that implements the C++ backend for Rollout Buffer....">C_RolloutBuffer</a>. This container stores the data and tracks the references with <a class="el" href="class_rollout_buffer_data.html" title="The class RolloutBufferData keeps the reference of each tensor of RolloutBufferContainer and provides...">RolloutBufferData</a> objects to keep transitions and policy outputs seperated. It also provides necessary methods to manipulate the buffer and get its properties.  <a href="class_rollout_buffer_container.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:ga43dcd719ccaff538c3e99cdac8cd1720"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#ga43dcd719ccaff538c3e99cdac8cd1720">OMP_PARALLELISM_THRESHOLD</a>&#160;&#160;&#160;8192</td></tr>
+<tr class="separator:ga43dcd719ccaff538c3e99cdac8cd1720"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

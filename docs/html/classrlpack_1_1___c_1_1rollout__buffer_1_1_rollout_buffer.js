@@ -1,7 +1,8 @@
 var classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer =
 [
-    [ "__init__", "classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#a1bbfe14e6e15b7b5c7fdfb024f5fdaf2", null ],
+    [ "__init__", "classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#aac5e7f3f105ea644fc56e5c35e1bc2c1", null ],
     [ "__len__", "classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#a424ce6605361c7a49980d67933ba85a7", null ],
+    [ "_gather_with_process_group", "classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#ae5f57bc1392b476adfe0170d75f34e0a", null ],
     [ "clear_policy_outputs", "classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#ae2c1db5ce9ac71a1b1afdb35611417dc", null ],
     [ "clear_transitions", "classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#a5a997316c47608efc76b73cd313af5b1", null ],
     [ "compute_discounted_td_residuals", "classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#a7c26bf9259ab426c3aa964d2eafda5c3", null ],
@@ -29,5 +30,10 @@ var classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer =
     [ "size_transitions", "classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#a22bfb0ddbbf0ab8243235fd72d0844e2", null ],
     [ "transition_at", "classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#a5c5da53655a9f67e17d4ee5807c0ed3b", null ],
     [ "c_rollout_buffer", "classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#aad249c278aeb8134017473ccae7d2a8c", null ],
-    [ "map_of_tensors", "classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#a3f2e719c09d4b715f8bcf2afd194aab7", null ]
+    [ "device", "classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#ac6de538c48f41e017ee8e04c5fe0deed", null ],
+    [ "dtype", "classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#aa1211037028ea388ef5e149946542ac3", null ],
+    [ "map_of_tensors", "classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#a3f2e719c09d4b715f8bcf2afd194aab7", null ],
+    [ "master_process_rank", "classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#ac687e2d469dd5559d49d1bc6d563d1de", null ],
+    [ "process_group", "classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#aa9b0a284b5510d0b05a7d35de4241eda", null ],
+    [ "work_timeout", "classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#a41bce75b60e65ed849c55b6919187324", null ]
 ];

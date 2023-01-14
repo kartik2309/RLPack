@@ -125,6 +125,9 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a66dad56ae50b14da87ac3ab5925f13b9"><td class="memItemLeft" align="right" valign="top">Dict[str, Any]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1simulator_1_1_simulator.html#a66dad56ae50b14da87ac3ab5925f13b9">prepare_config_to_save</a> (Dict[str, Any] <a class="el" href="classrlpack_1_1simulator_1_1_simulator.html#abbf70c408771986dc48057032837700a">config</a>)</td></tr>
+<tr class="memdesc:a66dad56ae50b14da87ac3ab5925f13b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prepares config for saving as a YAML file.  <a href="classrlpack_1_1simulator_1_1_simulator.html#a66dad56ae50b14da87ac3ab5925f13b9">More...</a><br /></td></tr>
+<tr class="separator:a66dad56ae50b14da87ac3ab5925f13b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af423215df4fe00e1443b00460980e68b"><td class="memItemLeft" align="right" valign="top">SummaryWriter&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1simulator_1_1_simulator.html#af423215df4fe00e1443b00460980e68b">setup_summary_writer</a> (str save_path)</td></tr>
 <tr class="memdesc:af423215df4fe00e1443b00460980e68b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets up summary writer for Tensorboard logger.  <a href="classrlpack_1_1simulator_1_1_simulator.html#af423215df4fe00e1443b00460980e68b">More...</a><br /></td></tr>
 <tr class="separator:af423215df4fe00e1443b00460980e68b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -198,6 +201,41 @@ Data Fields</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a66dad56ae50b14da87ac3ab5925f13b9" name="a66dad56ae50b14da87ac3ab5925f13b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66dad56ae50b14da87ac3ab5925f13b9">&#9670;&#160;</a></span>prepare_config_to_save()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, Any] rlpack.simulator.Simulator.prepare_config_to_save </td>
+          <td>(</td>
+          <td class="paramtype">Dict[str, Any]&#160;</td>
+          <td class="paramname"><em>config</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Prepares config for saving as a YAML file. </p>
+<p >This removes all values except str, int, bool, list, tuple, dict from the dictionary. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">config</td><td>Dict[str, Any]: The config dictionary. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>: Dict[str, Any]: The prepared dictionary </dd></dl>
+
+</div>
+</div>
 <a id="aff03873ad871b7483b2667140170a7dc" name="aff03873ad871b7483b2667140170a7dc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aff03873ad871b7483b2667140170a7dc">&#9670;&#160;</a></span>run()</h2>
 

@@ -1,8 +1,9 @@
 var group__utils__group =
 [
+    [ "opaque_containers", "group__opaque__containers__group.html", "group__opaque__containers__group" ],
     [ "ops", "group__ops__group.html", "group__ops__group" ],
-    [ "Maps", "class_maps.html", [
-      [ "deviceMap", "class_maps.html#a6549405b43cee13c49f2c44e5beddf96", null ],
-      [ "dTypeMap", "class_maps.html#a7ca35f3527ce4f3f77e385ce81339eda", null ]
+    [ "UtilityMapping", "class_utility_mapping.html", [
+      [ "deviceMap", "class_utility_mapping.html#a138d8c6ce3d8f9c44559aee9a5b97a88", null ],
+      [ "dTypeMap", "class_utility_mapping.html#ad82418353b59d83306132dc5b5ebe2fa", null ]
     ] ]
 ];

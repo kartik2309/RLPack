@@ -1,5 +1,6 @@
 <map id="utils" name="utils">
-<area shape="rect" id="node1" href="$group__binaries__group.html" title="Binaries Module consists of C++ backend exposed via pybind11 to rlpack via rlpack...." alt="" coords="5,5,72,31"/>
-<area shape="rect" id="node3" title="Utils Module provides generic utilities to be used by all binaries in rlpack." alt="" coords="120,5,167,31"/>
-<area shape="rect" id="node2" href="$group__ops__group.html" title="Ops modules provides operations useful across binaries in RLPack." alt="" coords="215,5,257,31"/>
+<area shape="rect" id="node1" href="$group__binaries__group.html" title="Binaries Module consists of C++ backend exposed via pybind11 to rlpack via rlpack...." alt="" coords="5,31,72,56"/>
+<area shape="rect" id="node4" title="Utils Module provides generic utilities to be used by all binaries in rlpack." alt="" coords="120,31,167,56"/>
+<area shape="rect" id="node2" href="$group__opaque__containers__group.html" title="opaque_containers module provides functions to make useful containers opaque and bind it with any mod..." alt="" coords="215,5,345,31"/>
+<area shape="rect" id="node3" href="$group__ops__group.html" title="Ops modules provides operations useful across binaries in RLPack." alt="" coords="259,55,301,80"/>
 </map>

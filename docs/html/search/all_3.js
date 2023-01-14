@@ -12,7 +12,7 @@ var searchData=
   ['c_5freplaybufferdata_2ecpp_9',['C_ReplayBufferData.cpp',['../_c___replay_buffer_data_8cpp.html',1,'']]],
   ['c_5freplaybufferdata_2eh_10',['C_ReplayBufferData.h',['../_c___replay_buffer_data_8h.html',1,'']]],
   ['c_5frollout_5fbuffer_11',['c_rollout_buffer',['../classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#aad249c278aeb8134017473ccae7d2a8c',1,'rlpack::_C::rollout_buffer::RolloutBuffer']]],
-  ['c_5frolloutbuffer_12',['C_RolloutBuffer',['../class_c___rollout_buffer.html',1,'C_RolloutBuffer'],['../class_c___rollout_buffer.html#a244889898ec240c4d2aef923dbbf2ea3',1,'C_RolloutBuffer::C_RolloutBuffer()']]],
+  ['c_5frolloutbuffer_12',['C_RolloutBuffer',['../class_c___rollout_buffer.html',1,'C_RolloutBuffer'],['../class_c___rollout_buffer.html#ac4a0e18b78b1abf2e0bce866820d5527',1,'C_RolloutBuffer::C_RolloutBuffer()']]],
   ['c_5frolloutbuffer_2ecpp_13',['C_RolloutBuffer.cpp',['../_c___rollout_buffer_8cpp.html',1,'']]],
   ['c_5frolloutbuffer_2eh_14',['C_RolloutBuffer.h',['../_c___rollout_buffer_8h.html',1,'']]],
   ['check_5factivation_5finit_5fsanity_15',['check_activation_init_sanity',['../classrlpack_1_1utils_1_1sanity__check_1_1_sanity_check.html#adb21e63c82f884ed93d01afa5890124b',1,'rlpack::utils::sanity_check::SanityCheck']]],

@@ -103,12 +103,12 @@ $(document).ready(function(){initNavTree('maps_8h_source.html',''); initResizabl
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// Created by Kartik Rajeshwaran on 2022-12-26.</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">//</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#ifndef RLPACK_BINARIES_UTILS_MAPS_H_</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#define RLPACK_BINARIES_UTILS_MAPS_H_</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#ifndef RLPACK_BINARIES_UTILS_UTILITYMAPPING_H_</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#define RLPACK_BINARIES_UTILS_UTILITYMAPPING_H_</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;torch/extension.h&gt;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="class_maps.html">   22</a></span><span class="keyword">class </span><a class="code hl_class" href="class_maps.html">Maps</a> {</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="class_maps.html">   22</a></span><span class="keyword">class </span><a class="code hl_class" href="class_maps.html">UtilityMapping</a> {</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">public</span>:</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="class_maps.html#a6549405b43cee13c49f2c44e5beddf96">   25</a></span>    <span class="keyword">inline</span> <span class="keyword">static</span> std::map&lt;std::string, torch::DeviceType&gt; <a class="code hl_variable" href="class_maps.html#a6549405b43cee13c49f2c44e5beddf96">deviceMap</a>{</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>            {<span class="stringliteral">&quot;cpu&quot;</span>, torch::kCPU},</div>
@@ -119,10 +119,10 @@ $(document).ready(function(){initNavTree('maps_8h_source.html',''); initResizabl
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>            {<span class="stringliteral">&quot;float64&quot;</span>, torch::kFloat64},</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    };</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>};</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#endif</span><span class="comment">//RLPACK_BINARIES_UTILS_MAPS_H_</span></div>
-<div class="ttc" id="aclass_maps_html"><div class="ttname"><a href="class_maps.html">Maps</a></div><div class="ttdoc">Maps class provides generic utility mappings for strings with various objects.</div><div class="ttdef"><b>Definition:</b> maps.h:22</div></div>
-<div class="ttc" id="aclass_maps_html_a6549405b43cee13c49f2c44e5beddf96"><div class="ttname"><a href="class_maps.html#a6549405b43cee13c49f2c44e5beddf96">Maps::deviceMap</a></div><div class="ttdeci">static std::map&lt; std::string, torch::DeviceType &gt; deviceMap</div><div class="ttdoc">The map between std::string and torch::DeviceType; mapping the device name in string to DeviceType.</div><div class="ttdef"><b>Definition:</b> maps.h:25</div></div>
-<div class="ttc" id="aclass_maps_html_a7ca35f3527ce4f3f77e385ce81339eda"><div class="ttname"><a href="class_maps.html#a7ca35f3527ce4f3f77e385ce81339eda">Maps::dTypeMap</a></div><div class="ttdeci">static std::map&lt; std::string, torch::Dtype &gt; dTypeMap</div><div class="ttdoc">The map between std::string and torch::Dtype; mapping the device name in string to DataType.</div><div class="ttdef"><b>Definition:</b> maps.h:30</div></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#endif</span><span class="comment">//RLPACK_BINARIES_UTILS_UTILITYMAPPING_H_</span></div>
+<div class="ttc" id="aclass_maps_html"><div class="ttname"><a href="class_maps.html">UtilityMapping</a></div><div class="ttdoc">UtilityMapping class provides generic utility mappings for strings with various objects.</div><div class="ttdef"><b>Definition:</b> maps.h:22</div></div>
+<div class="ttc" id="aclass_maps_html_a6549405b43cee13c49f2c44e5beddf96"><div class="ttname"><a href="class_maps.html#a6549405b43cee13c49f2c44e5beddf96">UtilityMapping::deviceMap</a></div><div class="ttdeci">static std::map&lt; std::string, torch::DeviceType &gt; deviceMap</div><div class="ttdoc">The map between std::string and torch::DeviceType; mapping the device name in string to DeviceType.</div><div class="ttdef"><b>Definition:</b> maps.h:25</div></div>
+<div class="ttc" id="aclass_maps_html_a7ca35f3527ce4f3f77e385ce81339eda"><div class="ttname"><a href="class_maps.html#a7ca35f3527ce4f3f77e385ce81339eda">UtilityMapping::dTypeMap</a></div><div class="ttdeci">static std::map&lt; std::string, torch::Dtype &gt; dTypeMap</div><div class="ttdoc">The map between std::string and torch::Dtype; mapping the device name in string to DataType.</div><div class="ttdef"><b>Definition:</b> maps.h:30</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

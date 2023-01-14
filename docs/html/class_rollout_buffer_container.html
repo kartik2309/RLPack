@@ -98,6 +98,7 @@ $(document).ready(function(){initNavTree('class_rollout_buffer_container.html','
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a>  </div>
   <div class="headertitle"><div class="title">RolloutBufferContainer Class Reference<div class="ingroups"><a class="el" href="group__binaries__group.html">binaries</a> &raquo; <a class="el" href="group__rollout__buffer__group.html">rollout_buffer</a></div></div></div>
 </div><!--header-->
@@ -144,14 +145,19 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac69d4923577f4de99594e213140582d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8ee6efdccd008d252977f6a2710add1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_rollout_buffer_container.html#ac8ee6efdccd008d252977f6a2710add1">RolloutBufferContainer</a> (int64_t bufferSize, std::string &amp;device, std::string &amp;dtype)</td></tr>
 <tr class="separator:ac8ee6efdccd008d252977f6a2710add1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc94f33e98ed225be8d14e95cb6b4bc5"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_rollout_buffer_container.html#afc94f33e98ed225be8d14e95cb6b4bc5">size_policy_outputs</a> ()</td></tr>
-<tr class="separator:afc94f33e98ed225be8d14e95cb6b4bc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a72a0803c0ed265cc738ea37fea0d6978"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_rollout_buffer_container.html#a72a0803c0ed265cc738ea37fea0d6978">size_transitions</a> ()</td></tr>
-<tr class="separator:a72a0803c0ed265cc738ea37fea0d6978"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab517a94a34f1f7b78859b95762a2fef0"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_rollout_buffer_container.html#ab517a94a34f1f7b78859b95762a2fef0">size_policy_outputs</a> () const</td></tr>
+<tr class="separator:ab517a94a34f1f7b78859b95762a2fef0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1be1896b5d1aea1416466ac5492236dc"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_rollout_buffer_container.html#a1be1896b5d1aea1416466ac5492236dc">size_transitions</a> () const</td></tr>
+<tr class="separator:a1be1896b5d1aea1416466ac5492236dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5d4d2854c9f29c526e6e4c76348d381"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_rollout_buffer_data.html">RolloutBufferData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_rollout_buffer_container.html#af5d4d2854c9f29c526e6e4c76348d381">transition_at</a> (int64_t index)</td></tr>
 <tr class="separator:af5d4d2854c9f29c526e6e4c76348d381"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a12f2d932ea35f0053cabd449e0535b7c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_rollout_buffer_container.html#a12f2d932ea35f0053cabd449e0535b7c">~RolloutBufferContainer</a> ()</td></tr>
 <tr class="separator:a12f2d932ea35f0053cabd449e0535b7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a928a4ccc04ae4b46bd52e071d42a845d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_rollout_buffer_container.html#a928a4ccc04ae4b46bd52e071d42a845d">fill_reference_vector_</a> (std::vector&lt; torch::Tensor &gt; &amp;source, uint64_t size)</td></tr>
+<tr class="separator:a928a4ccc04ae4b46bd52e071d42a845d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -173,9 +179,15 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a7749b0ec7545fa56b1ee0d870bdaf07e"><td class="memItemLeft" align="right" valign="top">std::vector&lt; torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_rollout_buffer_container.html#a7749b0ec7545fa56b1ee0d870bdaf07e">entropies_</a></td></tr>
 <tr class="memdesc:a7749b0ec7545fa56b1ee0d870bdaf07e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector of entropies of current distribution.  <a href="class_rollout_buffer_container.html#a7749b0ec7545fa56b1ee0d870bdaf07e">More...</a><br /></td></tr>
 <tr class="separator:a7749b0ec7545fa56b1ee0d870bdaf07e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61cbc6445a39d995e5726980eb38379b"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_rollout_buffer_container.html#a61cbc6445a39d995e5726980eb38379b">policyOutputCounter_</a></td></tr>
+<tr class="memdesc:a61cbc6445a39d995e5726980eb38379b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The counter to track the insertions for policy outputs..  <a href="class_rollout_buffer_container.html#a61cbc6445a39d995e5726980eb38379b">More...</a><br /></td></tr>
+<tr class="separator:a61cbc6445a39d995e5726980eb38379b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad84c8e4c3020a76dea1b916c4e0ea860"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="class_rollout_buffer_data.html">RolloutBufferData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_rollout_buffer_container.html#ad84c8e4c3020a76dea1b916c4e0ea860">policyOutputData_</a></td></tr>
 <tr class="memdesc:ad84c8e4c3020a76dea1b916c4e0ea860"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector of <a class="el" href="class_rollout_buffer_data.html" title="The class RolloutBufferData keeps the reference of each tensor of RolloutBufferContainer and provides...">RolloutBufferData</a> pointers for policy outputs.  <a href="class_rollout_buffer_container.html#ad84c8e4c3020a76dea1b916c4e0ea860">More...</a><br /></td></tr>
 <tr class="separator:ad84c8e4c3020a76dea1b916c4e0ea860"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add38a131d9608799b4752b2718b42c3d"><td class="memItemLeft" align="right" valign="top">std::vector&lt; torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_rollout_buffer_container.html#add38a131d9608799b4752b2718b42c3d">reference_</a></td></tr>
+<tr class="memdesc:add38a131d9608799b4752b2718b42c3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector of tensors to pass reference.  <a href="class_rollout_buffer_container.html#add38a131d9608799b4752b2718b42c3d">More...</a><br /></td></tr>
+<tr class="separator:add38a131d9608799b4752b2718b42c3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ee394e06ccb92499fa0844269f2906c"><td class="memItemLeft" align="right" valign="top">std::vector&lt; torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_rollout_buffer_container.html#a5ee394e06ccb92499fa0844269f2906c">rewards_</a></td></tr>
 <tr class="memdesc:a5ee394e06ccb92499fa0844269f2906c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector of accumulated rewards.  <a href="class_rollout_buffer_container.html#a5ee394e06ccb92499fa0844269f2906c">More...</a><br /></td></tr>
 <tr class="separator:a5ee394e06ccb92499fa0844269f2906c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -194,6 +206,9 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:aaabd59001915f2dc60a2e1196e3cf46d"><td class="memItemLeft" align="right" valign="top">torch::TensorOptions&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_rollout_buffer_container.html#aaabd59001915f2dc60a2e1196e3cf46d">tensorOptions_</a></td></tr>
 <tr class="memdesc:aaabd59001915f2dc60a2e1196e3cf46d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The tensor options to be used for PyTorch tensors; constructed with device_ and dtype_.  <a href="class_rollout_buffer_container.html#aaabd59001915f2dc60a2e1196e3cf46d">More...</a><br /></td></tr>
 <tr class="separator:aaabd59001915f2dc60a2e1196e3cf46d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b66844d338334274f9718e253a22683"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_rollout_buffer_container.html#a7b66844d338334274f9718e253a22683">transitionCounter_</a></td></tr>
+<tr class="memdesc:a7b66844d338334274f9718e253a22683"><td class="mdescLeft">&#160;</td><td class="mdescRight">The counter to track the insertions for transitions.  <a href="class_rollout_buffer_container.html#a7b66844d338334274f9718e253a22683">More...</a><br /></td></tr>
+<tr class="separator:a7b66844d338334274f9718e253a22683"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a32c70b9d28a1852de9c6c492b2a9e3c4"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="class_rollout_buffer_data.html">RolloutBufferData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_rollout_buffer_container.html#a32c70b9d28a1852de9c6c492b2a9e3c4">transitionData_</a></td></tr>
 <tr class="memdesc:a32c70b9d28a1852de9c6c492b2a9e3c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The vector of <a class="el" href="class_rollout_buffer_data.html" title="The class RolloutBufferData keeps the reference of each tensor of RolloutBufferContainer and provides...">RolloutBufferData</a> pointers for transition data.  <a href="class_rollout_buffer_container.html#a32c70b9d28a1852de9c6c492b2a9e3c4">More...</a><br /></td></tr>
 <tr class="separator:a32c70b9d28a1852de9c6c492b2a9e3c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -266,6 +281,7 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p >Default destructor for <a class="el" href="class_rollout_buffer_container.html" title="The class RolloutBufferContainer is the main backend container that is used in C_RolloutBuffer....">RolloutBufferContainer</a> </p>
 
 </div>
 </div>
@@ -284,7 +300,7 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Clears the policy output vectors</p>
+<p >Clears the policy output vectors. Doesn't clear the vector but changes the index causing insertion operations to overwrite the previous values.</p>
 
 </div>
 </div>
@@ -302,7 +318,7 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Clears the transition vectors.</p>
+<p >Clears the transition vectors. Doesn't clear the vector but changes the index causing insertion operations to overwrite the previous values.</p>
 
 </div>
 </div>
@@ -331,6 +347,50 @@ Private Attributes</h2></td></tr>
 <li>dones</li>
 </ul>
 </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a928a4ccc04ae4b46bd52e071d42a845d" name="a928a4ccc04ae4b46bd52e071d42a845d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a928a4ccc04ae4b46bd52e071d42a845d">&#9670;&#160;</a></span>fill_reference_vector_()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RolloutBufferContainer::fill_reference_vector_ </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; torch::Tensor &gt; &amp;&#160;</td>
+          <td class="paramname"><em>source</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint64_t&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p >Private method to fill the reference container to obtain the requested references of correct size.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">source</td><td>The reference to input source vector. </td></tr>
+    <tr><td class="paramname">size</td><td>The current size of buffer (transition or policy output).</td></tr>
   </table>
   </dd>
 </dl>
@@ -655,17 +715,17 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="afc94f33e98ed225be8d14e95cb6b4bc5" name="afc94f33e98ed225be8d14e95cb6b4bc5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afc94f33e98ed225be8d14e95cb6b4bc5">&#9670;&#160;</a></span>size_policy_outputs()</h2>
+<a id="ab517a94a34f1f7b78859b95762a2fef0" name="ab517a94a34f1f7b78859b95762a2fef0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab517a94a34f1f7b78859b95762a2fef0">&#9670;&#160;</a></span>size_policy_outputs()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">size_t RolloutBufferContainer::size_policy_outputs </td>
+          <td class="memname">uint64_t RolloutBufferContainer::size_policy_outputs </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -674,17 +734,17 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a72a0803c0ed265cc738ea37fea0d6978" name="a72a0803c0ed265cc738ea37fea0d6978"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a72a0803c0ed265cc738ea37fea0d6978">&#9670;&#160;</a></span>size_transitions()</h2>
+<a id="a1be1896b5d1aea1416466ac5492236dc" name="a1be1896b5d1aea1416466ac5492236dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1be1896b5d1aea1416466ac5492236dc">&#9670;&#160;</a></span>size_transitions()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">size_t RolloutBufferContainer::size_transitions </td>
+          <td class="memname">uint64_t RolloutBufferContainer::size_transitions </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -864,6 +924,30 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a61cbc6445a39d995e5726980eb38379b" name="a61cbc6445a39d995e5726980eb38379b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61cbc6445a39d995e5726980eb38379b">&#9670;&#160;</a></span>policyOutputCounter_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t RolloutBufferContainer::policyOutputCounter_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The counter to track the insertions for policy outputs.. </p>
+
+</div>
+</div>
 <a id="ad84c8e4c3020a76dea1b916c4e0ea860" name="ad84c8e4c3020a76dea1b916c4e0ea860"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad84c8e4c3020a76dea1b916c4e0ea860">&#9670;&#160;</a></span>policyOutputData_</h2>
 
@@ -885,6 +969,30 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The vector of <a class="el" href="class_rollout_buffer_data.html" title="The class RolloutBufferData keeps the reference of each tensor of RolloutBufferContainer and provides...">RolloutBufferData</a> pointers for policy outputs. </p>
+
+</div>
+</div>
+<a id="add38a131d9608799b4752b2718b42c3d" name="add38a131d9608799b4752b2718b42c3d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add38a131d9608799b4752b2718b42c3d">&#9670;&#160;</a></span>reference_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;torch::Tensor&gt; RolloutBufferContainer::reference_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The vector of tensors to pass reference. </p>
 
 </div>
 </div>
@@ -1029,6 +1137,30 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The tensor options to be used for PyTorch tensors; constructed with device_ and dtype_. </p>
+
+</div>
+</div>
+<a id="a7b66844d338334274f9718e253a22683" name="a7b66844d338334274f9718e253a22683"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b66844d338334274f9718e253a22683">&#9670;&#160;</a></span>transitionCounter_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t RolloutBufferContainer::transitionCounter_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The counter to track the insertions for transitions. </p>
 
 </div>
 </div>

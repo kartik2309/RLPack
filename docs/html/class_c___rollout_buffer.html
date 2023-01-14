@@ -99,7 +99,6 @@ $(document).ready(function(){initNavTree('class_c___rollout_buffer.html',''); in
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a>  </div>
   <div class="headertitle"><div class="title">C_RolloutBuffer Class Reference<div class="ingroups"><a class="el" href="group__binaries__group.html">binaries</a> &raquo; <a class="el" href="group__rollout__buffer__group.html">rollout_buffer</a></div></div></div>
 </div><!--header-->
@@ -129,8 +128,8 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a244889898ec240c4d2aef923dbbf2ea3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a244889898ec240c4d2aef923dbbf2ea3">C_RolloutBuffer</a> (int64_t bufferSize, std::string &amp;device, std::string &amp;dtype, std::map&lt; std::string, c10::intrusive_ptr&lt; c10d::ProcessGroup &gt; &gt; &amp;processGroupMap, const std::chrono::duration&lt; int32_t &gt; &amp;workTimeoutDuration)</td></tr>
-<tr class="separator:a244889898ec240c4d2aef923dbbf2ea3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4a0e18b78b1abf2e0bce866820d5527"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#ac4a0e18b78b1abf2e0bce866820d5527">C_RolloutBuffer</a> (int64_t bufferSize, std::string &amp;device, std::string &amp;dtype)</td></tr>
+<tr class="separator:ac4a0e18b78b1abf2e0bce866820d5527"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6688e63ed6b81b72e324097e306415f0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a6688e63ed6b81b72e324097e306415f0">clear_policy_outputs</a> ()</td></tr>
 <tr class="separator:a6688e63ed6b81b72e324097e306415f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d7329ae83788c6abdfd97e7bf65d24f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a3d7329ae83788c6abdfd97e7bf65d24f">clear_transitions</a> ()</td></tr>
@@ -141,8 +140,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a7edf043bd971020b94de504d1861d300"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb2ac0c8ffb12fb423b851013134e8be"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#aeb2ac0c8ffb12fb423b851013134e8be">compute_returns</a> (float_t gamma)</td></tr>
 <tr class="separator:aeb2ac0c8ffb12fb423b851013134e8be"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e4541bcd75daf31012ea961f3b5316b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a6e4541bcd75daf31012ea961f3b5316b">extend_transitions</a> ()</td></tr>
-<tr class="separator:a6e4541bcd75daf31012ea961f3b5316b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0622ffda866df2b1bb7f6de3ba1ae107"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a0622ffda866df2b1bb7f6de3ba1ae107">extend_transitions</a> (std::map&lt; std::string, std::vector&lt; torch::Tensor &gt; &gt; &amp;extensionMap)</td></tr>
+<tr class="separator:a0622ffda866df2b1bb7f6de3ba1ae107"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2dbf19066e59d0fd0639d129a8304d79"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a2dbf19066e59d0fd0639d129a8304d79">get_action_log_probabilities_statistics</a> ()</td></tr>
 <tr class="separator:a2dbf19066e59d0fd0639d129a8304d79"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af9ce17ba7cf35388670e89fd4d8cd311"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#af9ce17ba7cf35388670e89fd4d8cd311">get_advantage_statistics</a> (float_t gamma, float_t gae_lambda)</td></tr>
@@ -188,28 +187,17 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1f54e17e15693a455a89aa8fc92a6691"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a1f54e17e15693a455a89aa8fc92a6691">~C_RolloutBuffer</a> ()</td></tr>
 <tr class="separator:a1f54e17e15693a455a89aa8fc92a6691"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
-Private Member Functions</h2></td></tr>
-<tr class="memitem:ac9e6678c42bbeb1edcdc95cf4d8aae6e"><td class="memItemLeft" align="right" valign="top">std::vector&lt; torch::Tensor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#ac9e6678c42bbeb1edcdc95cf4d8aae6e">gather_with_process_group_</a> (torch::Tensor &amp;inputTensor)</td></tr>
-<tr class="separator:ac9e6678c42bbeb1edcdc95cf4d8aae6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:aa952e1995359f83c80ca914ed3d4d9e6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c___rollout_buffer.html#a2369413382be0e3418db567c04d3b5cd">DataLoader</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#aa952e1995359f83c80ca914ed3d4d9e6">dataloader_</a> = nullptr</td></tr>
 <tr class="memdesc:aa952e1995359f83c80ca914ed3d4d9e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">The DataLoader object. This is initialized to nullptr until <code>set_transitions_iterator</code> is called.  <a href="class_c___rollout_buffer.html#aa952e1995359f83c80ca914ed3d4d9e6">More...</a><br /></td></tr>
 <tr class="separator:aa952e1995359f83c80ca914ed3d4d9e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1227cf506fd45c481bd091bd28d9240f"><td class="memItemLeft" align="right" valign="top">c10::intrusive_ptr&lt; c10d::ProcessGroup &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a1227cf506fd45c481bd091bd28d9240f">processGroup_</a></td></tr>
-<tr class="memdesc:a1227cf506fd45c481bd091bd28d9240f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The intrusive pointer to ProcessGroup in PyTorch.  <a href="class_c___rollout_buffer.html#a1227cf506fd45c481bd091bd28d9240f">More...</a><br /></td></tr>
-<tr class="separator:a1227cf506fd45c481bd091bd28d9240f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab341d2908b3beef02dc8679fc4a7e4e6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_rollout_buffer_container.html">RolloutBufferContainer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#ab341d2908b3beef02dc8679fc4a7e4e6">rolloutBufferContainer_</a></td></tr>
 <tr class="memdesc:ab341d2908b3beef02dc8679fc4a7e4e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">The pointer to dynamically allocated <a class="el" href="class_rollout_buffer_container.html" title="The class RolloutBufferContainer is the main backend container that is used in C_RolloutBuffer....">RolloutBufferContainer</a> object.  <a href="class_c___rollout_buffer.html#ab341d2908b3beef02dc8679fc4a7e4e6">More...</a><br /></td></tr>
 <tr class="separator:ab341d2908b3beef02dc8679fc4a7e4e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a321dd6b9f34f49dfa2639cfe34f13974"><td class="memItemLeft" align="right" valign="top">torch::TensorOptions&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a321dd6b9f34f49dfa2639cfe34f13974">tensorOptions_</a></td></tr>
 <tr class="memdesc:a321dd6b9f34f49dfa2639cfe34f13974"><td class="mdescLeft">&#160;</td><td class="mdescRight">The tensor options to be used for PyTorch tensors; constructed with device_ and dtype_.  <a href="class_c___rollout_buffer.html#a321dd6b9f34f49dfa2639cfe34f13974">More...</a><br /></td></tr>
 <tr class="separator:a321dd6b9f34f49dfa2639cfe34f13974"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00863f460d299d33ac0fa0cd66bfdcaa"><td class="memItemLeft" align="right" valign="top">std::chrono::milliseconds&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html#a00863f460d299d33ac0fa0cd66bfdcaa">workTimeoutDuration_</a> = std::chrono::milliseconds( 900000 )</td></tr>
-<tr class="memdesc:a00863f460d299d33ac0fa0cd66bfdcaa"><td class="mdescLeft">&#160;</td><td class="mdescRight">The chrono duration for work timeout to wait for all processes to complete <code>gather</code>.  <a href="class_c___rollout_buffer.html#a00863f460d299d33ac0fa0cd66bfdcaa">More...</a><br /></td></tr>
-<tr class="separator:a00863f460d299d33ac0fa0cd66bfdcaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >The class <a class="el" href="class_c___rollout_buffer.html" title="The class C_RolloutBuffer is the class that implements the C++ backend for Rollout Buffer....">C_RolloutBuffer</a> is the class that implements the C++ backend for Rollout Buffer. Tensors are moved to C++ backend via PyBind11 and are kept opaque with std::map, hence, tensors are moved between Python and C++ only by references. <code><a class="el" href="class_c___rollout_buffer.html" title="The class C_RolloutBuffer is the class that implements the C++ backend for Rollout Buffer....">C_RolloutBuffer</a></code> is hence autograd safe. </p>
@@ -231,8 +219,8 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a244889898ec240c4d2aef923dbbf2ea3" name="a244889898ec240c4d2aef923dbbf2ea3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a244889898ec240c4d2aef923dbbf2ea3">&#9670;&#160;</a></span>C_RolloutBuffer()</h2>
+<a id="ac4a0e18b78b1abf2e0bce866820d5527" name="ac4a0e18b78b1abf2e0bce866820d5527"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4a0e18b78b1abf2e0bce866820d5527">&#9670;&#160;</a></span>C_RolloutBuffer()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -253,19 +241,7 @@ Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::string &amp;&#160;</td>
-          <td class="paramname"><em>dtype</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::map&lt; std::string, c10::intrusive_ptr&lt; c10d::ProcessGroup &gt; &gt; &amp;&#160;</td>
-          <td class="paramname"><em>processGroupMap</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::chrono::duration&lt; int32_t &gt; &amp;&#160;</td>
-          <td class="paramname"><em>workTimeoutDuration</em>&#160;</td>
+          <td class="paramname"><em>dtype</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -274,14 +250,12 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Class constructor for <a class="el" href="class_c___rollout_buffer.html" title="The class C_RolloutBuffer is the class that implements the C++ backend for Rollout Buffer....">C_RolloutBuffer</a>. This will allocate necessary memory as per input, and set relevant attributes. This method is C++ backend for <a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#a1bbfe14e6e15b7b5c7fdfb024f5fdaf2" title="Initialization method for RolloutBuffer.">rlpack._C.rollout_buffer.RolloutBuffer.__init__</a>.</p>
+<p >Class constructor for <a class="el" href="class_c___rollout_buffer.html" title="The class C_RolloutBuffer is the class that implements the C++ backend for Rollout Buffer....">C_RolloutBuffer</a>. This will allocate necessary memory as per input, and set relevant attributes. This method is C++ backend for <a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#aac5e7f3f105ea644fc56e5c35e1bc2c1" title="Initialization method for RolloutBuffer.">rlpack._C.rollout_buffer.RolloutBuffer.__init__</a>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">bufferSize</td><td>The buffer size to be used. </td></tr>
     <tr><td class="paramname">device</td><td>The device on which PyTorch tensors are to be processed. </td></tr>
-    <tr><td class="paramname">dtype</td><td>The datatype which is to be used for PyTorch tensors. </td></tr>
-    <tr><td class="paramname">processGroupMap</td><td>The map of process group's intrusive pointer from Python to perform collective operations if required. If the RolloutBuffer is not being used in distributed setting, this can be passed as a map of nullptr like: {{"process_group", nullptr}}. This map must contain the ProcessGroup with the key <code>process_group</code>. A map is being used to take <code>TensorMap</code> objected which is opaque and binded to avoid casting and easy pass by reference. </td></tr>
-    <tr><td class="paramname">workTimeoutDuration</td><td>If a valid <code>processGroupMap</code> is being passed, this argument is relevant and indicates the work timeout duration in minutes. The work instrusive pointer explicitly calls wait to ensure synchronization. Default is set to 30 seconds.</td></tr>
+    <tr><td class="paramname">dtype</td><td>The datatype which is to be used for PyTorch tensors.</td></tr>
   </table>
   </dd>
 </dl>
@@ -432,8 +406,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a6e4541bcd75daf31012ea961f3b5316b" name="a6e4541bcd75daf31012ea961f3b5316b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6e4541bcd75daf31012ea961f3b5316b">&#9670;&#160;</a></span>extend_transitions()</h2>
+<a id="a0622ffda866df2b1bb7f6de3ba1ae107" name="a0622ffda866df2b1bb7f6de3ba1ae107"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0622ffda866df2b1bb7f6de3ba1ae107">&#9670;&#160;</a></span>extend_transitions()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -441,46 +415,13 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="memname">void C_RolloutBuffer::extend_transitions </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">std::map&lt; std::string, std::vector&lt; torch::Tensor &gt; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>extensionMap</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >This method extends the transitions by performing gather for transition quantities. This method will throw a runtime error if process group is not defined. This method is C++ backend for <a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#a9d61053d9e8d7f6883e8a2e53c79303e" title="Method to extend the transitions.">rlpack._C.rollout_buffer.RolloutBuffer.extend_transitions</a>.</p>
-
-</div>
-</div>
-<a id="ac9e6678c42bbeb1edcdc95cf4d8aae6e" name="ac9e6678c42bbeb1edcdc95cf4d8aae6e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac9e6678c42bbeb1edcdc95cf4d8aae6e">&#9670;&#160;</a></span>gather_with_process_group_()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt; torch::Tensor &gt; C_RolloutBuffer::gather_with_process_group_ </td>
-          <td>(</td>
-          <td class="paramtype">torch::Tensor &amp;&#160;</td>
-          <td class="paramname"><em>inputTensor</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p >Performs gather with the initialized process group. This method will throw a runtime error if process group is not defined.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">inputTensor</td><td>: The input tensor which is to be used for input in gather. This tensor is broadcasted to other processes in the group and receives the same tensor instances from other groups. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>: A vector of tensors is returned from groups. The vector will have tensors from other processes only and will be unbinded.</dd></dl>
+<p >This method extends the transitions by performing gather for transition quantities. This method will throw a runtime error if process group is not defined in Python. If extension map is empty, returns immediately. This method is C++ backend for <a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#a9d61053d9e8d7f6883e8a2e53c79303e" title="Method to extend the transitions.">rlpack._C.rollout_buffer.RolloutBuffer.extend_transitions</a>.</p>
 
 </div>
 </div>
@@ -1004,30 +945,6 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a1227cf506fd45c481bd091bd28d9240f" name="a1227cf506fd45c481bd091bd28d9240f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1227cf506fd45c481bd091bd28d9240f">&#9670;&#160;</a></span>processGroup_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">c10::intrusive_ptr&lt;c10d::ProcessGroup&gt; C_RolloutBuffer::processGroup_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>The intrusive pointer to ProcessGroup in PyTorch. </p>
-
-</div>
-</div>
 <a id="ab341d2908b3beef02dc8679fc4a7e4e6" name="ab341d2908b3beef02dc8679fc4a7e4e6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab341d2908b3beef02dc8679fc4a7e4e6">&#9670;&#160;</a></span>rolloutBufferContainer_</h2>
 
@@ -1073,30 +990,6 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The tensor options to be used for PyTorch tensors; constructed with device_ and dtype_. </p>
-
-</div>
-</div>
-<a id="a00863f460d299d33ac0fa0cd66bfdcaa" name="a00863f460d299d33ac0fa0cd66bfdcaa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a00863f460d299d33ac0fa0cd66bfdcaa">&#9670;&#160;</a></span>workTimeoutDuration_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::chrono::milliseconds C_RolloutBuffer::workTimeoutDuration_ = std::chrono::milliseconds( 900000 )</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>The chrono duration for work timeout to wait for all processes to complete <code>gather</code>. </p>
 
 </div>
 </div>

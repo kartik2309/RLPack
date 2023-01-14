@@ -97,13 +97,11 @@ $(document).ready(function(){initNavTree('_c___rollout_buffer_8h.html',''); init
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Data Structures</a> &#124;
-<a href="#define-members">Macros</a>  </div>
+<a href="#nested-classes">Data Structures</a>  </div>
   <div class="headertitle"><div class="title">C_RolloutBuffer.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;torch/csrc/distributed/c10d/ProcessGroup.hpp&gt;</code><br />
-<code>#include &quot;<a class="el" href="_rollout_buffer_batch_8h_source.html">rollout_buffer_batch/RolloutBufferBatch.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="_rollout_buffer_batch_8h_source.html">rollout_buffer_batch/RolloutBufferBatch.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_rollout_buffer_batch_transform_8h_source.html">rollout_buffer_batch_transform/RolloutBufferBatchTransform.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_rollout_buffer_container_8h_source.html">rollout_buffer_container/RolloutBufferContainer.h</a>&quot;</code><br />
 </div><div class="textblock"><div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -113,14 +111,14 @@ $(document).ready(function(){initNavTree('_c___rollout_buffer_8h.html',''); init
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="_c___rollout_buffer_8h__incl.png" border="0" usemap="#a_2_users_2kartikrajeshwaran_2_library_2_cloud_storage_2_google_drive-kartikrajeshwaran_8kr_0dgmail_8com_2_my_01_drive_2_projects_2_python_2_r_l_pack_2binaries_2rollout__buffer_2_c___rollout_buffer_8h" alt=""/></div>
 <map name="a_2_users_2kartikrajeshwaran_2_library_2_cloud_storage_2_google_drive-kartikrajeshwaran_8kr_0dgmail_8com_2_my_01_drive_2_projects_2_python_2_r_l_pack_2binaries_2rollout__buffer_2_c___rollout_buffer_8h" id="a_2_users_2kartikrajeshwaran_2_library_2_cloud_storage_2_google_drive-kartikrajeshwaran_8kr_0dgmail_8com_2_my_01_drive_2_projects_2_python_2_r_l_pack_2binaries_2rollout__buffer_2_c___rollout_buffer_8h">
-<area shape="rect" title=" " alt="" coords="196,5,453,89"/>
-<area shape="rect" title=" " alt="" coords="5,137,172,177"/>
-<area shape="rect" href="_rollout_buffer_batch_8h.html" title=" " alt="" coords="197,137,343,177"/>
-<area shape="rect" href="_rollout_buffer_container_8h.html" title=" " alt="" coords="257,233,427,273"/>
-<area shape="rect" href="_rollout_buffer_batch_transform_8h.html" title=" " alt="" coords="451,225,649,280"/>
-<area shape="rect" title=" " alt="" coords="293,416,415,441"/>
-<area shape="rect" href="maps_8h.html" title=" " alt="" coords="295,335,413,361"/>
-<area shape="rect" href="_rollout_buffer_data_8h.html" title=" " alt="" coords="437,328,578,368"/>
+<area shape="rect" title=" " alt="" coords="66,5,323,89"/>
+<area shape="rect" href="_rollout_buffer_batch_8h.html" title=" " alt="" coords="10,137,157,177"/>
+<area shape="rect" href="_rollout_buffer_container_8h.html" title=" " alt="" coords="55,233,224,273"/>
+<area shape="rect" href="_rollout_buffer_batch_transform_8h.html" title=" " alt="" coords="307,225,506,280"/>
+<area shape="rect" title=" " alt="" coords="158,416,281,441"/>
+<area shape="rect" title=" " alt="" coords="45,335,104,361"/>
+<area shape="rect" href="_utility_mapping_8hpp.html" title=" " alt="" coords="128,335,311,361"/>
+<area shape="rect" href="_rollout_buffer_data_8h.html" title=" " alt="" coords="336,328,477,368"/>
 </map>
 </div>
 </div><div class="textblock"><div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -143,12 +141,6 @@ Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c___rollout_buffer.html">C_RolloutBuffer</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The class <a class="el" href="class_c___rollout_buffer.html" title="The class C_RolloutBuffer is the class that implements the C++ backend for Rollout Buffer....">C_RolloutBuffer</a> is the class that implements the C++ backend for Rollout Buffer. Tensors are moved to C++ backend via PyBind11 and are kept opaque with std::map, hence, tensors are moved between Python and C++ only by references. <code><a class="el" href="class_c___rollout_buffer.html" title="The class C_RolloutBuffer is the class that implements the C++ backend for Rollout Buffer....">C_RolloutBuffer</a></code> is hence autograd safe.  <a href="class_c___rollout_buffer.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:gaeeea9088c0cdb876174b6c7c426cd3e7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rollout__buffer__group.html#gaeeea9088c0cdb876174b6c7c426cd3e7">ALL_GATHER_WORK_TIMEOUT</a>&#160;&#160;&#160;900000</td></tr>
-<tr class="memdesc:gaeeea9088c0cdb876174b6c7c426cd3e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">The macro to define All-gather work timeout in milliseconds.  <a href="group__rollout__buffer__group.html#gaeeea9088c0cdb876174b6c7c426cd3e7">More...</a><br /></td></tr>
-<tr class="separator:gaeeea9088c0cdb876174b6c7c426cd3e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

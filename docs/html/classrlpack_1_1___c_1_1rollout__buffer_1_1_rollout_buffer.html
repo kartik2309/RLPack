@@ -98,16 +98,17 @@ $(document).ready(function(){initNavTree('classrlpack_1_1___c_1_1rollout__buffer
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Data Fields</a>  </div>
+<a href="#pub-attribs">Data Fields</a> &#124;
+<a href="#pri-methods">Private Member Functions</a>  </div>
   <div class="headertitle"><div class="title">rlpack._C.rollout_buffer.RolloutBuffer Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a1bbfe14e6e15b7b5c7fdfb024f5fdaf2"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#a1bbfe14e6e15b7b5c7fdfb024f5fdaf2">__init__</a> (self, int buffer_size, str device=&quot;cpu&quot;, str dtype=&quot;float32&quot;, Union[pytorch_distributed.ProcessGroup, None] process_group=None, timedelta work_timeout=timedelta(minutes=30))</td></tr>
-<tr class="memdesc:a1bbfe14e6e15b7b5c7fdfb024f5fdaf2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialization method for <a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html">RolloutBuffer</a>.  <a href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#a1bbfe14e6e15b7b5c7fdfb024f5fdaf2">More...</a><br /></td></tr>
-<tr class="separator:a1bbfe14e6e15b7b5c7fdfb024f5fdaf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac5e7f3f105ea644fc56e5c35e1bc2c1"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#aac5e7f3f105ea644fc56e5c35e1bc2c1">__init__</a> (self, int buffer_size, str <a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#ac6de538c48f41e017ee8e04c5fe0deed">device</a>=&quot;cpu&quot;, str <a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#aa1211037028ea388ef5e149946542ac3">dtype</a>=&quot;float32&quot;, Union[pytorch_distributed.ProcessGroup, None] <a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#aa9b0a284b5510d0b05a7d35de4241eda">process_group</a>=None, timedelta <a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#a41bce75b60e65ed849c55b6919187324">work_timeout</a>=timedelta(minutes=30), int <a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#ac687e2d469dd5559d49d1bc6d563d1de">master_process_rank</a>=0)</td></tr>
+<tr class="memdesc:aac5e7f3f105ea644fc56e5c35e1bc2c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialization method for <a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html">RolloutBuffer</a>.  <a href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#aac5e7f3f105ea644fc56e5c35e1bc2c1">More...</a><br /></td></tr>
+<tr class="separator:aac5e7f3f105ea644fc56e5c35e1bc2c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a424ce6605361c7a49980d67933ba85a7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#a424ce6605361c7a49980d67933ba85a7">__len__</a> (self)</td></tr>
 <tr class="memdesc:a424ce6605361c7a49980d67933ba85a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the total length of Rollout Buffer.  <a href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#a424ce6605361c7a49980d67933ba85a7">More...</a><br /></td></tr>
 <tr class="separator:a424ce6605361c7a49980d67933ba85a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -195,13 +196,34 @@ Data Fields</h2></td></tr>
 <tr class="memitem:aad249c278aeb8134017473ccae7d2a8c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#aad249c278aeb8134017473ccae7d2a8c">c_rollout_buffer</a></td></tr>
 <tr class="memdesc:aad249c278aeb8134017473ccae7d2a8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The instance of <a class="el" href="class_c___rollout_buffer.html" title="The class C_RolloutBuffer is the class that implements the C++ backend for Rollout Buffer....">C_RolloutBuffer</a>; the C++ backend of <a class="el" href="class_c___rollout_buffer.html" title="The class C_RolloutBuffer is the class that implements the C++ backend for Rollout Buffer....">C_RolloutBuffer</a> class.  <a href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#aad249c278aeb8134017473ccae7d2a8c">More...</a><br /></td></tr>
 <tr class="separator:aad249c278aeb8134017473ccae7d2a8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6de538c48f41e017ee8e04c5fe0deed"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#ac6de538c48f41e017ee8e04c5fe0deed">device</a></td></tr>
+<tr class="memdesc:ac6de538c48f41e017ee8e04c5fe0deed"><td class="mdescLeft">&#160;</td><td class="mdescRight">The instance of torch device on which tensors will be placed.  <a href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#ac6de538c48f41e017ee8e04c5fe0deed">More...</a><br /></td></tr>
+<tr class="separator:ac6de538c48f41e017ee8e04c5fe0deed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1211037028ea388ef5e149946542ac3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#aa1211037028ea388ef5e149946542ac3">dtype</a></td></tr>
+<tr class="memdesc:aa1211037028ea388ef5e149946542ac3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The instance of torch dtype to which tensors will be casted.  <a href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#aa1211037028ea388ef5e149946542ac3">More...</a><br /></td></tr>
+<tr class="separator:aa1211037028ea388ef5e149946542ac3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3f2e719c09d4b715f8bcf2afd194aab7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#a3f2e719c09d4b715f8bcf2afd194aab7">map_of_tensors</a></td></tr>
 <tr class="memdesc:a3f2e719c09d4b715f8bcf2afd194aab7"><td class="mdescLeft">&#160;</td><td class="mdescRight">The instance of TensorMap; the custom object used by C++ backend.  <a href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#a3f2e719c09d4b715f8bcf2afd194aab7">More...</a><br /></td></tr>
 <tr class="separator:a3f2e719c09d4b715f8bcf2afd194aab7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac687e2d469dd5559d49d1bc6d563d1de"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#ac687e2d469dd5559d49d1bc6d563d1de">master_process_rank</a></td></tr>
+<tr class="memdesc:ac687e2d469dd5559d49d1bc6d563d1de"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input <code>master_process_rank</code>.  <a href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#ac687e2d469dd5559d49d1bc6d563d1de">More...</a><br /></td></tr>
+<tr class="separator:ac687e2d469dd5559d49d1bc6d563d1de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9b0a284b5510d0b05a7d35de4241eda"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#aa9b0a284b5510d0b05a7d35de4241eda">process_group</a></td></tr>
+<tr class="memdesc:aa9b0a284b5510d0b05a7d35de4241eda"><td class="mdescLeft">&#160;</td><td class="mdescRight">The instance of process group being used.  <a href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#aa9b0a284b5510d0b05a7d35de4241eda">More...</a><br /></td></tr>
+<tr class="separator:aa9b0a284b5510d0b05a7d35de4241eda"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41bce75b60e65ed849c55b6919187324"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#a41bce75b60e65ed849c55b6919187324">work_timeout</a></td></tr>
+<tr class="memdesc:a41bce75b60e65ed849c55b6919187324"><td class="mdescLeft">&#160;</td><td class="mdescRight">The instance timedelta for work timeout in collective communication operations.  <a href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#a41bce75b60e65ed849c55b6919187324">More...</a><br /></td></tr>
+<tr class="separator:a41bce75b60e65ed849c55b6919187324"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:ae5f57bc1392b476adfe0170d75f34e0a"><td class="memItemLeft" align="right" valign="top">Union[List, List[pytorch.Tensor]]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#ae5f57bc1392b476adfe0170d75f34e0a">_gather_with_process_group</a> (self, pytorch.Tensor input_tensor)</td></tr>
+<tr class="memdesc:ae5f57bc1392b476adfe0170d75f34e0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs gather process on master process synchronously.  <a href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#ae5f57bc1392b476adfe0170d75f34e0a">More...</a><br /></td></tr>
+<tr class="separator:ae5f57bc1392b476adfe0170d75f34e0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a1bbfe14e6e15b7b5c7fdfb024f5fdaf2" name="a1bbfe14e6e15b7b5c7fdfb024f5fdaf2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1bbfe14e6e15b7b5c7fdfb024f5fdaf2">&#9670;&#160;</a></span>__init__()</h2>
+<a id="aac5e7f3f105ea644fc56e5c35e1bc2c1" name="aac5e7f3f105ea644fc56e5c35e1bc2c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac5e7f3f105ea644fc56e5c35e1bc2c1">&#9670;&#160;</a></span>__init__()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -240,7 +262,13 @@ Data Fields</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">timedelta &#160;</td>
-          <td class="paramname"><em>work_timeout</em> = <code>timedelta(minutes=30)</code>&#160;</td>
+          <td class="paramname"><em>work_timeout</em> = <code>timedelta(minutes=30)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &#160;</td>
+          <td class="paramname"><em>master_process_rank</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -258,6 +286,7 @@ Data Fields</h2></td></tr>
     <tr><td class="paramname">dtype</td><td>str: The datatype to for tensors. </td></tr>
     <tr><td class="paramname">process_group</td><td>Union[pytorch_distributed.ProcessGroup, None]: The current process group being used in distributed setting. If not in a distributed setting, must be None. Default: None. </td></tr>
     <tr><td class="paramname">work_timeout</td><td>timedelta: The duration for work wait for all processes to complete the gather process when <a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#a9d61053d9e8d7f6883e8a2e53c79303e" title="Method to extend the transitions.">RolloutBuffer.extend_transitions</a> is called in distributed setting. Default: 30 minutes. </td></tr>
+    <tr><td class="paramname">master_process_rank</td><td>int: The master process rank to be considered. This will be root process. Default: 0 </td></tr>
   </table>
   </dd>
 </dl>
@@ -283,6 +312,52 @@ Data Fields</h2></td></tr>
 
 <p>Gets the total length of Rollout Buffer. </p>
 <dl class="section return"><dt>Returns</dt><dd>: int: The size of the Rollout Buffer </dd></dl>
+
+</div>
+</div>
+<a id="ae5f57bc1392b476adfe0170d75f34e0a" name="ae5f57bc1392b476adfe0170d75f34e0a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae5f57bc1392b476adfe0170d75f34e0a">&#9670;&#160;</a></span>_gather_with_process_group()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Union[List, List[pytorch.Tensor]] rlpack._C.rollout_buffer.RolloutBuffer._gather_with_process_group </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">pytorch.Tensor
+    &#160;</td>
+          <td class="paramname"><em>input_tensor</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Performs gather process on master process synchronously. </p>
+<p >This is a blocking call and waits for all processes to complete gather until the specified timeout during class initialization. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">input_tensor</td><td>pytorch.Tensor: The input tensor for gather. This is the tensor received at master process. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>: Union[List, List[pytorch.Tensor]]: Either empty list; for non-master processes, and list of tensors for master process with gathered and unbinded tensors collected from each process except itself. </dd></dl>
 
 </div>
 </div>
@@ -1080,6 +1155,38 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
+<a id="ac6de538c48f41e017ee8e04c5fe0deed" name="ac6de538c48f41e017ee8e04c5fe0deed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac6de538c48f41e017ee8e04c5fe0deed">&#9670;&#160;</a></span>device</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">rlpack._C.rollout_buffer.RolloutBuffer.device</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The instance of torch device on which tensors will be placed. </p>
+
+</div>
+</div>
+<a id="aa1211037028ea388ef5e149946542ac3" name="aa1211037028ea388ef5e149946542ac3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1211037028ea388ef5e149946542ac3">&#9670;&#160;</a></span>dtype</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">rlpack._C.rollout_buffer.RolloutBuffer.dtype</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The instance of torch dtype to which tensors will be casted. </p>
+
+</div>
+</div>
 <a id="a3f2e719c09d4b715f8bcf2afd194aab7" name="a3f2e719c09d4b715f8bcf2afd194aab7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3f2e719c09d4b715f8bcf2afd194aab7">&#9670;&#160;</a></span>map_of_tensors</h2>
 
@@ -1093,6 +1200,55 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The instance of TensorMap; the custom object used by C++ backend. </p>
+
+</div>
+</div>
+<a id="ac687e2d469dd5559d49d1bc6d563d1de" name="ac687e2d469dd5559d49d1bc6d563d1de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac687e2d469dd5559d49d1bc6d563d1de">&#9670;&#160;</a></span>master_process_rank</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">rlpack._C.rollout_buffer.RolloutBuffer.master_process_rank</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The input <code>master_process_rank</code>. </p>
+
+</div>
+</div>
+<a id="aa9b0a284b5510d0b05a7d35de4241eda" name="aa9b0a284b5510d0b05a7d35de4241eda"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9b0a284b5510d0b05a7d35de4241eda">&#9670;&#160;</a></span>process_group</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">rlpack._C.rollout_buffer.RolloutBuffer.process_group</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The instance of process group being used. </p>
+<p >Will be None if not in distributed setting. </p>
+
+</div>
+</div>
+<a id="a41bce75b60e65ed849c55b6919187324" name="a41bce75b60e65ed849c55b6919187324"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a41bce75b60e65ed849c55b6919187324">&#9670;&#160;</a></span>work_timeout</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">rlpack._C.rollout_buffer.RolloutBuffer.work_timeout</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The instance timedelta for work timeout in collective communication operations. </p>
 
 </div>
 </div>

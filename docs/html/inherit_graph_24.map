@@ -1,4 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,144,31"/>
-<area shape="rect" id="node2" href="$class_rollout_buffer_batch.html" title="The class RolloutBufferBatch creates a PyTorch dataset. Current implementation creates the dataset fo..." alt="" coords="192,5,324,31"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,5,160,45"/>
+<area shape="rect" id="node2" href="$class_rollout_buffer_batch_transform.html" title="The class RolloutBufferBatchTransform applies transform to each batch when using iterator to iterate ..." alt="" coords="208,13,399,38"/>
 </map>

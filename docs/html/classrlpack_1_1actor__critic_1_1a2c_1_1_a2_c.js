@@ -7,6 +7,7 @@ var classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c =
     [ "_share_gradients", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a92571d3fed20230cef09be3128493712", null ],
     [ "_share_parameters", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#acdfdd9b1c1d04aca803128b6ba8c03f5", null ],
     [ "_perform_grad_processing", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af0fc4db35f9bb1a968d57802407d0876", null ],
+    [ "_policy_outputs_exploration", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#abd1aa231e28fa2445b54ab3d6cc0e3b4", null ],
     [ "_process_group", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a367be86530bb4c7afeaa1261db9dfbd2", null ],
     [ "_process_rank", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#affe02a8e5e805a98afbe999c6bf8f815", null ],
     [ "_take_backward_step", "classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a54e6853b03e0822fd85623118671986c", null ],

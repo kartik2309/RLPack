@@ -6,5 +6,7 @@ var searchData=
   ['update_5fstatistics_3',['update_statistics',['../classrlpack_1_1utils_1_1normalization_1_1_normalization.html#a91d242ae61edd648fcf0f124b74d8f63',1,'rlpack::utils::normalization::Normalization']]],
   ['use_5factor_5fprojection_4',['use_actor_projection',['../classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#acc3d0c82767c3101f50c0dd71b9a6e42',1,'rlpack::models::actor_critic_mlp_policy::ActorCriticMlpPolicy']]],
   ['use_5fdiagonal_5fembedding_5fon_5fprojection_5',['use_diagonal_embedding_on_projection',['../classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html#a812806819ae4b98740be3dc7f17607f3',1,'rlpack::models::actor_critic_mlp_policy::ActorCriticMlpPolicy']]],
-  ['utils_6',['utils',['../group__utils__group.html',1,'']]]
+  ['utilitymapping_6',['UtilityMapping',['../class_utility_mapping.html',1,'']]],
+  ['utilitymapping_2ehpp_7',['UtilityMapping.hpp',['../_utility_mapping_8hpp.html',1,'']]],
+  ['utils_8',['utils',['../group__utils__group.html',1,'']]]
 ];

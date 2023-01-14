@@ -11,9 +11,10 @@ var searchData=
   ['trainer_8',['trainer',['../classrlpack_1_1simulator_1_1_simulator.html#ae57fe23a8217e6bb3879e593603260d8',1,'rlpack::simulator::Simulator']]],
   ['training_5ffrequency_9',['training_frequency',['../classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#abb8397a2c8306113ec191e551fab2f64',1,'rlpack::actor_critic::utils::actor_critic_agent::ActorCriticAgent']]],
   ['transitionbatch_5f_10',['transitionBatch_',['../class_rollout_buffer_batch_transform.html#a1cd2d98ddf036a5d785510ecaba1b421',1,'RolloutBufferBatchTransform']]],
-  ['transitiondata_5f_11',['transitionData_',['../class_rollout_buffer_container.html#a32c70b9d28a1852de9c6c492b2a9e3c4',1,'RolloutBufferContainer']]],
-  ['transitioninformationreference_5f_12',['transitionInformationReference_',['../class_c___replay_buffer_data.html#aa334641d4b9ec1a54e0e71c217dcf4ed',1,'C_ReplayBufferData']]],
-  ['treeheight_5f_13',['treeHeight_',['../class_sum_tree.html#a760297b0da7e5767bdca72536157b3d5',1,'SumTree']]],
-  ['treeindex_5f_14',['treeIndex_',['../class_sum_tree_node.html#a4661823ded682bbed6883b4464cbd86e',1,'SumTreeNode']]],
-  ['treelevel_5f_15',['treeLevel_',['../class_sum_tree_node.html#ab0d99d7abe73768386a37e3349fa283b',1,'SumTreeNode']]]
+  ['transitioncounter_5f_11',['transitionCounter_',['../class_rollout_buffer_container.html#a7b66844d338334274f9718e253a22683',1,'RolloutBufferContainer']]],
+  ['transitiondata_5f_12',['transitionData_',['../class_rollout_buffer_container.html#a32c70b9d28a1852de9c6c492b2a9e3c4',1,'RolloutBufferContainer']]],
+  ['transitioninformationreference_5f_13',['transitionInformationReference_',['../class_c___replay_buffer_data.html#aa334641d4b9ec1a54e0e71c217dcf4ed',1,'C_ReplayBufferData']]],
+  ['treeheight_5f_14',['treeHeight_',['../class_sum_tree.html#a760297b0da7e5767bdca72536157b3d5',1,'SumTree']]],
+  ['treeindex_5f_15',['treeIndex_',['../class_sum_tree_node.html#a4661823ded682bbed6883b4464cbd86e',1,'SumTreeNode']]],
+  ['treelevel_5f_16',['treeLevel_',['../class_sum_tree_node.html#ab0d99d7abe73768386a37e3349fa283b',1,'SumTreeNode']]]
 ];

@@ -112,15 +112,12 @@ $(document).ready(function(){initNavTree('_stl_bindings_8h_source.html',''); ini
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;pybind11/stl_bind.h&gt;</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;torch/extension.h&gt;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;torch/csrc/distributed/c10d/ProcessGroup.hpp&gt;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>PYBIND11_MAKE_OPAQUE(std::map&lt;std::string, torch::Tensor&gt;)</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>PYBIND11_MAKE_OPAQUE(std::map&lt;std::string, c10::intrusive_ptr&lt;c10d::ProcessGroup&gt;&gt;)</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>PYBIND11_MAKE_OPAQUE(std::map&lt;std::<span class="keywordtype">string</span>, std::deque&lt;int64_t&gt;&gt;)</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>PYBIND11_MAKE_OPAQUE(std::map&lt;std::<span class="keywordtype">string</span>, std::deque&lt;torch::Tensor&gt;&gt;)</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#endif</span><span class="comment">//RLPACK_BINARIES_UTILS_STL_BINDINGS_STLBINDINGS_H_</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>PYBIND11_MAKE_OPAQUE(std::map&lt;std::string, torch::Tensor&gt;)</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>PYBIND11_MAKE_OPAQUE(std::map&lt;std::string, std::deque&lt;int64_t&gt;&gt;)</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>PYBIND11_MAKE_OPAQUE(std::map&lt;std::<span class="keywordtype">string</span>, std::deque&lt;torch::Tensor&gt;&gt;)</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#endif</span><span class="comment">//RLPACK_BINARIES_UTILS_STL_BINDINGS_STLBINDINGS_H_</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

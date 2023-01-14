@@ -1,6 +1,7 @@
 var classrlpack_1_1simulator_1_1_simulator =
 [
     [ "__init__", "classrlpack_1_1simulator_1_1_simulator.html#a0a51c3533ccdc8633aa7e9d89790af94", null ],
+    [ "prepare_config_to_save", "classrlpack_1_1simulator_1_1_simulator.html#a66dad56ae50b14da87ac3ab5925f13b9", null ],
     [ "run", "classrlpack_1_1simulator_1_1_simulator.html#aff03873ad871b7483b2667140170a7dc", null ],
     [ "setup_agent", "classrlpack_1_1simulator_1_1_simulator.html#ac43b3463ffb17c3513850ae47bcb3697", null ],
     [ "setup_environment", "classrlpack_1_1simulator_1_1_simulator.html#afc9d5bf745b4f269291dbc25ba403405", null ],

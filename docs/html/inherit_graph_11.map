@@ -1,4 +1,32 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,184,45"/>
-<area shape="rect" id="node2" href="$classrlpack_1_1utils_1_1typing__hints_1_1_l_r_scheduler.html" title="The Typing variable for LR Schedulers." alt="" coords="232,5,368,45"/>
+<area shape="rect" id="node1" title=" " alt="" coords="17,49,207,89"/>
+<area shape="rect" id="node2" href="$classrlpack_1_1distributions_1_1gaussian__mixture_1_1_gaussian_mixture.html" title="This class implements the Gaussian Mixture distribution." alt="" coords="309,85,495,125"/>
+<area shape="rect" id="node3" href="$classrlpack_1_1distributions_1_1gaussian__mixture__log__std_1_1_gaussian_mixture_log_std.html" title="This class implements the Gaussian Mixture distribution where input standard deviation (scale) is ass..." alt="" coords="291,5,513,60"/>
+<area shape="rect" id="node4" title=" " alt="" coords="47,692,177,717"/>
+<area shape="rect" id="node5" href="$classrlpack_1_1exploration_1_1utils_1_1exploration_1_1_exploration.html" title="Exploration class is the base class for exploration tools in rlpack." alt="" coords="291,557,513,597"/>
+<area shape="rect" id="node8" href="$classrlpack_1_1exploration_1_1utils_1_1variance__estimator_1_1_variance_estimator.html" title="A utility pytorch.nn.Module which performs variance estimation by learning the standard deviation." alt="" coords="299,749,505,789"/>
+<area shape="rect" id="node9" href="$classrlpack_1_1utils_1_1base_1_1model_1_1_model.html" title="Base class for all Models in RLPack." alt="" coords="322,813,482,853"/>
+<area shape="rect" id="node13" href="$classrlpack_1_1utils_1_1typing__hints_1_1_activation.html" title="The Typing variable for Activations." alt="" coords="340,621,464,661"/>
+<area shape="rect" id="node14" href="$classrlpack_1_1utils_1_1typing__hints_1_1_loss_function.html" title="The Typing variable for Loss Functions." alt="" coords="333,685,471,725"/>
+<area shape="rect" id="node6" href="$classrlpack_1_1exploration_1_1gaussian__noise__exploration_1_1_gaussian_noise_exploration.html" title="Exploration tool to produce gaussian noise." alt="" coords="603,600,825,655"/>
+<area shape="rect" id="node7" href="$classrlpack_1_1exploration_1_1state__dependent__exploration_1_1_state_dependent_exploration.html" title="StateDependentExploration performs exploration based on state values (or features)." alt="" coords="585,521,843,576"/>
+<area shape="rect" id="node10" href="$classrlpack_1_1models_1_1actor__critic__mlp__policy_1_1_actor_critic_mlp_policy.html" title="This class is a PyTorch Model implementing the MLP based Actor&#45;Critic Policy." alt="" coords="619,741,809,796"/>
+<area shape="rect" id="node11" href="$classrlpack_1_1models_1_1mlp_1_1_mlp.html" title="This class is a PyTorch Model implementing the MLP model for 1&#45;D or 2&#45;D state values." alt="" coords="637,820,791,845"/>
+<area shape="rect" id="node12" href="$classrlpack_1_1models_1_1utils_1_1mlp__feature__extractor_1_1_mlp_feature_extractor.html" title="This class is a PyTorch Model implementing the MLP based feature extractor for 1&#45;D or 2&#45;D state value..." alt="" coords="617,869,811,924"/>
+<area shape="rect" id="node15" title=" " alt="" coords="5,149,219,189"/>
+<area shape="rect" id="node16" href="$classrlpack_1_1distributions_1_1multivariate__normal__log__std_1_1_multivariate_normal_log_std.html" title="This class implements a variant of MultivariateNormal distribution where input scale matrix is assume..." alt="" coords="267,149,537,189"/>
+<area shape="rect" id="node17" title=" " alt="" coords="18,500,206,525"/>
+<area shape="rect" id="node18" href="$classrlpack_1_1distributions_1_1normal__log__std_1_1_normal_log_std.html" title="This class implements a variant of Normal distribution where input standard deviation (scale) is assu..." alt="" coords="315,493,489,533"/>
+<area shape="rect" id="node19" title=" " alt="" coords="87,307,137,332"/>
+<area shape="rect" id="node20" href="$classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html" title="The A2C class implements the asynchronous Actor&#45;Critic method with synchronization." alt="" coords="917,335,1097,360"/>
+<area shape="rect" id="node21" href="$classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html" title="The A3C class implements the asynchronous Actor&#45;Critic method." alt="" coords="917,388,1097,413"/>
+<area shape="rect" id="node22" href="$classrlpack_1_1actor__critic_1_1ac_1_1_a_c.html" title="The ActorCritic class implements the basic Actor&#45;Critic method with single agent." alt="" coords="924,437,1091,463"/>
+<area shape="rect" id="node23" href="$classrlpack_1_1utils_1_1base_1_1agent_1_1_agent.html" title="The base class for all agents." alt="" coords="323,327,481,367"/>
+<area shape="rect" id="node29" href="$classrlpack_1_1utils_1_1base_1_1trainer__base_1_1_trainer_base.html" title="This class is the abstract base class of all trainer classes which implements methods to train an age..." alt="" coords="323,213,481,253"/>
+<area shape="rect" id="node24" href="$classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html" title="The ActorCriticAgent is the base class for actor&#45;critic methods." alt="" coords="616,327,812,367"/>
+<area shape="rect" id="node25" href="$classrlpack_1_1dqn_1_1utils_1_1dqn__agent_1_1_dqn_agent.html" title="The DqnAgent is the base class for DQN methods." alt="" coords="647,213,781,253"/>
+<area shape="rect" id="node26" href="$classrlpack_1_1dqn_1_1dqn__proportional__agent_1_1_dqn_proportional_agent.html" title="This class implements the DQN with Proportional prioritization strategy." alt="" coords="911,270,1103,310"/>
+<area shape="rect" id="node27" href="$classrlpack_1_1dqn_1_1dqn__rank__based__agent_1_1_dqn_rank_based_agent.html" title="This class implements the DQN with Rank&#45;Based prioritization strategy." alt="" coords="891,142,1124,182"/>
+<area shape="rect" id="node28" href="$classrlpack_1_1dqn_1_1dqn__uniform__agent_1_1_dqn_uniform_agent.html" title="This class implements the basic DQN methodology, i.e." alt="" coords="923,206,1092,246"/>
+<area shape="rect" id="node30" href="$classrlpack_1_1trainer_1_1trainer_1_1_trainer.html" title="This class is a generic class to train or evaluate any agent in any environment." alt="" coords="625,163,803,188"/>
 </map>
