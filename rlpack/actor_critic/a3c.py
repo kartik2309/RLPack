@@ -183,7 +183,8 @@ class A3C(ActorCriticAgent, ABC):
 
     def _call_to_save(self) -> None:
         """
-        Method calling the save method when required. Only saved from first process (process with rank 0).
+        Method calling the save method when required. Only saved from first process (process with rank 0) for
+        every given `backup_frequency`.
         """
         if (
             (self.step_counter + 1) % self.backup_frequency == 0
@@ -193,16 +194,15 @@ class A3C(ActorCriticAgent, ABC):
     @pytorch.no_grad()
     def _call_to_extend_transitions(self) -> None:
         """
-        Method to extend the transitions with all gather. Here the method does nothing and returns immediately.
+        Method calling the method RolloutBuffer.extend_transitions. Here the method implementation is void empty.
         """
         return
 
     @pytorch.no_grad()
     def _share_gradients(self) -> None:
         """
-        Asynchronously averages the gradients across the world_size (number of processes) using non-blocking
-        reduce method to share gradients to master process. Here the method is implemented with reduce operation
-        at master process.
+        Method to share gradients to a single model. This must typically implement reduce collective communication
+        operation. Here the method implements asynchronous all reduce with mean at master process.
         """
         for param in self.policy_model.parameters():
             if param.requires_grad:
@@ -211,13 +211,15 @@ class A3C(ActorCriticAgent, ABC):
                     root=self._master_process_rank,
                     op=pytorch_distributed.ReduceOp.SUM,
                 )
-                param.grad /= self._world_size
+                if self._process_rank == self._master_process_rank:
+                    param.grad /= self._world_size
 
     @pytorch.no_grad()
     def _share_parameters(self):
         """
-        Method to share parameters from a single model. This must typically implement scatter collective communication
-        operation. Here the method is implemented by scattering parameters from master process to other processes.
+        Method to share parameters from a single model. This must typically implement broadcast collective
+        communication operation. Here the method is implemented by broadcast parameters from master process
+        to other processes asynchronously.
         """
         for param in self.policy_model.parameters():
             self._process_group.broadcast(tensor=param, root=self._master_process_rank)

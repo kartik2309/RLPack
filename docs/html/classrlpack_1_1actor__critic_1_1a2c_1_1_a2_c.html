@@ -276,7 +276,7 @@ Data Fields</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
 <tr class="memitem:af54ad5d4b3644f5436b2c7046914fb12"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af54ad5d4b3644f5436b2c7046914fb12">_call_to_extend_transitions</a> (self)</td></tr>
-<tr class="memdesc:af54ad5d4b3644f5436b2c7046914fb12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to extend the transitions with gather for master process.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af54ad5d4b3644f5436b2c7046914fb12">More...</a><br /></td></tr>
+<tr class="memdesc:af54ad5d4b3644f5436b2c7046914fb12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method calling the method RolloutBuffer.extend_transitions.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af54ad5d4b3644f5436b2c7046914fb12">More...</a><br /></td></tr>
 <tr class="separator:af54ad5d4b3644f5436b2c7046914fb12"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a487c58b125fb7cd2e14972552bdf5ea6"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a487c58b125fb7cd2e14972552bdf5ea6">_call_to_save</a> (self)</td></tr>
 <tr class="memdesc:a487c58b125fb7cd2e14972552bdf5ea6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method calling the save method when required.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a487c58b125fb7cd2e14972552bdf5ea6">More...</a><br /></td></tr>
@@ -285,7 +285,7 @@ Private Member Functions</h2></td></tr>
 <tr class="memdesc:a3ca76a98e5389e702f4a2f04dae6a032"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overriding abstract method to implement the setting of attributes with custom values.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a3ca76a98e5389e702f4a2f04dae6a032">More...</a><br /></td></tr>
 <tr class="separator:a3ca76a98e5389e702f4a2f04dae6a032"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92571d3fed20230cef09be3128493712"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a92571d3fed20230cef09be3128493712">_share_gradients</a> (self)</td></tr>
-<tr class="memdesc:a92571d3fed20230cef09be3128493712"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asynchronously averages the gradients across the world_size (number of processes) using non-blocking reduce method to share gradients to master process.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a92571d3fed20230cef09be3128493712">More...</a><br /></td></tr>
+<tr class="memdesc:a92571d3fed20230cef09be3128493712"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to share gradients to a single model.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a92571d3fed20230cef09be3128493712">More...</a><br /></td></tr>
 <tr class="separator:a92571d3fed20230cef09be3128493712"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acdfdd9b1c1d04aca803128b6ba8c03f5"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#acdfdd9b1c1d04aca803128b6ba8c03f5">_share_parameters</a> (self)</td></tr>
 <tr class="memdesc:acdfdd9b1c1d04aca803128b6ba8c03f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to share parameters from a single model.  <a href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#acdfdd9b1c1d04aca803128b6ba8c03f5">More...</a><br /></td></tr>
@@ -567,8 +567,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Method to extend the transitions with gather for master process. </p>
-<p >Here the method is implemented by calling RolloutBuffer.extend_transitions method. </p>
+<p>Method calling the method RolloutBuffer.extend_transitions. </p>
+<p >Here the method is implemented by calling RolloutBuffer.extend_transitions method and placing a process barrier for synchronization with given timeout. </p>
 
 <p>Reimplemented from <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a047cbca9519b71255a812248a48c2cf6">rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent</a>.</p>
 
@@ -599,7 +599,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Method calling the save method when required. </p>
-<p >Only saved from first process (process with rank 0). </p>
+<p >Only saved from first process (process with rank 0) for every given <code>backup_frequency</code>. </p>
 
 <p>Reimplemented from <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a79da689b8d6edfd4ae0f3128ac130d57">rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent</a>.</p>
 
@@ -659,8 +659,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Asynchronously averages the gradients across the world_size (number of processes) using non-blocking reduce method to share gradients to master process. </p>
-<p >Here the method does nothing and returns immediately. </p>
+<p>Method to share gradients to a single model. </p>
+<p >This must typically implement reduce collective communication operation. Here the method implementation is void empty. </p>
 
 <p>Reimplemented from <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ab36ef5c2f16a926750db603d7df2eb49">rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent</a>.</p>
 
@@ -691,7 +691,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Method to share parameters from a single model. </p>
-<p >This must typically implement scatter collective communication operation. This method is to be overriden by appropriate class. Here the method broadcasts the parameters from master to process to all other processes. </p>
+<p >This must typically implement broadcast collective communication operation. Here the method is implemented by broadcast parameters from master process to other processes synchronously with given timeout. </p>
 
 <p>Reimplemented from <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ac435775014322900099c4ac1f0febfba">rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent</a>.</p>
 

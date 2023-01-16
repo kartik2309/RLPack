@@ -164,7 +164,7 @@ class AC(ActorCriticAgent, ABC):
 
     def _call_to_save(self) -> None:
         """
-        Method calling the save method when required. This method is to be overriden by asynchronous methods.
+        Method calling the save method when required. Saves for every given `backup_frequency`.
         """
         if (self.step_counter + 1) % self.backup_frequency == 0:
             self.save()
@@ -176,11 +176,15 @@ class AC(ActorCriticAgent, ABC):
     @pytorch.no_grad()
     def _share_gradients(self) -> None:
         """
-        Asynchronously averages the gradients across the world_size (number of processes) using non-blocking
-        all-reduce method.
+        Method to share gradients to a single model. This must typically implement reduce collective communication
+        operation. Here the method implementation is void empty.
         """
         return
 
     @pytorch.no_grad()
-    def _share_parameters(self):
+    def _share_parameters(self) -> None:
+        """
+        Method to share parameters from a single model. This must typically implement broadcast collective
+        communication operation. Here the method implementation is void empty.
+        """
         return

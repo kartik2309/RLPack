@@ -438,35 +438,38 @@ class ActorCriticAgent(Agent):
     @abstractmethod
     def _call_to_save(self) -> None:
         """
-        Method calling the save method when required. This method is to be overriden.
+        Method calling the save method when required. Must be overriden by subclasses.
         """
         pass
 
     @abstractmethod
     def _call_to_extend_transitions(self) -> None:
         """
-        Method calling the method RolloutBuffer.extend_transitions. This method is to be overriden by
-        appropriate class.
+        Method calling the method RolloutBuffer.extend_transitions. Must be overriden by subclasses.
         """
         pass
 
     @abstractmethod
     def _share_gradients(self) -> None:
         """
-        Asynchronously averages the gradients across the world_size (number of processes) using non-blocking
-        reduce method to share gradients to master process. This method is to be overriden by appropriate class.
+        Method to share gradients to a single model. This must typically implement reduce collective communication
+        operation. Must be overriden by subclasses.
         """
         pass
 
     @abstractmethod
     def _share_parameters(self) -> None:
         """
-        Method to share parameters from a single model. This must typically implement scatter collective communication
-        operation. This method is to be overriden by appropriate class.
+        Method to share parameters from a single model. This must typically implement broadcast collective
+        communication operation. Must be overriden by subclasses.
         """
         pass
 
-    def _train_policy_model(self):
+    def _train_policy_model(self) -> None:
+        """
+        The method to train policy models. This calls forward pass, backward pass and optimizer to perform
+        training.
+        """
         if not self.policy_model.training:
             self.policy_model.train()
         # Extend rollout buffer if required (typically by gathering from multiple actors).

@@ -320,13 +320,14 @@ Private Member Functions</h2></td></tr>
 <tr class="memdesc:a9a8e806ef833a33b2972c2df202a78c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to set attributes for <a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html" title="The ActorCriticAgent is the base class for actor-critic methods.">ActorCriticAgent</a> with custom values.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a9a8e806ef833a33b2972c2df202a78c7">More...</a><br /></td></tr>
 <tr class="separator:a9a8e806ef833a33b2972c2df202a78c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab36ef5c2f16a926750db603d7df2eb49"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ab36ef5c2f16a926750db603d7df2eb49">_share_gradients</a> (self)</td></tr>
-<tr class="memdesc:ab36ef5c2f16a926750db603d7df2eb49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asynchronously averages the gradients across the world_size (number of processes) using non-blocking reduce method to share gradients to master process.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ab36ef5c2f16a926750db603d7df2eb49">More...</a><br /></td></tr>
+<tr class="memdesc:ab36ef5c2f16a926750db603d7df2eb49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to share gradients to a single model.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ab36ef5c2f16a926750db603d7df2eb49">More...</a><br /></td></tr>
 <tr class="separator:ab36ef5c2f16a926750db603d7df2eb49"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac435775014322900099c4ac1f0febfba"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ac435775014322900099c4ac1f0febfba">_share_parameters</a> (self)</td></tr>
 <tr class="memdesc:ac435775014322900099c4ac1f0febfba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to share parameters from a single model.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ac435775014322900099c4ac1f0febfba">More...</a><br /></td></tr>
 <tr class="separator:ac435775014322900099c4ac1f0febfba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f1336a65fb064e157eba54ab431521c"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a6f1336a65fb064e157eba54ab431521c">_train_policy_model</a> (self)</td></tr>
-<tr class="separator:a6f1336a65fb064e157eba54ab431521c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e021e7fd100a12ebb8c9347749f96ab"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a3e021e7fd100a12ebb8c9347749f96ab">_train_policy_model</a> (self)</td></tr>
+<tr class="memdesc:a3e021e7fd100a12ebb8c9347749f96ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">The method to train policy models.  <a href="classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a3e021e7fd100a12ebb8c9347749f96ab">More...</a><br /></td></tr>
+<tr class="separator:a3e021e7fd100a12ebb8c9347749f96ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-methods" name="pri-static-methods"></a>
 Static Private Member Functions</h2></td></tr>
@@ -717,7 +718,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Method calling the method <a class="el" href="classrlpack_1_1___c_1_1rollout__buffer_1_1_rollout_buffer.html#a9d61053d9e8d7f6883e8a2e53c79303e" title="Method to extend the transitions.">RolloutBuffer.extend_transitions</a>. </p>
-<p >This method is to be overriden by appropriate class. </p>
+<p >Must be overriden by subclasses. </p>
 
 <p>Reimplemented in <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#af54ad5d4b3644f5436b2c7046914fb12">rlpack.actor_critic.a2c.A2C</a>, <a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#adbe30f2d28526c27e692f0a84271db14">rlpack.actor_critic.a3c.A3C</a>, and <a class="el" href="classrlpack_1_1actor__critic_1_1ac_1_1_a_c.html#a6d3c0ef8e7e91c9ae36ac06814f5a0ca">rlpack.actor_critic.ac.AC</a>.</p>
 
@@ -748,7 +749,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Method calling the save method when required. </p>
-<p >This method is to be overriden. </p>
+<p >Must be overriden by subclasses. </p>
 
 <p>Reimplemented in <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a487c58b125fb7cd2e14972552bdf5ea6">rlpack.actor_critic.a2c.A2C</a>, <a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#ac2f6faa17ef5e68d665f2e085636b5d2">rlpack.actor_critic.a3c.A3C</a>, and <a class="el" href="classrlpack_1_1actor__critic_1_1ac_1_1_a_c.html#a007d495e6f8e3b960d7ff5c5f2ee2a15">rlpack.actor_critic.ac.AC</a>.</p>
 
@@ -1246,8 +1247,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Asynchronously averages the gradients across the world_size (number of processes) using non-blocking reduce method to share gradients to master process. </p>
-<p >This method is to be overriden by appropriate class. </p>
+<p>Method to share gradients to a single model. </p>
+<p >This must typically implement reduce collective communication operation. Must be overriden by subclasses. </p>
 
 <p>Reimplemented in <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#a92571d3fed20230cef09be3128493712">rlpack.actor_critic.a2c.A2C</a>, <a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#aaa59aaec166391e1ebc8e2eb04683ac6">rlpack.actor_critic.a3c.A3C</a>, and <a class="el" href="classrlpack_1_1actor__critic_1_1ac_1_1_a_c.html#a046f6c559232d908e2d2775ede74339c">rlpack.actor_critic.ac.AC</a>.</p>
 
@@ -1278,14 +1279,14 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Method to share parameters from a single model. </p>
-<p >This must typically implement scatter collective communication operation. This method is to be overriden by appropriate class. </p>
+<p >This must typically implement broadcast collective communication operation. Must be overriden by subclasses. </p>
 
-<p>Reimplemented in <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#acdfdd9b1c1d04aca803128b6ba8c03f5">rlpack.actor_critic.a2c.A2C</a>, <a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#a7e371a3aa442eb45be17a7f52be82d84">rlpack.actor_critic.a3c.A3C</a>, and <a class="el" href="classrlpack_1_1actor__critic_1_1ac_1_1_a_c.html#a6cf14a2b55e5782ca21f627a79fe747a">rlpack.actor_critic.ac.AC</a>.</p>
+<p>Reimplemented in <a class="el" href="classrlpack_1_1actor__critic_1_1a2c_1_1_a2_c.html#acdfdd9b1c1d04aca803128b6ba8c03f5">rlpack.actor_critic.a2c.A2C</a>, <a class="el" href="classrlpack_1_1actor__critic_1_1a3c_1_1_a3_c.html#a7e371a3aa442eb45be17a7f52be82d84">rlpack.actor_critic.a3c.A3C</a>, and <a class="el" href="classrlpack_1_1actor__critic_1_1ac_1_1_a_c.html#a98be5cd789b09ae6f95fe613d61014ca">rlpack.actor_critic.ac.AC</a>.</p>
 
 </div>
 </div>
-<a id="a6f1336a65fb064e157eba54ab431521c" name="a6f1336a65fb064e157eba54ab431521c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6f1336a65fb064e157eba54ab431521c">&#9670;&#160;</a></span>_train_policy_model()</h2>
+<a id="a3e021e7fd100a12ebb8c9347749f96ab" name="a3e021e7fd100a12ebb8c9347749f96ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e021e7fd100a12ebb8c9347749f96ab">&#9670;&#160;</a></span>_train_policy_model()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1294,7 +1295,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">def rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent._train_policy_model </td>
+          <td class="memname"> None rlpack.actor_critic.utils.actor_critic_agent.ActorCriticAgent._train_policy_model </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><em>self</em></td><td>)</td>
@@ -1307,6 +1308,9 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>The method to train policy models. </p>
+<p >This calls forward pass, backward pass and optimizer to perform training. </p>
 
 </div>
 </div>

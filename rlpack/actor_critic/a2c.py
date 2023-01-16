@@ -187,7 +187,8 @@ class A2C(ActorCriticAgent, ABC):
 
     def _call_to_save(self) -> None:
         """
-        Method calling the save method when required. Only saved from first process (process with rank 0).
+        Method calling the save method when required. Only saved from first process (process with rank 0) for
+        every given `backup_frequency`.
         """
         if (
             (self.step_counter + 1) % self.backup_frequency == 0
@@ -197,8 +198,8 @@ class A2C(ActorCriticAgent, ABC):
     @pytorch.no_grad()
     def _call_to_extend_transitions(self) -> None:
         """
-        Method to extend the transitions with gather for master process. Here the method is implemented by calling
-        RolloutBuffer.extend_transitions method.
+        Method calling the method RolloutBuffer.extend_transitions. Here the method is implemented by calling
+        RolloutBuffer.extend_transitions method and placing a process barrier for synchronization with given timeout.
         """
         self._rollout_buffer.extend_transitions()
         work_pointer = self._process_group.barrier()
@@ -207,17 +208,17 @@ class A2C(ActorCriticAgent, ABC):
     @pytorch.no_grad()
     def _share_gradients(self) -> None:
         """
-        Asynchronously averages the gradients across the world_size (number of processes) using non-blocking
-        reduce method to share gradients to master process. Here the method does nothing and returns immediately.
+        Method to share gradients to a single model. This must typically implement reduce collective communication
+        operation. Here the method implementation is void empty.
         """
         return
 
     @pytorch.no_grad()
     def _share_parameters(self):
         """
-        Method to share parameters from a single model. This must typically implement scatter collective communication
-        operation. This method is to be overriden by appropriate class. Here the method broadcasts the parameters
-        from master to process to all other processes.
+        Method to share parameters from a single model. This must typically implement broadcast collective
+        communication operation. Here the method is implemented by broadcast parameters from master process
+        to other processes synchronously with given timeout.
         """
         for param in self.policy_model.parameters():
             work_pointer = self._process_group.broadcast(

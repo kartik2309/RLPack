@@ -21,7 +21,7 @@ var classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_crit
     [ "_set_attribute_custom_values", "classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a9a8e806ef833a33b2972c2df202a78c7", null ],
     [ "_share_gradients", "classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ab36ef5c2f16a926750db603d7df2eb49", null ],
     [ "_share_parameters", "classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ac435775014322900099c4ac1f0febfba", null ],
-    [ "_train_policy_model", "classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a6f1336a65fb064e157eba54ab431521c", null ],
+    [ "_train_policy_model", "classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a3e021e7fd100a12ebb8c9347749f96ab", null ],
     [ "load", "classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#a369d886df0d6762cb825f10682607581", null ],
     [ "policy", "classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ae8e3441052d7b47fa91188a684e18659", null ],
     [ "save", "classrlpack_1_1actor__critic_1_1utils_1_1actor__critic__agent_1_1_actor_critic_agent.html#ad0e78685793f897be63b701cb75b6fc5", null ],
